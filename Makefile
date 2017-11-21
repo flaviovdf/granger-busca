@@ -1,5 +1,7 @@
 # Simple makefile
 
+.PHONY = all clean clean-cython test trailing-spaces
+
 PYTHON ?= python
 NOSETESTS ?= nosetests
 
@@ -9,8 +11,11 @@ all:
 clean:
 	rm -rf build/
 	find . -name "*.pyc" | xargs rm -f
-	find . -name "*.c" | egrep -v "randomkit.c|distributions.c" | xargs rm -f
 	find . -name "*.so" | xargs rm -f
+
+clean-cython:
+	find . -name "*.c" | egrep -v "randomkit.c|distributions.c" | xargs rm -f
+	find . -name "*.cpp" | xargs rm -f
 
 test:
 	$(NOSETESTS)
