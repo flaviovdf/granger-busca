@@ -74,6 +74,7 @@ def get_extensions():
             extension = Extension(module, ext_files,
                                   include_dirs=include_dirs,
                                   language='c++',
+                                  # define_macros=[('CYTHON_TRACE_NOGIL', '1')],
                                   extra_compile_args=['-msse', '-msse2',
                                                       '-mfpmath=sse',
                                                       '-fopenmp'],

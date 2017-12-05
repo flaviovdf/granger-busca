@@ -2,6 +2,7 @@
 # cython: boundscheck=False
 # cython: cdivision=True
 # cython: initializedcheck=False
+# cython: linetrace=True
 # cython: nonecheck=False
 # cython: wraparound=False
 
@@ -17,7 +18,9 @@ from libcpp.map cimport map
 from libcpp.map cimport pair
 from libcpp.vector cimport vector
 
+
 cdef double E = 2.718281828459045
+
 
 cdef extern from 'math.h':
     double exp(double) nogil
@@ -58,19 +61,23 @@ cdef inline int sample_background(double prob_background) nogil:
     return rand() < prob_background
 
 
-cdef inline int searchsorted(vector[double] &array, double value) nogil:
+cdef inline int searchsorted(vector[double] &array, double value, int lower,
+                             int left) nogil:
     '''
     Finds the first element in the array where the given is OR should have been
     in the given array. This is simply a binary search, but if the element is
-    not found we return the index where it should have been at (to the left).
+    not found we return the index where it should have been at (to the left,
+    or right given the parameter).
 
     Parameters
     ----------
     array: vector of doubles
     value: double to look for
+    lower: int to start search from [lower, n)
+    left:  int to determine if return the left or right index when the search
+           fails
     '''
 
-    cdef int lower = 0
     cdef int upper = array.size() - 1  # closed interval
     cdef int half = 0
     cdef int idx = -1
@@ -86,12 +93,16 @@ cdef inline int searchsorted(vector[double] &array, double value) nogil:
             upper = half - 1
 
     if idx == -1:  # Element not found, return where it should be
-        idx = lower
+        if left:
+            idx = upper # counter intuitive but upper is now < lower
+        else:
+            idx = lower
 
     return idx
 
 
-cdef inline double find_previous(vector[double] &timestamps, double t) nogil:
+cdef inline double find_previous(vector[double] &timestamps, double t,
+                                 int lower, int *store_idx) nogil:
     '''
     Finds the closest timestamp with value less than the one informed.
 
@@ -101,50 +112,79 @@ cdef inline double find_previous(vector[double] &timestamps, double t) nogil:
         the process to search in
     t: double
         the reference value to find tp < t such that t - tp is minimal
+    lower: int
+        where to start the search from [0, n_stamps)
     '''
 
-    cdef int tp_idx = searchsorted(timestamps, t)
+    cdef int tp_idx = searchsorted(timestamps, t, lower, 1)
+    store_idx[0] = tp_idx
+    if tp_idx == -1:
+        tp_idx = 0
     cdef double tp = timestamps[tp_idx]
-    while tp >= t and tp_idx >= 0:
-        tp_idx -= 1
-        tp = timestamps[tp_idx]
+    # while tp >= t and tp_idx >= 0:
+    #      tp_idx -= 1
+    #      tp = timestamps[tp_idx]
     if tp >= t:
         tp = 0
     return tp
 
 
-cdef inline double busca_probability(double t,
-                                     vector[double] &timestamps_proc_a,
-                                     vector[double] &timestamps_proc_b,
-                                     double alpha_ba,
-                                     double beta_proc_b) nogil:
+cdef inline double busca_probability(int i, int proc_a, int proc_b,
+                                     map[int, vector[double]] &all_timestamps,
+                                     double alpha_ba, double beta_proc_b,
+                                     map[int, int] &lower_stamps) nogil:
 
-    cdef double tp = find_previous(timestamps_proc_a, t)
-    cdef double tpp = find_previous(timestamps_proc_b, tp)
+    cdef double t = all_timestamps[proc_a][i]
+    cdef double tp
+    cdef double tpp
+    cdef int store_idx
+    cdef int lower = 0
+    if lower_stamps.count(proc_b) > 0:
+        lower = lower_stamps[proc_b]
+
+    if i > 0:
+        tp = all_timestamps[proc_a][i-1]
+    else:
+        tp = 0
+    if tp != 0:
+        if proc_a == proc_b:
+            if i > 1:
+                tpp = all_timestamps[proc_a][i-2]
+            else:
+                tpp = 0
+        else:
+            tpp = find_previous(all_timestamps[proc_b], tp, lower, &store_idx)
+            lower_stamps[proc_b] = store_idx
+    else:
+        tpp = 0
+
     cdef double rate = alpha_ba / (beta_proc_b/E + tp - tpp)
     return rate
 
 
-cdef inline void populate_busca_vect(double t, int proc_a,
+cdef inline void populate_busca_vect(int i, int proc_a,
                                      map[int, vector[double]] &all_timestamps,
                                      map[int, map[int, int]] &Alpha_ba,
                                      int[::1] sum_b, double alpha_prior,
                                      double[::1] beta_rates,
-                                     vector[double] &prob_b) nogil:
+                                     vector[double] &prob_b,
+                                     map[int, int] &lower_stamps) nogil:
 
     cdef double a_ba
     cdef int n_proc = <int>all_timestamps.size()
     cdef int proc_b
+    cdef int lower
+
     for proc_b in range(n_proc):
         a_ba = dirmulti_posterior(Alpha_ba, sum_b, proc_b, proc_a, alpha_prior)
-        prob_b[proc_b] = busca_probability(t, all_timestamps[proc_a],
-                                           all_timestamps[proc_b], a_ba,
-                                           beta_rates[proc_b])
+        prob_b[proc_b] = busca_probability(i, proc_a, proc_b, all_timestamps,
+                                           a_ba, beta_rates[proc_b],
+                                           lower_stamps)
         if proc_b > 0:
             prob_b[proc_b] += prob_b[proc_b-1]
 
 
-cdef inline int sample_one_timeindex(int proc_a, int i,
+cdef inline int sample_one_timeindex(int proc_a, int i, double prev_back_t,
                                      int[::1] num_background,
                                      map[int, vector[double]] &all_timestamps,
                                      vector[int] &curr_state_proc_a,
@@ -152,53 +192,51 @@ cdef inline int sample_one_timeindex(int proc_a, int i,
                                      int[::1] sum_b, double alpha_prior,
                                      double[::1] mu_rates,
                                      double[::1] beta_rates,
+                                     map[int, map[int, int]] &search_lower,
                                      vector[double] &prob_b) nogil:
 
     cdef double mu_rate = mu_rates[proc_a]
     cdef double ti = all_timestamps[proc_a][i]
-    cdef double tp = 0
-    cdef int j = i-1
-    while j >= 0:
-        if curr_state_proc_a[j] == -1:
-            tp = all_timestamps[proc_a][j]
-            break
-        j -= 1
-
+    cdef double tp = prev_back_t
     cdef double dt = ti - tp
     cdef double mu_prob = mu_rate * dt * exp(-mu_rate*dt)
 
-    populate_busca_vect(ti, proc_a, all_timestamps, Alpha_ba, sum_b,
-                        alpha_prior, beta_rates, prob_b)
+    populate_busca_vect(i, proc_a, all_timestamps, Alpha_ba, sum_b,
+                        alpha_prior, beta_rates, prob_b, search_lower[proc_a])
 
     cdef int n_proc = <int>all_timestamps.size()
     if sample_background(mu_prob / (mu_prob + prob_b[n_proc-1])):
         return -1
     else:
-        return searchsorted(prob_b, prob_b[n_proc-1] * rand())
+        return searchsorted(prob_b, prob_b[n_proc-1] * rand(), 0, 0)
 
 
 cdef void sample_alpha(int proc_a, map[int, vector[double]] &all_timestamps,
                        vector[int] &curr_state, int[::1] num_background,
                        map[int, map[int, int]] &Alpha_ba, int[::1] sum_b,
                        double[::1] mu_rates, double[::1] beta_rates,
-                       double alpha_prior, vector[double] &prob_b) nogil:
+                       double alpha_prior, vector[double] &prob_b,
+                       map[int, map[int, int]] &search_lower) nogil:
 
     cdef int i
     cdef int influencer
     cdef int new_influencer
+    cdef double prev_back_t = 0      # stores last known background time stamp
+    cdef double prev_back_t_aux = 0  # every it: prev_back_t = prev_back_t_aux
     for i in range(<int>all_timestamps[proc_a].size()):
         influencer = curr_state[i]
         if influencer == -1:
             num_background[proc_a] -= 1
+            prev_back_t_aux = all_timestamps[proc_a][i] # found a background ts
         else:
             Alpha_ba[influencer][proc_a] -= 1
             sum_b[influencer] -= 1
 
-        new_influencer = sample_one_timeindex(proc_a, i, num_background,
-                                              all_timestamps, curr_state,
-                                              Alpha_ba, sum_b,
+        new_influencer = sample_one_timeindex(proc_a, i, prev_back_t,
+                                              num_background, all_timestamps,
+                                              curr_state, Alpha_ba, sum_b,
                                               alpha_prior, mu_rates,
-                                              beta_rates, prob_b)
+                                              beta_rates, search_lower, prob_b)
         if new_influencer == -1:
             num_background[proc_a] += 1
         else:
@@ -208,8 +246,9 @@ cdef void sample_alpha(int proc_a, map[int, vector[double]] &all_timestamps,
                 Alpha_ba[new_influencer][proc_a] = 0
             Alpha_ba[new_influencer][proc_a] += 1
             sum_b[new_influencer] += 1
-        curr_state[i] = new_influencer
 
+        curr_state[i] = new_influencer
+        prev_back_t = prev_back_t_aux
 
 cdef void update_mu_rate(int proc_a, vector[double] &timestamps_proc_a,
                          vector[int] &curr_state_proc_a,
@@ -233,17 +272,20 @@ cdef void update_beta_rate(int proc_a,
 
     cdef vector[double] all_deltas
     cdef int n_proc = beta_rates.shape[0]
-    cdef int proc_b, i
+    cdef int proc_b, i, lower, store_idx
     cdef double ti, tp
     cdef double max_ti = 0
     cdef int n_elements = 0
     for proc_b in range(n_proc):
+        lower = 0
         for i in range(<int>all_timestamps[proc_b].size()):
             if curr_state_all[proc_b][i] == proc_a:
                 ti = all_timestamps[proc_b][i]
                 if ti > max_ti:
                     max_ti = ti
-                tp = find_previous(all_timestamps[proc_a], ti)
+                tp = find_previous(all_timestamps[proc_a], ti, lower,
+                                   &store_idx)
+                lower = store_idx
                 all_deltas.push_back(ti - tp)
                 n_elements += 1
 
@@ -261,21 +303,27 @@ cdef void sampleone(map[int, vector[double]] &all_timestamps,
                     map[int, vector[int]] &curr_state, int[::1] num_background,
                     double[::1] mu_rates, double[::1] beta_rates,
                     map[int, map[int, int]] &Alpha_ba, double alpha_prior,
-                    int[::1] sum_b, vector[double] &prob_b) nogil:
+                    int[::1] sum_b, vector[double] &prob_b,
+                    map[int, map[int, int]] &search_lower) nogil:
 
     cdef int n_proc = all_timestamps.size()
     cdef int a
 
+    printf("[logger]\t Learning mu.\n")
     for a in range(n_proc):
         update_mu_rate(a, all_timestamps[a], curr_state[a],
                        num_background[a], mu_rates)
+    printf("[logger]\t Learning beta.\n")
+    for a in range(n_proc):
         update_beta_rate(a, all_timestamps, curr_state, Alpha_ba, alpha_prior,
                          sum_b, beta_rates)
+        search_lower[a].clear()
 
+    printf("[logger]\t Sampling Alpha.\n")
     for a in range(n_proc):
         sample_alpha(a, all_timestamps, curr_state[a], num_background,
                      Alpha_ba, sum_b, mu_rates, beta_rates, alpha_prior,
-                     prob_b)
+                     prob_b, search_lower)
 
 
 cdef int cfit(map[int, vector[double]] &all_timestamps,
@@ -283,13 +331,14 @@ cdef int cfit(map[int, vector[double]] &all_timestamps,
               double[::1] mu_rates, double[::1] beta_rates,
               map[int, map[int, int]] &Alpha_ba, double alpha_prior,
               int[::1] sum_b, vector[double] &prob_b,
+              map[int, map[int, int]] &search_lower,
               double[::1] mu_rates_final, double[::1] beta_rates_final,
               map[int, map[int, int]] &Alpha_ba_final, int n_iter,
               int burn_in) nogil:
 
     printf("[logger] Sampler is starting\n")
-    printf("[logger] \tn_proc=%ld\n", mu_rates.shape[0])
-    printf("[logger] \talpha_prior=%lf\n", alpha_prior)
+    printf("[logger]\t n_proc=%ld\n", mu_rates.shape[0])
+    printf("[logger]\t alpha_prior=%lf\n", alpha_prior)
     printf("\n")
 
     cdef int iteration, b, a
@@ -297,8 +346,10 @@ cdef int cfit(map[int, vector[double]] &all_timestamps,
     for iteration in range(n_iter):
         printf("[logger] Iter=%d. Sampling...\n", iteration)
         sampleone(all_timestamps, curr_state, num_background, mu_rates,
-                  beta_rates, Alpha_ba, alpha_prior, sum_b, prob_b)
+                  beta_rates, Alpha_ba, alpha_prior, sum_b, prob_b,
+                  search_lower)
         if iteration >= burn_in:
+            printf("[logger]\t Averaging after burn in...\n")
             num_good += 1
             for b in range(mu_rates.shape[0]):
                 mu_rates_final[b] += mu_rates[b]
@@ -313,6 +364,7 @@ cdef int cfit(map[int, vector[double]] &all_timestamps,
                     if Alpha_ba_final[b].count(a) == 0:
                         Alpha_ba_final[b][a] = 0
                     Alpha_ba_final[b][a] += Alpha_ba[b][a]
+        printf("[logger] Iter done!\n")
     return num_good
 
 def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in):
@@ -322,12 +374,14 @@ def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in):
     cdef map[int, vector[int]] curr_state
     cdef map[int, map[int, int]] Alpha_ba
     cdef map[int, vector[double]] all_timestamps_map
+    cdef map[int, map[int, int]] search_lower
 
     cdef int[::1] sum_b = np.zeros(n_proc, dtype='i', order='C')
     cdef int[::1] num_background = np.zeros(n_proc, dtype='i', order='C')
 
     cdef int a, b
     for a in range(n_proc):
+        search_lower[a] = map[int, int]()
         all_timestamps_map[a] = all_timestamps[a]
         curr_state[a] = np.random.randint(-1, n_proc, len(all_timestamps[a]))
         for b in curr_state[a]:
@@ -351,8 +405,8 @@ def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in):
 
     cdef int n_good = cfit(all_timestamps_map, curr_state, num_background,
                            mu_rates, beta_rates, Alpha_ba, alpha_prior,
-                           sum_b, prob_b, mu_rates_final, beta_rates_final,
-                           Alpha_ba_final, n_iter, burn_in)
+                           sum_b, prob_b, search_lower, mu_rates_final,
+                           beta_rates_final, Alpha_ba_final, n_iter, burn_in)
 
     return Alpha_ba_final, np.asarray(mu_rates_final), \
         np.asarray(beta_rates_final), np.asarray(num_background), curr_state, \

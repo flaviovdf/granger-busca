@@ -36,8 +36,15 @@ class GrangerBusca(object):
 
     def fit(self, timestamps):
         self._init_timestamps(timestamps)
+
+        import cProfile
+        pr = cProfile.Profile()
+        pr.enable()
+
         self.Alpha_, self.mu_, self.beta_, self.back_, self.curr_state_, n = \
             fit(self.timestamps, self.alpha_p, self.num_iter, self.burn_in)
+
+        pr.dump_stats('profile.pstats')
 
         vals = []
         rows = []
@@ -48,8 +55,5 @@ class GrangerBusca(object):
                 cols.append(col)
                 vals.append(self.Alpha_[row][col] / n)
         self.Alpha_ = sp.csr_matrix((vals, (rows, cols)), dtype='i')
-        #from sklearn.preprocessing import normalize
-        #self.Alpha_ = normalize(self.Alpha_, norm='l1', axis=1)
-
         self.mu_ = self.mu_ / n
         self.beta_ = self.beta_ / n
