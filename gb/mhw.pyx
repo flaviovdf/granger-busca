@@ -116,14 +116,13 @@ cdef inline double find_previous(vector[double] &timestamps, double t,
     '''
 
     cdef int tp_idx = searchsorted(timestamps, t, lower, 1)
+
+    if tp_idx == lower - 1: # t is less than all timestamps, fall back to lower
+        tp_idx = lower
     store_idx[0] = tp_idx
-    if tp_idx == -1:
-        tp_idx = 0
+
     cdef double tp = timestamps[tp_idx]
-    # while tp >= t and tp_idx >= 0:
-    #      tp_idx -= 1
-    #      tp = timestamps[tp_idx]
-    if tp >= t:
+    if tp >= t: # can occur when no timestamp < t exists and lower == 0.
         tp = 0
     return tp
 
