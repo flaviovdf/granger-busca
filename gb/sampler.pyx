@@ -366,14 +366,11 @@ cdef int cfit(map[int, vector[double]] &all_timestamps,
         printf("[logger] Iter done!\n")
     return num_good
 
-def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in):
-
-    cdef int n_proc = len(all_timestamps)
+def fit(double[::1] all_timestamps, int[::1] processes, int n_proc,
+        double alpha_prior, int n_iter, int burn_in):
 
     cdef map[int, vector[int]] curr_state
     cdef map[int, map[int, int]] Alpha_ba
-    cdef map[int, vector[double]] all_timestamps_map
-    cdef map[int, map[int, int]] search_lower
 
     cdef int[::1] sum_b = np.zeros(n_proc, dtype='i', order='C')
     cdef int[::1] num_background = np.zeros(n_proc, dtype='i', order='C')

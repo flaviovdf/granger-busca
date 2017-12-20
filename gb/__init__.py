@@ -18,17 +18,23 @@ class GrangerBusca(object):
         max_all = 0
         copy_of_timestamps = {}
         n_proc = len(timestamps)
+        time_and_proc = []
         for i in range(n_proc):
             assert (np.asanyarray(timestamps[i]) >= 0).all()
             min_all = min(min_all, np.min(timestamps[i]))
             max_all = max(max_all, np.max(timestamps[i]))
-            tis = np.sort(timestamps[i])
-            copy_of_timestamps[i] = np.asanyarray(tis, dtype='d', order='C')
+            time_and_proc.append((timestamps[i], i))
 
-        timestamps = copy_of_timestamps
+        timestamps = np.asanyarray(len(time_and_proc), dtype='d', order='C')
+        proc_ids = np.asanyarray(len(time_and_proc), dtype='i', order='C')
+        i = 0
+        for t, p in sorted(time_and_proc):
+            timestamps[i] = t
+            proc_ids[i] = p
+            i += 1
+
         max_all -= min_all
-        for i in range(n_proc):
-            timestamps[i] -= min_all
+        timestamps -= min_all
 
         self.n_proc = n_proc
         self.timestamps = timestamps
@@ -37,14 +43,8 @@ class GrangerBusca(object):
     def fit(self, timestamps):
         self._init_timestamps(timestamps)
 
-        import cProfile
-        pr = cProfile.Profile()
-        pr.enable()
-
         self.Alpha_, self.mu_, self.beta_, self.back_, self.curr_state_, n = \
             fit(self.timestamps, self.alpha_p, self.num_iter, self.burn_in)
-
-        pr.dump_stats('profile.pstats')
 
         vals = []
         rows = []

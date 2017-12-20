@@ -51,12 +51,14 @@ cdef class FPTree:
         self.values[0] = t_pos
 
     cdef double get_value(self, int i) nogil:
-        assert(i + self.values[0] < self.values[0] + self.size)
+        cdef int t_pos = <int> self.values[0]
+        assert(i + t_pos < t_pos + self.size)
         return self.values[i + self.values[0]]
 
     cdef void set_value(int i, double value) nogil:
-        assert(i + self.values[0] < self.values[0] + self.size)
-        cdef int pos = i + self.values[0]
+        cdef int t_pos = <int> self.values[0]
+        assert(i + t_pos < t_pos + self.size)
+        cdef int pos = i + t_pos
 		value -= self.values[pos]
 		while pos > 0:
 			self.values[pos] += value;
@@ -64,13 +66,14 @@ cdef class FPTree:
 
     cdef int sample(double urnd):
         # urnd: uniformly random number between [0,1]
+        cdef int t_pos = <int> self.values[0]
 		cdef int pos = 1
-        while pos < self.values[0]:
+        while pos < t_pos:
             pos <<= 1
             if urnd >= val[pos]:
                 urnd -= val[pos]
                 pos += 1
-		return pos - self.values[0];
+		return pos - t_pos;
 
     cdef double get_total() nogil:
         return self.values[1]
