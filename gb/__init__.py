@@ -16,7 +16,6 @@ class GrangerBusca(object):
     def _init_timestamps(self, timestamps):
         min_all = np.float('inf')
         max_all = 0
-        copy_of_timestamps = {}
         n_proc = len(timestamps)
         time_and_proc = []
         for i in range(n_proc):
