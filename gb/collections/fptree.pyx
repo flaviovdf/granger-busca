@@ -33,47 +33,40 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 from libcpp.vector cimport vector
 
 
-cdef extern from 'assert.h':
-    void assert(int) nogil
-
-
 cdef class FPTree:
 
-    cdef reset(int size, double init_value=0.0) nogil:
-        assert(size > 0)
+    def __cinit__(self, int size, double init_value=0.0):
         self.size = size
-	    t_pos = 1
-        while self.t_pos < size:
+        cdef int t_pos = 1
+        while t_pos < size:
             t_pos *= 2
-        self.values.assign(2 * self.t_pos, init_value)
+        self.values.assign(2 * t_pos, init_value)
         # values[0] == T --> where the probabilities start
         # values[1] will be the root of the FPTree
         self.values[0] = t_pos
 
     cdef double get_value(self, int i) nogil:
         cdef int t_pos = <int> self.values[0]
-        assert(i + t_pos < t_pos + self.size)
-        return self.values[i + self.values[0]]
+        return self.values[i + t_pos]
 
-    cdef void set_value(int i, double value) nogil:
+    cdef void set_value(self, int i, double value) nogil:
         cdef int t_pos = <int> self.values[0]
-        assert(i + t_pos < t_pos + self.size)
         cdef int pos = i + t_pos
-		value -= self.values[pos]
-		while pos > 0:
-			self.values[pos] += value;
-			i >>= 1
+        value -= self.values[pos]
+        while pos > 0:
+            self.values[pos] += value
+            i >>= 1
 
-    cdef int sample(double urnd):
+    cdef int sample(self, double urnd) nogil:
         # urnd: uniformly random number between [0,1]
         cdef int t_pos = <int> self.values[0]
-		cdef int pos = 1
+        cdef int pos = 1
         while pos < t_pos:
             pos <<= 1
-            if urnd >= val[pos]:
-                urnd -= val[pos]
+            if urnd >= self.values[pos]:
+                urnd -= self.values[pos]
                 pos += 1
-		return pos - t_pos;
+        return pos - t_pos
 
-    cdef double get_total() nogil:
+    cdef double get_total(self) nogil:
         return self.values[1]
