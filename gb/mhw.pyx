@@ -168,53 +168,60 @@ cdef void sample_alpha(int i, double[::1] timestamps, int[::1] process_id,
     prev_back_t = prev_back_t_aux
 
 
-cdef void update_mu_rate(int proc_a, vector[double] &timestamps_proc_a,
-                         vector[int] &curr_state_proc_a,
+cdef void update_mu_rate(double[::1] last_t_background,
                          double count_background, double[::1] mu_rates) nogil:
-    cdef int n_events = timestamps_proc_a.size()
-    cdef double T = timestamps_proc_a[n_events-1]
-    cdef double rate
-    if T == 0:
-        rate = 0
-    else:
-        rate = count_background / T
-    mu_rates[proc_a] = rate
+
+    cdef int a
+    for a in range(last_t_background.shape[0]):
+        if last_t_background[a] <= 0:
+            mu_rates[a] = 0
+        else:
+            mu_rates[a] = count_background[a] / last_t_background[a]
 
 
-cdef void update_beta_rate(int proc_a,
-                           map[int, vector[double]] &all_timestamps,
-                           map[int, vector[int]] &curr_state_all,
+cdef void update_beta_rate(double[::1] timestamps, int[::1] process_id,
+                           int[::1] curr_state, double[::1] last_t,
                            map[int, map[int, int]] &Alpha_ab,
                            double alpha_prior, int[::1] sum_b,
                            double[::1] beta_rates) nogil:
 
-    cdef vector[double] all_deltas
+    cdef map[int, vector[double]] all_deltas
     cdef int n_proc = beta_rates.shape[0]
-    cdef int proc_b, i, lower, store_idx
-    cdef double ti, tp
-    cdef double max_ti = 0
-    cdef int n_elements = 0
-    for proc_b in range(n_proc):
-        lower = 0
-        for i in range(<int>all_timestamps[proc_b].size()):
-            if curr_state_all[proc_b][i] == proc_a:
-                ti = all_timestamps[proc_b][i]
-                if ti > max_ti:
-                    max_ti = ti
-                tp = find_previous(all_timestamps[proc_a], ti, lower,
-                                   &store_idx)
-                lower = store_idx
-                all_deltas.push_back(ti - tp)
-                n_elements += 1
+    cdef int proc_a, proc_b, i
+    cdef double t, dt
 
-    if n_elements >= 1:
-        stdsort(all_deltas.begin(), all_deltas.end())
-        beta_rates[proc_a] = all_deltas[all_deltas.size() // 2]
-        if n_elements % 2 == 0:
-            beta_rates[proc_a] += all_deltas[(all_deltas.size() // 2)-1]
-            beta_rates[proc_a] = beta_rates[proc_a] / 2
-    else:
-        beta_rates[proc_a] = max_ti
+    for proc_a in range(last_t.shape[0]):
+        last_t[proc_a] = -1
+
+    for i in range(timestamps.shape[0]):
+        t = timestamps[i]
+        proc_a = process_id[i]
+        proc_b = curr_state[i]
+        if proc_b == -1:
+            continue
+
+        dt = 0
+        if last_t[proc_b] == -1:
+            dt = t
+        else:
+            dt = t - last_t[proc_b]
+
+        if all_deltas.count(proc_a) == 0:
+            all_deltas[proc_a] = vector[double]()
+        all_deltas[proc_a].push_back(dt)
+        last_t[proc_a] = t
+
+    cdef int n
+    for proc_a in all_deltas:
+        n = all_deltas[proc_a]
+        if n >= 1:
+            stdsort(all_deltas[proc_a].begin(), all_deltas[proc_a].end())
+            beta_rates[proc_a] = all_deltas[proc_a][n // 2]
+            if n_elements % 2 == 0:
+                beta_rates[proc_a] += all_deltas[proc_a][(n // 2)-1]
+                beta_rates[proc_a] = beta_rates[proc_a] / 2
+        else:
+            beta_rates[proc_a] = timestamps[timestamps.shape[0] - 1]
 
 
 cdef void sampleone(double[::1] timestamps, int[::1] process_id,
@@ -235,13 +242,14 @@ cdef void sampleone(double[::1] timestamps, int[::1] process_id,
     printf("[logger]\t Sampling Alpha.\n")
     cdef int i, a, b
 
-    cdef map[int, map[int, double]] prev_dt
     for i in range(timestamps.shape[0]):
         a = process_id[i]
         sample_alpha(t, a, curr_state, num_background, Alpha_ab, sum_b,
                      mu_rates, beta_rates, alpha_prior, fptrees[a],
                      last_t, last_t_background[a])
-        last_t[a] = timestamps[i]
+        if curr_state[i] == -1:
+            last_t_background[i] = t
+        last_t[a] = t
 
 
 cdef int cfit(double[::1] timestamps, int[::1] process_id, int[::1] curr_state,
