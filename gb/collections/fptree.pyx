@@ -35,15 +35,24 @@ from libcpp.vector cimport vector
 
 cdef class FPTree:
 
-    def __cinit__(self, int size, double init_value=0.0):
+    def __cinit__(self, int size):
         self.size = size
         cdef int t_pos = 1
         while t_pos < size:
             t_pos *= 2
-        self.values.assign(2 * t_pos, init_value)
+        cdef double init_val = 0.0
+        self.values.resize(2 * t_pos)
+        cdef int i
+        for i in range(1, <int>self.values.size()):
+            self.values[i] = 0.0
         # values[0] == T --> where the probabilities start
         # values[1] will be the root of the FPTree
         self.values[0] = t_pos
+
+    cdef void reset(self) nogil:
+        cdef int i
+        for i in range(1, <int>self.values.size()):
+            self.values[i] = 0.0
 
     cdef double get_value(self, int i) nogil:
         cdef int t_pos = <int> self.values[0]
