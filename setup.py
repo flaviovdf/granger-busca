@@ -4,17 +4,11 @@
 import glob
 import numpy
 import os
-import platform
 import sys
 
 from distutils.core import setup
 from distutils.extension import Extension
 from Cython.Distutils import build_ext
-
-
-if platform.system() == 'Darwin':
-    os.environ["CC"] = "gcc-7"
-    os.environ["CXX"] = "gcc-7"
 
 
 SOURCE = '.'
@@ -74,11 +68,8 @@ def get_extensions():
             extension = Extension(module, ext_files,
                                   include_dirs=include_dirs,
                                   language='c++',
-                                  # define_macros=[('CYTHON_TRACE_NOGIL', '1')],
                                   extra_compile_args=['-msse', '-msse2',
-                                                      '-mfpmath=sse',
-                                                      '-fopenmp'],
-                                  extra_link_args=['-fopenmp'])
+                                                      '-mfpmath=sse'])
 
             extensions.append(extension)
 
