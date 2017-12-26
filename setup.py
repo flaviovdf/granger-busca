@@ -69,7 +69,9 @@ def get_extensions():
                                   include_dirs=include_dirs,
                                   language='c++',
                                   extra_compile_args=['-msse', '-msse2',
-                                                      '-mfpmath=sse'])
+                                                      '-mfpmath=sse',
+                                                      '-stdlib=libc++',
+                                                      '-mmacosx-version-min=10.7'])
 
             extensions.append(extension)
 

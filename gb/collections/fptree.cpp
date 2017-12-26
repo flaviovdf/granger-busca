@@ -675,6 +675,7 @@ struct __pyx_obj_2gb_11collections_6fptree_FPTree {
 
 struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree {
   void (*reset)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *);
+  void (*_build)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, int);
   void (*set_value)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, int, double);
   double (*get_value)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, int);
   int (*sample)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, double);
@@ -777,6 +778,40 @@ static int __Pyx_ParseOptionalKeywords(PyObject *kwds, PyObject **argnames[],\
 static void __Pyx_RaiseArgtupleInvalid(const char* func_name, int exact,
     Py_ssize_t num_min, Py_ssize_t num_max, Py_ssize_t num_found);
 
+/* ForceInitThreads.proto */
+#ifndef __PYX_FORCE_INIT_THREADS
+  #define __PYX_FORCE_INIT_THREADS 0
+#endif
+
+/* PyThreadStateGet.proto */
+#if CYTHON_FAST_THREAD_STATE
+#define __Pyx_PyThreadState_declare  PyThreadState *__pyx_tstate;
+#define __Pyx_PyThreadState_assign  __pyx_tstate = PyThreadState_GET();
+#else
+#define __Pyx_PyThreadState_declare
+#define __Pyx_PyThreadState_assign
+#endif
+
+/* PyErrFetchRestore.proto */
+#if CYTHON_FAST_THREAD_STATE
+#define __Pyx_ErrRestoreWithState(type, value, tb)  __Pyx_ErrRestoreInState(PyThreadState_GET(), type, value, tb)
+#define __Pyx_ErrFetchWithState(type, value, tb)    __Pyx_ErrFetchInState(PyThreadState_GET(), type, value, tb)
+#define __Pyx_ErrRestore(type, value, tb)  __Pyx_ErrRestoreInState(__pyx_tstate, type, value, tb)
+#define __Pyx_ErrFetch(type, value, tb)    __Pyx_ErrFetchInState(__pyx_tstate, type, value, tb)
+static CYTHON_INLINE void __Pyx_ErrRestoreInState(PyThreadState *tstate, PyObject *type, PyObject *value, PyObject *tb);
+static CYTHON_INLINE void __Pyx_ErrFetchInState(PyThreadState *tstate, PyObject **type, PyObject **value, PyObject **tb);
+#else
+#define __Pyx_ErrRestoreWithState(type, value, tb)  PyErr_Restore(type, value, tb)
+#define __Pyx_ErrFetchWithState(type, value, tb)  PyErr_Fetch(type, value, tb)
+#define __Pyx_ErrRestore(type, value, tb)  PyErr_Restore(type, value, tb)
+#define __Pyx_ErrFetch(type, value, tb)  PyErr_Fetch(type, value, tb)
+#endif
+
+/* WriteUnraisableException.proto */
+static void __Pyx_WriteUnraisable(const char *name, int clineno,
+                                  int lineno, const char *filename,
+                                  int full_traceback, int nogil);
+
 /* SetVTable.proto */
 static int __Pyx_SetVtable(PyObject *dict, void *vtable);
 
@@ -862,6 +897,7 @@ static int __Pyx_check_binary_version(void);
 /* InitStrings.proto */
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
+static void __pyx_f_2gb_11collections_6fptree_6FPTree__build(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, int __pyx_v_size); /* proto*/
 static void __pyx_f_2gb_11collections_6fptree_6FPTree_reset(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self); /* proto*/
 static double __pyx_f_2gb_11collections_6fptree_6FPTree_get_value(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, int __pyx_v_i); /* proto*/
 static void __pyx_f_2gb_11collections_6fptree_6FPTree_set_value(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, int __pyx_v_i, double __pyx_v_value); /* proto*/
@@ -889,14 +925,15 @@ static PyObject *__pyx_n_s_range;
 static PyObject *__pyx_n_s_size;
 static PyObject *__pyx_n_s_test;
 static int __pyx_pf_2gb_11collections_6fptree_6FPTree___cinit__(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, int __pyx_v_size); /* proto */
+static int __pyx_pf_2gb_11collections_6fptree_6FPTree_2__init__(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, int __pyx_v_size); /* proto */
 static PyObject *__pyx_tp_new_2gb_11collections_6fptree_FPTree(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 
 /* "gb/collections/fptree.pyx":38
  * cdef class FPTree:
  * 
  *     def __cinit__(self, int size):             # <<<<<<<<<<<<<<
- *         self.size = size
- *         cdef int t_pos = 1
+ *         self._build(size)
+ * 
  */
 
 /* Python wrapper */
@@ -949,27 +986,145 @@ static int __pyx_pw_2gb_11collections_6fptree_6FPTree_1__cinit__(PyObject *__pyx
 }
 
 static int __pyx_pf_2gb_11collections_6fptree_6FPTree___cinit__(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, int __pyx_v_size) {
-  int __pyx_v_t_pos;
-  CYTHON_UNUSED double __pyx_v_init_val;
-  int __pyx_v_i;
   int __pyx_r;
   __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
-  int __pyx_t_2;
-  int __pyx_t_3;
   __Pyx_RefNannySetupContext("__cinit__", 0);
 
   /* "gb/collections/fptree.pyx":39
  * 
  *     def __cinit__(self, int size):
+ *         self._build(size)             # <<<<<<<<<<<<<<
+ * 
+ *     def __init__(self, int size):
+ */
+  ((struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *)__pyx_v_self->__pyx_vtab)->_build(__pyx_v_self, __pyx_v_size);
+
+  /* "gb/collections/fptree.pyx":38
+ * cdef class FPTree:
+ * 
+ *     def __cinit__(self, int size):             # <<<<<<<<<<<<<<
+ *         self._build(size)
+ * 
+ */
+
+  /* function exit code */
+  __pyx_r = 0;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "gb/collections/fptree.pyx":41
+ *         self._build(size)
+ * 
+ *     def __init__(self, int size):             # <<<<<<<<<<<<<<
+ *         self._build(size)
+ * 
+ */
+
+/* Python wrapper */
+static int __pyx_pw_2gb_11collections_6fptree_6FPTree_3__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static int __pyx_pw_2gb_11collections_6fptree_6FPTree_3__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  int __pyx_v_size;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__init__ (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_size,0};
+    PyObject* values[1] = {0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_size)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 41, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 1) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+    }
+    __pyx_v_size = __Pyx_PyInt_As_int(values[0]); if (unlikely((__pyx_v_size == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 41, __pyx_L3_error)
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("__init__", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 41, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("gb.collections.fptree.FPTree.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return -1;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_2gb_11collections_6fptree_6FPTree_2__init__(((struct __pyx_obj_2gb_11collections_6fptree_FPTree *)__pyx_v_self), __pyx_v_size);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_2gb_11collections_6fptree_6FPTree_2__init__(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, int __pyx_v_size) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__init__", 0);
+
+  /* "gb/collections/fptree.pyx":42
+ * 
+ *     def __init__(self, int size):
+ *         self._build(size)             # <<<<<<<<<<<<<<
+ * 
+ *     cdef void _build(self, int size) nogil:
+ */
+  ((struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *)__pyx_v_self->__pyx_vtab)->_build(__pyx_v_self, __pyx_v_size);
+
+  /* "gb/collections/fptree.pyx":41
+ *         self._build(size)
+ * 
+ *     def __init__(self, int size):             # <<<<<<<<<<<<<<
+ *         self._build(size)
+ * 
+ */
+
+  /* function exit code */
+  __pyx_r = 0;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "gb/collections/fptree.pyx":44
+ *         self._build(size)
+ * 
+ *     cdef void _build(self, int size) nogil:             # <<<<<<<<<<<<<<
+ *         self.size = size
+ *         cdef int t_pos = 1
+ */
+
+static void __pyx_f_2gb_11collections_6fptree_6FPTree__build(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, int __pyx_v_size) {
+  int __pyx_v_t_pos;
+  CYTHON_UNUSED double __pyx_v_init_val;
+  int __pyx_v_i;
+  int __pyx_t_1;
+  int __pyx_t_2;
+  int __pyx_t_3;
+
+  /* "gb/collections/fptree.pyx":45
+ * 
+ *     cdef void _build(self, int size) nogil:
  *         self.size = size             # <<<<<<<<<<<<<<
  *         cdef int t_pos = 1
  *         while t_pos < size:
  */
   __pyx_v_self->size = __pyx_v_size;
 
-  /* "gb/collections/fptree.pyx":40
- *     def __cinit__(self, int size):
+  /* "gb/collections/fptree.pyx":46
+ *     cdef void _build(self, int size) nogil:
  *         self.size = size
  *         cdef int t_pos = 1             # <<<<<<<<<<<<<<
  *         while t_pos < size:
@@ -977,7 +1132,7 @@ static int __pyx_pf_2gb_11collections_6fptree_6FPTree___cinit__(struct __pyx_obj
  */
   __pyx_v_t_pos = 1;
 
-  /* "gb/collections/fptree.pyx":41
+  /* "gb/collections/fptree.pyx":47
  *         self.size = size
  *         cdef int t_pos = 1
  *         while t_pos < size:             # <<<<<<<<<<<<<<
@@ -988,7 +1143,7 @@ static int __pyx_pf_2gb_11collections_6fptree_6FPTree___cinit__(struct __pyx_obj
     __pyx_t_1 = ((__pyx_v_t_pos < __pyx_v_size) != 0);
     if (!__pyx_t_1) break;
 
-    /* "gb/collections/fptree.pyx":42
+    /* "gb/collections/fptree.pyx":48
  *         cdef int t_pos = 1
  *         while t_pos < size:
  *             t_pos *= 2             # <<<<<<<<<<<<<<
@@ -998,7 +1153,7 @@ static int __pyx_pf_2gb_11collections_6fptree_6FPTree___cinit__(struct __pyx_obj
     __pyx_v_t_pos = (__pyx_v_t_pos * 2);
   }
 
-  /* "gb/collections/fptree.pyx":43
+  /* "gb/collections/fptree.pyx":49
  *         while t_pos < size:
  *             t_pos *= 2
  *         cdef double init_val = 0.0             # <<<<<<<<<<<<<<
@@ -1007,7 +1162,7 @@ static int __pyx_pf_2gb_11collections_6fptree_6FPTree___cinit__(struct __pyx_obj
  */
   __pyx_v_init_val = 0.0;
 
-  /* "gb/collections/fptree.pyx":44
+  /* "gb/collections/fptree.pyx":50
  *             t_pos *= 2
  *         cdef double init_val = 0.0
  *         self.values.resize(2 * t_pos)             # <<<<<<<<<<<<<<
@@ -1017,11 +1172,17 @@ static int __pyx_pf_2gb_11collections_6fptree_6FPTree___cinit__(struct __pyx_obj
   try {
     __pyx_v_self->values.resize((2 * __pyx_v_t_pos));
   } catch(...) {
+    #ifdef WITH_THREAD
+    PyGILState_STATE __pyx_gilstate_save = PyGILState_Ensure();
+    #endif
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(0, 44, __pyx_L1_error)
+    #ifdef WITH_THREAD
+    PyGILState_Release(__pyx_gilstate_save);
+    #endif
+    __PYX_ERR(0, 50, __pyx_L1_error)
   }
 
-  /* "gb/collections/fptree.pyx":46
+  /* "gb/collections/fptree.pyx":52
  *         self.values.resize(2 * t_pos)
  *         cdef int i
  *         for i in range(1, <int>self.values.size()):             # <<<<<<<<<<<<<<
@@ -1032,7 +1193,7 @@ static int __pyx_pf_2gb_11collections_6fptree_6FPTree___cinit__(struct __pyx_obj
   for (__pyx_t_3 = 1; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "gb/collections/fptree.pyx":47
+    /* "gb/collections/fptree.pyx":53
  *         cdef int i
  *         for i in range(1, <int>self.values.size()):
  *             self.values[i] = 0.0             # <<<<<<<<<<<<<<
@@ -1042,7 +1203,7 @@ static int __pyx_pf_2gb_11collections_6fptree_6FPTree___cinit__(struct __pyx_obj
     (__pyx_v_self->values[__pyx_v_i]) = 0.0;
   }
 
-  /* "gb/collections/fptree.pyx":50
+  /* "gb/collections/fptree.pyx":56
  *         # values[0] == T --> where the probabilities start
  *         # values[1] will be the root of the FPTree
  *         self.values[0] = t_pos             # <<<<<<<<<<<<<<
@@ -1051,26 +1212,22 @@ static int __pyx_pf_2gb_11collections_6fptree_6FPTree___cinit__(struct __pyx_obj
  */
   (__pyx_v_self->values[0]) = __pyx_v_t_pos;
 
-  /* "gb/collections/fptree.pyx":38
- * cdef class FPTree:
+  /* "gb/collections/fptree.pyx":44
+ *         self._build(size)
  * 
- *     def __cinit__(self, int size):             # <<<<<<<<<<<<<<
+ *     cdef void _build(self, int size) nogil:             # <<<<<<<<<<<<<<
  *         self.size = size
  *         cdef int t_pos = 1
  */
 
   /* function exit code */
-  __pyx_r = 0;
   goto __pyx_L0;
   __pyx_L1_error:;
-  __Pyx_AddTraceback("gb.collections.fptree.FPTree.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = -1;
+  __Pyx_WriteUnraisable("gb.collections.fptree.FPTree._build", __pyx_clineno, __pyx_lineno, __pyx_filename, 0, 1);
   __pyx_L0:;
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
 }
 
-/* "gb/collections/fptree.pyx":52
+/* "gb/collections/fptree.pyx":58
  *         self.values[0] = t_pos
  * 
  *     cdef void reset(self) nogil:             # <<<<<<<<<<<<<<
@@ -1083,7 +1240,7 @@ static void __pyx_f_2gb_11collections_6fptree_6FPTree_reset(struct __pyx_obj_2gb
   int __pyx_t_1;
   int __pyx_t_2;
 
-  /* "gb/collections/fptree.pyx":54
+  /* "gb/collections/fptree.pyx":60
  *     cdef void reset(self) nogil:
  *         cdef int i
  *         for i in range(1, <int>self.values.size()):             # <<<<<<<<<<<<<<
@@ -1094,7 +1251,7 @@ static void __pyx_f_2gb_11collections_6fptree_6FPTree_reset(struct __pyx_obj_2gb
   for (__pyx_t_2 = 1; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
     __pyx_v_i = __pyx_t_2;
 
-    /* "gb/collections/fptree.pyx":55
+    /* "gb/collections/fptree.pyx":61
  *         cdef int i
  *         for i in range(1, <int>self.values.size()):
  *             self.values[i] = 0.0             # <<<<<<<<<<<<<<
@@ -1104,7 +1261,7 @@ static void __pyx_f_2gb_11collections_6fptree_6FPTree_reset(struct __pyx_obj_2gb
     (__pyx_v_self->values[__pyx_v_i]) = 0.0;
   }
 
-  /* "gb/collections/fptree.pyx":52
+  /* "gb/collections/fptree.pyx":58
  *         self.values[0] = t_pos
  * 
  *     cdef void reset(self) nogil:             # <<<<<<<<<<<<<<
@@ -1115,11 +1272,11 @@ static void __pyx_f_2gb_11collections_6fptree_6FPTree_reset(struct __pyx_obj_2gb
   /* function exit code */
 }
 
-/* "gb/collections/fptree.pyx":57
+/* "gb/collections/fptree.pyx":63
  *             self.values[i] = 0.0
  * 
  *     cdef double get_value(self, int i) nogil:             # <<<<<<<<<<<<<<
- *         cdef int t_pos = <int> self.values[0]
+ *         cdef int t_pos = <int>self.values[0]
  *         return self.values[i + t_pos]
  */
 
@@ -1127,18 +1284,18 @@ static double __pyx_f_2gb_11collections_6fptree_6FPTree_get_value(struct __pyx_o
   int __pyx_v_t_pos;
   double __pyx_r;
 
-  /* "gb/collections/fptree.pyx":58
+  /* "gb/collections/fptree.pyx":64
  * 
  *     cdef double get_value(self, int i) nogil:
- *         cdef int t_pos = <int> self.values[0]             # <<<<<<<<<<<<<<
+ *         cdef int t_pos = <int>self.values[0]             # <<<<<<<<<<<<<<
  *         return self.values[i + t_pos]
  * 
  */
   __pyx_v_t_pos = ((int)(__pyx_v_self->values[0]));
 
-  /* "gb/collections/fptree.pyx":59
+  /* "gb/collections/fptree.pyx":65
  *     cdef double get_value(self, int i) nogil:
- *         cdef int t_pos = <int> self.values[0]
+ *         cdef int t_pos = <int>self.values[0]
  *         return self.values[i + t_pos]             # <<<<<<<<<<<<<<
  * 
  *     cdef void set_value(self, int i, double value) nogil:
@@ -1146,11 +1303,11 @@ static double __pyx_f_2gb_11collections_6fptree_6FPTree_get_value(struct __pyx_o
   __pyx_r = (__pyx_v_self->values[(__pyx_v_i + __pyx_v_t_pos)]);
   goto __pyx_L0;
 
-  /* "gb/collections/fptree.pyx":57
+  /* "gb/collections/fptree.pyx":63
  *             self.values[i] = 0.0
  * 
  *     cdef double get_value(self, int i) nogil:             # <<<<<<<<<<<<<<
- *         cdef int t_pos = <int> self.values[0]
+ *         cdef int t_pos = <int>self.values[0]
  *         return self.values[i + t_pos]
  */
 
@@ -1159,11 +1316,11 @@ static double __pyx_f_2gb_11collections_6fptree_6FPTree_get_value(struct __pyx_o
   return __pyx_r;
 }
 
-/* "gb/collections/fptree.pyx":61
+/* "gb/collections/fptree.pyx":67
  *         return self.values[i + t_pos]
  * 
  *     cdef void set_value(self, int i, double value) nogil:             # <<<<<<<<<<<<<<
- *         cdef int t_pos = <int> self.values[0]
+ *         cdef int t_pos = <int>self.values[0]
  *         cdef int pos = i + t_pos
  */
 
@@ -1173,26 +1330,26 @@ static void __pyx_f_2gb_11collections_6fptree_6FPTree_set_value(struct __pyx_obj
   int __pyx_t_1;
   int __pyx_t_2;
 
-  /* "gb/collections/fptree.pyx":62
+  /* "gb/collections/fptree.pyx":68
  * 
  *     cdef void set_value(self, int i, double value) nogil:
- *         cdef int t_pos = <int> self.values[0]             # <<<<<<<<<<<<<<
+ *         cdef int t_pos = <int>self.values[0]             # <<<<<<<<<<<<<<
  *         cdef int pos = i + t_pos
  *         value -= self.values[pos]
  */
   __pyx_v_t_pos = ((int)(__pyx_v_self->values[0]));
 
-  /* "gb/collections/fptree.pyx":63
+  /* "gb/collections/fptree.pyx":69
  *     cdef void set_value(self, int i, double value) nogil:
- *         cdef int t_pos = <int> self.values[0]
+ *         cdef int t_pos = <int>self.values[0]
  *         cdef int pos = i + t_pos             # <<<<<<<<<<<<<<
  *         value -= self.values[pos]
  *         while pos > 0:
  */
   __pyx_v_pos = (__pyx_v_i + __pyx_v_t_pos);
 
-  /* "gb/collections/fptree.pyx":64
- *         cdef int t_pos = <int> self.values[0]
+  /* "gb/collections/fptree.pyx":70
+ *         cdef int t_pos = <int>self.values[0]
  *         cdef int pos = i + t_pos
  *         value -= self.values[pos]             # <<<<<<<<<<<<<<
  *         while pos > 0:
@@ -1200,50 +1357,50 @@ static void __pyx_f_2gb_11collections_6fptree_6FPTree_set_value(struct __pyx_obj
  */
   __pyx_v_value = (__pyx_v_value - (__pyx_v_self->values[__pyx_v_pos]));
 
-  /* "gb/collections/fptree.pyx":65
+  /* "gb/collections/fptree.pyx":71
  *         cdef int pos = i + t_pos
  *         value -= self.values[pos]
  *         while pos > 0:             # <<<<<<<<<<<<<<
  *             self.values[pos] += value
- *             i >>= 1
+ *             pos >>= 1
  */
   while (1) {
     __pyx_t_1 = ((__pyx_v_pos > 0) != 0);
     if (!__pyx_t_1) break;
 
-    /* "gb/collections/fptree.pyx":66
+    /* "gb/collections/fptree.pyx":72
  *         value -= self.values[pos]
  *         while pos > 0:
  *             self.values[pos] += value             # <<<<<<<<<<<<<<
- *             i >>= 1
+ *             pos >>= 1
  * 
  */
     __pyx_t_2 = __pyx_v_pos;
     (__pyx_v_self->values[__pyx_t_2]) = ((__pyx_v_self->values[__pyx_t_2]) + __pyx_v_value);
 
-    /* "gb/collections/fptree.pyx":67
+    /* "gb/collections/fptree.pyx":73
  *         while pos > 0:
  *             self.values[pos] += value
- *             i >>= 1             # <<<<<<<<<<<<<<
+ *             pos >>= 1             # <<<<<<<<<<<<<<
  * 
  *     cdef int sample(self, double urnd) nogil:
  */
-    __pyx_v_i = (__pyx_v_i >> 1);
+    __pyx_v_pos = (__pyx_v_pos >> 1);
   }
 
-  /* "gb/collections/fptree.pyx":61
+  /* "gb/collections/fptree.pyx":67
  *         return self.values[i + t_pos]
  * 
  *     cdef void set_value(self, int i, double value) nogil:             # <<<<<<<<<<<<<<
- *         cdef int t_pos = <int> self.values[0]
+ *         cdef int t_pos = <int>self.values[0]
  *         cdef int pos = i + t_pos
  */
 
   /* function exit code */
 }
 
-/* "gb/collections/fptree.pyx":69
- *             i >>= 1
+/* "gb/collections/fptree.pyx":75
+ *             pos >>= 1
  * 
  *     cdef int sample(self, double urnd) nogil:             # <<<<<<<<<<<<<<
  *         # urnd: uniformly random number between [0,1]
@@ -1256,7 +1413,7 @@ static int __pyx_f_2gb_11collections_6fptree_6FPTree_sample(struct __pyx_obj_2gb
   int __pyx_r;
   int __pyx_t_1;
 
-  /* "gb/collections/fptree.pyx":71
+  /* "gb/collections/fptree.pyx":77
  *     cdef int sample(self, double urnd) nogil:
  *         # urnd: uniformly random number between [0,1]
  *         cdef int t_pos = <int> self.values[0]             # <<<<<<<<<<<<<<
@@ -1265,7 +1422,7 @@ static int __pyx_f_2gb_11collections_6fptree_6FPTree_sample(struct __pyx_obj_2gb
  */
   __pyx_v_t_pos = ((int)(__pyx_v_self->values[0]));
 
-  /* "gb/collections/fptree.pyx":72
+  /* "gb/collections/fptree.pyx":78
  *         # urnd: uniformly random number between [0,1]
  *         cdef int t_pos = <int> self.values[0]
  *         cdef int pos = 1             # <<<<<<<<<<<<<<
@@ -1274,7 +1431,7 @@ static int __pyx_f_2gb_11collections_6fptree_6FPTree_sample(struct __pyx_obj_2gb
  */
   __pyx_v_pos = 1;
 
-  /* "gb/collections/fptree.pyx":73
+  /* "gb/collections/fptree.pyx":79
  *         cdef int t_pos = <int> self.values[0]
  *         cdef int pos = 1
  *         while pos < t_pos:             # <<<<<<<<<<<<<<
@@ -1285,7 +1442,7 @@ static int __pyx_f_2gb_11collections_6fptree_6FPTree_sample(struct __pyx_obj_2gb
     __pyx_t_1 = ((__pyx_v_pos < __pyx_v_t_pos) != 0);
     if (!__pyx_t_1) break;
 
-    /* "gb/collections/fptree.pyx":74
+    /* "gb/collections/fptree.pyx":80
  *         cdef int pos = 1
  *         while pos < t_pos:
  *             pos <<= 1             # <<<<<<<<<<<<<<
@@ -1294,7 +1451,7 @@ static int __pyx_f_2gb_11collections_6fptree_6FPTree_sample(struct __pyx_obj_2gb
  */
     __pyx_v_pos = (__pyx_v_pos << 1);
 
-    /* "gb/collections/fptree.pyx":75
+    /* "gb/collections/fptree.pyx":81
  *         while pos < t_pos:
  *             pos <<= 1
  *             if urnd >= self.values[pos]:             # <<<<<<<<<<<<<<
@@ -1304,7 +1461,7 @@ static int __pyx_f_2gb_11collections_6fptree_6FPTree_sample(struct __pyx_obj_2gb
     __pyx_t_1 = ((__pyx_v_urnd >= (__pyx_v_self->values[__pyx_v_pos])) != 0);
     if (__pyx_t_1) {
 
-      /* "gb/collections/fptree.pyx":76
+      /* "gb/collections/fptree.pyx":82
  *             pos <<= 1
  *             if urnd >= self.values[pos]:
  *                 urnd -= self.values[pos]             # <<<<<<<<<<<<<<
@@ -1313,7 +1470,7 @@ static int __pyx_f_2gb_11collections_6fptree_6FPTree_sample(struct __pyx_obj_2gb
  */
       __pyx_v_urnd = (__pyx_v_urnd - (__pyx_v_self->values[__pyx_v_pos]));
 
-      /* "gb/collections/fptree.pyx":77
+      /* "gb/collections/fptree.pyx":83
  *             if urnd >= self.values[pos]:
  *                 urnd -= self.values[pos]
  *                 pos += 1             # <<<<<<<<<<<<<<
@@ -1322,7 +1479,7 @@ static int __pyx_f_2gb_11collections_6fptree_6FPTree_sample(struct __pyx_obj_2gb
  */
       __pyx_v_pos = (__pyx_v_pos + 1);
 
-      /* "gb/collections/fptree.pyx":75
+      /* "gb/collections/fptree.pyx":81
  *         while pos < t_pos:
  *             pos <<= 1
  *             if urnd >= self.values[pos]:             # <<<<<<<<<<<<<<
@@ -1332,7 +1489,7 @@ static int __pyx_f_2gb_11collections_6fptree_6FPTree_sample(struct __pyx_obj_2gb
     }
   }
 
-  /* "gb/collections/fptree.pyx":78
+  /* "gb/collections/fptree.pyx":84
  *                 urnd -= self.values[pos]
  *                 pos += 1
  *         return pos - t_pos             # <<<<<<<<<<<<<<
@@ -1342,8 +1499,8 @@ static int __pyx_f_2gb_11collections_6fptree_6FPTree_sample(struct __pyx_obj_2gb
   __pyx_r = (__pyx_v_pos - __pyx_v_t_pos);
   goto __pyx_L0;
 
-  /* "gb/collections/fptree.pyx":69
- *             i >>= 1
+  /* "gb/collections/fptree.pyx":75
+ *             pos >>= 1
  * 
  *     cdef int sample(self, double urnd) nogil:             # <<<<<<<<<<<<<<
  *         # urnd: uniformly random number between [0,1]
@@ -1355,7 +1512,7 @@ static int __pyx_f_2gb_11collections_6fptree_6FPTree_sample(struct __pyx_obj_2gb
   return __pyx_r;
 }
 
-/* "gb/collections/fptree.pyx":80
+/* "gb/collections/fptree.pyx":86
  *         return pos - t_pos
  * 
  *     cdef double get_total(self) nogil:             # <<<<<<<<<<<<<<
@@ -1365,7 +1522,7 @@ static int __pyx_f_2gb_11collections_6fptree_6FPTree_sample(struct __pyx_obj_2gb
 static double __pyx_f_2gb_11collections_6fptree_6FPTree_get_total(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self) {
   double __pyx_r;
 
-  /* "gb/collections/fptree.pyx":81
+  /* "gb/collections/fptree.pyx":87
  * 
  *     cdef double get_total(self) nogil:
  *         return self.values[1]             # <<<<<<<<<<<<<<
@@ -1373,7 +1530,7 @@ static double __pyx_f_2gb_11collections_6fptree_6FPTree_get_total(struct __pyx_o
   __pyx_r = (__pyx_v_self->values[1]);
   goto __pyx_L0;
 
-  /* "gb/collections/fptree.pyx":80
+  /* "gb/collections/fptree.pyx":86
  *         return pos - t_pos
  * 
  *     cdef double get_total(self) nogil:             # <<<<<<<<<<<<<<
@@ -1461,7 +1618,7 @@ static PyTypeObject __pyx_type_2gb_11collections_6fptree_FPTree = {
   0, /*tp_descr_get*/
   0, /*tp_descr_set*/
   0, /*tp_dictoffset*/
-  0, /*tp_init*/
+  __pyx_pw_2gb_11collections_6fptree_6FPTree_3__init__, /*tp_init*/
   0, /*tp_alloc*/
   __pyx_tp_new_2gb_11collections_6fptree_FPTree, /*tp_new*/
   0, /*tp_free*/
@@ -1509,7 +1666,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0, 0, 0, 0}
 };
 static int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 46, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 52, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -1615,6 +1772,7 @@ PyMODINIT_FUNC PyInit_fptree(void)
   /*--- Type init code ---*/
   __pyx_vtabptr_2gb_11collections_6fptree_FPTree = &__pyx_vtable_2gb_11collections_6fptree_FPTree;
   __pyx_vtable_2gb_11collections_6fptree_FPTree.reset = (void (*)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *))__pyx_f_2gb_11collections_6fptree_6FPTree_reset;
+  __pyx_vtable_2gb_11collections_6fptree_FPTree._build = (void (*)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, int))__pyx_f_2gb_11collections_6fptree_6FPTree__build;
   __pyx_vtable_2gb_11collections_6fptree_FPTree.set_value = (void (*)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, int, double))__pyx_f_2gb_11collections_6fptree_6FPTree_set_value;
   __pyx_vtable_2gb_11collections_6fptree_FPTree.get_value = (double (*)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, int))__pyx_f_2gb_11collections_6fptree_6FPTree_get_value;
   __pyx_vtable_2gb_11collections_6fptree_FPTree.sample = (int (*)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, double))__pyx_f_2gb_11collections_6fptree_6FPTree_sample;
@@ -1836,6 +1994,72 @@ static void __Pyx_RaiseArgtupleInvalid(
                  "%.200s() takes %.8s %" CYTHON_FORMAT_SSIZE_T "d positional argument%.1s (%" CYTHON_FORMAT_SSIZE_T "d given)",
                  func_name, more_or_less, num_expected,
                  (num_expected == 1) ? "" : "s", num_found);
+}
+
+/* PyErrFetchRestore */
+#if CYTHON_FAST_THREAD_STATE
+static CYTHON_INLINE void __Pyx_ErrRestoreInState(PyThreadState *tstate, PyObject *type, PyObject *value, PyObject *tb) {
+    PyObject *tmp_type, *tmp_value, *tmp_tb;
+    tmp_type = tstate->curexc_type;
+    tmp_value = tstate->curexc_value;
+    tmp_tb = tstate->curexc_traceback;
+    tstate->curexc_type = type;
+    tstate->curexc_value = value;
+    tstate->curexc_traceback = tb;
+    Py_XDECREF(tmp_type);
+    Py_XDECREF(tmp_value);
+    Py_XDECREF(tmp_tb);
+}
+static CYTHON_INLINE void __Pyx_ErrFetchInState(PyThreadState *tstate, PyObject **type, PyObject **value, PyObject **tb) {
+    *type = tstate->curexc_type;
+    *value = tstate->curexc_value;
+    *tb = tstate->curexc_traceback;
+    tstate->curexc_type = 0;
+    tstate->curexc_value = 0;
+    tstate->curexc_traceback = 0;
+}
+#endif
+
+/* WriteUnraisableException */
+static void __Pyx_WriteUnraisable(const char *name, CYTHON_UNUSED int clineno,
+                                  CYTHON_UNUSED int lineno, CYTHON_UNUSED const char *filename,
+                                  int full_traceback, CYTHON_UNUSED int nogil) {
+    PyObject *old_exc, *old_val, *old_tb;
+    PyObject *ctx;
+    __Pyx_PyThreadState_declare
+#ifdef WITH_THREAD
+    PyGILState_STATE state;
+    if (nogil)
+        state = PyGILState_Ensure();
+#ifdef _MSC_VER
+    else state = (PyGILState_STATE)-1;
+#endif
+#endif
+    __Pyx_PyThreadState_assign
+    __Pyx_ErrFetch(&old_exc, &old_val, &old_tb);
+    if (full_traceback) {
+        Py_XINCREF(old_exc);
+        Py_XINCREF(old_val);
+        Py_XINCREF(old_tb);
+        __Pyx_ErrRestore(old_exc, old_val, old_tb);
+        PyErr_PrintEx(1);
+    }
+    #if PY_MAJOR_VERSION < 3
+    ctx = PyString_FromString(name);
+    #else
+    ctx = PyUnicode_FromString(name);
+    #endif
+    __Pyx_ErrRestore(old_exc, old_val, old_tb);
+    if (!ctx) {
+        PyErr_WriteUnraisable(Py_None);
+    } else {
+        PyErr_WriteUnraisable(ctx);
+        Py_DECREF(ctx);
+    }
+#ifdef WITH_THREAD
+    if (nogil)
+        PyGILState_Release(state);
+#endif
 }
 
 /* SetVTable */

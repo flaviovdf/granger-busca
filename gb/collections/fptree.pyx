@@ -36,6 +36,12 @@ from libcpp.vector cimport vector
 cdef class FPTree:
 
     def __cinit__(self, int size):
+        self._build(size)
+
+    def __init__(self, int size):
+        self._build(size)
+
+    cdef void _build(self, int size) nogil:
         self.size = size
         cdef int t_pos = 1
         while t_pos < size:
@@ -55,16 +61,16 @@ cdef class FPTree:
             self.values[i] = 0.0
 
     cdef double get_value(self, int i) nogil:
-        cdef int t_pos = <int> self.values[0]
+        cdef int t_pos = <int>self.values[0]
         return self.values[i + t_pos]
 
     cdef void set_value(self, int i, double value) nogil:
-        cdef int t_pos = <int> self.values[0]
+        cdef int t_pos = <int>self.values[0]
         cdef int pos = i + t_pos
         value -= self.values[pos]
         while pos > 0:
             self.values[pos] += value
-            i >>= 1
+            pos >>= 1
 
     cdef int sample(self, double urnd) nogil:
         # urnd: uniformly random number between [0,1]
