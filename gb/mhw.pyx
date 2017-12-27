@@ -54,7 +54,7 @@ cdef inline double dirmulti_posterior(map[int, map[int, int]] &Alpha_ab,
         nba = 0
     else:
         nba = Alpha_ab[proc_b][proc_a]
-    return (nba + prior) / (sum_b[proc_b] + n * prior)
+    return (nba + prior) # / (sum_b[proc_b] + n * prior)
 
 
 cdef inline int sample_background(double prob_background) nogil:
@@ -169,7 +169,6 @@ cdef inline int metropolis_walk_step(int proc_a, int i, double prev_back_t,
                                      double[::1] mu_rates,
                                      double[::1] beta_rates,
                                      map[int, map[int, int]] &search_lower,
-                                     vector[double] &prob_b,
                                      FPTree fptree) nogil:
 
     cdef double mu_rate = mu_rates[proc_a]
@@ -209,17 +208,24 @@ cdef inline int metropolis_walk_step(int proc_a, int i, double prev_back_t,
             return curr_influencer_b
 
 
+cdef inline double inc(int[::1] sum_b, int proc, double alpha_prior) nogil:
+    cdef int n = sum_b.shape[0]
+    return 1.0 / (sum_b[proc] + n * alpha_prior)
+
+
 cdef void sample_alpha(int proc_a, map[int, vector[double]] &all_timestamps,
                        vector[int] &curr_state, int[::1] num_background,
                        map[int, map[int, int]] &Alpha_ab, int[::1] sum_b,
                        double[::1] mu_rates, double[::1] beta_rates,
-                       double alpha_prior, vector[double] &prob_b,
+                       double alpha_prior,
                        map[int, map[int, int]] &search_lower,
                        FPTree fptree) nogil:
 
     cdef int i
     cdef int influencer
     cdef int new_influencer
+    cdef int n_proc = mu_rates.shape[0]
+
     cdef double prev_back_t = 0      # stores last known background time stamp
     cdef double prev_back_t_aux = 0  # every it: prev_back_t = prev_back_t_aux
     for i in range(<int>all_timestamps[proc_a].size()):
@@ -235,8 +241,7 @@ cdef void sample_alpha(int proc_a, map[int, vector[double]] &all_timestamps,
                                               num_background, all_timestamps,
                                               curr_state, Alpha_ab, sum_b,
                                               alpha_prior, mu_rates,
-                                              beta_rates, search_lower, prob_b,
-                                              fptree)
+                                              beta_rates, search_lower, fptree)
         if new_influencer == -1:
             num_background[proc_a] += 1
         else:
@@ -245,10 +250,13 @@ cdef void sample_alpha(int proc_a, map[int, vector[double]] &all_timestamps,
             Alpha_ab[proc_a][new_influencer] += 1
             sum_b[new_influencer] += 1
             fptree.set_value(new_influencer,
-                             fptree.get_value(new_influencer) + 1)
+                             fptree.get_value(new_influencer) +
+                             inc(sum_b, new_influencer, alpha_prior))
 
         if influencer != -1:
-            fptree.set_value(influencer, fptree.get_value(influencer) - 1)
+            fptree.set_value(influencer,
+                             fptree.get_value(influencer) -
+                             inc(sum_b, influencer, alpha_prior))
         curr_state[i] = new_influencer
         prev_back_t = prev_back_t_aux
 
@@ -306,8 +314,7 @@ cdef void sampleone(map[int, vector[double]] &all_timestamps,
                     map[int, vector[int]] &curr_state, int[::1] num_background,
                     double[::1] mu_rates, double[::1] beta_rates,
                     map[int, map[int, int]] &Alpha_ab, double alpha_prior,
-                    int[::1] sum_b, vector[double] &prob_b,
-                    map[int, map[int, int]] &search_lower,
+                    int[::1] sum_b, map[int, map[int, int]] &search_lower,
                     FPTree fptree) nogil:
 
     cdef int n_proc = all_timestamps.size()
@@ -328,20 +335,21 @@ cdef void sampleone(map[int, vector[double]] &all_timestamps,
         search_lower[a].clear()
         fptree.reset()
         for b in Alpha_ab[a]:
-            if Alpha_ab[a][b.first]:
-                fptree.set_value(b.first, b.second + alpha_prior)
+            fptree.set_value(b.first, dirmulti_posterior(Alpha_ab, sum_b,
+                                                         a, b.first,
+                                                         alpha_prior)
+                             )
 
         sample_alpha(a, all_timestamps, curr_state[a], num_background,
                      Alpha_ab, sum_b, mu_rates, beta_rates, alpha_prior,
-                     prob_b, search_lower, fptree)
+                     search_lower, fptree)
 
 
 cdef int cfit(map[int, vector[double]] &all_timestamps,
               map[int, vector[int]] &curr_state, int[::1] num_background,
               double[::1] mu_rates, double[::1] beta_rates,
               map[int, map[int, int]] &Alpha_ab, double alpha_prior,
-              int[::1] sum_b, vector[double] &prob_b,
-              map[int, map[int, int]] &search_lower,
+              int[::1] sum_b, map[int, map[int, int]] &search_lower,
               double[::1] mu_rates_final, double[::1] beta_rates_final,
               map[int, map[int, int]] &Alpha_ba_final, int n_iter,
               int burn_in, FPTree fptree) nogil:
@@ -357,8 +365,8 @@ cdef int cfit(map[int, vector[double]] &all_timestamps,
     for iteration in range(n_iter):
         printf("[logger] Iter=%d. Sampling...\n", iteration)
         sampleone(all_timestamps, curr_state, num_background, mu_rates,
-                  beta_rates, Alpha_ab, alpha_prior, sum_b, prob_b,
-                  search_lower, fptree)
+                  beta_rates, Alpha_ab, alpha_prior, sum_b, search_lower,
+                  fptree)
         if iteration >= burn_in:
             printf("[logger]\t Averaging after burn in...\n")
             num_good += 1
@@ -404,7 +412,6 @@ def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in):
 
     cdef double[::1] mu_rates = np.zeros(n_proc, dtype='d', order='C')
     cdef double[::1] beta_rates = np.zeros(n_proc, dtype='d', order='C')
-    cdef vector[double] prob_b = np.zeros(n_proc, dtype='d', order='C')
 
     cdef double[::1] mu_rates_final = np.zeros(n_proc, dtype='d', order='C')
     cdef double[::1] beta_rates_final = np.zeros(n_proc, dtype='d', order='C')
@@ -412,7 +419,7 @@ def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in):
     cdef FPTree fptree = FPTree(n_proc)
     cdef int n_good = cfit(all_timestamps_map, curr_state, num_background,
                            mu_rates, beta_rates, Alpha_ab, alpha_prior,
-                           sum_b, prob_b, search_lower, mu_rates_final,
+                           sum_b, search_lower, mu_rates_final,
                            beta_rates_final, Alpha_ba_final, n_iter, burn_in,
                            fptree)
 
