@@ -30,6 +30,7 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
+from libc.stdio cimport printf
 from libcpp.vector cimport vector
 
 
@@ -60,9 +61,15 @@ cdef class FPTree:
         for i in range(1, <int>self.values.size()):
             self.values[i] = 0.0
 
+    def reset(self):
+        self.reset()
+
     cdef double get_value(self, int i) nogil:
         cdef int t_pos = <int>self.values[0]
         return self.values[i + t_pos]
+
+    def _get_value(self, int i):
+        return self.get_value(i)
 
     cdef void set_value(self, int i, double value) nogil:
         cdef int t_pos = <int>self.values[0]
@@ -72,8 +79,11 @@ cdef class FPTree:
             self.values[pos] += value
             pos >>= 1
 
+    def _set_value(self, int i, double value):
+        self.set_value(i, value)
+
     cdef int sample(self, double urnd) nogil:
-        # urnd: uniformly random number between [0,1]
+        # urnd: uniformly random number between [0, tree_total]
         cdef int t_pos = <int> self.values[0]
         cdef int pos = 1
         while pos < t_pos:
@@ -83,5 +93,11 @@ cdef class FPTree:
                 pos += 1
         return pos - t_pos
 
+    def _sample(self, double urnd):
+        return self.sample(urnd)
+
     cdef double get_total(self) nogil:
         return self.values[1]
+
+    def _get_total(self):
+        return self.get_total()

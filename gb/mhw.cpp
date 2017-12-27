@@ -863,6 +863,7 @@ struct __pyx_memoryviewslice_obj {
 
 struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree {
   void (*reset)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *);
+  void (*_build)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, int);
   void (*set_value)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, int, double);
   double (*get_value)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, int);
   int (*sample)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, double);
@@ -2679,22 +2680,22 @@ static CYTHON_INLINE int __pyx_f_2gb_3mhw_metropolis_walk_step(int __pyx_v_proc_
  *     cdef double dt = ti - tp
  *     cdef double mu_prob = mu_rate * dt * exp(-mu_rate*dt)             # <<<<<<<<<<<<<<
  * 
- *     cdef int candidate = fptree.sample(rand())
+ *     cdef int candidate = fptree.sample(rand()*fptree.get_total())
  */
   __pyx_v_mu_prob = ((__pyx_v_mu_rate * __pyx_v_dt) * exp(((-__pyx_v_mu_rate) * __pyx_v_dt)));
 
   /* "gb/mhw.pyx":181
  *     cdef double mu_prob = mu_rate * dt * exp(-mu_rate*dt)
  * 
- *     cdef int candidate = fptree.sample(rand())             # <<<<<<<<<<<<<<
+ *     cdef int candidate = fptree.sample(rand()*fptree.get_total())             # <<<<<<<<<<<<<<
  *     cdef double q_c = fptree.get_value(candidate)
  *     cdef double a_ca = dirmulti_posterior(Alpha_ab, sum_b, proc_a, candidate,
  */
-  __pyx_v_candidate = ((struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *)__pyx_v_fptree->__pyx_vtab)->sample(__pyx_v_fptree, __pyx_f_2gb_9randomkit_6random_rand());
+  __pyx_v_candidate = ((struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *)__pyx_v_fptree->__pyx_vtab)->sample(__pyx_v_fptree, (__pyx_f_2gb_9randomkit_6random_rand() * ((struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *)__pyx_v_fptree->__pyx_vtab)->get_total(__pyx_v_fptree)));
 
   /* "gb/mhw.pyx":182
  * 
- *     cdef int candidate = fptree.sample(rand())
+ *     cdef int candidate = fptree.sample(rand()*fptree.get_total())
  *     cdef double q_c = fptree.get_value(candidate)             # <<<<<<<<<<<<<<
  *     cdef double a_ca = dirmulti_posterior(Alpha_ab, sum_b, proc_a, candidate,
  *                                           alpha_prior)
@@ -2702,7 +2703,7 @@ static CYTHON_INLINE int __pyx_f_2gb_3mhw_metropolis_walk_step(int __pyx_v_proc_
   __pyx_v_q_c = ((struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *)__pyx_v_fptree->__pyx_vtab)->get_value(__pyx_v_fptree, __pyx_v_candidate);
 
   /* "gb/mhw.pyx":183
- *     cdef int candidate = fptree.sample(rand())
+ *     cdef int candidate = fptree.sample(rand()*fptree.get_total())
  *     cdef double q_c = fptree.get_value(candidate)
  *     cdef double a_ca = dirmulti_posterior(Alpha_ab, sum_b, proc_a, candidate,             # <<<<<<<<<<<<<<
  *                                           alpha_prior)
@@ -3109,7 +3110,7 @@ static void __pyx_f_2gb_3mhw_sample_alpha(int __pyx_v_proc_a, std::unordered_map
  *         else:
  *             if Alpha_ab[proc_a].count(new_influencer) == 0:             # <<<<<<<<<<<<<<
  *                 Alpha_ab[proc_a][new_influencer] = 0
- *             Alpha_ab[proc_a][new_influencer] = 1
+ *             Alpha_ab[proc_a][new_influencer] += 1
  */
     /*else*/ {
       __pyx_t_3 = (((__pyx_v_Alpha_ab[__pyx_v_proc_a]).count(__pyx_v_new_influencer) == 0) != 0);
@@ -3119,7 +3120,7 @@ static void __pyx_f_2gb_3mhw_sample_alpha(int __pyx_v_proc_a, std::unordered_map
  *         else:
  *             if Alpha_ab[proc_a].count(new_influencer) == 0:
  *                 Alpha_ab[proc_a][new_influencer] = 0             # <<<<<<<<<<<<<<
- *             Alpha_ab[proc_a][new_influencer] = 1
+ *             Alpha_ab[proc_a][new_influencer] += 1
  *             sum_b[new_influencer] += 1
  */
         ((__pyx_v_Alpha_ab[__pyx_v_proc_a])[__pyx_v_new_influencer]) = 0;
@@ -3129,22 +3130,24 @@ static void __pyx_f_2gb_3mhw_sample_alpha(int __pyx_v_proc_a, std::unordered_map
  *         else:
  *             if Alpha_ab[proc_a].count(new_influencer) == 0:             # <<<<<<<<<<<<<<
  *                 Alpha_ab[proc_a][new_influencer] = 0
- *             Alpha_ab[proc_a][new_influencer] = 1
+ *             Alpha_ab[proc_a][new_influencer] += 1
  */
       }
 
       /* "gb/mhw.pyx":245
  *             if Alpha_ab[proc_a].count(new_influencer) == 0:
  *                 Alpha_ab[proc_a][new_influencer] = 0
- *             Alpha_ab[proc_a][new_influencer] = 1             # <<<<<<<<<<<<<<
+ *             Alpha_ab[proc_a][new_influencer] += 1             # <<<<<<<<<<<<<<
  *             sum_b[new_influencer] += 1
  *             fptree.set_value(new_influencer,
  */
-      ((__pyx_v_Alpha_ab[__pyx_v_proc_a])[__pyx_v_new_influencer]) = 1;
+      __pyx_t_5 = __pyx_v_proc_a;
+      __pyx_t_6 = __pyx_v_new_influencer;
+      ((__pyx_v_Alpha_ab[__pyx_t_5])[__pyx_t_6]) = (((__pyx_v_Alpha_ab[__pyx_t_5])[__pyx_t_6]) + 1);
 
       /* "gb/mhw.pyx":246
  *                 Alpha_ab[proc_a][new_influencer] = 0
- *             Alpha_ab[proc_a][new_influencer] = 1
+ *             Alpha_ab[proc_a][new_influencer] += 1
  *             sum_b[new_influencer] += 1             # <<<<<<<<<<<<<<
  *             fptree.set_value(new_influencer,
  *                              fptree.get_value(new_influencer) + 1)
@@ -3153,7 +3156,7 @@ static void __pyx_f_2gb_3mhw_sample_alpha(int __pyx_v_proc_a, std::unordered_map
       *((int *) ( /* dim=0 */ ((char *) (((int *) __pyx_v_sum_b.data) + __pyx_t_9)) )) += 1;
 
       /* "gb/mhw.pyx":247
- *             Alpha_ab[proc_a][new_influencer] = 1
+ *             Alpha_ab[proc_a][new_influencer] += 1
  *             sum_b[new_influencer] += 1
  *             fptree.set_value(new_influencer,             # <<<<<<<<<<<<<<
  *                              fptree.get_value(new_influencer) + 1)

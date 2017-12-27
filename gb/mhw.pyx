@@ -178,7 +178,7 @@ cdef inline int metropolis_walk_step(int proc_a, int i, double prev_back_t,
     cdef double dt = ti - tp
     cdef double mu_prob = mu_rate * dt * exp(-mu_rate*dt)
 
-    cdef int candidate = fptree.sample(rand())
+    cdef int candidate = fptree.sample(rand()*fptree.get_total())
     cdef double q_c = fptree.get_value(candidate)
     cdef double a_ca = dirmulti_posterior(Alpha_ab, sum_b, proc_a, candidate,
                                           alpha_prior)
@@ -242,7 +242,7 @@ cdef void sample_alpha(int proc_a, map[int, vector[double]] &all_timestamps,
         else:
             if Alpha_ab[proc_a].count(new_influencer) == 0:
                 Alpha_ab[proc_a][new_influencer] = 0
-            Alpha_ab[proc_a][new_influencer] = 1
+            Alpha_ab[proc_a][new_influencer] += 1
             sum_b[new_influencer] += 1
             fptree.set_value(new_influencer,
                              fptree.get_value(new_influencer) + 1)
