@@ -132,7 +132,7 @@
 #define RK_DEV_RANDOM "/dev/random"
 #endif
 
-char *rk_strerror[RK_ERR_MAX] =
+const char *rk_strerror[RK_ERR_MAX] =
 {
     "no error",
     "random device unvavailable"
@@ -524,7 +524,7 @@ void
 rk_fill(void *buffer, size_t size, rk_state *state)
 {
     unsigned long r;
-    unsigned char *buf = buffer;
+    unsigned char *buf = (unsigned char*)buffer;
 
     for (; size >= 4; size -= 4) {
         r = rk_random(state);

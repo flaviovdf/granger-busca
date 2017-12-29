@@ -4,11 +4,13 @@
 import glob
 import numpy
 import os
+import platform
 import sys
+
+from Cython.Distutils import build_ext
 
 from distutils.core import setup
 from distutils.extension import Extension
-from Cython.Distutils import build_ext
 
 
 SOURCE = '.'
@@ -65,14 +67,15 @@ def get_extensions():
                 ext_files.append(os.path.join(pkg_folder, 'randomkit.c'))
                 ext_files.append(os.path.join(pkg_folder, 'distributions.c'))
 
+            extra_compile_args = ['-msse', '-msse2', '-mfpmath=sse']
+            if platform.system() == 'Darwin':
+                extra_compile_args.append('-stdlib=libc++')
+                extra_compile_args.append('-mmacosx-version-min=10.9')
+
             extension = Extension(module, ext_files,
                                   include_dirs=include_dirs,
                                   language='c++',
-                                  extra_compile_args=['-msse', '-msse2',
-                                                      '-mfpmath=sse',
-                                                      '-stdlib=libc++',
-                                                      '-mmacosx-version-min=10.7'])
-
+                                  extra_compile_args=extra_compile_args)
             extensions.append(extension)
 
     return extensions
