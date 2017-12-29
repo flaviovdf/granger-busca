@@ -41,10 +41,10 @@ cdef inline double dirmulti_posterior(map[int, map[int, int]] &Alpha_ab,
         Counts for each time b cross-excited a
     sum_b: int array
         Sum for a given row in Alpha_ab
-    proc_b: int
-        ID for process b
     proc_a: int
         ID for process a
+    proc_b: int
+        ID for process b
     prior: double
         Prior for the process
     '''
@@ -55,7 +55,7 @@ cdef inline double dirmulti_posterior(map[int, map[int, int]] &Alpha_ab,
     elif Alpha_ab[proc_a].count(proc_b) == 0:
         nba = 0
     else:
-        nba = Alpha_ab[proc_b][proc_a]
+        nba = Alpha_ab[proc_a][proc_b]
     return (nba + prior) / (sum_b[proc_b] + n * prior)
 
 
@@ -159,9 +159,11 @@ cdef inline int metropolis_walk_step(int proc_a, int i, double prev_back_t,
         return choice
 
 
-cdef inline double inc(int[::1] sum_b, int proc, double alpha_prior) nogil:
-    cdef int n = sum_b.shape[0]
-    return 1.0 / (sum_b[proc] + n * alpha_prior)
+cdef inline double inc(int n, int nb, int nba, double alpha_prior,
+                       double delta) nogil:
+    cdef double b = nb + n * alpha_prior
+    cdef double a = nba + alpha_prior
+    return (b * delta - a * delta) / (b * (b + delta))
 
 
 cdef void sample_alpha(int proc_a, map[int, vector[double]] &all_timestamps,
@@ -177,15 +179,22 @@ cdef void sample_alpha(int proc_a, map[int, vector[double]] &all_timestamps,
 
     cdef double prev_back_t = 0      # stores last known background time stamp
     cdef double prev_back_t_aux = 0  # every it: prev_back_t = prev_back_t_aux
+    cdef int nba
+    cdef int nb
+
     for i in range(<int>all_timestamps[proc_a].size()):
         influencer = curr_state[i]
         if influencer == -1:
             num_background[proc_a] -= 1
             prev_back_t_aux = all_timestamps[proc_a][i] # found a background ts
         else:
+            nba = Alpha_ab[proc_a][influencer]
+            nb = sum_b[influencer]
             Alpha_ab[proc_a][influencer] -= 1
             sum_b[influencer] -= 1
-            fptree.set_value(influencer,fptree.get_value(influencer)-1)
+            fptree.set_value(influencer,
+                             fptree.get_value(influencer) - \
+                             inc(n_proc, nb, nba, alpha_prior, -1))
 
         new_influencer = metropolis_walk_step(proc_a, i, prev_back_t,
                                               num_background, all_timestamps,
@@ -197,9 +206,13 @@ cdef void sample_alpha(int proc_a, map[int, vector[double]] &all_timestamps,
         else:
             if Alpha_ab[proc_a].count(new_influencer) == 0:
                 Alpha_ab[proc_a][new_influencer] = 0
+            nba = Alpha_ab[proc_a][new_influencer]
+            nb = sum_b[new_influencer]
             Alpha_ab[proc_a][new_influencer] += 1
             sum_b[new_influencer] += 1
-            fptree.set_value(new_influencer,fptree.get_value(new_influencer)+1)
+            fptree.set_value(new_influencer,
+                             fptree.get_value(new_influencer) - \
+                             inc(n_proc, nb, nba, alpha_prior, -1))
 
         curr_state[i] = new_influencer
         prev_back_t = prev_back_t_aux
@@ -274,8 +287,9 @@ cdef void sampleone(map[int, vector[double]] &all_timestamps,
     for a in range(n_proc):
         fptree.reset()
         for b in Alpha_ab[a]:
-            if Alpha_ab[a][b.first]:
-                fptree.set_value(b.first, Alpha_ab[a][b.first] + alpha_prior)
+            fptree.set_value(b.first,
+                             (Alpha_ab[a][b.first] + alpha_prior) / \
+                             (sum_b[b.first] + n_proc * alpha_prior))
 
         sample_alpha(a, all_timestamps, curr_state[a], num_background,
                      Alpha_ab, sum_b, mu_rates, beta_rates, alpha_prior,
