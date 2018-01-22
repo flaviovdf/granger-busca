@@ -1,8 +1,7 @@
 # -*- coding: utf8
 
 from gb import GrangerBusca
-
-import numpy as np
+from gb.gbio import save_model
 
 timestamps = []
 with open('ticks.dat') as data:
@@ -12,8 +11,4 @@ with open('ticks.dat') as data:
 granger_model = GrangerBusca(alpha_p=1.0/len(timestamps), num_iter=300,
                              burn_in=200)
 granger_model.fit(timestamps)
-print(granger_model.back_)
-print(granger_model.mu_)
-print(granger_model.beta_)
-np.set_printoptions(precision=2)
-print(granger_model.Alpha_.toarray().T)
+save_model('first_model.npz', granger_model)
