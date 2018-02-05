@@ -106,9 +106,9 @@ class GrangerBusca(object):
                     st = ed
                     ed = ed + slice_size
 
-                    def work(job):
-                        return fit(self.timestamps, self.alpha_p, 5, 4,
-                                   self.curr_state_, workload_dicts[job])
+                def work(job):
+                    return fit(self.timestamps, self.alpha_p, 5, 4,
+                               self.curr_state_, workload_dicts[job])
                 for i in range(self.num_iter // 5):
                     futures = {}
                     futures = {executor.submit(work, job): job
