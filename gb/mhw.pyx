@@ -107,7 +107,7 @@ cdef inline double busca_probability(int i, int proc_a, int proc_b,
         tpp = 0
 
     cdef double rate = alpha_ba / (beta_proc_b/E + tp - tpp)
-    return rate
+    return rate # * exp(-rate * (t-tp))
 
 
 cdef inline int metropolis_walk_step(int proc_a, int i, double prev_back_t,
@@ -153,7 +153,7 @@ cdef inline int metropolis_walk_step(int proc_a, int i, double prev_back_t,
         choice = curr_influencer_b
         busca_rate_choice = p_b / a_ba
 
-    if sample_background(mu_prob / (mu_prob + busca_rate_choice)):
+    if sample_background(mu_prob): # / (mu_prob + busca_rate_choice)):
         return -1
     else:
         return choice
@@ -170,7 +170,8 @@ cdef void sample_alpha(int proc_a, map[int, vector[double]] &all_timestamps,
                        vector[int] &curr_state, int[::1] num_background,
                        map[int, map[int, int]] &Alpha_ab, int[::1] sum_b,
                        double[::1] mu_rates, double[::1] beta_rates,
-                       double alpha_prior, FPTree fptree) nogil:
+                       double alpha_prior, FPTree fptree,
+                       map[int, vector[int]] workload) nogil:
 
     cdef int i
     cdef int influencer
@@ -182,7 +183,7 @@ cdef void sample_alpha(int proc_a, map[int, vector[double]] &all_timestamps,
     cdef int nba
     cdef int nb
 
-    for i in range(<int>all_timestamps[proc_a].size()):
+    for i in workload[proc_a]:
         influencer = curr_state[i]
         if influencer == -1:
             num_background[proc_a] -= 1
@@ -268,7 +269,8 @@ cdef void sampleone(map[int, vector[double]] &all_timestamps,
                     map[int, vector[int]] &curr_state, int[::1] num_background,
                     double[::1] mu_rates, double[::1] beta_rates,
                     map[int, map[int, int]] &Alpha_ab, double alpha_prior,
-                    int[::1] sum_b, FPTree fptree) nogil:
+                    int[::1] sum_b, FPTree fptree,
+                    map[int, vector[int]] workload) nogil:
 
     cdef int n_proc = all_timestamps.size()
     cdef int a
@@ -293,7 +295,7 @@ cdef void sampleone(map[int, vector[double]] &all_timestamps,
 
         sample_alpha(a, all_timestamps, curr_state[a], num_background,
                      Alpha_ab, sum_b, mu_rates, beta_rates, alpha_prior,
-                     fptree)
+                     fptree, workload)
 
 
 cdef int cfit(map[int, vector[double]] &all_timestamps,
@@ -303,7 +305,8 @@ cdef int cfit(map[int, vector[double]] &all_timestamps,
               int[::1] sum_b, double[::1] mu_rates_final,
               double[::1] beta_rates_final,
               map[int, map[int, int]] &Alpha_ba_final, int n_iter,
-              int burn_in, FPTree fptree) nogil:
+              int burn_in, FPTree fptree,
+              map[int, vector[int]] workload) nogil:
 
     printf("[logger] Sampler is starting\n")
     printf("[logger]\t n_proc=%ld\n", mu_rates.shape[0])
@@ -316,7 +319,7 @@ cdef int cfit(map[int, vector[double]] &all_timestamps,
     for iteration in range(n_iter):
         printf("[logger] Iter=%d. Sampling...\n", iteration)
         sampleone(all_timestamps, curr_state, num_background, mu_rates,
-                  beta_rates, Alpha_ab, alpha_prior, sum_b, fptree)
+                  beta_rates, Alpha_ab, alpha_prior, sum_b, fptree, workload)
         if iteration >= burn_in:
             printf("[logger]\t Averaging after burn in...\n")
             num_good += 1
@@ -333,11 +336,13 @@ cdef int cfit(map[int, vector[double]] &all_timestamps,
         printf("[logger] Iter done!\n")
     return num_good
 
-def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in):
+def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in,
+        dict indexes, dict start_state=None):
 
     cdef int n_proc = len(all_timestamps)
 
     cdef map[int, vector[int]] curr_state
+    cdef map[int, vector[int]] workload
     cdef map[int, map[int, int]] Alpha_ab
     cdef map[int, vector[double]] all_timestamps_map
 
@@ -348,7 +353,13 @@ def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in):
     for a in range(n_proc):
         Alpha_ab[a] = map[int, int]()
         all_timestamps_map[a] = all_timestamps[a]
-        curr_state[a] = np.random.randint(-1, n_proc, len(all_timestamps[a]))
+        if start_state is None:
+            curr_state[a] = np.random.randint(-1, n_proc,
+                                              len(all_timestamps[a]))
+        else:
+            curr_state[a] = np.asanyarray(start_state[a], dtype='i')
+
+        workload[a] = np.asanyarray(indexes[a], dtype='i')
         for b in curr_state[a]:
             if b == -1:
                 num_background[a] += 1
@@ -368,7 +379,7 @@ def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in):
     cdef int n_good = cfit(all_timestamps_map, curr_state, num_background,
                            mu_rates, beta_rates, Alpha_ab, alpha_prior,
                            sum_b, mu_rates_final, beta_rates_final,
-                           Alpha_ba_final, n_iter, burn_in, fptree)
+                           Alpha_ba_final, n_iter, burn_in, fptree, workload)
 
     return Alpha_ba_final, np.asarray(mu_rates_final), \
         np.asarray(beta_rates_final), np.asarray(num_background), curr_state, \

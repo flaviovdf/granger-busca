@@ -1551,11 +1551,11 @@ static CYTHON_INLINE double __pyx_f_2gb_3mhw_find_previous(std::vector<double>  
 static CYTHON_INLINE double __pyx_f_2gb_3mhw_busca_probability(int, int, int, std::unordered_map<int,std::vector<double> >  &, double, double); /*proto*/
 static CYTHON_INLINE int __pyx_f_2gb_3mhw_metropolis_walk_step(int, int, double, __Pyx_memviewslice, std::unordered_map<int,std::vector<double> >  &, std::vector<int>  &, std::unordered_map<int,std::unordered_map<int,int> >  &, __Pyx_memviewslice, double, __Pyx_memviewslice, __Pyx_memviewslice, struct __pyx_obj_2gb_11collections_6fptree_FPTree *); /*proto*/
 static CYTHON_INLINE double __pyx_f_2gb_3mhw_inc(int, int, int, double, double); /*proto*/
-static void __pyx_f_2gb_3mhw_sample_alpha(int, std::unordered_map<int,std::vector<double> >  &, std::vector<int>  &, __Pyx_memviewslice, std::unordered_map<int,std::unordered_map<int,int> >  &, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, double, struct __pyx_obj_2gb_11collections_6fptree_FPTree *); /*proto*/
+static void __pyx_f_2gb_3mhw_sample_alpha(int, std::unordered_map<int,std::vector<double> >  &, std::vector<int>  &, __Pyx_memviewslice, std::unordered_map<int,std::unordered_map<int,int> >  &, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, double, struct __pyx_obj_2gb_11collections_6fptree_FPTree *, std::unordered_map<int,std::vector<int> > ); /*proto*/
 static void __pyx_f_2gb_3mhw_update_mu_rate(int, std::vector<double>  &, std::vector<int>  &, double, __Pyx_memviewslice); /*proto*/
 static void __pyx_f_2gb_3mhw_update_beta_rate(int, std::unordered_map<int,std::vector<double> >  &, std::unordered_map<int,std::vector<int> >  &, std::unordered_map<int,std::unordered_map<int,int> >  &, double, __Pyx_memviewslice, __Pyx_memviewslice); /*proto*/
-static void __pyx_f_2gb_3mhw_sampleone(std::unordered_map<int,std::vector<double> >  &, std::unordered_map<int,std::vector<int> >  &, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, std::unordered_map<int,std::unordered_map<int,int> >  &, double, __Pyx_memviewslice, struct __pyx_obj_2gb_11collections_6fptree_FPTree *); /*proto*/
-static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &, std::unordered_map<int,std::vector<int> >  &, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, std::unordered_map<int,std::unordered_map<int,int> >  &, double, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, std::unordered_map<int,std::unordered_map<int,int> >  &, int, int, struct __pyx_obj_2gb_11collections_6fptree_FPTree *); /*proto*/
+static void __pyx_f_2gb_3mhw_sampleone(std::unordered_map<int,std::vector<double> >  &, std::unordered_map<int,std::vector<int> >  &, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, std::unordered_map<int,std::unordered_map<int,int> >  &, double, __Pyx_memviewslice, struct __pyx_obj_2gb_11collections_6fptree_FPTree *, std::unordered_map<int,std::vector<int> > ); /*proto*/
+static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &, std::unordered_map<int,std::vector<int> >  &, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, std::unordered_map<int,std::unordered_map<int,int> >  &, double, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, std::unordered_map<int,std::unordered_map<int,int> >  &, int, int, struct __pyx_obj_2gb_11collections_6fptree_FPTree *, std::unordered_map<int,std::vector<int> > ); /*proto*/
 static std::vector<double>  __pyx_convert_vector_from_py_double(PyObject *); /*proto*/
 static std::vector<int>  __pyx_convert_vector_from_py_int(PyObject *); /*proto*/
 static PyObject *__pyx_convert_unordered_map_to_py_int____int(std::unordered_map<int,int>  const &); /*proto*/
@@ -1656,21 +1656,25 @@ static const char __pyx_k_unpack[] = "unpack";
 static const char __pyx_k_asarray[] = "asarray";
 static const char __pyx_k_burn_in[] = "burn_in";
 static const char __pyx_k_fortran[] = "fortran";
+static const char __pyx_k_indexes[] = "indexes";
 static const char __pyx_k_memview[] = "memview";
 static const char __pyx_k_randint[] = "randint";
 static const char __pyx_k_Alpha_ab[] = "Alpha_ab";
 static const char __pyx_k_Ellipsis[] = "Ellipsis";
 static const char __pyx_k_itemsize[] = "itemsize";
 static const char __pyx_k_mu_rates[] = "mu_rates";
+static const char __pyx_k_workload[] = "workload";
 static const char __pyx_k_TypeError[] = "TypeError";
 static const char __pyx_k_enumerate[] = "enumerate";
 static const char __pyx_k_IndexError[] = "IndexError";
 static const char __pyx_k_ValueError[] = "ValueError";
+static const char __pyx_k_asanyarray[] = "asanyarray";
 static const char __pyx_k_beta_rates[] = "beta_rates";
 static const char __pyx_k_curr_state[] = "curr_state";
 static const char __pyx_k_pyx_vtable[] = "__pyx_vtable__";
 static const char __pyx_k_MemoryError[] = "MemoryError";
 static const char __pyx_k_alpha_prior[] = "alpha_prior";
+static const char __pyx_k_start_state[] = "start_state";
 static const char __pyx_k_pyx_getbuffer[] = "__pyx_getbuffer";
 static const char __pyx_k_Alpha_ba_final[] = "Alpha_ba_final";
 static const char __pyx_k_all_timestamps[] = "all_timestamps";
@@ -1728,6 +1732,7 @@ static PyObject *__pyx_n_s_all_timestamps;
 static PyObject *__pyx_n_s_all_timestamps_map;
 static PyObject *__pyx_n_s_allocate_buffer;
 static PyObject *__pyx_n_s_alpha_prior;
+static PyObject *__pyx_n_s_asanyarray;
 static PyObject *__pyx_n_s_asarray;
 static PyObject *__pyx_n_s_b;
 static PyObject *__pyx_n_s_base;
@@ -1757,6 +1762,7 @@ static PyObject *__pyx_kp_s_got_differing_extents_in_dimensi;
 static PyObject *__pyx_n_s_i;
 static PyObject *__pyx_n_s_id;
 static PyObject *__pyx_n_s_import;
+static PyObject *__pyx_n_s_indexes;
 static PyObject *__pyx_n_s_itemsize;
 static PyObject *__pyx_kp_s_itemsize_0_for_cython_array;
 static PyObject *__pyx_n_s_main;
@@ -1784,6 +1790,7 @@ static PyObject *__pyx_n_s_range;
 static PyObject *__pyx_n_s_shape;
 static PyObject *__pyx_n_s_size;
 static PyObject *__pyx_n_s_start;
+static PyObject *__pyx_n_s_start_state;
 static PyObject *__pyx_n_s_step;
 static PyObject *__pyx_n_s_stop;
 static PyObject *__pyx_kp_s_strided_and_direct;
@@ -1795,8 +1802,9 @@ static PyObject *__pyx_n_s_test;
 static PyObject *__pyx_kp_s_unable_to_allocate_array_data;
 static PyObject *__pyx_kp_s_unable_to_allocate_shape_and_str;
 static PyObject *__pyx_n_s_unpack;
+static PyObject *__pyx_n_s_workload;
 static PyObject *__pyx_n_s_zeros;
-static PyObject *__pyx_pf_2gb_3mhw_fit(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_all_timestamps, double __pyx_v_alpha_prior, int __pyx_v_n_iter, int __pyx_v_burn_in); /* proto */
+static PyObject *__pyx_pf_2gb_3mhw_fit(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_all_timestamps, double __pyx_v_alpha_prior, int __pyx_v_n_iter, int __pyx_v_burn_in, PyObject *__pyx_v_indexes, PyObject *__pyx_v_start_state); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __pyx_array_obj *__pyx_v_self, PyObject *__pyx_v_shape, Py_ssize_t __pyx_v_itemsize, PyObject *__pyx_v_format, PyObject *__pyx_v_mode, int __pyx_v_allocate_buffer); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array_2__getbuffer__(struct __pyx_array_obj *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /* proto */
 static void __pyx_array___pyx_pf_15View_dot_MemoryView_5array_4__dealloc__(struct __pyx_array_obj *__pyx_v_self); /* proto */
@@ -2277,7 +2285,7 @@ static CYTHON_INLINE double __pyx_f_2gb_3mhw_busca_probability(int __pyx_v_i, in
  *         tpp = 0
  * 
  *     cdef double rate = alpha_ba / (beta_proc_b/E + tp - tpp)             # <<<<<<<<<<<<<<
- *     return rate
+ *     return rate # * exp(-rate * (t-tp))
  * 
  */
   __pyx_v_rate = (__pyx_v_alpha_ba / (((__pyx_v_beta_proc_b / __pyx_v_2gb_3mhw_E) + __pyx_v_tp) - __pyx_v_tpp));
@@ -2285,7 +2293,7 @@ static CYTHON_INLINE double __pyx_f_2gb_3mhw_busca_probability(int __pyx_v_i, in
   /* "gb/mhw.pyx":110
  * 
  *     cdef double rate = alpha_ba / (beta_proc_b/E + tp - tpp)
- *     return rate             # <<<<<<<<<<<<<<
+ *     return rate # * exp(-rate * (t-tp))             # <<<<<<<<<<<<<<
  * 
  * 
  */
@@ -2328,7 +2336,7 @@ static CYTHON_INLINE int __pyx_f_2gb_3mhw_metropolis_walk_step(int __pyx_v_proc_
   double __pyx_v_q_b;
   double __pyx_v_p_b;
   int __pyx_v_choice;
-  double __pyx_v_busca_rate_choice;
+  CYTHON_UNUSED double __pyx_v_busca_rate_choice;
   int __pyx_r;
   Py_ssize_t __pyx_t_1;
   Py_ssize_t __pyx_t_2;
@@ -2580,7 +2588,7 @@ static CYTHON_INLINE int __pyx_f_2gb_3mhw_metropolis_walk_step(int __pyx_v_proc_
  *         choice = curr_influencer_b
  *         busca_rate_choice = p_b / a_ba             # <<<<<<<<<<<<<<
  * 
- *     if sample_background(mu_prob / (mu_prob + busca_rate_choice)):
+ *     if sample_background(mu_prob): # / (mu_prob + busca_rate_choice)):
  */
     __pyx_v_busca_rate_choice = (__pyx_v_p_b / __pyx_v_a_ba);
   }
@@ -2589,16 +2597,16 @@ static CYTHON_INLINE int __pyx_f_2gb_3mhw_metropolis_walk_step(int __pyx_v_proc_
   /* "gb/mhw.pyx":156
  *         busca_rate_choice = p_b / a_ba
  * 
- *     if sample_background(mu_prob / (mu_prob + busca_rate_choice)):             # <<<<<<<<<<<<<<
+ *     if sample_background(mu_prob): # / (mu_prob + busca_rate_choice)):             # <<<<<<<<<<<<<<
  *         return -1
  *     else:
  */
-  __pyx_t_3 = (__pyx_f_2gb_3mhw_sample_background((__pyx_v_mu_prob / (__pyx_v_mu_prob + __pyx_v_busca_rate_choice))) != 0);
+  __pyx_t_3 = (__pyx_f_2gb_3mhw_sample_background(__pyx_v_mu_prob) != 0);
   if (__pyx_t_3) {
 
     /* "gb/mhw.pyx":157
  * 
- *     if sample_background(mu_prob / (mu_prob + busca_rate_choice)):
+ *     if sample_background(mu_prob): # / (mu_prob + busca_rate_choice)):
  *         return -1             # <<<<<<<<<<<<<<
  *     else:
  *         return choice
@@ -2609,7 +2617,7 @@ static CYTHON_INLINE int __pyx_f_2gb_3mhw_metropolis_walk_step(int __pyx_v_proc_
     /* "gb/mhw.pyx":156
  *         busca_rate_choice = p_b / a_ba
  * 
- *     if sample_background(mu_prob / (mu_prob + busca_rate_choice)):             # <<<<<<<<<<<<<<
+ *     if sample_background(mu_prob): # / (mu_prob + busca_rate_choice)):             # <<<<<<<<<<<<<<
  *         return -1
  *     else:
  */
@@ -2702,7 +2710,7 @@ static CYTHON_INLINE double __pyx_f_2gb_3mhw_inc(int __pyx_v_n, int __pyx_v_nb, 
  *                        map[int, map[int, int]] &Alpha_ab, int[::1] sum_b,
  */
 
-static void __pyx_f_2gb_3mhw_sample_alpha(int __pyx_v_proc_a, std::unordered_map<int,std::vector<double> >  &__pyx_v_all_timestamps, std::vector<int>  &__pyx_v_curr_state, __Pyx_memviewslice __pyx_v_num_background, std::unordered_map<int,std::unordered_map<int,int> >  &__pyx_v_Alpha_ab, __Pyx_memviewslice __pyx_v_sum_b, __Pyx_memviewslice __pyx_v_mu_rates, __Pyx_memviewslice __pyx_v_beta_rates, double __pyx_v_alpha_prior, struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_fptree) {
+static void __pyx_f_2gb_3mhw_sample_alpha(int __pyx_v_proc_a, std::unordered_map<int,std::vector<double> >  &__pyx_v_all_timestamps, std::vector<int>  &__pyx_v_curr_state, __Pyx_memviewslice __pyx_v_num_background, std::unordered_map<int,std::unordered_map<int,int> >  &__pyx_v_Alpha_ab, __Pyx_memviewslice __pyx_v_sum_b, __Pyx_memviewslice __pyx_v_mu_rates, __Pyx_memviewslice __pyx_v_beta_rates, double __pyx_v_alpha_prior, struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_fptree, std::unordered_map<int,std::vector<int> >  __pyx_v_workload) {
   int __pyx_v_i;
   int __pyx_v_influencer;
   int __pyx_v_new_influencer;
@@ -2711,19 +2719,19 @@ static void __pyx_f_2gb_3mhw_sample_alpha(int __pyx_v_proc_a, std::unordered_map
   double __pyx_v_prev_back_t_aux;
   int __pyx_v_nba;
   int __pyx_v_nb;
-  int __pyx_t_1;
-  int __pyx_t_2;
+  std::vector<int> ::iterator __pyx_t_1;
+  std::vector<int>  *__pyx_t_2;
   int __pyx_t_3;
-  Py_ssize_t __pyx_t_4;
+  int __pyx_t_4;
   Py_ssize_t __pyx_t_5;
-  int __pyx_t_6;
+  Py_ssize_t __pyx_t_6;
   int __pyx_t_7;
   Py_ssize_t __pyx_t_8;
   Py_ssize_t __pyx_t_9;
   Py_ssize_t __pyx_t_10;
   Py_ssize_t __pyx_t_11;
 
-  /* "gb/mhw.pyx":178
+  /* "gb/mhw.pyx":179
  *     cdef int influencer
  *     cdef int new_influencer
  *     cdef int n_proc = mu_rates.shape[0]             # <<<<<<<<<<<<<<
@@ -2732,7 +2740,7 @@ static void __pyx_f_2gb_3mhw_sample_alpha(int __pyx_v_proc_a, std::unordered_map
  */
   __pyx_v_n_proc = (__pyx_v_mu_rates.shape[0]);
 
-  /* "gb/mhw.pyx":180
+  /* "gb/mhw.pyx":181
  *     cdef int n_proc = mu_rates.shape[0]
  * 
  *     cdef double prev_back_t = 0      # stores last known background time stamp             # <<<<<<<<<<<<<<
@@ -2741,7 +2749,7 @@ static void __pyx_f_2gb_3mhw_sample_alpha(int __pyx_v_proc_a, std::unordered_map
  */
   __pyx_v_prev_back_t = 0.0;
 
-  /* "gb/mhw.pyx":181
+  /* "gb/mhw.pyx":182
  * 
  *     cdef double prev_back_t = 0      # stores last known background time stamp
  *     cdef double prev_back_t_aux = 0  # every it: prev_back_t = prev_back_t_aux             # <<<<<<<<<<<<<<
@@ -2750,47 +2758,51 @@ static void __pyx_f_2gb_3mhw_sample_alpha(int __pyx_v_proc_a, std::unordered_map
  */
   __pyx_v_prev_back_t_aux = 0.0;
 
-  /* "gb/mhw.pyx":185
+  /* "gb/mhw.pyx":186
  *     cdef int nb
  * 
- *     for i in range(<int>all_timestamps[proc_a].size()):             # <<<<<<<<<<<<<<
+ *     for i in workload[proc_a]:             # <<<<<<<<<<<<<<
  *         influencer = curr_state[i]
  *         if influencer == -1:
  */
-  __pyx_t_1 = ((int)(__pyx_v_all_timestamps[__pyx_v_proc_a]).size());
-  for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
-    __pyx_v_i = __pyx_t_2;
+  __pyx_t_2 = &(__pyx_v_workload[__pyx_v_proc_a]);
+  __pyx_t_1 = __pyx_t_2->begin();
+  for (;;) {
+    if (!(__pyx_t_1 != __pyx_t_2->end())) break;
+    __pyx_t_3 = *__pyx_t_1;
+    ++__pyx_t_1;
+    __pyx_v_i = __pyx_t_3;
 
-    /* "gb/mhw.pyx":186
+    /* "gb/mhw.pyx":187
  * 
- *     for i in range(<int>all_timestamps[proc_a].size()):
+ *     for i in workload[proc_a]:
  *         influencer = curr_state[i]             # <<<<<<<<<<<<<<
  *         if influencer == -1:
  *             num_background[proc_a] -= 1
  */
     __pyx_v_influencer = (__pyx_v_curr_state[__pyx_v_i]);
 
-    /* "gb/mhw.pyx":187
- *     for i in range(<int>all_timestamps[proc_a].size()):
+    /* "gb/mhw.pyx":188
+ *     for i in workload[proc_a]:
  *         influencer = curr_state[i]
  *         if influencer == -1:             # <<<<<<<<<<<<<<
  *             num_background[proc_a] -= 1
  *             prev_back_t_aux = all_timestamps[proc_a][i] # found a background ts
  */
-    __pyx_t_3 = ((__pyx_v_influencer == -1L) != 0);
-    if (__pyx_t_3) {
+    __pyx_t_4 = ((__pyx_v_influencer == -1L) != 0);
+    if (__pyx_t_4) {
 
-      /* "gb/mhw.pyx":188
+      /* "gb/mhw.pyx":189
  *         influencer = curr_state[i]
  *         if influencer == -1:
  *             num_background[proc_a] -= 1             # <<<<<<<<<<<<<<
  *             prev_back_t_aux = all_timestamps[proc_a][i] # found a background ts
  *         else:
  */
-      __pyx_t_4 = __pyx_v_proc_a;
-      *((int *) ( /* dim=0 */ ((char *) (((int *) __pyx_v_num_background.data) + __pyx_t_4)) )) -= 1;
+      __pyx_t_5 = __pyx_v_proc_a;
+      *((int *) ( /* dim=0 */ ((char *) (((int *) __pyx_v_num_background.data) + __pyx_t_5)) )) -= 1;
 
-      /* "gb/mhw.pyx":189
+      /* "gb/mhw.pyx":190
  *         if influencer == -1:
  *             num_background[proc_a] -= 1
  *             prev_back_t_aux = all_timestamps[proc_a][i] # found a background ts             # <<<<<<<<<<<<<<
@@ -2799,8 +2811,8 @@ static void __pyx_f_2gb_3mhw_sample_alpha(int __pyx_v_proc_a, std::unordered_map
  */
       __pyx_v_prev_back_t_aux = ((__pyx_v_all_timestamps[__pyx_v_proc_a])[__pyx_v_i]);
 
-      /* "gb/mhw.pyx":187
- *     for i in range(<int>all_timestamps[proc_a].size()):
+      /* "gb/mhw.pyx":188
+ *     for i in workload[proc_a]:
  *         influencer = curr_state[i]
  *         if influencer == -1:             # <<<<<<<<<<<<<<
  *             num_background[proc_a] -= 1
@@ -2809,7 +2821,7 @@ static void __pyx_f_2gb_3mhw_sample_alpha(int __pyx_v_proc_a, std::unordered_map
       goto __pyx_L5;
     }
 
-    /* "gb/mhw.pyx":191
+    /* "gb/mhw.pyx":192
  *             prev_back_t_aux = all_timestamps[proc_a][i] # found a background ts
  *         else:
  *             nba = Alpha_ab[proc_a][influencer]             # <<<<<<<<<<<<<<
@@ -2819,28 +2831,28 @@ static void __pyx_f_2gb_3mhw_sample_alpha(int __pyx_v_proc_a, std::unordered_map
     /*else*/ {
       __pyx_v_nba = ((__pyx_v_Alpha_ab[__pyx_v_proc_a])[__pyx_v_influencer]);
 
-      /* "gb/mhw.pyx":192
+      /* "gb/mhw.pyx":193
  *         else:
  *             nba = Alpha_ab[proc_a][influencer]
  *             nb = sum_b[influencer]             # <<<<<<<<<<<<<<
  *             Alpha_ab[proc_a][influencer] -= 1
  *             sum_b[influencer] -= 1
  */
-      __pyx_t_5 = __pyx_v_influencer;
-      __pyx_v_nb = (*((int *) ( /* dim=0 */ ((char *) (((int *) __pyx_v_sum_b.data) + __pyx_t_5)) )));
+      __pyx_t_6 = __pyx_v_influencer;
+      __pyx_v_nb = (*((int *) ( /* dim=0 */ ((char *) (((int *) __pyx_v_sum_b.data) + __pyx_t_6)) )));
 
-      /* "gb/mhw.pyx":193
+      /* "gb/mhw.pyx":194
  *             nba = Alpha_ab[proc_a][influencer]
  *             nb = sum_b[influencer]
  *             Alpha_ab[proc_a][influencer] -= 1             # <<<<<<<<<<<<<<
  *             sum_b[influencer] -= 1
  *             fptree.set_value(influencer,
  */
-      __pyx_t_6 = __pyx_v_proc_a;
+      __pyx_t_3 = __pyx_v_proc_a;
       __pyx_t_7 = __pyx_v_influencer;
-      ((__pyx_v_Alpha_ab[__pyx_t_6])[__pyx_t_7]) = (((__pyx_v_Alpha_ab[__pyx_t_6])[__pyx_t_7]) - 1);
+      ((__pyx_v_Alpha_ab[__pyx_t_3])[__pyx_t_7]) = (((__pyx_v_Alpha_ab[__pyx_t_3])[__pyx_t_7]) - 1);
 
-      /* "gb/mhw.pyx":194
+      /* "gb/mhw.pyx":195
  *             nb = sum_b[influencer]
  *             Alpha_ab[proc_a][influencer] -= 1
  *             sum_b[influencer] -= 1             # <<<<<<<<<<<<<<
@@ -2850,7 +2862,7 @@ static void __pyx_f_2gb_3mhw_sample_alpha(int __pyx_v_proc_a, std::unordered_map
       __pyx_t_8 = __pyx_v_influencer;
       *((int *) ( /* dim=0 */ ((char *) (((int *) __pyx_v_sum_b.data) + __pyx_t_8)) )) -= 1;
 
-      /* "gb/mhw.pyx":195
+      /* "gb/mhw.pyx":196
  *             Alpha_ab[proc_a][influencer] -= 1
  *             sum_b[influencer] -= 1
  *             fptree.set_value(influencer,             # <<<<<<<<<<<<<<
@@ -2861,7 +2873,7 @@ static void __pyx_f_2gb_3mhw_sample_alpha(int __pyx_v_proc_a, std::unordered_map
     }
     __pyx_L5:;
 
-    /* "gb/mhw.pyx":199
+    /* "gb/mhw.pyx":200
  *                              inc(n_proc, nb, nba, alpha_prior, -1))
  * 
  *         new_influencer = metropolis_walk_step(proc_a, i, prev_back_t,             # <<<<<<<<<<<<<<
@@ -2870,17 +2882,17 @@ static void __pyx_f_2gb_3mhw_sample_alpha(int __pyx_v_proc_a, std::unordered_map
  */
     __pyx_v_new_influencer = __pyx_f_2gb_3mhw_metropolis_walk_step(__pyx_v_proc_a, __pyx_v_i, __pyx_v_prev_back_t, __pyx_v_num_background, __pyx_v_all_timestamps, __pyx_v_curr_state, __pyx_v_Alpha_ab, __pyx_v_sum_b, __pyx_v_alpha_prior, __pyx_v_mu_rates, __pyx_v_beta_rates, __pyx_v_fptree);
 
-    /* "gb/mhw.pyx":204
+    /* "gb/mhw.pyx":205
  *                                               alpha_prior, mu_rates,
  *                                               beta_rates, fptree)
  *         if new_influencer == -1:             # <<<<<<<<<<<<<<
  *             num_background[proc_a] += 1
  *         else:
  */
-    __pyx_t_3 = ((__pyx_v_new_influencer == -1L) != 0);
-    if (__pyx_t_3) {
+    __pyx_t_4 = ((__pyx_v_new_influencer == -1L) != 0);
+    if (__pyx_t_4) {
 
-      /* "gb/mhw.pyx":205
+      /* "gb/mhw.pyx":206
  *                                               beta_rates, fptree)
  *         if new_influencer == -1:
  *             num_background[proc_a] += 1             # <<<<<<<<<<<<<<
@@ -2890,7 +2902,7 @@ static void __pyx_f_2gb_3mhw_sample_alpha(int __pyx_v_proc_a, std::unordered_map
       __pyx_t_9 = __pyx_v_proc_a;
       *((int *) ( /* dim=0 */ ((char *) (((int *) __pyx_v_num_background.data) + __pyx_t_9)) )) += 1;
 
-      /* "gb/mhw.pyx":204
+      /* "gb/mhw.pyx":205
  *                                               alpha_prior, mu_rates,
  *                                               beta_rates, fptree)
  *         if new_influencer == -1:             # <<<<<<<<<<<<<<
@@ -2900,7 +2912,7 @@ static void __pyx_f_2gb_3mhw_sample_alpha(int __pyx_v_proc_a, std::unordered_map
       goto __pyx_L6;
     }
 
-    /* "gb/mhw.pyx":207
+    /* "gb/mhw.pyx":208
  *             num_background[proc_a] += 1
  *         else:
  *             if Alpha_ab[proc_a].count(new_influencer) == 0:             # <<<<<<<<<<<<<<
@@ -2908,10 +2920,10 @@ static void __pyx_f_2gb_3mhw_sample_alpha(int __pyx_v_proc_a, std::unordered_map
  *             nba = Alpha_ab[proc_a][new_influencer]
  */
     /*else*/ {
-      __pyx_t_3 = (((__pyx_v_Alpha_ab[__pyx_v_proc_a]).count(__pyx_v_new_influencer) == 0) != 0);
-      if (__pyx_t_3) {
+      __pyx_t_4 = (((__pyx_v_Alpha_ab[__pyx_v_proc_a]).count(__pyx_v_new_influencer) == 0) != 0);
+      if (__pyx_t_4) {
 
-        /* "gb/mhw.pyx":208
+        /* "gb/mhw.pyx":209
  *         else:
  *             if Alpha_ab[proc_a].count(new_influencer) == 0:
  *                 Alpha_ab[proc_a][new_influencer] = 0             # <<<<<<<<<<<<<<
@@ -2920,7 +2932,7 @@ static void __pyx_f_2gb_3mhw_sample_alpha(int __pyx_v_proc_a, std::unordered_map
  */
         ((__pyx_v_Alpha_ab[__pyx_v_proc_a])[__pyx_v_new_influencer]) = 0;
 
-        /* "gb/mhw.pyx":207
+        /* "gb/mhw.pyx":208
  *             num_background[proc_a] += 1
  *         else:
  *             if Alpha_ab[proc_a].count(new_influencer) == 0:             # <<<<<<<<<<<<<<
@@ -2929,7 +2941,7 @@ static void __pyx_f_2gb_3mhw_sample_alpha(int __pyx_v_proc_a, std::unordered_map
  */
       }
 
-      /* "gb/mhw.pyx":209
+      /* "gb/mhw.pyx":210
  *             if Alpha_ab[proc_a].count(new_influencer) == 0:
  *                 Alpha_ab[proc_a][new_influencer] = 0
  *             nba = Alpha_ab[proc_a][new_influencer]             # <<<<<<<<<<<<<<
@@ -2938,7 +2950,7 @@ static void __pyx_f_2gb_3mhw_sample_alpha(int __pyx_v_proc_a, std::unordered_map
  */
       __pyx_v_nba = ((__pyx_v_Alpha_ab[__pyx_v_proc_a])[__pyx_v_new_influencer]);
 
-      /* "gb/mhw.pyx":210
+      /* "gb/mhw.pyx":211
  *                 Alpha_ab[proc_a][new_influencer] = 0
  *             nba = Alpha_ab[proc_a][new_influencer]
  *             nb = sum_b[new_influencer]             # <<<<<<<<<<<<<<
@@ -2948,18 +2960,18 @@ static void __pyx_f_2gb_3mhw_sample_alpha(int __pyx_v_proc_a, std::unordered_map
       __pyx_t_10 = __pyx_v_new_influencer;
       __pyx_v_nb = (*((int *) ( /* dim=0 */ ((char *) (((int *) __pyx_v_sum_b.data) + __pyx_t_10)) )));
 
-      /* "gb/mhw.pyx":211
+      /* "gb/mhw.pyx":212
  *             nba = Alpha_ab[proc_a][new_influencer]
  *             nb = sum_b[new_influencer]
  *             Alpha_ab[proc_a][new_influencer] += 1             # <<<<<<<<<<<<<<
  *             sum_b[new_influencer] += 1
  *             fptree.set_value(new_influencer,
  */
-      __pyx_t_6 = __pyx_v_proc_a;
+      __pyx_t_3 = __pyx_v_proc_a;
       __pyx_t_7 = __pyx_v_new_influencer;
-      ((__pyx_v_Alpha_ab[__pyx_t_6])[__pyx_t_7]) = (((__pyx_v_Alpha_ab[__pyx_t_6])[__pyx_t_7]) + 1);
+      ((__pyx_v_Alpha_ab[__pyx_t_3])[__pyx_t_7]) = (((__pyx_v_Alpha_ab[__pyx_t_3])[__pyx_t_7]) + 1);
 
-      /* "gb/mhw.pyx":212
+      /* "gb/mhw.pyx":213
  *             nb = sum_b[new_influencer]
  *             Alpha_ab[proc_a][new_influencer] += 1
  *             sum_b[new_influencer] += 1             # <<<<<<<<<<<<<<
@@ -2969,7 +2981,7 @@ static void __pyx_f_2gb_3mhw_sample_alpha(int __pyx_v_proc_a, std::unordered_map
       __pyx_t_11 = __pyx_v_new_influencer;
       *((int *) ( /* dim=0 */ ((char *) (((int *) __pyx_v_sum_b.data) + __pyx_t_11)) )) += 1;
 
-      /* "gb/mhw.pyx":213
+      /* "gb/mhw.pyx":214
  *             Alpha_ab[proc_a][new_influencer] += 1
  *             sum_b[new_influencer] += 1
  *             fptree.set_value(new_influencer,             # <<<<<<<<<<<<<<
@@ -2980,7 +2992,7 @@ static void __pyx_f_2gb_3mhw_sample_alpha(int __pyx_v_proc_a, std::unordered_map
     }
     __pyx_L6:;
 
-    /* "gb/mhw.pyx":217
+    /* "gb/mhw.pyx":218
  *                              inc(n_proc, nb, nba, alpha_prior, -1))
  * 
  *         curr_state[i] = new_influencer             # <<<<<<<<<<<<<<
@@ -2989,7 +3001,7 @@ static void __pyx_f_2gb_3mhw_sample_alpha(int __pyx_v_proc_a, std::unordered_map
  */
     (__pyx_v_curr_state[__pyx_v_i]) = __pyx_v_new_influencer;
 
-    /* "gb/mhw.pyx":218
+    /* "gb/mhw.pyx":219
  * 
  *         curr_state[i] = new_influencer
  *         prev_back_t = prev_back_t_aux             # <<<<<<<<<<<<<<
@@ -2997,6 +3009,14 @@ static void __pyx_f_2gb_3mhw_sample_alpha(int __pyx_v_proc_a, std::unordered_map
  * 
  */
     __pyx_v_prev_back_t = __pyx_v_prev_back_t_aux;
+
+    /* "gb/mhw.pyx":186
+ *     cdef int nb
+ * 
+ *     for i in workload[proc_a]:             # <<<<<<<<<<<<<<
+ *         influencer = curr_state[i]
+ *         if influencer == -1:
+ */
   }
 
   /* "gb/mhw.pyx":169
@@ -3010,7 +3030,7 @@ static void __pyx_f_2gb_3mhw_sample_alpha(int __pyx_v_proc_a, std::unordered_map
   /* function exit code */
 }
 
-/* "gb/mhw.pyx":221
+/* "gb/mhw.pyx":222
  * 
  * 
  * cdef void update_mu_rate(int proc_a, vector[double] &timestamps_proc_a,             # <<<<<<<<<<<<<<
@@ -3025,7 +3045,7 @@ static void __pyx_f_2gb_3mhw_update_mu_rate(int __pyx_v_proc_a, std::vector<doub
   int __pyx_t_1;
   Py_ssize_t __pyx_t_2;
 
-  /* "gb/mhw.pyx":224
+  /* "gb/mhw.pyx":225
  *                          vector[int] &curr_state_proc_a,
  *                          double count_background, double[::1] mu_rates) nogil:
  *     cdef int n_events = timestamps_proc_a.size()             # <<<<<<<<<<<<<<
@@ -3034,7 +3054,7 @@ static void __pyx_f_2gb_3mhw_update_mu_rate(int __pyx_v_proc_a, std::vector<doub
  */
   __pyx_v_n_events = __pyx_v_timestamps_proc_a.size();
 
-  /* "gb/mhw.pyx":225
+  /* "gb/mhw.pyx":226
  *                          double count_background, double[::1] mu_rates) nogil:
  *     cdef int n_events = timestamps_proc_a.size()
  *     cdef double T = timestamps_proc_a[n_events-1]             # <<<<<<<<<<<<<<
@@ -3043,7 +3063,7 @@ static void __pyx_f_2gb_3mhw_update_mu_rate(int __pyx_v_proc_a, std::vector<doub
  */
   __pyx_v_T = (__pyx_v_timestamps_proc_a[(__pyx_v_n_events - 1)]);
 
-  /* "gb/mhw.pyx":227
+  /* "gb/mhw.pyx":228
  *     cdef double T = timestamps_proc_a[n_events-1]
  *     cdef double rate
  *     if T == 0:             # <<<<<<<<<<<<<<
@@ -3053,7 +3073,7 @@ static void __pyx_f_2gb_3mhw_update_mu_rate(int __pyx_v_proc_a, std::vector<doub
   __pyx_t_1 = ((__pyx_v_T == 0.0) != 0);
   if (__pyx_t_1) {
 
-    /* "gb/mhw.pyx":228
+    /* "gb/mhw.pyx":229
  *     cdef double rate
  *     if T == 0:
  *         rate = 0             # <<<<<<<<<<<<<<
@@ -3062,7 +3082,7 @@ static void __pyx_f_2gb_3mhw_update_mu_rate(int __pyx_v_proc_a, std::vector<doub
  */
     __pyx_v_rate = 0.0;
 
-    /* "gb/mhw.pyx":227
+    /* "gb/mhw.pyx":228
  *     cdef double T = timestamps_proc_a[n_events-1]
  *     cdef double rate
  *     if T == 0:             # <<<<<<<<<<<<<<
@@ -3072,7 +3092,7 @@ static void __pyx_f_2gb_3mhw_update_mu_rate(int __pyx_v_proc_a, std::vector<doub
     goto __pyx_L3;
   }
 
-  /* "gb/mhw.pyx":230
+  /* "gb/mhw.pyx":231
  *         rate = 0
  *     else:
  *         rate = count_background / T             # <<<<<<<<<<<<<<
@@ -3084,7 +3104,7 @@ static void __pyx_f_2gb_3mhw_update_mu_rate(int __pyx_v_proc_a, std::vector<doub
   }
   __pyx_L3:;
 
-  /* "gb/mhw.pyx":231
+  /* "gb/mhw.pyx":232
  *     else:
  *         rate = count_background / T
  *     mu_rates[proc_a] = rate             # <<<<<<<<<<<<<<
@@ -3094,7 +3114,7 @@ static void __pyx_f_2gb_3mhw_update_mu_rate(int __pyx_v_proc_a, std::vector<doub
   __pyx_t_2 = __pyx_v_proc_a;
   *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_mu_rates.data) + __pyx_t_2)) )) = __pyx_v_rate;
 
-  /* "gb/mhw.pyx":221
+  /* "gb/mhw.pyx":222
  * 
  * 
  * cdef void update_mu_rate(int proc_a, vector[double] &timestamps_proc_a,             # <<<<<<<<<<<<<<
@@ -3105,7 +3125,7 @@ static void __pyx_f_2gb_3mhw_update_mu_rate(int __pyx_v_proc_a, std::vector<doub
   /* function exit code */
 }
 
-/* "gb/mhw.pyx":234
+/* "gb/mhw.pyx":235
  * 
  * 
  * cdef void update_beta_rate(int proc_a,             # <<<<<<<<<<<<<<
@@ -3133,7 +3153,7 @@ static void __pyx_f_2gb_3mhw_update_beta_rate(int __pyx_v_proc_a, std::unordered
   Py_ssize_t __pyx_t_9;
   Py_ssize_t __pyx_t_10;
 
-  /* "gb/mhw.pyx":242
+  /* "gb/mhw.pyx":243
  * 
  *     cdef vector[double] all_deltas
  *     cdef int n_proc = beta_rates.shape[0]             # <<<<<<<<<<<<<<
@@ -3142,7 +3162,7 @@ static void __pyx_f_2gb_3mhw_update_beta_rate(int __pyx_v_proc_a, std::unordered
  */
   __pyx_v_n_proc = (__pyx_v_beta_rates.shape[0]);
 
-  /* "gb/mhw.pyx":245
+  /* "gb/mhw.pyx":246
  *     cdef int proc_b, i
  *     cdef double ti, tp
  *     cdef double max_ti = 0             # <<<<<<<<<<<<<<
@@ -3151,7 +3171,7 @@ static void __pyx_f_2gb_3mhw_update_beta_rate(int __pyx_v_proc_a, std::unordered
  */
   __pyx_v_max_ti = 0.0;
 
-  /* "gb/mhw.pyx":246
+  /* "gb/mhw.pyx":247
  *     cdef double ti, tp
  *     cdef double max_ti = 0
  *     cdef int n_elements = 0             # <<<<<<<<<<<<<<
@@ -3160,7 +3180,7 @@ static void __pyx_f_2gb_3mhw_update_beta_rate(int __pyx_v_proc_a, std::unordered
  */
   __pyx_v_n_elements = 0;
 
-  /* "gb/mhw.pyx":247
+  /* "gb/mhw.pyx":248
  *     cdef double max_ti = 0
  *     cdef int n_elements = 0
  *     for proc_b in range(n_proc):             # <<<<<<<<<<<<<<
@@ -3171,7 +3191,7 @@ static void __pyx_f_2gb_3mhw_update_beta_rate(int __pyx_v_proc_a, std::unordered
   for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
     __pyx_v_proc_b = __pyx_t_2;
 
-    /* "gb/mhw.pyx":248
+    /* "gb/mhw.pyx":249
  *     cdef int n_elements = 0
  *     for proc_b in range(n_proc):
  *         for i in range(<int>all_timestamps[proc_b].size()):             # <<<<<<<<<<<<<<
@@ -3182,7 +3202,7 @@ static void __pyx_f_2gb_3mhw_update_beta_rate(int __pyx_v_proc_a, std::unordered
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_i = __pyx_t_4;
 
-      /* "gb/mhw.pyx":249
+      /* "gb/mhw.pyx":250
  *     for proc_b in range(n_proc):
  *         for i in range(<int>all_timestamps[proc_b].size()):
  *             if curr_state_all[proc_b][i] == proc_a:             # <<<<<<<<<<<<<<
@@ -3192,7 +3212,7 @@ static void __pyx_f_2gb_3mhw_update_beta_rate(int __pyx_v_proc_a, std::unordered
       __pyx_t_5 = ((((__pyx_v_curr_state_all[__pyx_v_proc_b])[__pyx_v_i]) == __pyx_v_proc_a) != 0);
       if (__pyx_t_5) {
 
-        /* "gb/mhw.pyx":250
+        /* "gb/mhw.pyx":251
  *         for i in range(<int>all_timestamps[proc_b].size()):
  *             if curr_state_all[proc_b][i] == proc_a:
  *                 ti = all_timestamps[proc_b][i]             # <<<<<<<<<<<<<<
@@ -3201,7 +3221,7 @@ static void __pyx_f_2gb_3mhw_update_beta_rate(int __pyx_v_proc_a, std::unordered
  */
         __pyx_v_ti = ((__pyx_v_all_timestamps[__pyx_v_proc_b])[__pyx_v_i]);
 
-        /* "gb/mhw.pyx":251
+        /* "gb/mhw.pyx":252
  *             if curr_state_all[proc_b][i] == proc_a:
  *                 ti = all_timestamps[proc_b][i]
  *                 if ti > max_ti:             # <<<<<<<<<<<<<<
@@ -3211,7 +3231,7 @@ static void __pyx_f_2gb_3mhw_update_beta_rate(int __pyx_v_proc_a, std::unordered
         __pyx_t_5 = ((__pyx_v_ti > __pyx_v_max_ti) != 0);
         if (__pyx_t_5) {
 
-          /* "gb/mhw.pyx":252
+          /* "gb/mhw.pyx":253
  *                 ti = all_timestamps[proc_b][i]
  *                 if ti > max_ti:
  *                     max_ti = ti             # <<<<<<<<<<<<<<
@@ -3220,7 +3240,7 @@ static void __pyx_f_2gb_3mhw_update_beta_rate(int __pyx_v_proc_a, std::unordered
  */
           __pyx_v_max_ti = __pyx_v_ti;
 
-          /* "gb/mhw.pyx":251
+          /* "gb/mhw.pyx":252
  *             if curr_state_all[proc_b][i] == proc_a:
  *                 ti = all_timestamps[proc_b][i]
  *                 if ti > max_ti:             # <<<<<<<<<<<<<<
@@ -3229,7 +3249,7 @@ static void __pyx_f_2gb_3mhw_update_beta_rate(int __pyx_v_proc_a, std::unordered
  */
         }
 
-        /* "gb/mhw.pyx":253
+        /* "gb/mhw.pyx":254
  *                 if ti > max_ti:
  *                     max_ti = ti
  *                 tp = find_previous(all_timestamps[proc_a], ti)             # <<<<<<<<<<<<<<
@@ -3238,7 +3258,7 @@ static void __pyx_f_2gb_3mhw_update_beta_rate(int __pyx_v_proc_a, std::unordered
  */
         __pyx_v_tp = __pyx_f_2gb_3mhw_find_previous((__pyx_v_all_timestamps[__pyx_v_proc_a]), __pyx_v_ti);
 
-        /* "gb/mhw.pyx":254
+        /* "gb/mhw.pyx":255
  *                     max_ti = ti
  *                 tp = find_previous(all_timestamps[proc_a], ti)
  *                 all_deltas.push_back(ti - tp)             # <<<<<<<<<<<<<<
@@ -3255,10 +3275,10 @@ static void __pyx_f_2gb_3mhw_update_beta_rate(int __pyx_v_proc_a, std::unordered
           #ifdef WITH_THREAD
           PyGILState_Release(__pyx_gilstate_save);
           #endif
-          __PYX_ERR(0, 254, __pyx_L1_error)
+          __PYX_ERR(0, 255, __pyx_L1_error)
         }
 
-        /* "gb/mhw.pyx":255
+        /* "gb/mhw.pyx":256
  *                 tp = find_previous(all_timestamps[proc_a], ti)
  *                 all_deltas.push_back(ti - tp)
  *                 n_elements += 1             # <<<<<<<<<<<<<<
@@ -3267,7 +3287,7 @@ static void __pyx_f_2gb_3mhw_update_beta_rate(int __pyx_v_proc_a, std::unordered
  */
         __pyx_v_n_elements = (__pyx_v_n_elements + 1);
 
-        /* "gb/mhw.pyx":249
+        /* "gb/mhw.pyx":250
  *     for proc_b in range(n_proc):
  *         for i in range(<int>all_timestamps[proc_b].size()):
  *             if curr_state_all[proc_b][i] == proc_a:             # <<<<<<<<<<<<<<
@@ -3278,7 +3298,7 @@ static void __pyx_f_2gb_3mhw_update_beta_rate(int __pyx_v_proc_a, std::unordered
     }
   }
 
-  /* "gb/mhw.pyx":257
+  /* "gb/mhw.pyx":258
  *                 n_elements += 1
  * 
  *     if n_elements >= 1:             # <<<<<<<<<<<<<<
@@ -3288,7 +3308,7 @@ static void __pyx_f_2gb_3mhw_update_beta_rate(int __pyx_v_proc_a, std::unordered
   __pyx_t_5 = ((__pyx_v_n_elements >= 1) != 0);
   if (__pyx_t_5) {
 
-    /* "gb/mhw.pyx":258
+    /* "gb/mhw.pyx":259
  * 
  *     if n_elements >= 1:
  *         stdsort(all_deltas.begin(), all_deltas.end())             # <<<<<<<<<<<<<<
@@ -3297,7 +3317,7 @@ static void __pyx_f_2gb_3mhw_update_beta_rate(int __pyx_v_proc_a, std::unordered
  */
     std::sort<std::vector<double> ::iterator>(__pyx_v_all_deltas.begin(), __pyx_v_all_deltas.end());
 
-    /* "gb/mhw.pyx":259
+    /* "gb/mhw.pyx":260
  *     if n_elements >= 1:
  *         stdsort(all_deltas.begin(), all_deltas.end())
  *         beta_rates[proc_a] = all_deltas[all_deltas.size() // 2]             # <<<<<<<<<<<<<<
@@ -3307,7 +3327,7 @@ static void __pyx_f_2gb_3mhw_update_beta_rate(int __pyx_v_proc_a, std::unordered
     __pyx_t_6 = __pyx_v_proc_a;
     *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_beta_rates.data) + __pyx_t_6)) )) = (__pyx_v_all_deltas[(__pyx_v_all_deltas.size() / 2)]);
 
-    /* "gb/mhw.pyx":260
+    /* "gb/mhw.pyx":261
  *         stdsort(all_deltas.begin(), all_deltas.end())
  *         beta_rates[proc_a] = all_deltas[all_deltas.size() // 2]
  *         if n_elements % 2 == 0:             # <<<<<<<<<<<<<<
@@ -3317,7 +3337,7 @@ static void __pyx_f_2gb_3mhw_update_beta_rate(int __pyx_v_proc_a, std::unordered
     __pyx_t_5 = (((__pyx_v_n_elements % 2) == 0) != 0);
     if (__pyx_t_5) {
 
-      /* "gb/mhw.pyx":261
+      /* "gb/mhw.pyx":262
  *         beta_rates[proc_a] = all_deltas[all_deltas.size() // 2]
  *         if n_elements % 2 == 0:
  *             beta_rates[proc_a] += all_deltas[(all_deltas.size() // 2)-1]             # <<<<<<<<<<<<<<
@@ -3327,7 +3347,7 @@ static void __pyx_f_2gb_3mhw_update_beta_rate(int __pyx_v_proc_a, std::unordered
       __pyx_t_7 = __pyx_v_proc_a;
       *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_beta_rates.data) + __pyx_t_7)) )) += (__pyx_v_all_deltas[((__pyx_v_all_deltas.size() / 2) - 1)]);
 
-      /* "gb/mhw.pyx":262
+      /* "gb/mhw.pyx":263
  *         if n_elements % 2 == 0:
  *             beta_rates[proc_a] += all_deltas[(all_deltas.size() // 2)-1]
  *             beta_rates[proc_a] = beta_rates[proc_a] / 2             # <<<<<<<<<<<<<<
@@ -3338,7 +3358,7 @@ static void __pyx_f_2gb_3mhw_update_beta_rate(int __pyx_v_proc_a, std::unordered
       __pyx_t_9 = __pyx_v_proc_a;
       *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_beta_rates.data) + __pyx_t_9)) )) = ((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_beta_rates.data) + __pyx_t_8)) ))) / 2.0);
 
-      /* "gb/mhw.pyx":260
+      /* "gb/mhw.pyx":261
  *         stdsort(all_deltas.begin(), all_deltas.end())
  *         beta_rates[proc_a] = all_deltas[all_deltas.size() // 2]
  *         if n_elements % 2 == 0:             # <<<<<<<<<<<<<<
@@ -3347,7 +3367,7 @@ static void __pyx_f_2gb_3mhw_update_beta_rate(int __pyx_v_proc_a, std::unordered
  */
     }
 
-    /* "gb/mhw.pyx":257
+    /* "gb/mhw.pyx":258
  *                 n_elements += 1
  * 
  *     if n_elements >= 1:             # <<<<<<<<<<<<<<
@@ -3357,7 +3377,7 @@ static void __pyx_f_2gb_3mhw_update_beta_rate(int __pyx_v_proc_a, std::unordered
     goto __pyx_L9;
   }
 
-  /* "gb/mhw.pyx":264
+  /* "gb/mhw.pyx":265
  *             beta_rates[proc_a] = beta_rates[proc_a] / 2
  *     else:
  *         beta_rates[proc_a] = max_ti             # <<<<<<<<<<<<<<
@@ -3370,7 +3390,7 @@ static void __pyx_f_2gb_3mhw_update_beta_rate(int __pyx_v_proc_a, std::unordered
   }
   __pyx_L9:;
 
-  /* "gb/mhw.pyx":234
+  /* "gb/mhw.pyx":235
  * 
  * 
  * cdef void update_beta_rate(int proc_a,             # <<<<<<<<<<<<<<
@@ -3385,7 +3405,7 @@ static void __pyx_f_2gb_3mhw_update_beta_rate(int __pyx_v_proc_a, std::unordered
   __pyx_L0:;
 }
 
-/* "gb/mhw.pyx":267
+/* "gb/mhw.pyx":268
  * 
  * 
  * cdef void sampleone(map[int, vector[double]] &all_timestamps,             # <<<<<<<<<<<<<<
@@ -3393,7 +3413,7 @@ static void __pyx_f_2gb_3mhw_update_beta_rate(int __pyx_v_proc_a, std::unordered
  *                     double[::1] mu_rates, double[::1] beta_rates,
  */
 
-static void __pyx_f_2gb_3mhw_sampleone(std::unordered_map<int,std::vector<double> >  &__pyx_v_all_timestamps, std::unordered_map<int,std::vector<int> >  &__pyx_v_curr_state, __Pyx_memviewslice __pyx_v_num_background, __Pyx_memviewslice __pyx_v_mu_rates, __Pyx_memviewslice __pyx_v_beta_rates, std::unordered_map<int,std::unordered_map<int,int> >  &__pyx_v_Alpha_ab, double __pyx_v_alpha_prior, __Pyx_memviewslice __pyx_v_sum_b, struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_fptree) {
+static void __pyx_f_2gb_3mhw_sampleone(std::unordered_map<int,std::vector<double> >  &__pyx_v_all_timestamps, std::unordered_map<int,std::vector<int> >  &__pyx_v_curr_state, __Pyx_memviewslice __pyx_v_num_background, __Pyx_memviewslice __pyx_v_mu_rates, __Pyx_memviewslice __pyx_v_beta_rates, std::unordered_map<int,std::unordered_map<int,int> >  &__pyx_v_Alpha_ab, double __pyx_v_alpha_prior, __Pyx_memviewslice __pyx_v_sum_b, struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_fptree, std::unordered_map<int,std::vector<int> >  __pyx_v_workload) {
   int __pyx_v_n_proc;
   int __pyx_v_a;
   std::pair<int,int>  __pyx_v_b;
@@ -3405,8 +3425,8 @@ static void __pyx_f_2gb_3mhw_sampleone(std::unordered_map<int,std::vector<double
   std::pair<int,int>  __pyx_t_6;
   Py_ssize_t __pyx_t_7;
 
-  /* "gb/mhw.pyx":273
- *                     int[::1] sum_b, FPTree fptree) nogil:
+  /* "gb/mhw.pyx":275
+ *                     map[int, vector[int]] workload) nogil:
  * 
  *     cdef int n_proc = all_timestamps.size()             # <<<<<<<<<<<<<<
  *     cdef int a
@@ -3414,7 +3434,7 @@ static void __pyx_f_2gb_3mhw_sampleone(std::unordered_map<int,std::vector<double
  */
   __pyx_v_n_proc = __pyx_v_all_timestamps.size();
 
-  /* "gb/mhw.pyx":276
+  /* "gb/mhw.pyx":278
  *     cdef int a
  * 
  *     printf("[logger]\t Learning mu.\n")             # <<<<<<<<<<<<<<
@@ -3423,7 +3443,7 @@ static void __pyx_f_2gb_3mhw_sampleone(std::unordered_map<int,std::vector<double
  */
   printf(((char const *)"[logger]\t Learning mu.\n"));
 
-  /* "gb/mhw.pyx":277
+  /* "gb/mhw.pyx":279
  * 
  *     printf("[logger]\t Learning mu.\n")
  *     for a in range(n_proc):             # <<<<<<<<<<<<<<
@@ -3434,7 +3454,7 @@ static void __pyx_f_2gb_3mhw_sampleone(std::unordered_map<int,std::vector<double
   for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
     __pyx_v_a = __pyx_t_2;
 
-    /* "gb/mhw.pyx":279
+    /* "gb/mhw.pyx":281
  *     for a in range(n_proc):
  *         update_mu_rate(a, all_timestamps[a], curr_state[a],
  *                        num_background[a], mu_rates)             # <<<<<<<<<<<<<<
@@ -3443,7 +3463,7 @@ static void __pyx_f_2gb_3mhw_sampleone(std::unordered_map<int,std::vector<double
  */
     __pyx_t_3 = __pyx_v_a;
 
-    /* "gb/mhw.pyx":278
+    /* "gb/mhw.pyx":280
  *     printf("[logger]\t Learning mu.\n")
  *     for a in range(n_proc):
  *         update_mu_rate(a, all_timestamps[a], curr_state[a],             # <<<<<<<<<<<<<<
@@ -3453,7 +3473,7 @@ static void __pyx_f_2gb_3mhw_sampleone(std::unordered_map<int,std::vector<double
     __pyx_f_2gb_3mhw_update_mu_rate(__pyx_v_a, (__pyx_v_all_timestamps[__pyx_v_a]), (__pyx_v_curr_state[__pyx_v_a]), (*((int *) ( /* dim=0 */ ((char *) (((int *) __pyx_v_num_background.data) + __pyx_t_3)) ))), __pyx_v_mu_rates);
   }
 
-  /* "gb/mhw.pyx":280
+  /* "gb/mhw.pyx":282
  *         update_mu_rate(a, all_timestamps[a], curr_state[a],
  *                        num_background[a], mu_rates)
  *     printf("[logger]\t Learning beta.\n")             # <<<<<<<<<<<<<<
@@ -3462,7 +3482,7 @@ static void __pyx_f_2gb_3mhw_sampleone(std::unordered_map<int,std::vector<double
  */
   printf(((char const *)"[logger]\t Learning beta.\n"));
 
-  /* "gb/mhw.pyx":281
+  /* "gb/mhw.pyx":283
  *                        num_background[a], mu_rates)
  *     printf("[logger]\t Learning beta.\n")
  *     for a in range(n_proc):             # <<<<<<<<<<<<<<
@@ -3473,7 +3493,7 @@ static void __pyx_f_2gb_3mhw_sampleone(std::unordered_map<int,std::vector<double
   for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
     __pyx_v_a = __pyx_t_2;
 
-    /* "gb/mhw.pyx":282
+    /* "gb/mhw.pyx":284
  *     printf("[logger]\t Learning beta.\n")
  *     for a in range(n_proc):
  *         update_beta_rate(a, all_timestamps, curr_state, Alpha_ab, alpha_prior,             # <<<<<<<<<<<<<<
@@ -3483,7 +3503,7 @@ static void __pyx_f_2gb_3mhw_sampleone(std::unordered_map<int,std::vector<double
     __pyx_f_2gb_3mhw_update_beta_rate(__pyx_v_a, __pyx_v_all_timestamps, __pyx_v_curr_state, __pyx_v_Alpha_ab, __pyx_v_alpha_prior, __pyx_v_sum_b, __pyx_v_beta_rates);
   }
 
-  /* "gb/mhw.pyx":285
+  /* "gb/mhw.pyx":287
  *                          sum_b, beta_rates)
  * 
  *     printf("[logger]\t Sampling Alpha.\n")             # <<<<<<<<<<<<<<
@@ -3492,7 +3512,7 @@ static void __pyx_f_2gb_3mhw_sampleone(std::unordered_map<int,std::vector<double
  */
   printf(((char const *)"[logger]\t Sampling Alpha.\n"));
 
-  /* "gb/mhw.pyx":287
+  /* "gb/mhw.pyx":289
  *     printf("[logger]\t Sampling Alpha.\n")
  *     cdef pair[int, int] b
  *     for a in range(n_proc):             # <<<<<<<<<<<<<<
@@ -3503,7 +3523,7 @@ static void __pyx_f_2gb_3mhw_sampleone(std::unordered_map<int,std::vector<double
   for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
     __pyx_v_a = __pyx_t_2;
 
-    /* "gb/mhw.pyx":288
+    /* "gb/mhw.pyx":290
  *     cdef pair[int, int] b
  *     for a in range(n_proc):
  *         fptree.reset()             # <<<<<<<<<<<<<<
@@ -3512,7 +3532,7 @@ static void __pyx_f_2gb_3mhw_sampleone(std::unordered_map<int,std::vector<double
  */
     ((struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *)__pyx_v_fptree->__pyx_vtab)->reset(__pyx_v_fptree);
 
-    /* "gb/mhw.pyx":289
+    /* "gb/mhw.pyx":291
  *     for a in range(n_proc):
  *         fptree.reset()
  *         for b in Alpha_ab[a]:             # <<<<<<<<<<<<<<
@@ -3527,7 +3547,7 @@ static void __pyx_f_2gb_3mhw_sampleone(std::unordered_map<int,std::vector<double
       ++__pyx_t_4;
       __pyx_v_b = __pyx_t_6;
 
-      /* "gb/mhw.pyx":292
+      /* "gb/mhw.pyx":294
  *             fptree.set_value(b.first,
  *                              (Alpha_ab[a][b.first] + alpha_prior) / \
  *                              (sum_b[b.first] + n_proc * alpha_prior))             # <<<<<<<<<<<<<<
@@ -3536,7 +3556,7 @@ static void __pyx_f_2gb_3mhw_sampleone(std::unordered_map<int,std::vector<double
  */
       __pyx_t_7 = __pyx_v_b.first;
 
-      /* "gb/mhw.pyx":290
+      /* "gb/mhw.pyx":292
  *         fptree.reset()
  *         for b in Alpha_ab[a]:
  *             fptree.set_value(b.first,             # <<<<<<<<<<<<<<
@@ -3545,7 +3565,7 @@ static void __pyx_f_2gb_3mhw_sampleone(std::unordered_map<int,std::vector<double
  */
       ((struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *)__pyx_v_fptree->__pyx_vtab)->set_value(__pyx_v_fptree, __pyx_v_b.first, ((((__pyx_v_Alpha_ab[__pyx_v_a])[__pyx_v_b.first]) + __pyx_v_alpha_prior) / ((*((int *) ( /* dim=0 */ ((char *) (((int *) __pyx_v_sum_b.data) + __pyx_t_7)) ))) + (__pyx_v_n_proc * __pyx_v_alpha_prior))));
 
-      /* "gb/mhw.pyx":289
+      /* "gb/mhw.pyx":291
  *     for a in range(n_proc):
  *         fptree.reset()
  *         for b in Alpha_ab[a]:             # <<<<<<<<<<<<<<
@@ -3554,17 +3574,17 @@ static void __pyx_f_2gb_3mhw_sampleone(std::unordered_map<int,std::vector<double
  */
     }
 
-    /* "gb/mhw.pyx":294
+    /* "gb/mhw.pyx":296
  *                              (sum_b[b.first] + n_proc * alpha_prior))
  * 
  *         sample_alpha(a, all_timestamps, curr_state[a], num_background,             # <<<<<<<<<<<<<<
  *                      Alpha_ab, sum_b, mu_rates, beta_rates, alpha_prior,
- *                      fptree)
+ *                      fptree, workload)
  */
-    __pyx_f_2gb_3mhw_sample_alpha(__pyx_v_a, __pyx_v_all_timestamps, (__pyx_v_curr_state[__pyx_v_a]), __pyx_v_num_background, __pyx_v_Alpha_ab, __pyx_v_sum_b, __pyx_v_mu_rates, __pyx_v_beta_rates, __pyx_v_alpha_prior, __pyx_v_fptree);
+    __pyx_f_2gb_3mhw_sample_alpha(__pyx_v_a, __pyx_v_all_timestamps, (__pyx_v_curr_state[__pyx_v_a]), __pyx_v_num_background, __pyx_v_Alpha_ab, __pyx_v_sum_b, __pyx_v_mu_rates, __pyx_v_beta_rates, __pyx_v_alpha_prior, __pyx_v_fptree, __pyx_v_workload);
   }
 
-  /* "gb/mhw.pyx":267
+  /* "gb/mhw.pyx":268
  * 
  * 
  * cdef void sampleone(map[int, vector[double]] &all_timestamps,             # <<<<<<<<<<<<<<
@@ -3575,7 +3595,7 @@ static void __pyx_f_2gb_3mhw_sampleone(std::unordered_map<int,std::vector<double
   /* function exit code */
 }
 
-/* "gb/mhw.pyx":299
+/* "gb/mhw.pyx":301
  * 
  * 
  * cdef int cfit(map[int, vector[double]] &all_timestamps,             # <<<<<<<<<<<<<<
@@ -3583,7 +3603,7 @@ static void __pyx_f_2gb_3mhw_sampleone(std::unordered_map<int,std::vector<double
  *               double[::1] mu_rates, double[::1] beta_rates,
  */
 
-static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &__pyx_v_all_timestamps, std::unordered_map<int,std::vector<int> >  &__pyx_v_curr_state, __Pyx_memviewslice __pyx_v_num_background, __Pyx_memviewslice __pyx_v_mu_rates, __Pyx_memviewslice __pyx_v_beta_rates, std::unordered_map<int,std::unordered_map<int,int> >  &__pyx_v_Alpha_ab, double __pyx_v_alpha_prior, __Pyx_memviewslice __pyx_v_sum_b, __Pyx_memviewslice __pyx_v_mu_rates_final, __Pyx_memviewslice __pyx_v_beta_rates_final, std::unordered_map<int,std::unordered_map<int,int> >  &__pyx_v_Alpha_ba_final, int __pyx_v_n_iter, int __pyx_v_burn_in, struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_fptree) {
+static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &__pyx_v_all_timestamps, std::unordered_map<int,std::vector<int> >  &__pyx_v_curr_state, __Pyx_memviewslice __pyx_v_num_background, __Pyx_memviewslice __pyx_v_mu_rates, __Pyx_memviewslice __pyx_v_beta_rates, std::unordered_map<int,std::unordered_map<int,int> >  &__pyx_v_Alpha_ab, double __pyx_v_alpha_prior, __Pyx_memviewslice __pyx_v_sum_b, __Pyx_memviewslice __pyx_v_mu_rates_final, __Pyx_memviewslice __pyx_v_beta_rates_final, std::unordered_map<int,std::unordered_map<int,int> >  &__pyx_v_Alpha_ba_final, int __pyx_v_n_iter, int __pyx_v_burn_in, struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_fptree, std::unordered_map<int,std::vector<int> >  __pyx_v_workload) {
   int __pyx_v_iteration;
   int __pyx_v_a;
   int __pyx_v_b;
@@ -3606,8 +3626,8 @@ static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &
   std::unordered_map<int,int>  __pyx_t_14;
   int __pyx_t_15;
 
-  /* "gb/mhw.pyx":308
- *               int burn_in, FPTree fptree) nogil:
+  /* "gb/mhw.pyx":311
+ *               map[int, vector[int]] workload) nogil:
  * 
  *     printf("[logger] Sampler is starting\n")             # <<<<<<<<<<<<<<
  *     printf("[logger]\t n_proc=%ld\n", mu_rates.shape[0])
@@ -3615,7 +3635,7 @@ static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &
  */
   printf(((char const *)"[logger] Sampler is starting\n"));
 
-  /* "gb/mhw.pyx":309
+  /* "gb/mhw.pyx":312
  * 
  *     printf("[logger] Sampler is starting\n")
  *     printf("[logger]\t n_proc=%ld\n", mu_rates.shape[0])             # <<<<<<<<<<<<<<
@@ -3624,7 +3644,7 @@ static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &
  */
   printf(((char const *)"[logger]\t n_proc=%ld\n"), (__pyx_v_mu_rates.shape[0]));
 
-  /* "gb/mhw.pyx":310
+  /* "gb/mhw.pyx":313
  *     printf("[logger] Sampler is starting\n")
  *     printf("[logger]\t n_proc=%ld\n", mu_rates.shape[0])
  *     printf("[logger]\t alpha_prior=%lf\n", alpha_prior)             # <<<<<<<<<<<<<<
@@ -3633,7 +3653,7 @@ static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &
  */
   printf(((char const *)"[logger]\t alpha_prior=%lf\n"), __pyx_v_alpha_prior);
 
-  /* "gb/mhw.pyx":311
+  /* "gb/mhw.pyx":314
  *     printf("[logger]\t n_proc=%ld\n", mu_rates.shape[0])
  *     printf("[logger]\t alpha_prior=%lf\n", alpha_prior)
  *     printf("\n")             # <<<<<<<<<<<<<<
@@ -3642,7 +3662,7 @@ static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &
  */
   printf(((char const *)"\n"));
 
-  /* "gb/mhw.pyx":314
+  /* "gb/mhw.pyx":317
  * 
  *     cdef int iteration, a, b
  *     cdef int num_good = 0             # <<<<<<<<<<<<<<
@@ -3651,7 +3671,7 @@ static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &
  */
   __pyx_v_num_good = 0;
 
-  /* "gb/mhw.pyx":316
+  /* "gb/mhw.pyx":319
  *     cdef int num_good = 0
  *     cdef pair[int, int] pair
  *     for iteration in range(n_iter):             # <<<<<<<<<<<<<<
@@ -3662,27 +3682,27 @@ static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &
   for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
     __pyx_v_iteration = __pyx_t_2;
 
-    /* "gb/mhw.pyx":317
+    /* "gb/mhw.pyx":320
  *     cdef pair[int, int] pair
  *     for iteration in range(n_iter):
  *         printf("[logger] Iter=%d. Sampling...\n", iteration)             # <<<<<<<<<<<<<<
  *         sampleone(all_timestamps, curr_state, num_background, mu_rates,
- *                   beta_rates, Alpha_ab, alpha_prior, sum_b, fptree)
+ *                   beta_rates, Alpha_ab, alpha_prior, sum_b, fptree, workload)
  */
     printf(((char const *)"[logger] Iter=%d. Sampling...\n"), __pyx_v_iteration);
 
-    /* "gb/mhw.pyx":318
+    /* "gb/mhw.pyx":321
  *     for iteration in range(n_iter):
  *         printf("[logger] Iter=%d. Sampling...\n", iteration)
  *         sampleone(all_timestamps, curr_state, num_background, mu_rates,             # <<<<<<<<<<<<<<
- *                   beta_rates, Alpha_ab, alpha_prior, sum_b, fptree)
+ *                   beta_rates, Alpha_ab, alpha_prior, sum_b, fptree, workload)
  *         if iteration >= burn_in:
  */
-    __pyx_f_2gb_3mhw_sampleone(__pyx_v_all_timestamps, __pyx_v_curr_state, __pyx_v_num_background, __pyx_v_mu_rates, __pyx_v_beta_rates, __pyx_v_Alpha_ab, __pyx_v_alpha_prior, __pyx_v_sum_b, __pyx_v_fptree);
+    __pyx_f_2gb_3mhw_sampleone(__pyx_v_all_timestamps, __pyx_v_curr_state, __pyx_v_num_background, __pyx_v_mu_rates, __pyx_v_beta_rates, __pyx_v_Alpha_ab, __pyx_v_alpha_prior, __pyx_v_sum_b, __pyx_v_fptree, __pyx_v_workload);
 
-    /* "gb/mhw.pyx":320
+    /* "gb/mhw.pyx":323
  *         sampleone(all_timestamps, curr_state, num_background, mu_rates,
- *                   beta_rates, Alpha_ab, alpha_prior, sum_b, fptree)
+ *                   beta_rates, Alpha_ab, alpha_prior, sum_b, fptree, workload)
  *         if iteration >= burn_in:             # <<<<<<<<<<<<<<
  *             printf("[logger]\t Averaging after burn in...\n")
  *             num_good += 1
@@ -3690,8 +3710,8 @@ static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &
     __pyx_t_3 = ((__pyx_v_iteration >= __pyx_v_burn_in) != 0);
     if (__pyx_t_3) {
 
-      /* "gb/mhw.pyx":321
- *                   beta_rates, Alpha_ab, alpha_prior, sum_b, fptree)
+      /* "gb/mhw.pyx":324
+ *                   beta_rates, Alpha_ab, alpha_prior, sum_b, fptree, workload)
  *         if iteration >= burn_in:
  *             printf("[logger]\t Averaging after burn in...\n")             # <<<<<<<<<<<<<<
  *             num_good += 1
@@ -3699,7 +3719,7 @@ static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &
  */
       printf(((char const *)"[logger]\t Averaging after burn in...\n"));
 
-      /* "gb/mhw.pyx":322
+      /* "gb/mhw.pyx":325
  *         if iteration >= burn_in:
  *             printf("[logger]\t Averaging after burn in...\n")
  *             num_good += 1             # <<<<<<<<<<<<<<
@@ -3708,7 +3728,7 @@ static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &
  */
       __pyx_v_num_good = (__pyx_v_num_good + 1);
 
-      /* "gb/mhw.pyx":323
+      /* "gb/mhw.pyx":326
  *             printf("[logger]\t Averaging after burn in...\n")
  *             num_good += 1
  *             for a in range(mu_rates.shape[0]):             # <<<<<<<<<<<<<<
@@ -3719,7 +3739,7 @@ static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &
       for (__pyx_t_5 = 0; __pyx_t_5 < __pyx_t_4; __pyx_t_5+=1) {
         __pyx_v_a = __pyx_t_5;
 
-        /* "gb/mhw.pyx":324
+        /* "gb/mhw.pyx":327
  *             num_good += 1
  *             for a in range(mu_rates.shape[0]):
  *                 mu_rates_final[a] += mu_rates[a]             # <<<<<<<<<<<<<<
@@ -3730,7 +3750,7 @@ static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &
         __pyx_t_7 = __pyx_v_a;
         *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_mu_rates_final.data) + __pyx_t_7)) )) += (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_mu_rates.data) + __pyx_t_6)) )));
 
-        /* "gb/mhw.pyx":325
+        /* "gb/mhw.pyx":328
  *             for a in range(mu_rates.shape[0]):
  *                 mu_rates_final[a] += mu_rates[a]
  *                 beta_rates_final[a] += beta_rates[a]             # <<<<<<<<<<<<<<
@@ -3741,7 +3761,7 @@ static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &
         __pyx_t_9 = __pyx_v_a;
         *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_beta_rates_final.data) + __pyx_t_9)) )) += (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_beta_rates.data) + __pyx_t_8)) )));
 
-        /* "gb/mhw.pyx":326
+        /* "gb/mhw.pyx":329
  *                 mu_rates_final[a] += mu_rates[a]
  *                 beta_rates_final[a] += beta_rates[a]
  *                 for pair in Alpha_ab[a]:             # <<<<<<<<<<<<<<
@@ -3756,7 +3776,7 @@ static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &
           ++__pyx_t_10;
           __pyx_v_pair = __pyx_t_12;
 
-          /* "gb/mhw.pyx":327
+          /* "gb/mhw.pyx":330
  *                 beta_rates_final[a] += beta_rates[a]
  *                 for pair in Alpha_ab[a]:
  *                     b = pair.first             # <<<<<<<<<<<<<<
@@ -3766,7 +3786,7 @@ static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &
           __pyx_t_13 = __pyx_v_pair.first;
           __pyx_v_b = __pyx_t_13;
 
-          /* "gb/mhw.pyx":328
+          /* "gb/mhw.pyx":331
  *                 for pair in Alpha_ab[a]:
  *                     b = pair.first
  *                     if Alpha_ba_final.count(b) == 0:             # <<<<<<<<<<<<<<
@@ -3776,7 +3796,7 @@ static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &
           __pyx_t_3 = ((__pyx_v_Alpha_ba_final.count(__pyx_v_b) == 0) != 0);
           if (__pyx_t_3) {
 
-            /* "gb/mhw.pyx":329
+            /* "gb/mhw.pyx":332
  *                     b = pair.first
  *                     if Alpha_ba_final.count(b) == 0:
  *                         Alpha_ba_final[b] = map[int, int]()             # <<<<<<<<<<<<<<
@@ -3793,11 +3813,11 @@ static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &
               #ifdef WITH_THREAD
               PyGILState_Release(__pyx_gilstate_save);
               #endif
-              __PYX_ERR(0, 329, __pyx_L1_error)
+              __PYX_ERR(0, 332, __pyx_L1_error)
             }
             (__pyx_v_Alpha_ba_final[__pyx_v_b]) = __pyx_t_14;
 
-            /* "gb/mhw.pyx":328
+            /* "gb/mhw.pyx":331
  *                 for pair in Alpha_ab[a]:
  *                     b = pair.first
  *                     if Alpha_ba_final.count(b) == 0:             # <<<<<<<<<<<<<<
@@ -3806,7 +3826,7 @@ static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &
  */
           }
 
-          /* "gb/mhw.pyx":330
+          /* "gb/mhw.pyx":333
  *                     if Alpha_ba_final.count(b) == 0:
  *                         Alpha_ba_final[b] = map[int, int]()
  *                     if Alpha_ba_final[b].count(a) == 0:             # <<<<<<<<<<<<<<
@@ -3816,7 +3836,7 @@ static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &
           __pyx_t_3 = (((__pyx_v_Alpha_ba_final[__pyx_v_b]).count(__pyx_v_a) == 0) != 0);
           if (__pyx_t_3) {
 
-            /* "gb/mhw.pyx":331
+            /* "gb/mhw.pyx":334
  *                         Alpha_ba_final[b] = map[int, int]()
  *                     if Alpha_ba_final[b].count(a) == 0:
  *                         Alpha_ba_final[b][a] = 0             # <<<<<<<<<<<<<<
@@ -3825,7 +3845,7 @@ static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &
  */
             ((__pyx_v_Alpha_ba_final[__pyx_v_b])[__pyx_v_a]) = 0;
 
-            /* "gb/mhw.pyx":330
+            /* "gb/mhw.pyx":333
  *                     if Alpha_ba_final.count(b) == 0:
  *                         Alpha_ba_final[b] = map[int, int]()
  *                     if Alpha_ba_final[b].count(a) == 0:             # <<<<<<<<<<<<<<
@@ -3834,7 +3854,7 @@ static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &
  */
           }
 
-          /* "gb/mhw.pyx":332
+          /* "gb/mhw.pyx":335
  *                     if Alpha_ba_final[b].count(a) == 0:
  *                         Alpha_ba_final[b][a] = 0
  *                     Alpha_ba_final[b][a] += Alpha_ab[a][b]             # <<<<<<<<<<<<<<
@@ -3845,7 +3865,7 @@ static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &
           __pyx_t_15 = __pyx_v_a;
           ((__pyx_v_Alpha_ba_final[__pyx_t_13])[__pyx_t_15]) = (((__pyx_v_Alpha_ba_final[__pyx_t_13])[__pyx_t_15]) + ((__pyx_v_Alpha_ab[__pyx_v_a])[__pyx_v_b]));
 
-          /* "gb/mhw.pyx":326
+          /* "gb/mhw.pyx":329
  *                 mu_rates_final[a] += mu_rates[a]
  *                 beta_rates_final[a] += beta_rates[a]
  *                 for pair in Alpha_ab[a]:             # <<<<<<<<<<<<<<
@@ -3855,16 +3875,16 @@ static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &
         }
       }
 
-      /* "gb/mhw.pyx":320
+      /* "gb/mhw.pyx":323
  *         sampleone(all_timestamps, curr_state, num_background, mu_rates,
- *                   beta_rates, Alpha_ab, alpha_prior, sum_b, fptree)
+ *                   beta_rates, Alpha_ab, alpha_prior, sum_b, fptree, workload)
  *         if iteration >= burn_in:             # <<<<<<<<<<<<<<
  *             printf("[logger]\t Averaging after burn in...\n")
  *             num_good += 1
  */
     }
 
-    /* "gb/mhw.pyx":333
+    /* "gb/mhw.pyx":336
  *                         Alpha_ba_final[b][a] = 0
  *                     Alpha_ba_final[b][a] += Alpha_ab[a][b]
  *         printf("[logger] Iter done!\n")             # <<<<<<<<<<<<<<
@@ -3874,17 +3894,17 @@ static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &
     printf(((char const *)"[logger] Iter done!\n"));
   }
 
-  /* "gb/mhw.pyx":334
+  /* "gb/mhw.pyx":337
  *                     Alpha_ba_final[b][a] += Alpha_ab[a][b]
  *         printf("[logger] Iter done!\n")
  *     return num_good             # <<<<<<<<<<<<<<
  * 
- * def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in):
+ * def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in,
  */
   __pyx_r = __pyx_v_num_good;
   goto __pyx_L0;
 
-  /* "gb/mhw.pyx":299
+  /* "gb/mhw.pyx":301
  * 
  * 
  * cdef int cfit(map[int, vector[double]] &all_timestamps,             # <<<<<<<<<<<<<<
@@ -3900,12 +3920,12 @@ static int __pyx_f_2gb_3mhw_cfit(std::unordered_map<int,std::vector<double> >  &
   return __pyx_r;
 }
 
-/* "gb/mhw.pyx":336
+/* "gb/mhw.pyx":339
  *     return num_good
  * 
- * def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in):             # <<<<<<<<<<<<<<
+ * def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in,             # <<<<<<<<<<<<<<
+ *         dict indexes, dict start_state=None):
  * 
- *     cdef int n_proc = len(all_timestamps)
  */
 
 /* Python wrapper */
@@ -3916,16 +3936,29 @@ static PyObject *__pyx_pw_2gb_3mhw_1fit(PyObject *__pyx_self, PyObject *__pyx_ar
   double __pyx_v_alpha_prior;
   int __pyx_v_n_iter;
   int __pyx_v_burn_in;
+  PyObject *__pyx_v_indexes = 0;
+  PyObject *__pyx_v_start_state = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("fit (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_all_timestamps,&__pyx_n_s_alpha_prior,&__pyx_n_s_n_iter,&__pyx_n_s_burn_in,0};
-    PyObject* values[4] = {0,0,0,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_all_timestamps,&__pyx_n_s_alpha_prior,&__pyx_n_s_n_iter,&__pyx_n_s_burn_in,&__pyx_n_s_indexes,&__pyx_n_s_start_state,0};
+    PyObject* values[6] = {0,0,0,0,0,0};
+
+    /* "gb/mhw.pyx":340
+ * 
+ * def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in,
+ *         dict indexes, dict start_state=None):             # <<<<<<<<<<<<<<
+ * 
+ *     cdef int n_proc = len(all_timestamps)
+ */
+    values[5] = ((PyObject*)Py_None);
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
       switch (pos_args) {
+        case  6: values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
+        case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
         case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
         case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
         case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
@@ -3941,45 +3974,71 @@ static PyObject *__pyx_pw_2gb_3mhw_1fit(PyObject *__pyx_self, PyObject *__pyx_ar
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_alpha_prior)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("fit", 1, 4, 4, 1); __PYX_ERR(0, 336, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("fit", 0, 5, 6, 1); __PYX_ERR(0, 339, __pyx_L3_error)
         }
         case  2:
         if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_n_iter)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("fit", 1, 4, 4, 2); __PYX_ERR(0, 336, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("fit", 0, 5, 6, 2); __PYX_ERR(0, 339, __pyx_L3_error)
         }
         case  3:
         if (likely((values[3] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_burn_in)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("fit", 1, 4, 4, 3); __PYX_ERR(0, 336, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("fit", 0, 5, 6, 3); __PYX_ERR(0, 339, __pyx_L3_error)
+        }
+        case  4:
+        if (likely((values[4] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_indexes)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("fit", 0, 5, 6, 4); __PYX_ERR(0, 339, __pyx_L3_error)
+        }
+        case  5:
+        if (kw_args > 0) {
+          PyObject* value = PyDict_GetItem(__pyx_kwds, __pyx_n_s_start_state);
+          if (value) { values[5] = value; kw_args--; }
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "fit") < 0)) __PYX_ERR(0, 336, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "fit") < 0)) __PYX_ERR(0, 339, __pyx_L3_error)
       }
-    } else if (PyTuple_GET_SIZE(__pyx_args) != 4) {
-      goto __pyx_L5_argtuple_error;
     } else {
-      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-      values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-      values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
+      switch (PyTuple_GET_SIZE(__pyx_args)) {
+        case  6: values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
+        case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
+        values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
+        values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+        values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        break;
+        default: goto __pyx_L5_argtuple_error;
+      }
     }
     __pyx_v_all_timestamps = ((PyObject*)values[0]);
-    __pyx_v_alpha_prior = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_alpha_prior == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 336, __pyx_L3_error)
-    __pyx_v_n_iter = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_n_iter == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 336, __pyx_L3_error)
-    __pyx_v_burn_in = __Pyx_PyInt_As_int(values[3]); if (unlikely((__pyx_v_burn_in == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 336, __pyx_L3_error)
+    __pyx_v_alpha_prior = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_alpha_prior == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 339, __pyx_L3_error)
+    __pyx_v_n_iter = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_n_iter == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 339, __pyx_L3_error)
+    __pyx_v_burn_in = __Pyx_PyInt_As_int(values[3]); if (unlikely((__pyx_v_burn_in == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 339, __pyx_L3_error)
+    __pyx_v_indexes = ((PyObject*)values[4]);
+    __pyx_v_start_state = ((PyObject*)values[5]);
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("fit", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 336, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("fit", 0, 5, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 339, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gb.mhw.fit", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_all_timestamps), (&PyDict_Type), 1, "all_timestamps", 1))) __PYX_ERR(0, 336, __pyx_L1_error)
-  __pyx_r = __pyx_pf_2gb_3mhw_fit(__pyx_self, __pyx_v_all_timestamps, __pyx_v_alpha_prior, __pyx_v_n_iter, __pyx_v_burn_in);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_all_timestamps), (&PyDict_Type), 1, "all_timestamps", 1))) __PYX_ERR(0, 339, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_indexes), (&PyDict_Type), 1, "indexes", 1))) __PYX_ERR(0, 340, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_start_state), (&PyDict_Type), 1, "start_state", 1))) __PYX_ERR(0, 340, __pyx_L1_error)
+  __pyx_r = __pyx_pf_2gb_3mhw_fit(__pyx_self, __pyx_v_all_timestamps, __pyx_v_alpha_prior, __pyx_v_n_iter, __pyx_v_burn_in, __pyx_v_indexes, __pyx_v_start_state);
+
+  /* "gb/mhw.pyx":339
+ *     return num_good
+ * 
+ * def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in,             # <<<<<<<<<<<<<<
+ *         dict indexes, dict start_state=None):
+ * 
+ */
 
   /* function exit code */
   goto __pyx_L0;
@@ -3990,9 +4049,10 @@ static PyObject *__pyx_pw_2gb_3mhw_1fit(PyObject *__pyx_self, PyObject *__pyx_ar
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_2gb_3mhw_fit(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_all_timestamps, double __pyx_v_alpha_prior, int __pyx_v_n_iter, int __pyx_v_burn_in) {
+static PyObject *__pyx_pf_2gb_3mhw_fit(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_all_timestamps, double __pyx_v_alpha_prior, int __pyx_v_n_iter, int __pyx_v_burn_in, PyObject *__pyx_v_indexes, PyObject *__pyx_v_start_state) {
   int __pyx_v_n_proc;
   std::unordered_map<int,std::vector<int> >  __pyx_v_curr_state;
+  std::unordered_map<int,std::vector<int> >  __pyx_v_workload;
   std::unordered_map<int,std::unordered_map<int,int> >  __pyx_v_Alpha_ab;
   std::unordered_map<int,std::vector<double> >  __pyx_v_all_timestamps_map;
   __Pyx_memviewslice __pyx_v_sum_b = { 0, 0, { 0 }, { 0 }, { 0 } };
@@ -4018,23 +4078,24 @@ static PyObject *__pyx_pf_2gb_3mhw_fit(CYTHON_UNUSED PyObject *__pyx_self, PyObj
   int __pyx_t_8;
   std::unordered_map<int,int>  __pyx_t_9;
   std::vector<double>  __pyx_t_10;
-  PyObject *__pyx_t_11 = NULL;
+  int __pyx_t_11;
   int __pyx_t_12;
   PyObject *__pyx_t_13 = NULL;
-  std::vector<int>  __pyx_t_14;
-  std::vector<int> ::iterator __pyx_t_15;
-  std::vector<int>  *__pyx_t_16;
-  int __pyx_t_17;
-  Py_ssize_t __pyx_t_18;
-  int __pyx_t_19;
-  Py_ssize_t __pyx_t_20;
-  __Pyx_memviewslice __pyx_t_21 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  PyObject *__pyx_t_22 = NULL;
+  int __pyx_t_14;
+  PyObject *__pyx_t_15 = NULL;
+  std::vector<int>  __pyx_t_16;
+  std::vector<int> ::iterator __pyx_t_17;
+  std::vector<int>  *__pyx_t_18;
+  Py_ssize_t __pyx_t_19;
+  int __pyx_t_20;
+  Py_ssize_t __pyx_t_21;
+  __Pyx_memviewslice __pyx_t_22 = { 0, 0, { 0 }, { 0 }, { 0 } };
   PyObject *__pyx_t_23 = NULL;
+  PyObject *__pyx_t_24 = NULL;
   __Pyx_RefNannySetupContext("fit", 0);
 
-  /* "gb/mhw.pyx":338
- * def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in):
+  /* "gb/mhw.pyx":342
+ *         dict indexes, dict start_state=None):
  * 
  *     cdef int n_proc = len(all_timestamps)             # <<<<<<<<<<<<<<
  * 
@@ -4042,82 +4103,82 @@ static PyObject *__pyx_pf_2gb_3mhw_fit(CYTHON_UNUSED PyObject *__pyx_self, PyObj
  */
   if (unlikely(__pyx_v_all_timestamps == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    __PYX_ERR(0, 338, __pyx_L1_error)
+    __PYX_ERR(0, 342, __pyx_L1_error)
   }
-  __pyx_t_1 = PyDict_Size(__pyx_v_all_timestamps); if (unlikely(__pyx_t_1 == -1)) __PYX_ERR(0, 338, __pyx_L1_error)
+  __pyx_t_1 = PyDict_Size(__pyx_v_all_timestamps); if (unlikely(__pyx_t_1 == -1)) __PYX_ERR(0, 342, __pyx_L1_error)
   __pyx_v_n_proc = __pyx_t_1;
 
-  /* "gb/mhw.pyx":344
+  /* "gb/mhw.pyx":349
  *     cdef map[int, vector[double]] all_timestamps_map
  * 
  *     cdef int[::1] sum_b = np.zeros(n_proc, dtype='i', order='C')             # <<<<<<<<<<<<<<
  *     cdef int[::1] num_background = np.zeros(n_proc, dtype='i', order='C')
  * 
  */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 344, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 349, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_zeros); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 344, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_zeros); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 349, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_n_proc); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 344, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_n_proc); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 349, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 344, __pyx_L1_error)
+  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 349, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_GIVEREF(__pyx_t_2);
   PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_2);
   __pyx_t_2 = 0;
-  __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 344, __pyx_L1_error)
+  __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 349, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, __pyx_n_s_i) < 0) __PYX_ERR(0, 344, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_order, __pyx_n_s_C) < 0) __PYX_ERR(0, 344, __pyx_L1_error)
-  __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 344, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, __pyx_n_s_i) < 0) __PYX_ERR(0, 349, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_order, __pyx_n_s_C) < 0) __PYX_ERR(0, 349, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 349, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_dc_int(__pyx_t_5);
-  if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 344, __pyx_L1_error)
+  if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 349, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_v_sum_b = __pyx_t_6;
   __pyx_t_6.memview = NULL;
   __pyx_t_6.data = NULL;
 
-  /* "gb/mhw.pyx":345
+  /* "gb/mhw.pyx":350
  * 
  *     cdef int[::1] sum_b = np.zeros(n_proc, dtype='i', order='C')
  *     cdef int[::1] num_background = np.zeros(n_proc, dtype='i', order='C')             # <<<<<<<<<<<<<<
  * 
  *     cdef int a, b
  */
-  __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 345, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 350, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 345, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 350, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_n_proc); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 345, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_n_proc); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 350, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 345, __pyx_L1_error)
+  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 350, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_GIVEREF(__pyx_t_5);
   PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_5);
   __pyx_t_5 = 0;
-  __pyx_t_5 = PyDict_New(); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 345, __pyx_L1_error)
+  __pyx_t_5 = PyDict_New(); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 350, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_dtype, __pyx_n_s_i) < 0) __PYX_ERR(0, 345, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_order, __pyx_n_s_C) < 0) __PYX_ERR(0, 345, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 345, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_dtype, __pyx_n_s_i) < 0) __PYX_ERR(0, 350, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_order, __pyx_n_s_C) < 0) __PYX_ERR(0, 350, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 350, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_dc_int(__pyx_t_3);
-  if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 345, __pyx_L1_error)
+  if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 350, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_num_background = __pyx_t_6;
   __pyx_t_6.memview = NULL;
   __pyx_t_6.data = NULL;
 
-  /* "gb/mhw.pyx":348
+  /* "gb/mhw.pyx":353
  * 
  *     cdef int a, b
  *     for a in range(n_proc):             # <<<<<<<<<<<<<<
@@ -4128,173 +4189,289 @@ static PyObject *__pyx_pf_2gb_3mhw_fit(CYTHON_UNUSED PyObject *__pyx_self, PyObj
   for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
     __pyx_v_a = __pyx_t_8;
 
-    /* "gb/mhw.pyx":349
+    /* "gb/mhw.pyx":354
  *     cdef int a, b
  *     for a in range(n_proc):
  *         Alpha_ab[a] = map[int, int]()             # <<<<<<<<<<<<<<
  *         all_timestamps_map[a] = all_timestamps[a]
- *         curr_state[a] = np.random.randint(-1, n_proc, len(all_timestamps[a]))
+ *         if start_state is None:
  */
     try {
       __pyx_t_9 = std::unordered_map<int,int> ();
     } catch(...) {
       __Pyx_CppExn2PyErr();
-      __PYX_ERR(0, 349, __pyx_L1_error)
+      __PYX_ERR(0, 354, __pyx_L1_error)
     }
     (__pyx_v_Alpha_ab[__pyx_v_a]) = __pyx_t_9;
 
-    /* "gb/mhw.pyx":350
+    /* "gb/mhw.pyx":355
  *     for a in range(n_proc):
  *         Alpha_ab[a] = map[int, int]()
  *         all_timestamps_map[a] = all_timestamps[a]             # <<<<<<<<<<<<<<
- *         curr_state[a] = np.random.randint(-1, n_proc, len(all_timestamps[a]))
- *         for b in curr_state[a]:
+ *         if start_state is None:
+ *             curr_state[a] = np.random.randint(-1, n_proc,
  */
     if (unlikely(__pyx_v_all_timestamps == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 350, __pyx_L1_error)
+      __PYX_ERR(0, 355, __pyx_L1_error)
     }
-    __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_a); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 350, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_a); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 355, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_5 = __Pyx_PyDict_GetItem(__pyx_v_all_timestamps, __pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 350, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyDict_GetItem(__pyx_v_all_timestamps, __pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 355, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_10 = __pyx_convert_vector_from_py_double(__pyx_t_5); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 350, __pyx_L1_error)
+    __pyx_t_10 = __pyx_convert_vector_from_py_double(__pyx_t_5); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 355, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     (__pyx_v_all_timestamps_map[__pyx_v_a]) = __pyx_t_10;
 
-    /* "gb/mhw.pyx":351
+    /* "gb/mhw.pyx":356
  *         Alpha_ab[a] = map[int, int]()
  *         all_timestamps_map[a] = all_timestamps[a]
- *         curr_state[a] = np.random.randint(-1, n_proc, len(all_timestamps[a]))             # <<<<<<<<<<<<<<
+ *         if start_state is None:             # <<<<<<<<<<<<<<
+ *             curr_state[a] = np.random.randint(-1, n_proc,
+ *                                               len(all_timestamps[a]))
+ */
+    __pyx_t_11 = (__pyx_v_start_state == ((PyObject*)Py_None));
+    __pyx_t_12 = (__pyx_t_11 != 0);
+    if (__pyx_t_12) {
+
+      /* "gb/mhw.pyx":357
+ *         all_timestamps_map[a] = all_timestamps[a]
+ *         if start_state is None:
+ *             curr_state[a] = np.random.randint(-1, n_proc,             # <<<<<<<<<<<<<<
+ *                                               len(all_timestamps[a]))
+ *         else:
+ */
+      __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 357, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_random); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 357, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_randint); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 357, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_n_proc); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 357, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+
+      /* "gb/mhw.pyx":358
+ *         if start_state is None:
+ *             curr_state[a] = np.random.randint(-1, n_proc,
+ *                                               len(all_timestamps[a]))             # <<<<<<<<<<<<<<
+ *         else:
+ *             curr_state[a] = np.asanyarray(start_state[a], dtype='i')
+ */
+      if (unlikely(__pyx_v_all_timestamps == Py_None)) {
+        PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+        __PYX_ERR(0, 358, __pyx_L1_error)
+      }
+      __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_a); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 358, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_2);
+      __pyx_t_13 = __Pyx_PyDict_GetItem(__pyx_v_all_timestamps, __pyx_t_2); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 358, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_13);
+      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+      __pyx_t_1 = PyObject_Length(__pyx_t_13); if (unlikely(__pyx_t_1 == -1)) __PYX_ERR(0, 358, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+      __pyx_t_13 = PyInt_FromSsize_t(__pyx_t_1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 358, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_13);
+      __pyx_t_2 = NULL;
+      __pyx_t_14 = 0;
+      if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
+        __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
+        if (likely(__pyx_t_2)) {
+          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+          __Pyx_INCREF(__pyx_t_2);
+          __Pyx_INCREF(function);
+          __Pyx_DECREF_SET(__pyx_t_3, function);
+          __pyx_t_14 = 1;
+        }
+      }
+      #if CYTHON_FAST_PYCALL
+      if (PyFunction_Check(__pyx_t_3)) {
+        PyObject *__pyx_temp[4] = {__pyx_t_2, __pyx_int_neg_1, __pyx_t_4, __pyx_t_13};
+        __pyx_t_5 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_14, 3+__pyx_t_14); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 357, __pyx_L1_error)
+        __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+        __Pyx_GOTREF(__pyx_t_5);
+        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+        __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+      } else
+      #endif
+      #if CYTHON_FAST_PYCCALL
+      if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
+        PyObject *__pyx_temp[4] = {__pyx_t_2, __pyx_int_neg_1, __pyx_t_4, __pyx_t_13};
+        __pyx_t_5 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_14, 3+__pyx_t_14); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 357, __pyx_L1_error)
+        __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+        __Pyx_GOTREF(__pyx_t_5);
+        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+        __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+      } else
+      #endif
+      {
+        __pyx_t_15 = PyTuple_New(3+__pyx_t_14); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 357, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_15);
+        if (__pyx_t_2) {
+          __Pyx_GIVEREF(__pyx_t_2); PyTuple_SET_ITEM(__pyx_t_15, 0, __pyx_t_2); __pyx_t_2 = NULL;
+        }
+        __Pyx_INCREF(__pyx_int_neg_1);
+        __Pyx_GIVEREF(__pyx_int_neg_1);
+        PyTuple_SET_ITEM(__pyx_t_15, 0+__pyx_t_14, __pyx_int_neg_1);
+        __Pyx_GIVEREF(__pyx_t_4);
+        PyTuple_SET_ITEM(__pyx_t_15, 1+__pyx_t_14, __pyx_t_4);
+        __Pyx_GIVEREF(__pyx_t_13);
+        PyTuple_SET_ITEM(__pyx_t_15, 2+__pyx_t_14, __pyx_t_13);
+        __pyx_t_4 = 0;
+        __pyx_t_13 = 0;
+        __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_15, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 357, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_5);
+        __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+      }
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+      /* "gb/mhw.pyx":357
+ *         all_timestamps_map[a] = all_timestamps[a]
+ *         if start_state is None:
+ *             curr_state[a] = np.random.randint(-1, n_proc,             # <<<<<<<<<<<<<<
+ *                                               len(all_timestamps[a]))
+ *         else:
+ */
+      __pyx_t_16 = __pyx_convert_vector_from_py_int(__pyx_t_5); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 357, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      (__pyx_v_curr_state[__pyx_v_a]) = __pyx_t_16;
+
+      /* "gb/mhw.pyx":356
+ *         Alpha_ab[a] = map[int, int]()
+ *         all_timestamps_map[a] = all_timestamps[a]
+ *         if start_state is None:             # <<<<<<<<<<<<<<
+ *             curr_state[a] = np.random.randint(-1, n_proc,
+ *                                               len(all_timestamps[a]))
+ */
+      goto __pyx_L5;
+    }
+
+    /* "gb/mhw.pyx":360
+ *                                               len(all_timestamps[a]))
+ *         else:
+ *             curr_state[a] = np.asanyarray(start_state[a], dtype='i')             # <<<<<<<<<<<<<<
+ * 
+ *         workload[a] = np.asanyarray(indexes[a], dtype='i')
+ */
+    /*else*/ {
+      __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 360, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_asanyarray); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 360, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      if (unlikely(__pyx_v_start_state == Py_None)) {
+        PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+        __PYX_ERR(0, 360, __pyx_L1_error)
+      }
+      __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_a); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 360, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __pyx_t_15 = __Pyx_PyDict_GetItem(__pyx_v_start_state, __pyx_t_5); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 360, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_15);
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 360, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __Pyx_GIVEREF(__pyx_t_15);
+      PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_15);
+      __pyx_t_15 = 0;
+      __pyx_t_15 = PyDict_New(); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 360, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_15);
+      if (PyDict_SetItem(__pyx_t_15, __pyx_n_s_dtype, __pyx_n_s_i) < 0) __PYX_ERR(0, 360, __pyx_L1_error)
+      __pyx_t_13 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_5, __pyx_t_15); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 360, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_13);
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+      __pyx_t_16 = __pyx_convert_vector_from_py_int(__pyx_t_13); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 360, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+      (__pyx_v_curr_state[__pyx_v_a]) = __pyx_t_16;
+    }
+    __pyx_L5:;
+
+    /* "gb/mhw.pyx":362
+ *             curr_state[a] = np.asanyarray(start_state[a], dtype='i')
+ * 
+ *         workload[a] = np.asanyarray(indexes[a], dtype='i')             # <<<<<<<<<<<<<<
  *         for b in curr_state[a]:
  *             if b == -1:
  */
-    __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 351, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_random); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 351, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_randint); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 351, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_n_proc); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 351, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    if (unlikely(__pyx_v_all_timestamps == Py_None)) {
+    __pyx_t_13 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 362, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_13);
+    __pyx_t_15 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_asanyarray); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 362, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_15);
+    __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+    if (unlikely(__pyx_v_indexes == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 351, __pyx_L1_error)
+      __PYX_ERR(0, 362, __pyx_L1_error)
     }
-    __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_a); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 351, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_11 = __Pyx_PyDict_GetItem(__pyx_v_all_timestamps, __pyx_t_2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 351, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_11);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_1 = PyObject_Length(__pyx_t_11); if (unlikely(__pyx_t_1 == -1)) __PYX_ERR(0, 351, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-    __pyx_t_11 = PyInt_FromSsize_t(__pyx_t_1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 351, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_11);
-    __pyx_t_2 = NULL;
-    __pyx_t_12 = 0;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
-      __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
-      if (likely(__pyx_t_2)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-        __Pyx_INCREF(__pyx_t_2);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_3, function);
-        __pyx_t_12 = 1;
-      }
-    }
-    #if CYTHON_FAST_PYCALL
-    if (PyFunction_Check(__pyx_t_3)) {
-      PyObject *__pyx_temp[4] = {__pyx_t_2, __pyx_int_neg_1, __pyx_t_4, __pyx_t_11};
-      __pyx_t_5 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_12, 3+__pyx_t_12); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 351, __pyx_L1_error)
-      __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __Pyx_GOTREF(__pyx_t_5);
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-    } else
-    #endif
-    #if CYTHON_FAST_PYCCALL
-    if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
-      PyObject *__pyx_temp[4] = {__pyx_t_2, __pyx_int_neg_1, __pyx_t_4, __pyx_t_11};
-      __pyx_t_5 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_12, 3+__pyx_t_12); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 351, __pyx_L1_error)
-      __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __Pyx_GOTREF(__pyx_t_5);
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-    } else
-    #endif
-    {
-      __pyx_t_13 = PyTuple_New(3+__pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 351, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_13);
-      if (__pyx_t_2) {
-        __Pyx_GIVEREF(__pyx_t_2); PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_t_2); __pyx_t_2 = NULL;
-      }
-      __Pyx_INCREF(__pyx_int_neg_1);
-      __Pyx_GIVEREF(__pyx_int_neg_1);
-      PyTuple_SET_ITEM(__pyx_t_13, 0+__pyx_t_12, __pyx_int_neg_1);
-      __Pyx_GIVEREF(__pyx_t_4);
-      PyTuple_SET_ITEM(__pyx_t_13, 1+__pyx_t_12, __pyx_t_4);
-      __Pyx_GIVEREF(__pyx_t_11);
-      PyTuple_SET_ITEM(__pyx_t_13, 2+__pyx_t_12, __pyx_t_11);
-      __pyx_t_4 = 0;
-      __pyx_t_11 = 0;
-      __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_13, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 351, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
-      __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    }
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_14 = __pyx_convert_vector_from_py_int(__pyx_t_5); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 351, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_PyInt_From_int(__pyx_v_a); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 362, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_13);
+    __pyx_t_5 = __Pyx_PyDict_GetItem(__pyx_v_indexes, __pyx_t_13); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 362, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+    __pyx_t_13 = PyTuple_New(1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 362, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_13);
+    __Pyx_GIVEREF(__pyx_t_5);
+    PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_t_5);
+    __pyx_t_5 = 0;
+    __pyx_t_5 = PyDict_New(); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 362, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_dtype, __pyx_n_s_i) < 0) __PYX_ERR(0, 362, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_15, __pyx_t_13, __pyx_t_5); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 362, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+    __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    (__pyx_v_curr_state[__pyx_v_a]) = __pyx_t_14;
+    __pyx_t_16 = __pyx_convert_vector_from_py_int(__pyx_t_3); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 362, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    (__pyx_v_workload[__pyx_v_a]) = __pyx_t_16;
 
-    /* "gb/mhw.pyx":352
- *         all_timestamps_map[a] = all_timestamps[a]
- *         curr_state[a] = np.random.randint(-1, n_proc, len(all_timestamps[a]))
+    /* "gb/mhw.pyx":363
+ * 
+ *         workload[a] = np.asanyarray(indexes[a], dtype='i')
  *         for b in curr_state[a]:             # <<<<<<<<<<<<<<
  *             if b == -1:
  *                 num_background[a] += 1
  */
-    __pyx_t_16 = &(__pyx_v_curr_state[__pyx_v_a]);
-    __pyx_t_15 = __pyx_t_16->begin();
+    __pyx_t_18 = &(__pyx_v_curr_state[__pyx_v_a]);
+    __pyx_t_17 = __pyx_t_18->begin();
     for (;;) {
-      if (!(__pyx_t_15 != __pyx_t_16->end())) break;
-      __pyx_t_12 = *__pyx_t_15;
-      ++__pyx_t_15;
-      __pyx_v_b = __pyx_t_12;
+      if (!(__pyx_t_17 != __pyx_t_18->end())) break;
+      __pyx_t_14 = *__pyx_t_17;
+      ++__pyx_t_17;
+      __pyx_v_b = __pyx_t_14;
 
-      /* "gb/mhw.pyx":353
- *         curr_state[a] = np.random.randint(-1, n_proc, len(all_timestamps[a]))
+      /* "gb/mhw.pyx":364
+ *         workload[a] = np.asanyarray(indexes[a], dtype='i')
  *         for b in curr_state[a]:
  *             if b == -1:             # <<<<<<<<<<<<<<
  *                 num_background[a] += 1
  *             else:
  */
-      __pyx_t_17 = ((__pyx_v_b == -1L) != 0);
-      if (__pyx_t_17) {
+      __pyx_t_12 = ((__pyx_v_b == -1L) != 0);
+      if (__pyx_t_12) {
 
-        /* "gb/mhw.pyx":354
+        /* "gb/mhw.pyx":365
  *         for b in curr_state[a]:
  *             if b == -1:
  *                 num_background[a] += 1             # <<<<<<<<<<<<<<
  *             else:
  *                 if Alpha_ab[a].count(b) == 0:
  */
-        __pyx_t_18 = __pyx_v_a;
-        *((int *) ( /* dim=0 */ ((char *) (((int *) __pyx_v_num_background.data) + __pyx_t_18)) )) += 1;
+        __pyx_t_19 = __pyx_v_a;
+        *((int *) ( /* dim=0 */ ((char *) (((int *) __pyx_v_num_background.data) + __pyx_t_19)) )) += 1;
 
-        /* "gb/mhw.pyx":353
- *         curr_state[a] = np.random.randint(-1, n_proc, len(all_timestamps[a]))
+        /* "gb/mhw.pyx":364
+ *         workload[a] = np.asanyarray(indexes[a], dtype='i')
  *         for b in curr_state[a]:
  *             if b == -1:             # <<<<<<<<<<<<<<
  *                 num_background[a] += 1
  *             else:
  */
-        goto __pyx_L7;
+        goto __pyx_L8;
       }
 
-      /* "gb/mhw.pyx":356
+      /* "gb/mhw.pyx":367
  *                 num_background[a] += 1
  *             else:
  *                 if Alpha_ab[a].count(b) == 0:             # <<<<<<<<<<<<<<
@@ -4302,10 +4479,10 @@ static PyObject *__pyx_pf_2gb_3mhw_fit(CYTHON_UNUSED PyObject *__pyx_self, PyObj
  *                 Alpha_ab[a][b] += 1
  */
       /*else*/ {
-        __pyx_t_17 = (((__pyx_v_Alpha_ab[__pyx_v_a]).count(__pyx_v_b) == 0) != 0);
-        if (__pyx_t_17) {
+        __pyx_t_12 = (((__pyx_v_Alpha_ab[__pyx_v_a]).count(__pyx_v_b) == 0) != 0);
+        if (__pyx_t_12) {
 
-          /* "gb/mhw.pyx":357
+          /* "gb/mhw.pyx":368
  *             else:
  *                 if Alpha_ab[a].count(b) == 0:
  *                     Alpha_ab[a][b] = 0             # <<<<<<<<<<<<<<
@@ -4314,7 +4491,7 @@ static PyObject *__pyx_pf_2gb_3mhw_fit(CYTHON_UNUSED PyObject *__pyx_self, PyObj
  */
           ((__pyx_v_Alpha_ab[__pyx_v_a])[__pyx_v_b]) = 0;
 
-          /* "gb/mhw.pyx":356
+          /* "gb/mhw.pyx":367
  *                 num_background[a] += 1
  *             else:
  *                 if Alpha_ab[a].count(b) == 0:             # <<<<<<<<<<<<<<
@@ -4323,32 +4500,32 @@ static PyObject *__pyx_pf_2gb_3mhw_fit(CYTHON_UNUSED PyObject *__pyx_self, PyObj
  */
         }
 
-        /* "gb/mhw.pyx":358
+        /* "gb/mhw.pyx":369
  *                 if Alpha_ab[a].count(b) == 0:
  *                     Alpha_ab[a][b] = 0
  *                 Alpha_ab[a][b] += 1             # <<<<<<<<<<<<<<
  *                 sum_b[b] += 1
  * 
  */
-        __pyx_t_12 = __pyx_v_a;
-        __pyx_t_19 = __pyx_v_b;
-        ((__pyx_v_Alpha_ab[__pyx_t_12])[__pyx_t_19]) = (((__pyx_v_Alpha_ab[__pyx_t_12])[__pyx_t_19]) + 1);
+        __pyx_t_14 = __pyx_v_a;
+        __pyx_t_20 = __pyx_v_b;
+        ((__pyx_v_Alpha_ab[__pyx_t_14])[__pyx_t_20]) = (((__pyx_v_Alpha_ab[__pyx_t_14])[__pyx_t_20]) + 1);
 
-        /* "gb/mhw.pyx":359
+        /* "gb/mhw.pyx":370
  *                     Alpha_ab[a][b] = 0
  *                 Alpha_ab[a][b] += 1
  *                 sum_b[b] += 1             # <<<<<<<<<<<<<<
  * 
  *     cdef double[::1] mu_rates = np.zeros(n_proc, dtype='d', order='C')
  */
-        __pyx_t_20 = __pyx_v_b;
-        *((int *) ( /* dim=0 */ ((char *) (((int *) __pyx_v_sum_b.data) + __pyx_t_20)) )) += 1;
+        __pyx_t_21 = __pyx_v_b;
+        *((int *) ( /* dim=0 */ ((char *) (((int *) __pyx_v_sum_b.data) + __pyx_t_21)) )) += 1;
       }
-      __pyx_L7:;
+      __pyx_L8:;
 
-      /* "gb/mhw.pyx":352
- *         all_timestamps_map[a] = all_timestamps[a]
- *         curr_state[a] = np.random.randint(-1, n_proc, len(all_timestamps[a]))
+      /* "gb/mhw.pyx":363
+ * 
+ *         workload[a] = np.asanyarray(indexes[a], dtype='i')
  *         for b in curr_state[a]:             # <<<<<<<<<<<<<<
  *             if b == -1:
  *                 num_background[a] += 1
@@ -4356,251 +4533,251 @@ static PyObject *__pyx_pf_2gb_3mhw_fit(CYTHON_UNUSED PyObject *__pyx_self, PyObj
     }
   }
 
-  /* "gb/mhw.pyx":361
+  /* "gb/mhw.pyx":372
  *                 sum_b[b] += 1
  * 
  *     cdef double[::1] mu_rates = np.zeros(n_proc, dtype='d', order='C')             # <<<<<<<<<<<<<<
  *     cdef double[::1] beta_rates = np.zeros(n_proc, dtype='d', order='C')
  * 
  */
-  __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 361, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_zeros); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 361, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_n_proc); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 361, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_zeros); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 372, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_13 = PyTuple_New(1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 361, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __Pyx_GIVEREF(__pyx_t_5);
-  PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_t_5);
-  __pyx_t_5 = 0;
-  __pyx_t_5 = PyDict_New(); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 361, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_dtype, __pyx_n_s_d) < 0) __PYX_ERR(0, 361, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_order, __pyx_n_s_C) < 0) __PYX_ERR(0, 361, __pyx_L1_error)
-  __pyx_t_11 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_13, __pyx_t_5); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 361, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_n_proc); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 372, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_13 = PyTuple_New(1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 372, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __Pyx_GIVEREF(__pyx_t_3);
+  PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_t_3);
+  __pyx_t_3 = 0;
+  __pyx_t_3 = PyDict_New(); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 372, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_dtype, __pyx_n_s_d) < 0) __PYX_ERR(0, 372, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_order, __pyx_n_s_C) < 0) __PYX_ERR(0, 372, __pyx_L1_error)
+  __pyx_t_15 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_13, __pyx_t_3); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 372, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_21 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_11);
-  if (unlikely(!__pyx_t_21.memview)) __PYX_ERR(0, 361, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_v_mu_rates = __pyx_t_21;
-  __pyx_t_21.memview = NULL;
-  __pyx_t_21.data = NULL;
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_22 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_15);
+  if (unlikely(!__pyx_t_22.memview)) __PYX_ERR(0, 372, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+  __pyx_v_mu_rates = __pyx_t_22;
+  __pyx_t_22.memview = NULL;
+  __pyx_t_22.data = NULL;
 
-  /* "gb/mhw.pyx":362
+  /* "gb/mhw.pyx":373
  * 
  *     cdef double[::1] mu_rates = np.zeros(n_proc, dtype='d', order='C')
  *     cdef double[::1] beta_rates = np.zeros(n_proc, dtype='d', order='C')             # <<<<<<<<<<<<<<
  * 
  *     cdef double[::1] mu_rates_final = np.zeros(n_proc, dtype='d', order='C')
  */
-  __pyx_t_11 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 362, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_n_s_zeros); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 362, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_n_proc); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 362, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  __pyx_t_13 = PyTuple_New(1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 362, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __Pyx_GIVEREF(__pyx_t_11);
-  PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_t_11);
-  __pyx_t_11 = 0;
-  __pyx_t_11 = PyDict_New(); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 362, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  if (PyDict_SetItem(__pyx_t_11, __pyx_n_s_dtype, __pyx_n_s_d) < 0) __PYX_ERR(0, 362, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_11, __pyx_n_s_order, __pyx_n_s_C) < 0) __PYX_ERR(0, 362, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_13, __pyx_t_11); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 362, __pyx_L1_error)
+  __pyx_t_15 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 373, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_15, __pyx_n_s_zeros); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 373, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_21 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_3);
-  if (unlikely(!__pyx_t_21.memview)) __PYX_ERR(0, 362, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+  __pyx_t_15 = __Pyx_PyInt_From_int(__pyx_v_n_proc); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 373, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __pyx_t_13 = PyTuple_New(1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 373, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __Pyx_GIVEREF(__pyx_t_15);
+  PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_t_15);
+  __pyx_t_15 = 0;
+  __pyx_t_15 = PyDict_New(); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 373, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  if (PyDict_SetItem(__pyx_t_15, __pyx_n_s_dtype, __pyx_n_s_d) < 0) __PYX_ERR(0, 373, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_15, __pyx_n_s_order, __pyx_n_s_C) < 0) __PYX_ERR(0, 373, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_13, __pyx_t_15); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 373, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_v_beta_rates = __pyx_t_21;
-  __pyx_t_21.memview = NULL;
-  __pyx_t_21.data = NULL;
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+  __pyx_t_22 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_5);
+  if (unlikely(!__pyx_t_22.memview)) __PYX_ERR(0, 373, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_v_beta_rates = __pyx_t_22;
+  __pyx_t_22.memview = NULL;
+  __pyx_t_22.data = NULL;
 
-  /* "gb/mhw.pyx":364
+  /* "gb/mhw.pyx":375
  *     cdef double[::1] beta_rates = np.zeros(n_proc, dtype='d', order='C')
  * 
  *     cdef double[::1] mu_rates_final = np.zeros(n_proc, dtype='d', order='C')             # <<<<<<<<<<<<<<
  *     cdef double[::1] beta_rates_final = np.zeros(n_proc, dtype='d', order='C')
  *     cdef map[int, map[int, int]] Alpha_ba_final
  */
-  __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 364, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_zeros); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 364, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_n_proc); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 364, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_13 = PyTuple_New(1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 364, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __Pyx_GIVEREF(__pyx_t_3);
-  PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_t_3);
-  __pyx_t_3 = 0;
-  __pyx_t_3 = PyDict_New(); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 364, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_dtype, __pyx_n_s_d) < 0) __PYX_ERR(0, 364, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_order, __pyx_n_s_C) < 0) __PYX_ERR(0, 364, __pyx_L1_error)
-  __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_11, __pyx_t_13, __pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 364, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 375, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_21 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_5);
-  if (unlikely(!__pyx_t_21.memview)) __PYX_ERR(0, 364, __pyx_L1_error)
+  __pyx_t_15 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_zeros); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 375, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_v_mu_rates_final = __pyx_t_21;
-  __pyx_t_21.memview = NULL;
-  __pyx_t_21.data = NULL;
+  __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_n_proc); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 375, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_13 = PyTuple_New(1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 375, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __Pyx_GIVEREF(__pyx_t_5);
+  PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_t_5);
+  __pyx_t_5 = 0;
+  __pyx_t_5 = PyDict_New(); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 375, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_dtype, __pyx_n_s_d) < 0) __PYX_ERR(0, 375, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_order, __pyx_n_s_C) < 0) __PYX_ERR(0, 375, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_15, __pyx_t_13, __pyx_t_5); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 375, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_22 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_3);
+  if (unlikely(!__pyx_t_22.memview)) __PYX_ERR(0, 375, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_v_mu_rates_final = __pyx_t_22;
+  __pyx_t_22.memview = NULL;
+  __pyx_t_22.data = NULL;
 
-  /* "gb/mhw.pyx":365
+  /* "gb/mhw.pyx":376
  * 
  *     cdef double[::1] mu_rates_final = np.zeros(n_proc, dtype='d', order='C')
  *     cdef double[::1] beta_rates_final = np.zeros(n_proc, dtype='d', order='C')             # <<<<<<<<<<<<<<
  *     cdef map[int, map[int, int]] Alpha_ba_final
  *     cdef FPTree fptree = FPTree(n_proc)
  */
-  __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 365, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_zeros); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 365, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 376, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_n_proc); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 365, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_zeros); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 376, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_13 = PyTuple_New(1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 365, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __Pyx_GIVEREF(__pyx_t_5);
-  PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_t_5);
-  __pyx_t_5 = 0;
-  __pyx_t_5 = PyDict_New(); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 365, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_dtype, __pyx_n_s_d) < 0) __PYX_ERR(0, 365, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_order, __pyx_n_s_C) < 0) __PYX_ERR(0, 365, __pyx_L1_error)
-  __pyx_t_11 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_13, __pyx_t_5); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 365, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_n_proc); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 376, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_13 = PyTuple_New(1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 376, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __Pyx_GIVEREF(__pyx_t_3);
+  PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_t_3);
+  __pyx_t_3 = 0;
+  __pyx_t_3 = PyDict_New(); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 376, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_dtype, __pyx_n_s_d) < 0) __PYX_ERR(0, 376, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_order, __pyx_n_s_C) < 0) __PYX_ERR(0, 376, __pyx_L1_error)
+  __pyx_t_15 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_13, __pyx_t_3); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 376, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_21 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_11);
-  if (unlikely(!__pyx_t_21.memview)) __PYX_ERR(0, 365, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_v_beta_rates_final = __pyx_t_21;
-  __pyx_t_21.memview = NULL;
-  __pyx_t_21.data = NULL;
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_22 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_15);
+  if (unlikely(!__pyx_t_22.memview)) __PYX_ERR(0, 376, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+  __pyx_v_beta_rates_final = __pyx_t_22;
+  __pyx_t_22.memview = NULL;
+  __pyx_t_22.data = NULL;
 
-  /* "gb/mhw.pyx":367
+  /* "gb/mhw.pyx":378
  *     cdef double[::1] beta_rates_final = np.zeros(n_proc, dtype='d', order='C')
  *     cdef map[int, map[int, int]] Alpha_ba_final
  *     cdef FPTree fptree = FPTree(n_proc)             # <<<<<<<<<<<<<<
  *     cdef int n_good = cfit(all_timestamps_map, curr_state, num_background,
  *                            mu_rates, beta_rates, Alpha_ab, alpha_prior,
  */
-  __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_n_proc); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 367, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 367, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GIVEREF(__pyx_t_11);
-  PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_11);
-  __pyx_t_11 = 0;
-  __pyx_t_11 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_2gb_11collections_6fptree_FPTree), __pyx_t_5, NULL); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 367, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_v_fptree = ((struct __pyx_obj_2gb_11collections_6fptree_FPTree *)__pyx_t_11);
-  __pyx_t_11 = 0;
+  __pyx_t_15 = __Pyx_PyInt_From_int(__pyx_v_n_proc); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 378, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 378, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_GIVEREF(__pyx_t_15);
+  PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_15);
+  __pyx_t_15 = 0;
+  __pyx_t_15 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_2gb_11collections_6fptree_FPTree), __pyx_t_3, NULL); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 378, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_v_fptree = ((struct __pyx_obj_2gb_11collections_6fptree_FPTree *)__pyx_t_15);
+  __pyx_t_15 = 0;
 
-  /* "gb/mhw.pyx":368
+  /* "gb/mhw.pyx":379
  *     cdef map[int, map[int, int]] Alpha_ba_final
  *     cdef FPTree fptree = FPTree(n_proc)
  *     cdef int n_good = cfit(all_timestamps_map, curr_state, num_background,             # <<<<<<<<<<<<<<
  *                            mu_rates, beta_rates, Alpha_ab, alpha_prior,
  *                            sum_b, mu_rates_final, beta_rates_final,
  */
-  __pyx_v_n_good = __pyx_f_2gb_3mhw_cfit(__pyx_v_all_timestamps_map, __pyx_v_curr_state, __pyx_v_num_background, __pyx_v_mu_rates, __pyx_v_beta_rates, __pyx_v_Alpha_ab, __pyx_v_alpha_prior, __pyx_v_sum_b, __pyx_v_mu_rates_final, __pyx_v_beta_rates_final, __pyx_v_Alpha_ba_final, __pyx_v_n_iter, __pyx_v_burn_in, __pyx_v_fptree);
+  __pyx_v_n_good = __pyx_f_2gb_3mhw_cfit(__pyx_v_all_timestamps_map, __pyx_v_curr_state, __pyx_v_num_background, __pyx_v_mu_rates, __pyx_v_beta_rates, __pyx_v_Alpha_ab, __pyx_v_alpha_prior, __pyx_v_sum_b, __pyx_v_mu_rates_final, __pyx_v_beta_rates_final, __pyx_v_Alpha_ba_final, __pyx_v_n_iter, __pyx_v_burn_in, __pyx_v_fptree, __pyx_v_workload);
 
-  /* "gb/mhw.pyx":373
- *                            Alpha_ba_final, n_iter, burn_in, fptree)
+  /* "gb/mhw.pyx":384
+ *                            Alpha_ba_final, n_iter, burn_in, fptree, workload)
  * 
  *     return Alpha_ba_final, np.asarray(mu_rates_final), \             # <<<<<<<<<<<<<<
  *         np.asarray(beta_rates_final), np.asarray(num_background), curr_state, \
  *         n_good
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_11 = __pyx_convert_unordered_map_to_py_int____std_3a__3a_unordered_map_3c_int_2c_int_3e___(__pyx_v_Alpha_ba_final); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 373, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  __pyx_t_13 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 373, __pyx_L1_error)
+  __pyx_t_15 = __pyx_convert_unordered_map_to_py_int____std_3a__3a_unordered_map_3c_int_2c_int_3e___(__pyx_v_Alpha_ba_final); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 384, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __pyx_t_13 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 384, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_asarray); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 373, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_asarray); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 384, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = __pyx_memoryview_fromslice(__pyx_v_mu_rates_final, 1, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 373, __pyx_L1_error)
+  __pyx_t_13 = __pyx_memoryview_fromslice(__pyx_v_mu_rates_final, 1, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 384, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
   __pyx_t_4 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
-    __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_5))) {
+    __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_5);
     if (likely(__pyx_t_4)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
       __Pyx_INCREF(__pyx_t_4);
       __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_3, function);
+      __Pyx_DECREF_SET(__pyx_t_5, function);
     }
   }
   if (!__pyx_t_4) {
-    __pyx_t_5 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_13); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 373, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_13); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 384, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_GOTREF(__pyx_t_3);
   } else {
     #if CYTHON_FAST_PYCALL
-    if (PyFunction_Check(__pyx_t_3)) {
+    if (PyFunction_Check(__pyx_t_5)) {
       PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_t_13};
-      __pyx_t_5 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 373, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 384, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __Pyx_GOTREF(__pyx_t_5);
+      __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
     } else
     #endif
     #if CYTHON_FAST_PYCCALL
-    if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
+    if (__Pyx_PyFastCFunction_Check(__pyx_t_5)) {
       PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_t_13};
-      __pyx_t_5 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 373, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 384, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __Pyx_GOTREF(__pyx_t_5);
+      __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
     } else
     #endif
     {
-      __pyx_t_2 = PyTuple_New(1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 373, __pyx_L1_error)
+      __pyx_t_2 = PyTuple_New(1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 384, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_4); __pyx_t_4 = NULL;
       __Pyx_GIVEREF(__pyx_t_13);
       PyTuple_SET_ITEM(__pyx_t_2, 0+1, __pyx_t_13);
       __pyx_t_13 = 0;
-      __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_2, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 373, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
+      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_2, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 384, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     }
   }
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-  /* "gb/mhw.pyx":374
+  /* "gb/mhw.pyx":385
  * 
  *     return Alpha_ba_final, np.asarray(mu_rates_final), \
  *         np.asarray(beta_rates_final), np.asarray(num_background), curr_state, \             # <<<<<<<<<<<<<<
  *         n_good
  */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 374, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 385, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_asarray); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 374, __pyx_L1_error)
+  __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_asarray); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 385, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __pyx_memoryview_fromslice(__pyx_v_beta_rates_final, 1, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 374, __pyx_L1_error)
+  __pyx_t_2 = __pyx_memoryview_fromslice(__pyx_v_beta_rates_final, 1, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 385, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_13))) {
@@ -4613,48 +4790,48 @@ static PyObject *__pyx_pf_2gb_3mhw_fit(CYTHON_UNUSED PyObject *__pyx_self, PyObj
     }
   }
   if (!__pyx_t_4) {
-    __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 374, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 385, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_GOTREF(__pyx_t_5);
   } else {
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_13)) {
       PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_t_2};
-      __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_13, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 374, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyFunction_FastCall(__pyx_t_13, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 385, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __Pyx_GOTREF(__pyx_t_3);
+      __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     } else
     #endif
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_13)) {
       PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_t_2};
-      __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_13, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 374, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyCFunction_FastCall(__pyx_t_13, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 385, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __Pyx_GOTREF(__pyx_t_3);
+      __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     } else
     #endif
     {
-      __pyx_t_22 = PyTuple_New(1+1); if (unlikely(!__pyx_t_22)) __PYX_ERR(0, 374, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_22);
-      __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_22, 0, __pyx_t_4); __pyx_t_4 = NULL;
+      __pyx_t_23 = PyTuple_New(1+1); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 385, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_23);
+      __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_23, 0, __pyx_t_4); __pyx_t_4 = NULL;
       __Pyx_GIVEREF(__pyx_t_2);
-      PyTuple_SET_ITEM(__pyx_t_22, 0+1, __pyx_t_2);
+      PyTuple_SET_ITEM(__pyx_t_23, 0+1, __pyx_t_2);
       __pyx_t_2 = 0;
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_13, __pyx_t_22, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 374, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __Pyx_DECREF(__pyx_t_22); __pyx_t_22 = 0;
+      __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_13, __pyx_t_23, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 385, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __Pyx_DECREF(__pyx_t_23); __pyx_t_23 = 0;
     }
   }
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_22 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_22)) __PYX_ERR(0, 374, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_22);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_22, __pyx_n_s_asarray); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 374, __pyx_L1_error)
+  __pyx_t_23 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 385, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_23);
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_23, __pyx_n_s_asarray); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 385, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_22); __pyx_t_22 = 0;
-  __pyx_t_22 = __pyx_memoryview_fromslice(__pyx_v_num_background, 1, (PyObject *(*)(char *)) __pyx_memview_get_int, (int (*)(char *, PyObject *)) __pyx_memview_set_int, 0);; if (unlikely(!__pyx_t_22)) __PYX_ERR(0, 374, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_22);
+  __Pyx_DECREF(__pyx_t_23); __pyx_t_23 = 0;
+  __pyx_t_23 = __pyx_memoryview_fromslice(__pyx_v_num_background, 1, (PyObject *(*)(char *)) __pyx_memview_get_int, (int (*)(char *, PyObject *)) __pyx_memview_set_int, 0);; if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 385, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_23);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
     __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_2);
@@ -4666,89 +4843,89 @@ static PyObject *__pyx_pf_2gb_3mhw_fit(CYTHON_UNUSED PyObject *__pyx_self, PyObj
     }
   }
   if (!__pyx_t_4) {
-    __pyx_t_13 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_22); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 374, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_22); __pyx_t_22 = 0;
+    __pyx_t_13 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_23); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 385, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_23); __pyx_t_23 = 0;
     __Pyx_GOTREF(__pyx_t_13);
   } else {
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_2)) {
-      PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_t_22};
-      __pyx_t_13 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 374, __pyx_L1_error)
+      PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_t_23};
+      __pyx_t_13 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 385, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_GOTREF(__pyx_t_13);
-      __Pyx_DECREF(__pyx_t_22); __pyx_t_22 = 0;
+      __Pyx_DECREF(__pyx_t_23); __pyx_t_23 = 0;
     } else
     #endif
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
-      PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_t_22};
-      __pyx_t_13 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 374, __pyx_L1_error)
+      PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_t_23};
+      __pyx_t_13 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 385, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_GOTREF(__pyx_t_13);
-      __Pyx_DECREF(__pyx_t_22); __pyx_t_22 = 0;
+      __Pyx_DECREF(__pyx_t_23); __pyx_t_23 = 0;
     } else
     #endif
     {
-      __pyx_t_23 = PyTuple_New(1+1); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 374, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_23);
-      __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_23, 0, __pyx_t_4); __pyx_t_4 = NULL;
-      __Pyx_GIVEREF(__pyx_t_22);
-      PyTuple_SET_ITEM(__pyx_t_23, 0+1, __pyx_t_22);
-      __pyx_t_22 = 0;
-      __pyx_t_13 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_23, NULL); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 374, __pyx_L1_error)
+      __pyx_t_24 = PyTuple_New(1+1); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 385, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_24);
+      __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_24, 0, __pyx_t_4); __pyx_t_4 = NULL;
+      __Pyx_GIVEREF(__pyx_t_23);
+      PyTuple_SET_ITEM(__pyx_t_24, 0+1, __pyx_t_23);
+      __pyx_t_23 = 0;
+      __pyx_t_13 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_24, NULL); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 385, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
-      __Pyx_DECREF(__pyx_t_23); __pyx_t_23 = 0;
+      __Pyx_DECREF(__pyx_t_24); __pyx_t_24 = 0;
     }
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __pyx_convert_unordered_map_to_py_int____std_3a__3a_vector_3c_int_3e___(__pyx_v_curr_state); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 374, __pyx_L1_error)
+  __pyx_t_2 = __pyx_convert_unordered_map_to_py_int____std_3a__3a_vector_3c_int_3e___(__pyx_v_curr_state); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 385, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
 
-  /* "gb/mhw.pyx":375
+  /* "gb/mhw.pyx":386
  *     return Alpha_ba_final, np.asarray(mu_rates_final), \
  *         np.asarray(beta_rates_final), np.asarray(num_background), curr_state, \
  *         n_good             # <<<<<<<<<<<<<<
  */
-  __pyx_t_23 = __Pyx_PyInt_From_int(__pyx_v_n_good); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 375, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_23);
+  __pyx_t_24 = __Pyx_PyInt_From_int(__pyx_v_n_good); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 386, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_24);
 
-  /* "gb/mhw.pyx":373
- *                            Alpha_ba_final, n_iter, burn_in, fptree)
+  /* "gb/mhw.pyx":384
+ *                            Alpha_ba_final, n_iter, burn_in, fptree, workload)
  * 
  *     return Alpha_ba_final, np.asarray(mu_rates_final), \             # <<<<<<<<<<<<<<
  *         np.asarray(beta_rates_final), np.asarray(num_background), curr_state, \
  *         n_good
  */
-  __pyx_t_22 = PyTuple_New(6); if (unlikely(!__pyx_t_22)) __PYX_ERR(0, 373, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_22);
-  __Pyx_GIVEREF(__pyx_t_11);
-  PyTuple_SET_ITEM(__pyx_t_22, 0, __pyx_t_11);
-  __Pyx_GIVEREF(__pyx_t_5);
-  PyTuple_SET_ITEM(__pyx_t_22, 1, __pyx_t_5);
+  __pyx_t_23 = PyTuple_New(6); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 384, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_23);
+  __Pyx_GIVEREF(__pyx_t_15);
+  PyTuple_SET_ITEM(__pyx_t_23, 0, __pyx_t_15);
   __Pyx_GIVEREF(__pyx_t_3);
-  PyTuple_SET_ITEM(__pyx_t_22, 2, __pyx_t_3);
+  PyTuple_SET_ITEM(__pyx_t_23, 1, __pyx_t_3);
+  __Pyx_GIVEREF(__pyx_t_5);
+  PyTuple_SET_ITEM(__pyx_t_23, 2, __pyx_t_5);
   __Pyx_GIVEREF(__pyx_t_13);
-  PyTuple_SET_ITEM(__pyx_t_22, 3, __pyx_t_13);
+  PyTuple_SET_ITEM(__pyx_t_23, 3, __pyx_t_13);
   __Pyx_GIVEREF(__pyx_t_2);
-  PyTuple_SET_ITEM(__pyx_t_22, 4, __pyx_t_2);
-  __Pyx_GIVEREF(__pyx_t_23);
-  PyTuple_SET_ITEM(__pyx_t_22, 5, __pyx_t_23);
-  __pyx_t_11 = 0;
-  __pyx_t_5 = 0;
+  PyTuple_SET_ITEM(__pyx_t_23, 4, __pyx_t_2);
+  __Pyx_GIVEREF(__pyx_t_24);
+  PyTuple_SET_ITEM(__pyx_t_23, 5, __pyx_t_24);
+  __pyx_t_15 = 0;
   __pyx_t_3 = 0;
+  __pyx_t_5 = 0;
   __pyx_t_13 = 0;
   __pyx_t_2 = 0;
+  __pyx_t_24 = 0;
+  __pyx_r = __pyx_t_23;
   __pyx_t_23 = 0;
-  __pyx_r = __pyx_t_22;
-  __pyx_t_22 = 0;
   goto __pyx_L0;
 
-  /* "gb/mhw.pyx":336
+  /* "gb/mhw.pyx":339
  *     return num_good
  * 
- * def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in):             # <<<<<<<<<<<<<<
+ * def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in,             # <<<<<<<<<<<<<<
+ *         dict indexes, dict start_state=None):
  * 
- *     cdef int n_proc = len(all_timestamps)
  */
 
   /* function exit code */
@@ -4758,11 +4935,11 @@ static PyObject *__pyx_pf_2gb_3mhw_fit(CYTHON_UNUSED PyObject *__pyx_self, PyObj
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
   __PYX_XDEC_MEMVIEW(&__pyx_t_6, 1);
-  __Pyx_XDECREF(__pyx_t_11);
   __Pyx_XDECREF(__pyx_t_13);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_21, 1);
-  __Pyx_XDECREF(__pyx_t_22);
+  __Pyx_XDECREF(__pyx_t_15);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_22, 1);
   __Pyx_XDECREF(__pyx_t_23);
+  __Pyx_XDECREF(__pyx_t_24);
   __Pyx_AddTraceback("gb.mhw.fit", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
@@ -17781,6 +17958,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_all_timestamps_map, __pyx_k_all_timestamps_map, sizeof(__pyx_k_all_timestamps_map), 0, 0, 1, 1},
   {&__pyx_n_s_allocate_buffer, __pyx_k_allocate_buffer, sizeof(__pyx_k_allocate_buffer), 0, 0, 1, 1},
   {&__pyx_n_s_alpha_prior, __pyx_k_alpha_prior, sizeof(__pyx_k_alpha_prior), 0, 0, 1, 1},
+  {&__pyx_n_s_asanyarray, __pyx_k_asanyarray, sizeof(__pyx_k_asanyarray), 0, 0, 1, 1},
   {&__pyx_n_s_asarray, __pyx_k_asarray, sizeof(__pyx_k_asarray), 0, 0, 1, 1},
   {&__pyx_n_s_b, __pyx_k_b, sizeof(__pyx_k_b), 0, 0, 1, 1},
   {&__pyx_n_s_base, __pyx_k_base, sizeof(__pyx_k_base), 0, 0, 1, 1},
@@ -17810,6 +17988,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_i, __pyx_k_i, sizeof(__pyx_k_i), 0, 0, 1, 1},
   {&__pyx_n_s_id, __pyx_k_id, sizeof(__pyx_k_id), 0, 0, 1, 1},
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
+  {&__pyx_n_s_indexes, __pyx_k_indexes, sizeof(__pyx_k_indexes), 0, 0, 1, 1},
   {&__pyx_n_s_itemsize, __pyx_k_itemsize, sizeof(__pyx_k_itemsize), 0, 0, 1, 1},
   {&__pyx_kp_s_itemsize_0_for_cython_array, __pyx_k_itemsize_0_for_cython_array, sizeof(__pyx_k_itemsize_0_for_cython_array), 0, 0, 1, 0},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
@@ -17837,6 +18016,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_shape, __pyx_k_shape, sizeof(__pyx_k_shape), 0, 0, 1, 1},
   {&__pyx_n_s_size, __pyx_k_size, sizeof(__pyx_k_size), 0, 0, 1, 1},
   {&__pyx_n_s_start, __pyx_k_start, sizeof(__pyx_k_start), 0, 0, 1, 1},
+  {&__pyx_n_s_start_state, __pyx_k_start_state, sizeof(__pyx_k_start_state), 0, 0, 1, 1},
   {&__pyx_n_s_step, __pyx_k_step, sizeof(__pyx_k_step), 0, 0, 1, 1},
   {&__pyx_n_s_stop, __pyx_k_stop, sizeof(__pyx_k_stop), 0, 0, 1, 1},
   {&__pyx_kp_s_strided_and_direct, __pyx_k_strided_and_direct, sizeof(__pyx_k_strided_and_direct), 0, 0, 1, 0},
@@ -17848,11 +18028,12 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_unable_to_allocate_array_data, __pyx_k_unable_to_allocate_array_data, sizeof(__pyx_k_unable_to_allocate_array_data), 0, 0, 1, 0},
   {&__pyx_kp_s_unable_to_allocate_shape_and_str, __pyx_k_unable_to_allocate_shape_and_str, sizeof(__pyx_k_unable_to_allocate_shape_and_str), 0, 0, 1, 0},
   {&__pyx_n_s_unpack, __pyx_k_unpack, sizeof(__pyx_k_unpack), 0, 0, 1, 1},
+  {&__pyx_n_s_workload, __pyx_k_workload, sizeof(__pyx_k_workload), 0, 0, 1, 1},
   {&__pyx_n_s_zeros, __pyx_k_zeros, sizeof(__pyx_k_zeros), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 185, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 248, __pyx_L1_error)
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(1, 131, __pyx_L1_error)
   __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(1, 146, __pyx_L1_error)
   __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(1, 149, __pyx_L1_error)
@@ -18015,17 +18196,17 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__13);
   __Pyx_GIVEREF(__pyx_tuple__13);
 
-  /* "gb/mhw.pyx":336
+  /* "gb/mhw.pyx":339
  *     return num_good
  * 
- * def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in):             # <<<<<<<<<<<<<<
+ * def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in,             # <<<<<<<<<<<<<<
+ *         dict indexes, dict start_state=None):
  * 
- *     cdef int n_proc = len(all_timestamps)
  */
-  __pyx_tuple__14 = PyTuple_Pack(19, __pyx_n_s_all_timestamps, __pyx_n_s_alpha_prior, __pyx_n_s_n_iter, __pyx_n_s_burn_in, __pyx_n_s_n_proc, __pyx_n_s_curr_state, __pyx_n_s_Alpha_ab, __pyx_n_s_all_timestamps_map, __pyx_n_s_sum_b, __pyx_n_s_num_background, __pyx_n_s_a, __pyx_n_s_b, __pyx_n_s_mu_rates, __pyx_n_s_beta_rates, __pyx_n_s_mu_rates_final, __pyx_n_s_beta_rates_final, __pyx_n_s_Alpha_ba_final, __pyx_n_s_fptree, __pyx_n_s_n_good); if (unlikely(!__pyx_tuple__14)) __PYX_ERR(0, 336, __pyx_L1_error)
+  __pyx_tuple__14 = PyTuple_Pack(22, __pyx_n_s_all_timestamps, __pyx_n_s_alpha_prior, __pyx_n_s_n_iter, __pyx_n_s_burn_in, __pyx_n_s_indexes, __pyx_n_s_start_state, __pyx_n_s_n_proc, __pyx_n_s_curr_state, __pyx_n_s_workload, __pyx_n_s_Alpha_ab, __pyx_n_s_all_timestamps_map, __pyx_n_s_sum_b, __pyx_n_s_num_background, __pyx_n_s_a, __pyx_n_s_b, __pyx_n_s_mu_rates, __pyx_n_s_beta_rates, __pyx_n_s_mu_rates_final, __pyx_n_s_beta_rates_final, __pyx_n_s_Alpha_ba_final, __pyx_n_s_fptree, __pyx_n_s_n_good); if (unlikely(!__pyx_tuple__14)) __PYX_ERR(0, 339, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__14);
   __Pyx_GIVEREF(__pyx_tuple__14);
-  __pyx_codeobj__15 = (PyObject*)__Pyx_PyCode_New(4, 0, 19, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__14, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_flaviovdf_workspace_gb_gb, __pyx_n_s_fit, 336, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__15)) __PYX_ERR(0, 336, __pyx_L1_error)
+  __pyx_codeobj__15 = (PyObject*)__Pyx_PyCode_New(6, 0, 22, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__14, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_flaviovdf_workspace_gb_gb, __pyx_n_s_fit, 339, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__15)) __PYX_ERR(0, 339, __pyx_L1_error)
 
   /* "View.MemoryView":282
  *         return self.name
@@ -18258,16 +18439,16 @@ PyMODINIT_FUNC PyInit_mhw(void)
  */
   __pyx_v_2gb_3mhw_E = 2.718281828459045;
 
-  /* "gb/mhw.pyx":336
+  /* "gb/mhw.pyx":339
  *     return num_good
  * 
- * def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in):             # <<<<<<<<<<<<<<
+ * def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in,             # <<<<<<<<<<<<<<
+ *         dict indexes, dict start_state=None):
  * 
- *     cdef int n_proc = len(all_timestamps)
  */
-  __pyx_t_3 = PyCFunction_NewEx(&__pyx_mdef_2gb_3mhw_1fit, NULL, __pyx_n_s_gb_mhw); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 336, __pyx_L1_error)
+  __pyx_t_3 = PyCFunction_NewEx(&__pyx_mdef_2gb_3mhw_1fit, NULL, __pyx_n_s_gb_mhw); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 339, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_fit, __pyx_t_3) < 0) __PYX_ERR(0, 336, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_fit, __pyx_t_3) < 0) __PYX_ERR(0, 339, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
   /* "gb/mhw.pyx":1

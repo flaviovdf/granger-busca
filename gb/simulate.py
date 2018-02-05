@@ -9,7 +9,8 @@ class GrangeBuscaSimulator(object):
         self.mu_rates = np.asanyarray(mu_rates)
         self.beta_rates = np.asanyarray(beta_rates)
         self.Alpha_ba = np.asanyarray(Alpha_ba)
-        self.past = [[0] for i in range(self.Alpha_ba.shape[0])]
+        self.past = [[] for i in range(self.Alpha_ba.shape[0])]
+        self.rates = [[] for i in range(self.Alpha_ba.shape[0])]
         self.t = 0
 
     def total_intensity(self, t):
@@ -18,7 +19,10 @@ class GrangeBuscaSimulator(object):
         for proc_a in range(self.Alpha_ba.shape[0]):
             lambdas_t[proc_a] = self.mu_rates[proc_a]
             for proc_b in range(self.Alpha_ba.shape[0]):
-                tp = self.past[proc_b][-1]
+                if len(self.past[proc_b]):
+                    tp = self.past[proc_b][-1]
+                else:
+                    tp = 0
                 assert tp <= t
                 if len(self.past[proc_b]) >= 2:
                     tpp = self.past[proc_b][-2]
@@ -47,5 +51,6 @@ class GrangeBuscaSimulator(object):
                     break
                 i += 1
             self.past[i].append(t)
+            self.rates[i].append(lambdas_t[i])
         self.t = t
         return self.past
