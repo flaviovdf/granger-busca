@@ -107,7 +107,7 @@ cdef inline double busca_probability(int i, int proc_a, int proc_b,
         tpp = 0
 
     cdef double rate = alpha_ba / (beta_proc_b/E + tp - tpp)
-    return rate # * exp(-rate * (t-tp))
+    return rate
 
 
 cdef inline int metropolis_walk_step(int proc_a, int i, double prev_back_t,
@@ -153,7 +153,7 @@ cdef inline int metropolis_walk_step(int proc_a, int i, double prev_back_t,
         choice = curr_influencer_b
         busca_rate_choice = p_b / a_ba
 
-    if sample_background(mu_prob): # / (mu_prob + busca_rate_choice)):
+    if sample_background(mu_prob):
         return -1
     else:
         return choice
@@ -275,16 +275,16 @@ cdef void sampleone(map[int, vector[double]] &all_timestamps,
     cdef int n_proc = all_timestamps.size()
     cdef int a
 
-    printf("[logger]\t Learning mu.\n")
+    # printf("[logger]\t Learning mu.\n")
     for a in range(n_proc):
         update_mu_rate(a, all_timestamps[a], curr_state[a],
                        num_background[a], mu_rates)
-    printf("[logger]\t Learning beta.\n")
+    # printf("[logger]\t Learning beta.\n")
     for a in range(n_proc):
         update_beta_rate(a, all_timestamps, curr_state, Alpha_ab, alpha_prior,
                          sum_b, beta_rates)
 
-    printf("[logger]\t Sampling Alpha.\n")
+    # printf("[logger]\t Sampling Alpha.\n")
     cdef pair[int, int] b
     for a in range(n_proc):
         fptree.reset()
@@ -309,19 +309,19 @@ cdef int cfit(map[int, vector[double]] &all_timestamps,
               map[int, vector[int]] workload) nogil:
 
     printf("[logger] Sampler is starting\n")
-    printf("[logger]\t n_proc=%ld\n", mu_rates.shape[0])
-    printf("[logger]\t alpha_prior=%lf\n", alpha_prior)
-    printf("\n")
+    # printf("[logger]\t n_proc=%ld\n", mu_rates.shape[0])
+    # printf("[logger]\t alpha_prior=%lf\n", alpha_prior)
+    # printf("\n")
 
     cdef int iteration, a, b
     cdef int num_good = 0
     cdef pair[int, int] pair
     for iteration in range(n_iter):
-        printf("[logger] Iter=%d. Sampling...\n", iteration)
+        # printf("[logger] Iter=%d. Sampling...\n", iteration)
         sampleone(all_timestamps, curr_state, num_background, mu_rates,
                   beta_rates, Alpha_ab, alpha_prior, sum_b, fptree, workload)
         if iteration >= burn_in:
-            printf("[logger]\t Averaging after burn in...\n")
+            # printf("[logger]\t Averaging after burn in...\n")
             num_good += 1
             for a in range(mu_rates.shape[0]):
                 mu_rates_final[a] += mu_rates[a]
@@ -337,7 +337,7 @@ cdef int cfit(map[int, vector[double]] &all_timestamps,
     return num_good
 
 def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in,
-        dict indexes, dict start_state=None):
+        dict start_state, dict indexes=None):
 
     cdef int n_proc = len(all_timestamps)
 
@@ -353,13 +353,11 @@ def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in,
     for a in range(n_proc):
         Alpha_ab[a] = map[int, int]()
         all_timestamps_map[a] = all_timestamps[a]
-        if start_state is None:
-            curr_state[a] = np.random.randint(-1, n_proc,
-                                              len(all_timestamps[a]))
+        curr_state[a] = np.asanyarray(start_state[a], dtype='i')
+        if indexes is not None:
+            workload[a] = np.asanyarray(indexes[a], dtype='i')
         else:
-            curr_state[a] = np.asanyarray(start_state[a], dtype='i')
-
-        workload[a] = np.asanyarray(indexes[a], dtype='i')
+            workload[a] = np.arange(len(all_timestamps_map[a]), dtype='i')
         for b in curr_state[a]:
             if b == -1:
                 num_background[a] += 1

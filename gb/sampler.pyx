@@ -204,7 +204,7 @@ cdef inline int sample_one_timeindex(int proc_a, int i, double prev_back_t,
                         alpha_prior, beta_rates, prob_b, search_lower[proc_a])
 
     cdef int n_proc = <int>all_timestamps.size()
-    if sample_background(mu_prob / (mu_prob + prob_b[n_proc-1])):
+    if sample_background(mu_prob): # / (mu_prob + prob_b[n_proc-1])):
         return -1
     else:
         return searchsorted(prob_b, prob_b[n_proc-1] * rand(), 0, 0)
