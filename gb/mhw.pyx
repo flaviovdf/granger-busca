@@ -267,13 +267,10 @@ def mstep(map[int, vector[double]] &all_timestamps,
 
     cdef int n_proc = all_timestamps.size()
 
-    cdef int[::1] num_background = np.zeros(n_proc, dtype='i')
-    cdef int[::1] sum_b = np.zeros(n_proc, dtype='i')
-    cdef double[::1] mu_rates = np.zeros(n_proc, dtype='d', order='C')
-    cdef double[::1] beta_rates = np.zeros(n_proc, dtype='d', order='C')
-
     cdef int a, b
     cdef map[int, map[int, int]] Alpha_ab
+    cdef int[::1] num_background = np.zeros(n_proc, dtype='i')
+    cdef int[::1] sum_b = np.zeros(n_proc, dtype='i')
     for a in range(n_proc):
         Alpha_ab[a] = map[int, int]()
         for b in curr_state[a]:
@@ -285,6 +282,8 @@ def mstep(map[int, vector[double]] &all_timestamps,
             else:
                 num_background[a] += 1
 
+    cdef double[::1] mu_rates = np.zeros(n_proc, dtype='d', order='C')
+    cdef double[::1] beta_rates = np.zeros(n_proc, dtype='d', order='C')
     for a in parallel.prange(n_proc, schedule='static', nogil=True):
         update_mu_rate(a, all_timestamps[a], curr_state[a], num_background[a],
                        mu_rates)
@@ -352,10 +351,9 @@ def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in,
 
     cdef int i
     for i in range(n_iter):
-        Alpha_ab, num_background, sum_b, mu_rates, beta_rates = \
+        Alpha_ab, num_background, mu_rates, beta_rates = \
             mstep(all_timestamps_map, curr_state, alpha_prior)
         for job in parallel.prange(n_jobs, schedule='static', nogil=True):
-            SB[job] = sum_b
             with gil:
                 # the gil will be released as soon as the func starts
                 # we need it just to create the FPTree obj
@@ -363,20 +361,20 @@ def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in,
                       alpha_prior, SB[job], FPTree(), workload[job])
 
     # One final mstep to get parameters
-    Alpha_ab, num_background, sum_b, mu_rates, beta_rates = \
+    Alpha_ab, num_background, mu_rates, beta_rates = \
         mstep(all_timestamps_map, curr_state, alpha_prior)
 
     cdef pair[int, int] b_pair
     cdef int b
     cdef map[int, map[int, int]] Alpha_ba
-    for a in range(mu_rates.shape[0]):
+    for a in range(n_proc):
         if Alpha_ab.count(a) == 0:
             continue
         for b_pair in Alpha_ab[a]:
             b = b_pair.first
             if Alpha_ba.count(b) == 0:
                 Alpha_ba[b] = map[int, int]()
-            Alpha_ba[b][a] += Alpha_ab[b][a]
+            Alpha_ba[b][a] += Alpha_ab[a][b]
 
     return Alpha_ba, np.asarray(mu_rates), np.asarray(beta_rates), \
         np.asarray(num_background), curr_state
