@@ -14,5 +14,7 @@ cdef class AliasTable:
     cdef vector[double] P
     cdef vector[int] L
     cdef vector[int] S
+    cdef vector[double] original
 
+    cdef void build(self, vector[double] p)
     cdef int sample(self, double urnd1, double urnd2) nogil

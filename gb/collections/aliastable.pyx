@@ -44,8 +44,8 @@ from libcpp.vector cimport vector
 
 cdef class AliasTable:
 
-    def __cinit__(self, double[::1] p):
-        cdef int size = p.shape[0]
+    cdef void build(self, vector[double] p):
+        cdef int size = p.size()
         if size:
             self.alias.resize(size)
             self.prob.resize(size)
@@ -59,6 +59,9 @@ cdef class AliasTable:
         cdef int i
         for i in range(size):
             sum_ += p[i]
+        for i in range(size):
+            p[i] = p[i] / sum_
+        self.original = p
         for i in range(size):
             self.P[i] = p[i] * size / sum_
 
