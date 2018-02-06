@@ -287,10 +287,10 @@ def mstep(map[int, vector[double]] &all_timestamps,
 
     cdef double[::1] mu_rates = np.zeros(n_proc, dtype='d', order='C')
     cdef double[::1] beta_rates = np.zeros(n_proc, dtype='d', order='C')
-    for a in parallel.prange(n_proc, schedule='static', nogil=True):
+    for a in range(n_proc):
         update_mu_rate(a, all_timestamps[a], curr_state[a], num_background[a],
                        mu_rates)
-    for a in parallel.prange(n_proc, schedule='static', nogil=True):
+    for a in range(n_proc):
         update_beta_rate(a, all_timestamps, curr_state, Alpha_ab, alpha_prior,
                          sum_b, beta_rates)
     return Alpha_ab, num_background, mu_rates, beta_rates
@@ -303,7 +303,7 @@ cdef void estep(map[int, vector[double]] &all_timestamps,
                 FPTree fptree, map[int, vector[int]] &workload) nogil:
 
     cdef int n_proc = all_timestamps.size()
-    cdef int a, b
+    cdef int i, a, b
     cdef map[int, map[int, int]] Alpha_ab
     for a in range(n_proc):
         Alpha_ab[a] = map[int, int]()
@@ -321,8 +321,9 @@ cdef void estep(map[int, vector[double]] &all_timestamps,
             b = b_pair.first
             fptree.set_value(b, (Alpha_ab[a][b] + alpha_prior) / \
                                  (sum_b[b] + n_proc * alpha_prior))
-        sample_alpha(a, all_timestamps, curr_state[a], Alpha_ab, sum_b,
-                     mu_rates, beta_rates, alpha_prior, fptree, workload)
+        for i in range(5):
+            sample_alpha(a, all_timestamps, curr_state[a], Alpha_ab, sum_b,
+                         mu_rates, beta_rates, alpha_prior, fptree, workload)
 
 
 def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in,
@@ -351,23 +352,23 @@ def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in,
     cdef double[::1] mu_rates
     cdef double[::1] beta_rates
     cdef int[:,::1] SB = np.zeros(shape=(n_jobs, n_proc), dtype='i', order='C')
-    cdef map[int, map[int, vector[int]]] job_state
 
-    for iter_ in range(n_iter):
-        Alpha_ab, num_background, mu_rates, beta_rates = \
-            mstep(all_timestamps_map, curr_state, alpha_prior)
+    def work(int job_id):
+        estep(all_timestamps_map, curr_state, mu_rates, beta_rates,
+              alpha_prior, SB[job_id], FPTree(n_proc), workload[job_id])
 
-        for job in range(n_jobs):
-            job_state[job] = curr_state
-
-        for job in parallel.prange(n_jobs, schedule='static', nogil=True):
-            with gil:
-                estep(all_timestamps_map, job_state[job], mu_rates,
-                      beta_rates, alpha_prior, SB[job], FPTree(n_proc),
-                      workload[job])
-                for a in range(n_proc):
-                    for idx in workload[job][a]:
-                        curr_state[a][idx] = job_state[job][a][idx]
+    with ThreadPoolExecutor(max_workers=n_jobs) as executor:
+        for iter_ in range(n_iter // 5):
+            Alpha_ab, num_background, mu_rates, beta_rates = \
+                mstep(all_timestamps_map, curr_state, alpha_prior)
+            futures = {executor.submit(work, job) for job in range(n_jobs)}
+            for future in as_completed(futures):
+                pass
+        #for job in parallel.prange(n_jobs, schedule='static', nogil=True):
+        #     with gil:
+        #        estep(all_timestamps_map, curr_state, mu_rates,
+        #              beta_rates, alpha_prior, SB[job], FPTree(n_proc),
+        #              workload[job])
 
     # One final mstep to get parameters
     Alpha_ab, num_background, mu_rates, beta_rates = \

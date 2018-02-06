@@ -19,7 +19,7 @@ class GrangerBusca(object):
         self.burn_in = burn_in
         self.metropolis = metropolis
         if n_jobs is None:
-            n_jobs = os.cpu_count() - 1
+            n_jobs = os.cpu_count()
         self.n_jobs = n_jobs
 
         self.timestamps = None
