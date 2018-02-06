@@ -4,7 +4,6 @@
 import glob
 import numpy
 import os
-import platform
 import sys
 
 from Cython.Distutils import build_ext
@@ -72,7 +71,8 @@ def get_extensions():
             extension = Extension(module, ext_files,
                                   include_dirs=include_dirs,
                                   language='c++',
-                                  extra_compile_args=extra_compile_args)
+                                  extra_compile_args=extra_compile_args,
+                                  extra_link_args=['-fopenmp'])
             extensions.append(extension)
 
     return extensions
