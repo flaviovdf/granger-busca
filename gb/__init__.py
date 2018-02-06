@@ -3,12 +3,8 @@
 from gb.sampler import fit as gibbs_fit
 from gb.mhw import fit as metropolis_fit
 
-# from joblib import delayed
-# from joblib import Parallel
-
 from scipy import sparse as sp
 
-import concurrent.futures
 import numpy as np
 import os
 import time
@@ -23,7 +19,7 @@ class GrangerBusca(object):
         self.burn_in = burn_in
         self.metropolis = metropolis
         if n_jobs is None:
-            n_jobs = os.cpu_count() - 1
+            n_jobs = os.cpu_count()
         self.n_jobs = n_jobs
 
         self.timestamps = None
@@ -62,71 +58,49 @@ class GrangerBusca(object):
         self.time_range = max_all
         self.num_stamps = num_stamps
 
+    def parallel_metropolis(self):
+        workload = np.zeros(shape=(self.num_stamps, 2), dtype='i')
+        slice_size = len(workload) // self.n_jobs
+        i = 0
+        for a in self.timestamps:
+            for idx in range(len(self.timestamps[a])):
+                workload[i][0] = a
+                workload[i][1] = idx
+                i += 1
+
+        np.random.shuffle(workload)
+        workload_dicts = []
+        st = 0
+        ed = slice_size
+        for job in range(self.n_jobs):
+            workload_dict = {}
+            for a in range(len(self.timestamps)):
+                workload_dict[a] = []
+            workload_dicts.append(workload_dict)
+
+            if job == self.n_jobs - 1:
+                ed = len(workload)
+            for slice_ in workload[st:ed]:
+                a = slice_[0]
+                idx = slice_[1]
+                workload_dict[a].append(idx)
+            st = ed
+            ed = ed + slice_size
+
+        return metropolis_fit(self.timestamps, self.alpha_p, self.num_iter, 0,
+                              self.curr_state_, workload_dict)
+
     def fit(self, timestamps):
         self._init_timestamps(timestamps)
 
-        if self.metropolis:
-            fit = metropolis_fit
-        else:
-            fit = gibbs_fit
-
         now = time.time()
-        if self.n_jobs == 1:
-            R = fit(self.timestamps, self.alpha_p, self.num_iter, self.burn_in,
-                    self.curr_state_)
+        if self.metropolis:
+            R = self.parallel_metropolis()
+            n = 1
         else:
-            workload = np.zeros(shape=(self.num_stamps, 2), dtype='i')
-            slice_size = len(workload) // self.n_jobs
-            i = 0
-            for a in self.timestamps:
-                for idx in range(len(self.timestamps[a])):
-                    workload[i][0] = a
-                    workload[i][1] = idx
-                    i += 1
-            # with Parallel(n_jobs=self.n_jobs, backend='threading',
-            #              batch_size=1, pre_dispatch='all') as parallel:
-            with concurrent.futures.ThreadPoolExecutor(
-                    max_workers=self.n_jobs) as executor:
-                np.random.shuffle(workload)
-                workload_dicts = []
-                st = 0
-                ed = slice_size
-                for job in range(self.n_jobs):
-                    workload_dict = {}
-                    for a in range(len(self.timestamps)):
-                        workload_dict[a] = []
-                    workload_dicts.append(workload_dict)
-
-                    if job == self.n_jobs - 1:
-                        ed = len(workload)
-                    for slice_ in workload[st:ed]:
-                        a = slice_[0]
-                        idx = slice_[1]
-                        workload_dict[a].append(idx)
-                    st = ed
-                    ed = ed + slice_size
-
-                def work(job):
-                    return fit(self.timestamps, self.alpha_p, 5, 4,
-                               self.curr_state_, workload_dicts[job])
-                for i in range(self.num_iter // 5):
-                    futures = {}
-                    futures = {executor.submit(work, job): job
-                               for job in range(self.n_jobs)}
-                    # Rn = parallel(
-                    #        delayed(fit)(self.timestamps, self.alpha_p, 1, 0,
-                    #                    self.curr_state_, workload_dicts[job])
-                    #        for job in range(self.n_jobs))
-                    # for job in range(self.n_jobs):
-                    for future in concurrent.futures.as_completed(futures):
-                        job = futures[future]
-                        Rn = future.result()
-                        job_state = Rn[4]
-                        for a in job_state:
-                            idx = workload_dicts[job][a]
-                            state = np.asanyarray(job_state[a])
-                            self.curr_state_[a][idx] = state[idx]
-            R = fit(self.timestamps, self.alpha_p, 1, 0, self.curr_state_)
+            R = gibbs_fit(self.timestamps, self.alpha_p, self.num_iter,
+                          self.burn_in)
+            n = R[-1]
         dt = time.time() - now
 
         self.Alpha_ = R[0]
@@ -134,7 +108,6 @@ class GrangerBusca(object):
         self.beta_ = R[2]
         self.back_ = R[3]
         self.curr_state_ = R[4]
-        n = R[5]
         self.training_time = dt
 
         vals = []

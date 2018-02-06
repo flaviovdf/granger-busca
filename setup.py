@@ -67,11 +67,8 @@ def get_extensions():
                 ext_files.append(os.path.join(pkg_folder, 'randomkit.c'))
                 ext_files.append(os.path.join(pkg_folder, 'distributions.c'))
 
-            extra_compile_args = ['-msse', '-msse2', '-mfpmath=sse']
-            if platform.system() == 'Darwin':
-                extra_compile_args.append('-stdlib=libc++')
-                extra_compile_args.append('-mmacosx-version-min=10.9')
-
+            extra_compile_args = ['-msse', '-msse2', '-mfpmath=sse',
+                                  '-std=c++11', '-fopenmp']
             extension = Extension(module, ext_files,
                                   include_dirs=include_dirs,
                                   language='c++',

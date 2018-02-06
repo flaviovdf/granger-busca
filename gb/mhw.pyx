@@ -5,7 +5,7 @@
 # cython: nonecheck=False
 # cython: wraparound=False
 
-import numpy as np
+from cython cimport parallel
 
 from gb.collections.fptree cimport FPTree
 
@@ -20,6 +20,8 @@ from libcpp.algorithm cimport sort as stdsort
 from libcpp.unordered_map cimport unordered_map as map
 from libcpp.map cimport pair
 from libcpp.vector cimport vector
+
+import numpy as np
 
 
 cdef double E = 2.718281828459045
@@ -111,7 +113,6 @@ cdef inline double busca_probability(int i, int proc_a, int proc_b,
 
 
 cdef inline int metropolis_walk_step(int proc_a, int i, double prev_back_t,
-                                     int[::1] num_background,
                                      map[int, vector[double]] &all_timestamps,
                                      vector[int] &curr_state_proc_a,
                                      map[int, map[int, int]] &Alpha_ab,
@@ -167,7 +168,7 @@ cdef inline double inc(int n, int nb, int nba, double alpha_prior,
 
 
 cdef void sample_alpha(int proc_a, map[int, vector[double]] &all_timestamps,
-                       vector[int] &curr_state, int[::1] num_background,
+                       vector[int] &curr_state,
                        map[int, map[int, int]] &Alpha_ab, int[::1] sum_b,
                        double[::1] mu_rates, double[::1] beta_rates,
                        double alpha_prior, FPTree fptree,
@@ -186,7 +187,6 @@ cdef void sample_alpha(int proc_a, map[int, vector[double]] &all_timestamps,
     for i in workload[proc_a]:
         influencer = curr_state[i]
         if influencer == -1:
-            num_background[proc_a] -= 1
             prev_back_t_aux = all_timestamps[proc_a][i] # found a background ts
         else:
             nba = Alpha_ab[proc_a][influencer]
@@ -198,13 +198,10 @@ cdef void sample_alpha(int proc_a, map[int, vector[double]] &all_timestamps,
                              inc(n_proc, nb, nba, alpha_prior, -1))
 
         new_influencer = metropolis_walk_step(proc_a, i, prev_back_t,
-                                              num_background, all_timestamps,
-                                              curr_state, Alpha_ab, sum_b,
-                                              alpha_prior, mu_rates,
-                                              beta_rates, fptree)
-        if new_influencer == -1:
-            num_background[proc_a] += 1
-        else:
+                                              all_timestamps, curr_state,
+                                              Alpha_ab, sum_b, alpha_prior,
+                                              mu_rates, beta_rates, fptree)
+        if new_influencer != -1:
             if Alpha_ab[proc_a].count(new_influencer) == 0:
                 Alpha_ab[proc_a][new_influencer] = 0
             nba = Alpha_ab[proc_a][new_influencer]
@@ -265,120 +262,121 @@ cdef void update_beta_rate(int proc_a,
         beta_rates[proc_a] = max_ti
 
 
-cdef void sampleone(map[int, vector[double]] &all_timestamps,
-                    map[int, vector[int]] &curr_state, int[::1] num_background,
-                    double[::1] mu_rates, double[::1] beta_rates,
-                    map[int, map[int, int]] &Alpha_ab, double alpha_prior,
-                    int[::1] sum_b, FPTree fptree,
-                    map[int, vector[int]] workload) nogil:
+def mstep(map[int, vector[double]] &all_timestamps,
+          map[int, vector[int]] &curr_state, double alpha_prior):
 
     cdef int n_proc = all_timestamps.size()
-    cdef int a
 
-    # printf("[logger]\t Learning mu.\n")
-    for a in range(n_proc):
-        update_mu_rate(a, all_timestamps[a], curr_state[a],
-                       num_background[a], mu_rates)
-    # printf("[logger]\t Learning beta.\n")
-    for a in range(n_proc):
-        update_beta_rate(a, all_timestamps, curr_state, Alpha_ab, alpha_prior,
-                         sum_b, beta_rates)
-
-    # printf("[logger]\t Sampling Alpha.\n")
-    cdef pair[int, int] b
-    for a in range(n_proc):
-        fptree.reset()
-        for b in Alpha_ab[a]:
-            fptree.set_value(b.first,
-                             (Alpha_ab[a][b.first] + alpha_prior) / \
-                             (sum_b[b.first] + n_proc * alpha_prior))
-
-        sample_alpha(a, all_timestamps, curr_state[a], num_background,
-                     Alpha_ab, sum_b, mu_rates, beta_rates, alpha_prior,
-                     fptree, workload)
-
-
-cdef int cfit(map[int, vector[double]] &all_timestamps,
-              map[int, vector[int]] &curr_state, int[::1] num_background,
-              double[::1] mu_rates, double[::1] beta_rates,
-              map[int, map[int, int]] &Alpha_ab, double alpha_prior,
-              int[::1] sum_b, double[::1] mu_rates_final,
-              double[::1] beta_rates_final,
-              map[int, map[int, int]] &Alpha_ba_final, int n_iter,
-              int burn_in, FPTree fptree,
-              map[int, vector[int]] workload) nogil:
-
-    printf("[logger] Sampler is starting\n")
-    # printf("[logger]\t n_proc=%ld\n", mu_rates.shape[0])
-    # printf("[logger]\t alpha_prior=%lf\n", alpha_prior)
-    # printf("\n")
-
-    cdef int iteration, a, b
-    cdef int num_good = 0
-    cdef pair[int, int] pair
-    for iteration in range(n_iter):
-        # printf("[logger] Iter=%d. Sampling...\n", iteration)
-        sampleone(all_timestamps, curr_state, num_background, mu_rates,
-                  beta_rates, Alpha_ab, alpha_prior, sum_b, fptree, workload)
-        if iteration >= burn_in:
-            # printf("[logger]\t Averaging after burn in...\n")
-            num_good += 1
-            for a in range(mu_rates.shape[0]):
-                mu_rates_final[a] += mu_rates[a]
-                beta_rates_final[a] += beta_rates[a]
-                for pair in Alpha_ab[a]:
-                    b = pair.first
-                    if Alpha_ba_final.count(b) == 0:
-                        Alpha_ba_final[b] = map[int, int]()
-                    if Alpha_ba_final[b].count(a) == 0:
-                        Alpha_ba_final[b][a] = 0
-                    Alpha_ba_final[b][a] += Alpha_ab[a][b]
-        printf("[logger] Iter done!\n")
-    return num_good
-
-def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in,
-        dict start_state, dict indexes=None):
-
-    cdef int n_proc = len(all_timestamps)
-
-    cdef map[int, vector[int]] curr_state
-    cdef map[int, vector[int]] workload
-    cdef map[int, map[int, int]] Alpha_ab
-    cdef map[int, vector[double]] all_timestamps_map
-
-    cdef int[::1] sum_b = np.zeros(n_proc, dtype='i', order='C')
-    cdef int[::1] num_background = np.zeros(n_proc, dtype='i', order='C')
+    cdef int[::1] num_background = np.zeros(n_proc, dtype='i')
+    cdef int[::1] sum_b = np.zeros(n_proc, dtype='i')
+    cdef double[::1] mu_rates = np.zeros(n_proc, dtype='d', order='C')
+    cdef double[::1] beta_rates = np.zeros(n_proc, dtype='d', order='C')
 
     cdef int a, b
+    cdef map[int, map[int, int]] Alpha_ab
     for a in range(n_proc):
         Alpha_ab[a] = map[int, int]()
-        all_timestamps_map[a] = all_timestamps[a]
-        curr_state[a] = np.asanyarray(start_state[a], dtype='i')
-        if indexes is not None:
-            workload[a] = np.asanyarray(indexes[a], dtype='i')
-        else:
-            workload[a] = np.arange(len(all_timestamps_map[a]), dtype='i')
         for b in curr_state[a]:
-            if b == -1:
-                num_background[a] += 1
+            if b != -1:
+                if Alpha_ab[a].count(b) == 0:
+                    Alpha_ab[a][b] = 0
+                Alpha_ab[a][b] += 1
+                sum_b[b] += 1
             else:
+                num_background[a] += 1
+
+    for a in parallel.prange(n_proc, schedule='static', nogil=True):
+        update_mu_rate(a, all_timestamps[a], curr_state[a], num_background[a],
+                       mu_rates)
+    for a in parallel.prange(n_proc, schedule='static', nogil=True):
+        update_beta_rate(a, all_timestamps, curr_state, Alpha_ab, alpha_prior,
+                         sum_b, beta_rates)
+    return Alpha_ab, num_background, sum_b, mu_rates, beta_rates
+
+
+cdef int estep(map[int, vector[double]] &all_timestamps,
+               map[int, vector[int]] &curr_state, double[::1] mu_rates,
+               double[::1] beta_rates, double alpha_prior, int[::1] sum_b,
+               FPTree fptree, map[int, vector[int]] &workload) nogil:
+
+    cdef int n_proc = all_timestamps.size()
+    cdef int a, b
+    cdef map[int, map[int, int]] Alpha_ab
+    for a in range(n_proc):
+        Alpha_ab[a] = map[int, int]()
+        for b in curr_state[a]:
+            if b != -1:
                 if Alpha_ab[a].count(b) == 0:
                     Alpha_ab[a][b] = 0
                 Alpha_ab[a][b] += 1
                 sum_b[b] += 1
 
-    cdef double[::1] mu_rates = np.zeros(n_proc, dtype='d', order='C')
-    cdef double[::1] beta_rates = np.zeros(n_proc, dtype='d', order='C')
+    cdef pair[int, int] b_pair
+    for a in range(n_proc):
+        fptree.reset()
+        for b_pair in Alpha_ab[a]:
+            b = b_pair.first
+            fptree.set_value(b, (Alpha_ab[a][b] + alpha_prior) / \
+                                 (sum_b[b] + n_proc * alpha_prior))
+        sample_alpha(a, all_timestamps, curr_state[a], Alpha_ab, sum_b,
+                     mu_rates, beta_rates, alpha_prior, fptree, workload)
 
-    cdef double[::1] mu_rates_final = np.zeros(n_proc, dtype='d', order='C')
-    cdef double[::1] beta_rates_final = np.zeros(n_proc, dtype='d', order='C')
-    cdef map[int, map[int, int]] Alpha_ba_final
-    cdef FPTree fptree = FPTree(n_proc)
-    cdef int n_good = cfit(all_timestamps_map, curr_state, num_background,
-                           mu_rates, beta_rates, Alpha_ab, alpha_prior,
-                           sum_b, mu_rates_final, beta_rates_final,
-                           Alpha_ba_final, n_iter, burn_in, fptree, workload)
 
-    return Alpha_ba_final, np.asarray(mu_rates_final), \
-        np.asarray(beta_rates_final), np.asarray(num_background), curr_state, \
-        n_good
+def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in,
+        dict start_state, dict workload_dict):
+
+    cdef int n_proc = len(all_timestamps)
+
+    cdef map[int, vector[int]] curr_state
+    cdef map[int, map[int, vector[int]]] workload
+    cdef map[int, vector[double]] all_timestamps_map
+
+    cdef int a
+    for a in range(n_proc):
+        all_timestamps_map[a] = all_timestamps[a]
+        curr_state[a] = np.asanyarray(start_state[a], dtype='i')
+
+    cdef int n_jobs = len(workload)
+    cdef int job
+    for job in range(n_jobs):
+        workload[job] = map[int, vector[int]]()
+        for a in range(n_proc):
+            workload[job][a] = np.asanyarray(workload_dict[job][a], dtype='i')
+
+    cdef map[int, map[int, int]] Alpha_ab
+    cdef int[::1] num_background
+    cdef int[::1] sum_b
+    cdef double[::1] mu_rates
+    cdef double[::1] beta_rates
+    cdef int[:,::1] SB = np.zeros(shape=(n_jobs, n_proc), dtype='i', order='C')
+
+    cdef int i
+    for i in range(n_iter):
+        Alpha_ab, num_background, sum_b, mu_rates, beta_rates = \
+            mstep(all_timestamps_map, curr_state, alpha_prior)
+        for job in parallel.prange(n_jobs, schedule='static', nogil=True):
+            SB[job] = sum_b
+            with gil:
+                # the gil will be released as soon as the func starts
+                # we need it just to create the FPTree obj
+                estep(all_timestamps_map, curr_state, mu_rates, beta_rates,
+                      alpha_prior, SB[job], FPTree(), workload[job])
+
+    # One final mstep to get parameters
+    Alpha_ab, num_background, sum_b, mu_rates, beta_rates = \
+        mstep(all_timestamps_map, curr_state, alpha_prior)
+
+    cdef pair[int, int] b_pair
+    cdef int b
+    cdef map[int, map[int, int]] Alpha_ba
+    for a in range(mu_rates.shape[0]):
+        if Alpha_ab.count(a) == 0:
+            continue
+        for b_pair in Alpha_ab[a]:
+            b = b_pair.first
+            if Alpha_ba.count(b) == 0:
+                Alpha_ba[b] = map[int, int]()
+            Alpha_ba[b][a] += Alpha_ab[b][a]
+
+    return Alpha_ba, np.asarray(mu_rates), np.asarray(beta_rates), \
+        np.asarray(num_background), curr_state
