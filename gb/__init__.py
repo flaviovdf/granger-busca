@@ -19,7 +19,7 @@ class GrangerBusca(object):
         self.burn_in = burn_in
         self.metropolis = metropolis
         if n_jobs is None:
-            n_jobs = os.cpu_count()
+            n_jobs = os.cpu_count() - 1
         self.n_jobs = n_jobs
 
         self.timestamps = None
@@ -69,14 +69,14 @@ class GrangerBusca(object):
                 i += 1
 
         np.random.shuffle(workload)
-        workload_dicts = []
+        workload_dicts = {}
         st = 0
         ed = slice_size
         for job in range(self.n_jobs):
             workload_dict = {}
             for a in range(len(self.timestamps)):
                 workload_dict[a] = []
-            workload_dicts.append(workload_dict)
+            workload_dicts[job] = workload_dict
 
             if job == self.n_jobs - 1:
                 ed = len(workload)
@@ -88,7 +88,7 @@ class GrangerBusca(object):
             ed = ed + slice_size
 
         return metropolis_fit(self.timestamps, self.alpha_p, self.num_iter, 0,
-                              self.curr_state_, workload_dict)
+                              self.curr_state_, workload_dicts)
 
     def fit(self, timestamps):
         self._init_timestamps(timestamps)

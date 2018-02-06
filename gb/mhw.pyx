@@ -21,6 +21,9 @@ from libcpp.unordered_map cimport unordered_map as map
 from libcpp.map cimport pair
 from libcpp.vector cimport vector
 
+from concurrent.futures import as_completed
+from concurrent.futures import ThreadPoolExecutor
+
 import numpy as np
 
 
@@ -290,13 +293,14 @@ def mstep(map[int, vector[double]] &all_timestamps,
     for a in parallel.prange(n_proc, schedule='static', nogil=True):
         update_beta_rate(a, all_timestamps, curr_state, Alpha_ab, alpha_prior,
                          sum_b, beta_rates)
-    return Alpha_ab, num_background, sum_b, mu_rates, beta_rates
+    return Alpha_ab, num_background, mu_rates, beta_rates
 
 
-cdef int estep(map[int, vector[double]] &all_timestamps,
-               map[int, vector[int]] &curr_state, double[::1] mu_rates,
-               double[::1] beta_rates, double alpha_prior, int[::1] sum_b,
-               FPTree fptree, map[int, vector[int]] &workload) nogil:
+# This function receives copies of the curr state
+cdef void estep(map[int, vector[double]] &all_timestamps,
+                map[int, vector[int]] &curr_state, double[::1] mu_rates,
+                double[::1] beta_rates, double alpha_prior, int[::1] sum_b,
+                FPTree fptree, map[int, vector[int]] &workload) nogil:
 
     cdef int n_proc = all_timestamps.size()
     cdef int a, b
@@ -335,7 +339,7 @@ def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in,
         all_timestamps_map[a] = all_timestamps[a]
         curr_state[a] = np.asanyarray(start_state[a], dtype='i')
 
-    cdef int n_jobs = len(workload)
+    cdef int n_jobs = len(workload_dict)
     cdef int job
     for job in range(n_jobs):
         workload[job] = map[int, vector[int]]()
@@ -344,21 +348,26 @@ def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in,
 
     cdef map[int, map[int, int]] Alpha_ab
     cdef int[::1] num_background
-    cdef int[::1] sum_b
     cdef double[::1] mu_rates
     cdef double[::1] beta_rates
     cdef int[:,::1] SB = np.zeros(shape=(n_jobs, n_proc), dtype='i', order='C')
+    cdef map[int, map[int, vector[int]]] job_state
 
-    cdef int i
-    for i in range(n_iter):
+    for iter_ in range(n_iter):
         Alpha_ab, num_background, mu_rates, beta_rates = \
             mstep(all_timestamps_map, curr_state, alpha_prior)
+
+        for job in range(n_jobs):
+            job_state[job] = curr_state
+
         for job in parallel.prange(n_jobs, schedule='static', nogil=True):
             with gil:
-                # the gil will be released as soon as the func starts
-                # we need it just to create the FPTree obj
-                estep(all_timestamps_map, curr_state, mu_rates, beta_rates,
-                      alpha_prior, SB[job], FPTree(), workload[job])
+                estep(all_timestamps_map, job_state[job], mu_rates,
+                      beta_rates, alpha_prior, SB[job], FPTree(n_proc),
+                      workload[job])
+                for a in range(n_proc):
+                    for idx in workload[job][a]:
+                        curr_state[a][idx] = job_state[job][a][idx]
 
     # One final mstep to get parameters
     Alpha_ab, num_background, mu_rates, beta_rates = \
