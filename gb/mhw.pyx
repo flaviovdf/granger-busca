@@ -86,9 +86,9 @@ cdef inline double find_previous(vector[double] &timestamps, double t) nogil:
 cdef inline double busca_probability(int i, int proc_a, int proc_b,
                                      map[int, vector[double]] &all_timestamps,
                                      double alpha_ba,
-                                     double beta_proc_b) nogil:
+                                     double beta_proc_b,
+                                     map[int, map[int, map[int, double]]] &previous_stamps) nogil:
 
-    cdef double t = all_timestamps[proc_a][i]
     cdef double tp
     cdef double tpp
     if i > 0:
@@ -96,13 +96,10 @@ cdef inline double busca_probability(int i, int proc_a, int proc_b,
     else:
         tp = 0
     if tp != 0:
-        if proc_a == proc_b:
-            if i > 1:
-                tpp = all_timestamps[proc_a][i-2]
-            else:
-                tpp = 0
+        if i > 1:
+            tpp = previous_stamps[proc_a][i-2][proc_b]
         else:
-            tpp = find_previous(all_timestamps[proc_b], tp)
+            tpp = 0
     else:
         tpp = 0
 
@@ -118,7 +115,8 @@ cdef inline int metropolis_walk_step(int proc_a, int i, double prev_back_t,
                                      int[::1] sum_b, double alpha_prior,
                                      double[::1] mu_rates,
                                      double[::1] beta_rates,
-                                     FPTree fptree) nogil:
+                                     FPTree fptree,
+                                     map[int, map[int, map[int, double]]] &previous_stamps) nogil:
 
     cdef double mu_rate = mu_rates[proc_a]
     cdef double ti = all_timestamps[proc_a][i]
@@ -143,14 +141,16 @@ cdef inline int metropolis_walk_step(int proc_a, int i, double prev_back_t,
     cdef double a_ca = dirmulti_posterior(Alpha_ab, sum_b, proc_a, candidate,
                                           alpha_prior)
     cdef double p_c = busca_probability(i, proc_a, candidate, all_timestamps,
-                                        a_ca, beta_rates[candidate])
+                                        a_ca, beta_rates[candidate],
+                                        previous_stamps)
 
     cdef double a_ba = dirmulti_posterior(Alpha_ab, sum_b, proc_a,
                                           curr_influencer_b, alpha_prior)
     cdef double q_b = fptree.get_value(curr_influencer_b)
     cdef double p_b = busca_probability(i, proc_a, curr_influencer_b,
                                         all_timestamps, a_ba,
-                                        beta_rates[curr_influencer_b])
+                                        beta_rates[curr_influencer_b],
+                                        previous_stamps)
 
     cdef int choice
     if rand() < min(1, (p_c * q_b) / (p_b * q_c)):
@@ -171,7 +171,8 @@ cdef void sample_alpha(int proc_a, map[int, vector[double]] &all_timestamps,
                        vector[int] &curr_state, int[::1] num_background,
                        map[int, map[int, int]] &Alpha_ab, int[::1] sum_b,
                        double[::1] mu_rates, double[::1] beta_rates,
-                       double alpha_prior, FPTree fptree) nogil:
+                       double alpha_prior, FPTree fptree,
+                       map[int, map[int, map[int, double]]] &previous_stamps) nogil:
 
     cdef int i
     cdef int influencer
@@ -201,7 +202,8 @@ cdef void sample_alpha(int proc_a, map[int, vector[double]] &all_timestamps,
                                               num_background, all_timestamps,
                                               curr_state, Alpha_ab, sum_b,
                                               alpha_prior, mu_rates,
-                                              beta_rates, fptree)
+                                              beta_rates, fptree,
+                                              previous_stamps)
         if new_influencer == -1:
             num_background[proc_a] += 1
         else:
@@ -237,7 +239,8 @@ cdef void update_beta_rate(int proc_a,
                            map[int, vector[int]] &curr_state_all,
                            map[int, map[int, int]] &Alpha_ba,
                            double alpha_prior, int[::1] sum_b,
-                           double[::1] beta_rates) nogil:
+                           double[::1] beta_rates,
+                           map[int, map[int, map[int, double]]] &previous_stamps) nogil:
 
     cdef vector[double] all_deltas
     cdef int n_proc = beta_rates.shape[0]
@@ -251,7 +254,7 @@ cdef void update_beta_rate(int proc_a,
                 ti = all_timestamps[proc_b][i]
                 if ti > max_ti:
                     max_ti = ti
-                tp = find_previous(all_timestamps[proc_a], ti)
+                tp = previous_stamps[proc_b][i][proc_a]
                 all_deltas.push_back(ti - tp)
                 n_elements += 1
 
@@ -263,13 +266,15 @@ cdef void update_beta_rate(int proc_a,
             beta_rates[proc_a] = beta_rates[proc_a] / 2
     else:
         beta_rates[proc_a] = max_ti
-
+    if beta_rates[proc_a] < E:
+        beta_rates[proc_a] = E
 
 cdef void sampleone(map[int, vector[double]] &all_timestamps,
                     map[int, vector[int]] &curr_state, int[::1] num_background,
                     double[::1] mu_rates, double[::1] beta_rates,
                     map[int, map[int, int]] &Alpha_ab, double alpha_prior,
-                    int[::1] sum_b, FPTree fptree) nogil:
+                    int[::1] sum_b, FPTree fptree,
+                    map[int, map[int, map[int, double]]] &previous_stamps) nogil:
 
     cdef int n_proc = all_timestamps.size()
     cdef int a
@@ -281,7 +286,7 @@ cdef void sampleone(map[int, vector[double]] &all_timestamps,
     printf("[logger]\t Learning beta.\n")
     for a in range(n_proc):
         update_beta_rate(a, all_timestamps, curr_state, Alpha_ab, alpha_prior,
-                         sum_b, beta_rates)
+                         sum_b, beta_rates, previous_stamps)
 
     printf("[logger]\t Sampling Alpha.\n")
     cdef pair[int, int] b
@@ -294,7 +299,7 @@ cdef void sampleone(map[int, vector[double]] &all_timestamps,
 
         sample_alpha(a, all_timestamps, curr_state[a], num_background,
                      Alpha_ab, sum_b, mu_rates, beta_rates, alpha_prior,
-                     fptree)
+                     fptree, previous_stamps)
 
 
 cdef int cfit(map[int, vector[double]] &all_timestamps,
@@ -304,7 +309,8 @@ cdef int cfit(map[int, vector[double]] &all_timestamps,
               int[::1] sum_b, double[::1] mu_rates_final,
               double[::1] beta_rates_final,
               map[int, map[int, int]] &Alpha_ba_final, int n_iter,
-              int burn_in, FPTree fptree) nogil:
+              int burn_in, FPTree fptree,
+              map[int, map[int, map[int, double]]] &previous_stamps) nogil:
 
     printf("[logger] Sampler is starting\n")
     printf("[logger]\t n_proc=%ld\n", mu_rates.shape[0])
@@ -317,7 +323,8 @@ cdef int cfit(map[int, vector[double]] &all_timestamps,
     for iteration in range(n_iter):
         printf("[logger] Iter=%d. Sampling...\n", iteration)
         sampleone(all_timestamps, curr_state, num_background, mu_rates,
-                  beta_rates, Alpha_ab, alpha_prior, sum_b, fptree)
+                  beta_rates, Alpha_ab, alpha_prior, sum_b, fptree,
+				  previous_stamps)
         if iteration >= burn_in:
             printf("[logger]\t Averaging after burn in...\n")
             num_good += 1
@@ -341,6 +348,7 @@ def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in):
     cdef map[int, vector[int]] curr_state
     cdef map[int, map[int, int]] Alpha_ab
     cdef map[int, vector[double]] all_timestamps_map
+    cdef map[int, map[int, map[int, double]]] previous_stamps
 
     cdef int[::1] sum_b = np.zeros(n_proc, dtype='i', order='C')
     cdef int[::1] num_background = np.zeros(n_proc, dtype='i', order='C')
@@ -359,6 +367,18 @@ def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in):
                 Alpha_ab[a][b] += 1
                 sum_b[b] += 1
 
+    cdef double ti, tp
+    cdef int i
+    for a in range(n_proc):
+        previous_stamps[a] = map[int, map[int, double]]()
+        i = 0
+        for ti in all_timestamps[a]:
+            previous_stamps[a][i] = map[int, double]()
+            for b in range(n_proc):
+                tp = find_previous(all_timestamps[b], ti)
+                previous_stamps[a][i][b] = tp
+            i += 1
+
     cdef double[::1] mu_rates = np.zeros(n_proc, dtype='d', order='C')
     cdef double[::1] beta_rates = np.zeros(n_proc, dtype='d', order='C')
 
@@ -369,7 +389,8 @@ def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in):
     cdef int n_good = cfit(all_timestamps_map, curr_state, num_background,
                            mu_rates, beta_rates, Alpha_ab, alpha_prior,
                            sum_b, mu_rates_final, beta_rates_final,
-                           Alpha_ba_final, n_iter, burn_in, fptree)
+                           Alpha_ba_final, n_iter, burn_in, fptree,
+                           previous_stamps)
 
     return Alpha_ba_final, np.asarray(mu_rates_final), \
         np.asarray(beta_rates_final), np.asarray(num_background), curr_state, \
