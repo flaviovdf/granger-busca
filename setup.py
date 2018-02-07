@@ -67,7 +67,8 @@ def get_extensions():
                 ext_files.append(os.path.join(pkg_folder, 'randomkit.c'))
                 ext_files.append(os.path.join(pkg_folder, 'distributions.c'))
 
-            extra_compile_args = ['-msse', '-msse2', '-mfpmath=sse']
+            extra_compile_args = ['-msse', '-msse2', '-mfpmath=sse',
+                                  '-std=c++11']
             if platform.system() == 'Darwin':
                 extra_compile_args.append('-stdlib=libc++')
                 extra_compile_args.append('-mmacosx-version-min=10.9')

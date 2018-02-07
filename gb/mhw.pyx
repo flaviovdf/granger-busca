@@ -126,37 +126,38 @@ cdef inline int metropolis_walk_step(int proc_a, int i, double prev_back_t,
     cdef double dt = ti - tp
     cdef double mu_prob = mu_rate * dt * exp(-mu_rate*dt)
 
+    if sample_background(mu_prob):
+        return -1
+
     cdef int candidate = fptree.sample(rand()*fptree.get_total())
+    # printf("%d %d\n", candidate, mu_rates.shape[0])
+    # printf("%f\n", fptree.get_total())
+    while candidate < 0 or candidate >= mu_rates.shape[0]:
+        candidate = fptree.sample(rand()*fptree.get_total())
+
+    cdef int curr_influencer_b = curr_state_proc_a[i]
+    if curr_influencer_b == -1:
+        return candidate
+
     cdef double q_c = fptree.get_value(candidate)
     cdef double a_ca = dirmulti_posterior(Alpha_ab, sum_b, proc_a, candidate,
                                           alpha_prior)
     cdef double p_c = busca_probability(i, proc_a, candidate, all_timestamps,
                                         a_ca, beta_rates[candidate])
 
-    cdef int curr_influencer_b = curr_state_proc_a[i]
     cdef double a_ba = dirmulti_posterior(Alpha_ab, sum_b, proc_a,
                                           curr_influencer_b, alpha_prior)
-    cdef double q_b = 0
-    cdef double p_b = 0
-    if curr_influencer_b != -1:
-        q_b = fptree.get_value(curr_influencer_b)
-        p_b = busca_probability(i, proc_a, curr_influencer_b, all_timestamps,
-                                a_ba, beta_rates[curr_influencer_b])
-
+    cdef double q_b = fptree.get_value(curr_influencer_b)
+    cdef double p_b = busca_probability(i, proc_a, curr_influencer_b,
+                                        all_timestamps, a_ba,
+                                        beta_rates[curr_influencer_b])
 
     cdef int choice
-    cdef double busca_rate_choice
-    if curr_influencer_b == -1 or rand() < min(1, (p_c * q_b) / (p_b * q_c)):
+    if rand() < min(1, (p_c * q_b) / (p_b * q_c)):
         choice = candidate
-        busca_rate_choice = p_c / a_ca
     else:
         choice = curr_influencer_b
-        busca_rate_choice = p_b / a_ba
-
-    if sample_background(mu_prob / (mu_prob + busca_rate_choice)):
-        return -1
-    else:
-        return choice
+    return choice
 
 
 cdef inline double inc(int n, int nb, int nba, double alpha_prior,
@@ -211,8 +212,8 @@ cdef void sample_alpha(int proc_a, map[int, vector[double]] &all_timestamps,
             Alpha_ab[proc_a][new_influencer] += 1
             sum_b[new_influencer] += 1
             fptree.set_value(new_influencer,
-                             fptree.get_value(new_influencer) - \
-                             inc(n_proc, nb, nba, alpha_prior, -1))
+                             fptree.get_value(new_influencer) + \
+                             inc(n_proc, nb, nba, alpha_prior, +1))
 
         curr_state[i] = new_influencer
         prev_back_t = prev_back_t_aux

@@ -2,7 +2,7 @@
 
 from gb import GrangerBusca
 
-import tick.simulation as hk
+import tick.hawkes.simulation as hk
 import numpy as np
 
 # Simulation of a 10-dimensional Hawkes process

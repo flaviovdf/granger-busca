@@ -71,6 +71,7 @@ cdef class FPTree:
         return self.get_value(i)
 
     cdef void set_value(self, int i, double value) nogil:
+        if value < 0: value = 0
         cdef int t_pos = <int>self.values[0]
         cdef int pos = i + t_pos
         value -= self.values[pos]

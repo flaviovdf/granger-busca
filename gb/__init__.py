@@ -56,6 +56,6 @@ class GrangerBusca(object):
                 rows.append(row)
                 cols.append(col)
                 vals.append(self.Alpha_[row][col] / n)
-        self.Alpha_ = sp.csr_matrix((vals, (rows, cols)), dtype='d')
+        self.Alpha_ = sp.csr_matrix((vals, (rows, cols)), dtype='i')
         self.mu_ = self.mu_ / n
         self.beta_ = self.beta_ / n
