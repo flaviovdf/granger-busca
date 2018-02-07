@@ -93,18 +93,27 @@ cdef inline double busca_probability(int i, int proc_a, int proc_b,
     cdef double tpp
     if i > 0:
         tp = all_timestamps[proc_a][i-1]
+        if proc_b == proc_a:
+            if i > 1:
+                tpp = all_timestamps[proc_a][i-2]
+            else:
+                tpp = 0
+        else:
+            if previous_stamps.count(proc_a) != 0 and \
+                    previous_stamps[proc_a].count(i-1) != 0 and \
+                    previous_stamps[proc_a][i-1].count(proc_b) != 0:
+                tpp = previous_stamps[proc_a][i-1][proc_b]
+            else:
+                tpp = find_previous(all_timestamps[proc_b], tp)
+                if previous_stamps.count(proc_a) == 0:
+                    previous_stamps[proc_a] = map[int, map[int, double]]()
+                if previous_stamps[proc_a].count(i-1) == 0:
+                    previous_stamps[proc_a][i-1] = map[int, double]()
+                previous_stamps[proc_a][i-1][proc_b] = tpp
     else:
         tp = 0
-    if tp != 0:
-        if i > 1:
-            tpp = previous_stamps[proc_a][i-2][proc_b]
-        else:
-            tpp = 0
-    else:
         tpp = 0
-
-    cdef double rate = alpha_ba / (beta_proc_b/E + tp - tpp)
-    return rate
+    return alpha_ba / (beta_proc_b/E + tp - tpp)
 
 
 cdef inline int metropolis_walk_step(int proc_a, int i, double prev_back_t,
@@ -254,7 +263,17 @@ cdef void update_beta_rate(int proc_a,
                 ti = all_timestamps[proc_b][i]
                 if ti > max_ti:
                     max_ti = ti
-                tp = previous_stamps[proc_b][i][proc_a]
+                if previous_stamps.count(proc_b) != 0 and \
+                        previous_stamps[proc_b].count(i) != 0 and \
+                        previous_stamps[proc_b][i].count(proc_a) != 0:
+                    tp = previous_stamps[proc_b][i][proc_a]
+                else:
+                    tp = find_previous(all_timestamps[proc_a], ti)
+                    if previous_stamps.count(proc_b) == 0:
+                        previous_stamps[proc_b] = map[int, map[int, double]]()
+                    if previous_stamps[proc_b].count(i) == 0:
+                         previous_stamps[proc_b][i] = map[int, double]()
+                    previous_stamps[proc_b][i][proc_a] = tp
                 all_deltas.push_back(ti - tp)
                 n_elements += 1
 
@@ -366,18 +385,6 @@ def fit(dict all_timestamps, double alpha_prior, int n_iter, int burn_in):
                     Alpha_ab[a][b] = 0
                 Alpha_ab[a][b] += 1
                 sum_b[b] += 1
-
-    cdef double ti, tp
-    cdef int i
-    for a in range(n_proc):
-        previous_stamps[a] = map[int, map[int, double]]()
-        i = 0
-        for ti in all_timestamps[a]:
-            previous_stamps[a][i] = map[int, double]()
-            for b in range(n_proc):
-                tp = find_previous(all_timestamps[b], ti)
-                previous_stamps[a][i][b] = tp
-            i += 1
 
     cdef double[::1] mu_rates = np.zeros(n_proc, dtype='d', order='C')
     cdef double[::1] beta_rates = np.zeros(n_proc, dtype='d', order='C')
