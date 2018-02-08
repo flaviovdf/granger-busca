@@ -130,11 +130,6 @@ cdef inline int metropolis_walk_step(int proc_a, int i, double prev_back_t,
         return -1
 
     cdef int candidate = fptree.sample(rand()*fptree.get_total())
-    # printf("%d %d\n", candidate, mu_rates.shape[0])
-    # printf("%f\n", fptree.get_total())
-    while candidate < 0 or candidate >= mu_rates.shape[0]:
-        candidate = fptree.sample(rand()*fptree.get_total())
-
     cdef int curr_influencer_b = curr_state_proc_a[i]
     if curr_influencer_b == -1:
         return candidate
