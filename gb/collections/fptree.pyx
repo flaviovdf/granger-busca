@@ -35,9 +35,6 @@ from libcpp.vector cimport vector
 
 cdef class FPTree:
 
-    def __cinit__(self, int size):
-        self._build(size)
-
     def __init__(self, int size):
         self._build(size)
 
