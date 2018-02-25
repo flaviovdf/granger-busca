@@ -5,11 +5,13 @@
 # cython: nonecheck=False
 # cython: wraparound=False
 
+
+from libc.stdint cimport uint64_t
+
+
 cdef class BitSet(object):
     cdef int size
-    cdef int num_set
-    cdef int max
-    cdef int8[::1] data
+    cdef uint64_t[::1] data
 
     cdef void add(self, int i) nogil
     cdef void remove(self, int i) nogil

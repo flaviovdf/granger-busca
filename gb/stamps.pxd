@@ -5,10 +5,16 @@
 # cython: nonecheck=False
 # cython: wraparound=False
 
+
 from libcpp.unordered_map cimport unordered_map
 
-cdef class Stamps(object):
 
-    cdef float[::1] all_stamps
+cdef class Timestamps(object):
+
+    cdef double[::1] all_stamps
+    cdef int[::1] causes
     cdef unordered_map[int, int] start_positions
-    cdef float[::1] get_stamps(self, int process) nogil
+    cdef int n_stamps
+
+    cdef double[::1] get_stamps(self, int process) nogil
+    cdef int[::1] get_causes(self, int process) nogil

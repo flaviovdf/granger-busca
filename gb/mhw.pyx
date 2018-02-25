@@ -10,7 +10,6 @@ import numpy as np
 from gb.collections.fptree cimport FPTree
 
 from gb.randomkit.random cimport rand
-from gb.randomkit.random cimport gamma as rgamma
 
 from gb.sorting.binsearch cimport searchsorted
 
