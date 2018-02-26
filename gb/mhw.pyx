@@ -188,7 +188,7 @@ cdef void sample_alpha(int proc_a, map[int, vector[double]] &all_timestamps,
             Alpha_ab[proc_a][influencer] -= 1
             sum_b[influencer] -= 1
             fptree.set_value(influencer,
-                             fptree.get_value(influencer) - \
+                             fptree.get_value(influencer) + \
                              inc(n_proc, nb, nba, alpha_prior, -1))
 
         new_influencer = metropolis_walk_step(proc_a, i, prev_back_t,

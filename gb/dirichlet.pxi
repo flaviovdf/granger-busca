@@ -11,6 +11,16 @@ cdef inline double dirmulti_posterior(int joint_count, int denominator,
     return (joint_count + prior) / (denominator + n * prior)
 
 
+cdef inline double numerator(double p, int denominator, int n,
+                             double prior) nogil:
+    return p * (denominator + n * prior)
+
+
+cdef inline double renormalize(double p, int denominator, int n,
+                               double prior) nogil:
+    return p / (denominator + n * prior)
+
+
 cdef inline double inc(int joint_count, int denominator, int n, double prior,
                        double delta) nogil:
     cdef double b = denominator + n * prior
