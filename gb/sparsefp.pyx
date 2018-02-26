@@ -12,9 +12,12 @@ include 'dirichlet.pxi'
 from gb.collections cimport BitSet
 from gb.collections cimport FPTree
 
+from libcpp.unordered_map cimport unordered_map
+
+
 cdef class SparseFenwickSampler(object):
 
-    def __init__(self, int n, double[::1] joint_counts,
+    def __init__(self, int n, unordered_map[int, int] joint_counts,
                  double[::1] denominators, double alpha_prior):
         self.n = n
         self.alpha_prior = alpha_prior
@@ -25,7 +28,7 @@ cdef class SparseFenwickSampler(object):
         cdef int j = 0
         self.non_zero = 0
         for i in range(self.size):
-            if joint_counts[i] != 0:
+            if joint_counts.count(i) != 0:
                 self.non_zero_idx[j] = i
                 self.reverse_idx[i] = j
                 self.non_zero += 1
@@ -36,9 +39,14 @@ cdef class SparseFenwickSampler(object):
         self.load = self.non_zero
         self.tree.reset(self.non_zero)
         cdef double prob
+        cdef int joint
         for i in range(self.non_zero):
-            prob = dirmulti_posterior(joint_counts[i], denominators[i],
-                                      self.n, alpha_prior)
+            if joint_counts.count(i) == 0:
+                joint = 0
+            else:
+                joint = joint_counts[i]
+            prob = dirmulti_posterior(joint, denominators[i], self.n,
+                                      alpha_prior)
             self.tree.set_value(i, prob)
         self.current_denominators = denominators
 

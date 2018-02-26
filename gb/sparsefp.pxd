@@ -22,6 +22,7 @@ cdef class SparseFenwickSampler(object):
     cdef BitSet bit_set
     cdef int non_zero
     cdef int load
+    cdef int[::1] counts
     cdef double[::1] current_denominators
     cdef unordered_map[int, int] non_zero_idx
     cdef unordered_map[int, int] reverse_idx
