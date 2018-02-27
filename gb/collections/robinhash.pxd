@@ -15,6 +15,8 @@ from libcpp.vector cimport vector
 
 cdef class RobinHoodHash(object):
     cdef int size
+    cdef int capacity
+    cdef int initial_capacity
     cdef vector[uint64_t] data
 
     cdef void insert(self, uint32_t key, uint32_t value) nogil
