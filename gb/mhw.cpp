@@ -819,13 +819,13 @@ struct __pyx_memoryviewslice_obj;
  * from libcpp.vector cimport vector
  * 
  * cdef class FPTree:             # <<<<<<<<<<<<<<
- *     cdef int size
+ *     cdef size_t size
  *     cdef vector[double] values # values[0] == T in the paper
  */
 struct __pyx_obj_2gb_11collections_6fptree_FPTree {
   PyObject_HEAD
   struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *__pyx_vtab;
-  int size;
+  size_t size;
   std::vector<double>  values;
 };
 
@@ -912,16 +912,16 @@ struct __pyx_memoryviewslice_obj {
  * from libcpp.vector cimport vector
  * 
  * cdef class FPTree:             # <<<<<<<<<<<<<<
- *     cdef int size
+ *     cdef size_t size
  *     cdef vector[double] values # values[0] == T in the paper
  */
 
 struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree {
   void (*reset)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *);
-  void (*_build)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, int);
-  void (*set_value)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, int, double);
-  double (*get_value)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, int);
-  int (*sample)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, double);
+  void (*_build)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, size_t);
+  void (*set_value)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, size_t, double);
+  double (*get_value)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, size_t);
+  size_t (*sample)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, double);
   double (*get_total)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *);
 };
 static struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *__pyx_vtabptr_2gb_11collections_6fptree_FPTree;

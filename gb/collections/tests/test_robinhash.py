@@ -1,6 +1,6 @@
 # -*- coding: utf8
 
-from gb.collections.robinhash import RobinHoodHash
+from gb.collections.table import RobinHoodHash
 
 from numpy.testing import assert_equal
 

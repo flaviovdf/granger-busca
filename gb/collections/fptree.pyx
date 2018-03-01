@@ -66,7 +66,7 @@ cdef class FPTree:
         for i in range(1, <size_t>self.values.size()):
             self.values[i] = 0.0
 
-    def reset(self):
+    def _reset(self):
         self.reset()
 
     cdef double get_value(self, size_t i) nogil:
