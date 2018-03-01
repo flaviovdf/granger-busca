@@ -9,4 +9,4 @@
 from libcpp.vector cimport vector
 
 
-cdef int searchsorted(vector[double] &array, double value, int lower) nogil
+cdef int searchsorted(double[::1] array, double value, int lower) nogil

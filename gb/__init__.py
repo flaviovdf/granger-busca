@@ -1,7 +1,6 @@
 # -*- coding: utf8
 
-from gb.sampler import fit as gibbs_fit
-from gb.mhw import fit as metropolis_fit
+from gb.metropolis_walker import fit as metropolis_fit
 
 from scipy import sparse as sp
 
@@ -47,8 +46,8 @@ class GrangerBusca(object):
             fit = gibbs_fit
 
         now = time.time()
-        self.Alpha_, self.mu_, self.beta_, self.back_, self.curr_state_, n = \
-            fit(self.timestamps, self.alpha_p, self.num_iter, self.burn_in)
+        self.Alpha_, self.mu_, self.beta_, self.back_, self.curr_state_ = \
+            fit(self.timestamps, self.alpha_p, self.num_iter)
         dt = time.time() - now
         self.training_time = dt
 
@@ -59,7 +58,7 @@ class GrangerBusca(object):
             for col in self.Alpha_[row]:
                 rows.append(row)
                 cols.append(col)
-                vals.append(self.Alpha_[row][col] / n)
+                vals.append(self.Alpha_[row][col])
         self.Alpha_ = sp.csr_matrix((vals, (rows, cols)), dtype='d')
-        self.mu_ = self.mu_ / n
-        self.beta_ = self.beta_ / n
+        self.mu_ = self.mu_
+        self.beta_ = self.beta_

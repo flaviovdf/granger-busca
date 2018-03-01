@@ -12,9 +12,10 @@ from libcpp.unordered_map cimport unordered_map
 cdef class Timestamps(object):
 
     cdef double[::1] all_stamps
-    cdef int[::1] causes
-    cdef unordered_map[int, int] start_positions
-    cdef int n_stamps
+    cdef size_t[::1] causes
+    cdef size_t n_stamps
+    cdef unordered_map[size_t, size_t] start_positions
 
-    cdef double[::1] get_stamps(self, int process) nogil
-    cdef int[::1] get_causes(self, int process) nogil
+    cdef double[::1] get_stamps(self, size_t process) nogil
+    cdef size_t[::1] get_causes(self, size_t process) nogil
+    cdef double find_previous(self, size_t process, double t) nogil

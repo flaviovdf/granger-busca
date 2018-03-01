@@ -997,25 +997,6 @@ static struct __pyx_vtabstruct__memoryviewslice *__pyx_vtabptr__memoryviewslice;
 #define __Pyx_CLEAR(r)    do { PyObject* tmp = ((PyObject*)(r)); r = NULL; __Pyx_DECREF(tmp);} while(0)
 #define __Pyx_XCLEAR(r)   do { if((r) != NULL) {PyObject* tmp = ((PyObject*)(r)); r = NULL; __Pyx_DECREF(tmp);}} while(0)
 
-/* PyObjectGetAttrStr.proto */
-#if CYTHON_USE_TYPE_SLOTS
-static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject* attr_name) {
-    PyTypeObject* tp = Py_TYPE(obj);
-    if (likely(tp->tp_getattro))
-        return tp->tp_getattro(obj, attr_name);
-#if PY_MAJOR_VERSION < 3
-    if (likely(tp->tp_getattr))
-        return tp->tp_getattr(obj, PyString_AS_STRING(attr_name));
-#endif
-    return PyObject_GetAttr(obj, attr_name);
-}
-#else
-#define __Pyx_PyObject_GetAttrStr(o,n) PyObject_GetAttr(o,n)
-#endif
-
-/* GetBuiltinName.proto */
-static PyObject *__Pyx_GetBuiltinName(PyObject *name);
-
 /* RaiseArgTupleInvalid.proto */
 static void __Pyx_RaiseArgtupleInvalid(const char* func_name, int exact,
     Py_ssize_t num_min, Py_ssize_t num_max, Py_ssize_t num_found);
@@ -1069,6 +1050,25 @@ static CYTHON_INLINE void __Pyx_XDEC_MEMVIEW(__Pyx_memviewslice *, int, int);
 /* ArgTypeTest.proto */
 static CYTHON_INLINE int __Pyx_ArgTypeTest(PyObject *obj, PyTypeObject *type, int none_allowed,
     const char *name, int exact);
+
+/* PyObjectGetAttrStr.proto */
+#if CYTHON_USE_TYPE_SLOTS
+static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject* attr_name) {
+    PyTypeObject* tp = Py_TYPE(obj);
+    if (likely(tp->tp_getattro))
+        return tp->tp_getattro(obj, attr_name);
+#if PY_MAJOR_VERSION < 3
+    if (likely(tp->tp_getattr))
+        return tp->tp_getattr(obj, PyString_AS_STRING(attr_name));
+#endif
+    return PyObject_GetAttr(obj, attr_name);
+}
+#else
+#define __Pyx_PyObject_GetAttrStr(o,n) PyObject_GetAttr(o,n)
+#endif
+
+/* GetBuiltinName.proto */
+static PyObject *__Pyx_GetBuiltinName(PyObject *name);
 
 /* PyObjectCall.proto */
 #if CYTHON_COMPILING_IN_CPYTHON
@@ -1419,48 +1419,6 @@ static int __Pyx_ValidateAndInit_memviewslice(
 /* ObjectToMemviewSlice.proto */
 static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dc_double(PyObject *);
 
-/* CppExceptionConversion.proto */
-#ifndef __Pyx_CppExn2PyErr
-#include <new>
-#include <typeinfo>
-#include <stdexcept>
-#include <ios>
-static void __Pyx_CppExn2PyErr() {
-  try {
-    if (PyErr_Occurred())
-      ; // let the latest Python exn pass through and ignore the current one
-    else
-      throw;
-  } catch (const std::bad_alloc& exn) {
-    PyErr_SetString(PyExc_MemoryError, exn.what());
-  } catch (const std::bad_cast& exn) {
-    PyErr_SetString(PyExc_TypeError, exn.what());
-  } catch (const std::bad_typeid& exn) {
-    PyErr_SetString(PyExc_TypeError, exn.what());
-  } catch (const std::domain_error& exn) {
-    PyErr_SetString(PyExc_ValueError, exn.what());
-  } catch (const std::invalid_argument& exn) {
-    PyErr_SetString(PyExc_ValueError, exn.what());
-  } catch (const std::ios_base::failure& exn) {
-    PyErr_SetString(PyExc_IOError, exn.what());
-  } catch (const std::out_of_range& exn) {
-    PyErr_SetString(PyExc_IndexError, exn.what());
-  } catch (const std::overflow_error& exn) {
-    PyErr_SetString(PyExc_OverflowError, exn.what());
-  } catch (const std::range_error& exn) {
-    PyErr_SetString(PyExc_ArithmeticError, exn.what());
-  } catch (const std::underflow_error& exn) {
-    PyErr_SetString(PyExc_ArithmeticError, exn.what());
-  } catch (const std::exception& exn) {
-    PyErr_SetString(PyExc_RuntimeError, exn.what());
-  }
-  catch (...)
-  {
-    PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
-  }
-}
-#endif
-
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
 
@@ -1519,7 +1477,7 @@ static PyObject *contiguous = 0;
 static PyObject *indirect_contiguous = 0;
 static int __pyx_memoryview_thread_locks_used;
 static PyThread_type_lock __pyx_memoryview_thread_locks[8];
-static int __pyx_f_2gb_7sorting_9binsearch_searchsorted(std::vector<double>  &, double, int); /*proto*/
+static int __pyx_f_2gb_7sorting_9binsearch_searchsorted(__Pyx_memviewslice, double, int); /*proto*/
 static struct __pyx_array_obj *__pyx_array_new(PyObject *, Py_ssize_t, char *, char *, char *); /*proto*/
 static void *__pyx_align_pointer(void *, size_t); /*proto*/
 static PyObject *__pyx_memoryview_new(PyObject *, int, int, __Pyx_TypeInfo *); /*proto*/
@@ -1558,22 +1516,20 @@ static __Pyx_TypeInfo __Pyx_TypeInfo_double = { "double", NULL, sizeof(double), 
 int __pyx_module_is_main_gb__sorting__binsearch = 0;
 
 /* Implementation of 'gb.sorting.binsearch' */
-static PyObject *__pyx_builtin_range;
 static PyObject *__pyx_builtin_ValueError;
 static PyObject *__pyx_builtin_MemoryError;
 static PyObject *__pyx_builtin_enumerate;
+static PyObject *__pyx_builtin_range;
 static PyObject *__pyx_builtin_TypeError;
 static PyObject *__pyx_builtin_Ellipsis;
 static PyObject *__pyx_builtin_id;
 static PyObject *__pyx_builtin_IndexError;
 static const char __pyx_k_O[] = "O";
 static const char __pyx_k_c[] = "c";
-static const char __pyx_k_i[] = "i";
 static const char __pyx_k_id[] = "id";
 static const char __pyx_k_new[] = "__new__";
 static const char __pyx_k_obj[] = "obj";
 static const char __pyx_k_base[] = "base";
-static const char __pyx_k_copy[] = "copy";
 static const char __pyx_k_dict[] = "__dict__";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_mode[] = "mode";
@@ -1686,7 +1642,6 @@ static PyObject *__pyx_n_s_class;
 static PyObject *__pyx_n_s_cline_in_traceback;
 static PyObject *__pyx_kp_s_contiguous_and_direct;
 static PyObject *__pyx_kp_s_contiguous_and_indirect;
-static PyObject *__pyx_n_s_copy;
 static PyObject *__pyx_n_s_dict;
 static PyObject *__pyx_n_s_dtype_is_object;
 static PyObject *__pyx_n_s_encode;
@@ -1700,7 +1655,6 @@ static PyObject *__pyx_n_s_gb_sorting_binsearch;
 static PyObject *__pyx_kp_s_gb_sorting_binsearch_pyx;
 static PyObject *__pyx_n_s_getstate;
 static PyObject *__pyx_kp_s_got_differing_extents_in_dimensi;
-static PyObject *__pyx_n_s_i;
 static PyObject *__pyx_n_s_id;
 static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_itemsize;
@@ -1831,30 +1785,32 @@ static PyObject *__pyx_codeobj__28;
 /* "gb/sorting/binsearch.pyx":13
  * 
  * 
- * cdef int searchsorted(vector[double] &array, double value, int lower) nogil:             # <<<<<<<<<<<<<<
+ * cdef int searchsorted(double[::1] array, double value, int lower) nogil:             # <<<<<<<<<<<<<<
  *     '''
  *     Finds the first element in the array where the given is OR should have been
  */
 
-static int __pyx_f_2gb_7sorting_9binsearch_searchsorted(std::vector<double>  &__pyx_v_array, double __pyx_v_value, int __pyx_v_lower) {
+static int __pyx_f_2gb_7sorting_9binsearch_searchsorted(__Pyx_memviewslice __pyx_v_array, double __pyx_v_value, int __pyx_v_lower) {
   int __pyx_v_upper;
   int __pyx_v_half;
   int __pyx_v_idx;
   int __pyx_r;
   int __pyx_t_1;
+  Py_ssize_t __pyx_t_2;
+  Py_ssize_t __pyx_t_3;
 
   /* "gb/sorting/binsearch.pyx":26
  *     '''
  * 
- *     cdef int upper = array.size() - 1  # closed interval             # <<<<<<<<<<<<<<
+ *     cdef int upper = array.shape[0] - 1  # closed interval             # <<<<<<<<<<<<<<
  *     cdef int half = 0
  *     cdef int idx = -1
  */
-  __pyx_v_upper = (__pyx_v_array.size() - 1);
+  __pyx_v_upper = ((__pyx_v_array.shape[0]) - 1);
 
   /* "gb/sorting/binsearch.pyx":27
  * 
- *     cdef int upper = array.size() - 1  # closed interval
+ *     cdef int upper = array.shape[0] - 1  # closed interval
  *     cdef int half = 0             # <<<<<<<<<<<<<<
  *     cdef int idx = -1
  * 
@@ -1862,7 +1818,7 @@ static int __pyx_f_2gb_7sorting_9binsearch_searchsorted(std::vector<double>  &__
   __pyx_v_half = 0;
 
   /* "gb/sorting/binsearch.pyx":28
- *     cdef int upper = array.size() - 1  # closed interval
+ *     cdef int upper = array.shape[0] - 1  # closed interval
  *     cdef int half = 0
  *     cdef int idx = -1             # <<<<<<<<<<<<<<
  * 
@@ -1897,7 +1853,8 @@ static int __pyx_f_2gb_7sorting_9binsearch_searchsorted(std::vector<double>  &__
  *             idx = half
  *             break
  */
-    __pyx_t_1 = ((__pyx_v_value == (__pyx_v_array[__pyx_v_half])) != 0);
+    __pyx_t_2 = __pyx_v_half;
+    __pyx_t_1 = ((__pyx_v_value == (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_array.data) + __pyx_t_2)) )))) != 0);
     if (__pyx_t_1) {
 
       /* "gb/sorting/binsearch.pyx":33
@@ -1934,7 +1891,8 @@ static int __pyx_f_2gb_7sorting_9binsearch_searchsorted(std::vector<double>  &__
  *             lower = half + 1
  *         else:
  */
-    __pyx_t_1 = ((__pyx_v_value > (__pyx_v_array[__pyx_v_half])) != 0);
+    __pyx_t_3 = __pyx_v_half;
+    __pyx_t_1 = ((__pyx_v_value > (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_array.data) + __pyx_t_3)) )))) != 0);
     if (__pyx_t_1) {
 
       /* "gb/sorting/binsearch.pyx":36
@@ -2011,7 +1969,7 @@ static int __pyx_f_2gb_7sorting_9binsearch_searchsorted(std::vector<double>  &__
   /* "gb/sorting/binsearch.pyx":13
  * 
  * 
- * cdef int searchsorted(vector[double] &array, double value, int lower) nogil:             # <<<<<<<<<<<<<<
+ * cdef int searchsorted(double[::1] array, double value, int lower) nogil:             # <<<<<<<<<<<<<<
  *     '''
  *     Finds the first element in the array where the given is OR should have been
  */
@@ -2025,8 +1983,7 @@ static int __pyx_f_2gb_7sorting_9binsearch_searchsorted(std::vector<double>  &__
  * 
  * 
  * def _searchsorted(double[::1] array, double value, int lower=0):             # <<<<<<<<<<<<<<
- *     cdef vector[double] copy
- *     cdef int i
+ *     return searchsorted(array, value, lower)
  */
 
 /* Python wrapper */
@@ -2110,65 +2067,33 @@ static PyObject *__pyx_pw_2gb_7sorting_9binsearch_1_searchsorted(PyObject *__pyx
 }
 
 static PyObject *__pyx_pf_2gb_7sorting_9binsearch__searchsorted(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_array, double __pyx_v_value, int __pyx_v_lower) {
-  std::vector<double>  __pyx_v_copy;
-  int __pyx_v_i;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  Py_ssize_t __pyx_t_1;
-  int __pyx_t_2;
-  Py_ssize_t __pyx_t_3;
-  PyObject *__pyx_t_4 = NULL;
+  PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("_searchsorted", 0);
 
-  /* "gb/sorting/binsearch.pyx":49
- *     cdef vector[double] copy
- *     cdef int i
- *     for i in range(array.shape[0]):             # <<<<<<<<<<<<<<
- *         copy.push_back(array[i])
- *     return searchsorted(copy, value, lower)
- */
-  __pyx_t_1 = (__pyx_v_array.shape[0]);
-  for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
-    __pyx_v_i = __pyx_t_2;
-
-    /* "gb/sorting/binsearch.pyx":50
- *     cdef int i
- *     for i in range(array.shape[0]):
- *         copy.push_back(array[i])             # <<<<<<<<<<<<<<
- *     return searchsorted(copy, value, lower)
- */
-    __pyx_t_3 = __pyx_v_i;
-    try {
-      __pyx_v_copy.push_back((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_array.data) + __pyx_t_3)) ))));
-    } catch(...) {
-      __Pyx_CppExn2PyErr();
-      __PYX_ERR(0, 50, __pyx_L1_error)
-    }
-  }
-
-  /* "gb/sorting/binsearch.pyx":51
- *     for i in range(array.shape[0]):
- *         copy.push_back(array[i])
- *     return searchsorted(copy, value, lower)             # <<<<<<<<<<<<<<
+  /* "gb/sorting/binsearch.pyx":47
+ * 
+ * def _searchsorted(double[::1] array, double value, int lower=0):
+ *     return searchsorted(array, value, lower)             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_f_2gb_7sorting_9binsearch_searchsorted(__pyx_v_copy, __pyx_v_value, __pyx_v_lower)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 51, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_r = __pyx_t_4;
-  __pyx_t_4 = 0;
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_f_2gb_7sorting_9binsearch_searchsorted(__pyx_v_array, __pyx_v_value, __pyx_v_lower)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 47, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
   goto __pyx_L0;
 
   /* "gb/sorting/binsearch.pyx":46
  * 
  * 
  * def _searchsorted(double[::1] array, double value, int lower=0):             # <<<<<<<<<<<<<<
- *     cdef vector[double] copy
- *     cdef int i
+ *     return searchsorted(array, value, lower)
  */
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_1);
   __Pyx_AddTraceback("gb.sorting.binsearch._searchsorted", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
@@ -15712,7 +15637,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
   {&__pyx_kp_s_contiguous_and_direct, __pyx_k_contiguous_and_direct, sizeof(__pyx_k_contiguous_and_direct), 0, 0, 1, 0},
   {&__pyx_kp_s_contiguous_and_indirect, __pyx_k_contiguous_and_indirect, sizeof(__pyx_k_contiguous_and_indirect), 0, 0, 1, 0},
-  {&__pyx_n_s_copy, __pyx_k_copy, sizeof(__pyx_k_copy), 0, 0, 1, 1},
   {&__pyx_n_s_dict, __pyx_k_dict, sizeof(__pyx_k_dict), 0, 0, 1, 1},
   {&__pyx_n_s_dtype_is_object, __pyx_k_dtype_is_object, sizeof(__pyx_k_dtype_is_object), 0, 0, 1, 1},
   {&__pyx_n_s_encode, __pyx_k_encode, sizeof(__pyx_k_encode), 0, 0, 1, 1},
@@ -15726,7 +15650,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_gb_sorting_binsearch_pyx, __pyx_k_gb_sorting_binsearch_pyx, sizeof(__pyx_k_gb_sorting_binsearch_pyx), 0, 0, 1, 0},
   {&__pyx_n_s_getstate, __pyx_k_getstate, sizeof(__pyx_k_getstate), 0, 0, 1, 1},
   {&__pyx_kp_s_got_differing_extents_in_dimensi, __pyx_k_got_differing_extents_in_dimensi, sizeof(__pyx_k_got_differing_extents_in_dimensi), 0, 0, 1, 0},
-  {&__pyx_n_s_i, __pyx_k_i, sizeof(__pyx_k_i), 0, 0, 1, 1},
   {&__pyx_n_s_id, __pyx_k_id, sizeof(__pyx_k_id), 0, 0, 1, 1},
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
   {&__pyx_n_s_itemsize, __pyx_k_itemsize, sizeof(__pyx_k_itemsize), 0, 0, 1, 1},
@@ -15777,10 +15700,10 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0, 0, 0, 0}
 };
 static int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 49, __pyx_L1_error)
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(1, 131, __pyx_L1_error)
   __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(1, 146, __pyx_L1_error)
   __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(1, 149, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(1, 178, __pyx_L1_error)
   __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) __PYX_ERR(1, 2, __pyx_L1_error)
   __pyx_builtin_Ellipsis = __Pyx_GetBuiltinName(__pyx_n_s_Ellipsis); if (!__pyx_builtin_Ellipsis) __PYX_ERR(1, 398, __pyx_L1_error)
   __pyx_builtin_id = __Pyx_GetBuiltinName(__pyx_n_s_id); if (!__pyx_builtin_id) __PYX_ERR(1, 601, __pyx_L1_error)
@@ -16001,13 +15924,12 @@ static int __Pyx_InitCachedConstants(void) {
  * 
  * 
  * def _searchsorted(double[::1] array, double value, int lower=0):             # <<<<<<<<<<<<<<
- *     cdef vector[double] copy
- *     cdef int i
+ *     return searchsorted(array, value, lower)
  */
-  __pyx_tuple__20 = PyTuple_Pack(5, __pyx_n_s_array, __pyx_n_s_value, __pyx_n_s_lower, __pyx_n_s_copy, __pyx_n_s_i); if (unlikely(!__pyx_tuple__20)) __PYX_ERR(0, 46, __pyx_L1_error)
+  __pyx_tuple__20 = PyTuple_Pack(3, __pyx_n_s_array, __pyx_n_s_value, __pyx_n_s_lower); if (unlikely(!__pyx_tuple__20)) __PYX_ERR(0, 46, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__20);
   __Pyx_GIVEREF(__pyx_tuple__20);
-  __pyx_codeobj__21 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__20, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_gb_sorting_binsearch_pyx, __pyx_n_s_searchsorted, 46, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__21)) __PYX_ERR(0, 46, __pyx_L1_error)
+  __pyx_codeobj__21 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__20, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_gb_sorting_binsearch_pyx, __pyx_n_s_searchsorted, 46, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__21)) __PYX_ERR(0, 46, __pyx_L1_error)
 
   /* "View.MemoryView":284
  *         return self.name
@@ -16181,7 +16103,7 @@ PyMODINIT_FUNC PyInit_binsearch(void)
   indirect_contiguous = Py_None; Py_INCREF(Py_None);
   /*--- Variable export code ---*/
   /*--- Function export code ---*/
-  if (__Pyx_ExportFunction("searchsorted", (void (*)(void))__pyx_f_2gb_7sorting_9binsearch_searchsorted, "int (std::vector<double>  &, double, int)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportFunction("searchsorted", (void (*)(void))__pyx_f_2gb_7sorting_9binsearch_searchsorted, "int (__Pyx_memviewslice, double, int)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   /*--- Type init code ---*/
   __pyx_vtabptr_array = &__pyx_vtable_array;
   __pyx_vtable_array.get_memview = (PyObject *(*)(struct __pyx_array_obj *))__pyx_array_get_memview;
@@ -16229,8 +16151,7 @@ PyMODINIT_FUNC PyInit_binsearch(void)
  * 
  * 
  * def _searchsorted(double[::1] array, double value, int lower=0):             # <<<<<<<<<<<<<<
- *     cdef vector[double] copy
- *     cdef int i
+ *     return searchsorted(array, value, lower)
  */
   __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_2gb_7sorting_9binsearch_1_searchsorted, NULL, __pyx_n_s_gb_sorting_binsearch); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 46, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -16439,20 +16360,6 @@ end:
     return (__Pyx_RefNannyAPIStruct *)r;
 }
 #endif
-
-/* GetBuiltinName */
-static PyObject *__Pyx_GetBuiltinName(PyObject *name) {
-    PyObject* result = __Pyx_PyObject_GetAttrStr(__pyx_b, name);
-    if (unlikely(!result)) {
-        PyErr_Format(PyExc_NameError,
-#if PY_MAJOR_VERSION >= 3
-            "name '%U' is not defined", name);
-#else
-            "name '%.200s' is not defined", PyString_AS_STRING(name));
-#endif
-    }
-    return result;
-}
 
 /* RaiseArgTupleInvalid */
 static void __Pyx_RaiseArgtupleInvalid(
@@ -17313,6 +17220,20 @@ static CYTHON_INLINE int __Pyx_ArgTypeTest(PyObject *obj, PyTypeObject *type, in
     }
     __Pyx_RaiseArgumentTypeInvalid(name, obj, type);
     return 0;
+}
+
+/* GetBuiltinName */
+  static PyObject *__Pyx_GetBuiltinName(PyObject *name) {
+    PyObject* result = __Pyx_PyObject_GetAttrStr(__pyx_b, name);
+    if (unlikely(!result)) {
+        PyErr_Format(PyExc_NameError,
+#if PY_MAJOR_VERSION >= 3
+            "name '%U' is not defined", name);
+#else
+            "name '%.200s' is not defined", PyString_AS_STRING(name));
+#endif
+    }
+    return result;
 }
 
 /* PyObjectCall */

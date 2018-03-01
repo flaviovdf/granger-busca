@@ -6,24 +6,26 @@
 # cython: wraparound=False
 
 
+from gb.sorting.binsearch cimport searchsorted
+
 import numpy as np
 
 
 cdef class Timestamps(object):
 
     def __init__(self, dict process_stamps):
-        cdef int n_proc = len(process_stamps)
+        cdef size_t n_proc = len(process_stamps)
 
         self.n_stamps = 0
-        cdef int proc_a
+        cdef size_t proc_a
         for proc_a in range(n_proc):
             self.n_stamps += len(process_stamps[proc_a])
 
         self.all_stamps = np.zeros(n_proc + self.n_stamps, dtype='d')
-        self.causes = np.zeros(n_proc + self.n_stamps, dtype='i') - 1
+        self.causes = np.zeros(n_proc + self.n_stamps, dtype='uint64') + n_proc
 
-        cdef int pos = 0
-        cdef int n
+        cdef size_t pos = 0
+        cdef size_t n
         cdef double[::1] stamps
         for proc_a in range(n_proc):
             stamps = np.asanyarray(process_stamps[proc_a], dtype='d')
@@ -37,18 +39,26 @@ cdef class Timestamps(object):
             self.all_stamps[pos:pos+n] = stamps
             pos += n
 
-    cdef double[::1] get_stamps(self, int process) nogil:
-        cdef int pos = self.start_positions[process]
-        cdef int size = self.causes[pos]
+    cdef double[::1] get_stamps(self, size_t process) nogil:
+        cdef size_t pos = self.start_positions[process]
+        cdef size_t size = self.causes[pos]
         return self.all_stamps[pos+1:pos+1+size]
 
-    def _get_stamps(self, int process):
+    def _get_stamps(self, size_t process):
         return self.get_stamps(process)
 
-    cdef int[::1] get_causes(self, int process) nogil:
-        cdef int pos = self.start_positions[process]
-        cdef int size = self.causes[pos]
+    cdef size_t[::1] get_causes(self, size_t process) nogil:
+        cdef size_t pos = self.start_positions[process]
+        cdef size_t size = self.causes[pos]
         return self.causes[pos+1:pos+1+size]
 
-    def _get_causes(self, int process):
+    def _get_causes(self, size_t process):
         return self.get_causes(process)
+
+    cdef double find_previous(self, size_t process, double t) nogil:
+        cdef double[::1] timestamps = self.get_stamps(process)
+        cdef size_t tp_idx = max(searchsorted(timestamps, t, 0) - 1, 0)
+        cdef double tp = timestamps[tp_idx]
+        if tp >= t:
+            tp = 0
+        return tp

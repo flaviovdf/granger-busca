@@ -13,7 +13,7 @@ from gb.randomkit.random cimport rand
 
 cdef class FenwickSampler(object):
 
-    def __init__(self, size_t n, Table joint_counts, Timestamps timestamps,
+    def __init__(self, Table joint_counts, Timestamps timestamps,
                  uint64_t[::1] denominators, double alpha_prior,
                  size_t initial_process):
         self.n_proc = denominators.shape[0]
@@ -46,12 +46,28 @@ cdef class FenwickSampler(object):
     cdef void inc_one(self, size_t b) nogil:
         cdef size_t a = self.current_process
         cdef uint64_t joint_count = self.joint_counts.get_cell(a, b)
+        cdef double old_prob = self.tree.get_value(b)
+        cdef double new_prob = old_prob + inc(joint_count,
+                                              self.denominators[b],
+                                              self.current_process_size,
+                                              self.alpha_prior, 1)
+
+        self.denominators[b] += 1
         self.joint_counts.set_cell(a, b, joint_count + 1)
+        self.tree.set_value(b, new_prob)
 
     cdef void dec_one(self, size_t b) nogil:
         cdef size_t a = self.current_process
         cdef uint64_t joint_count = self.joint_counts.get_cell(a, b)
+        cdef double old_prob = self.tree.get_value(b)
+        cdef double new_prob = old_prob + inc(joint_count,
+                                              self.denominators[b],
+                                              self.current_process_size,
+                                              self.alpha_prior, -1)
+
+        self.denominators[b] -= 1
         self.joint_counts.set_cell(a, b, joint_count - 1)
+        self.tree.set_value(b, new_prob)
 
     cdef size_t sample(self) nogil:
         return self.tree.sample(rand())
