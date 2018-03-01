@@ -79,7 +79,7 @@ cdef class RobinHoodHash(object):
             entry.dib += 1
             i += 1
 
-        cdef double load = self.inserted / self.data.size()
+        cdef double load = (<double>self.inserted) / self.data.size()
         cdef size_t new_n
         if load > self.load_factor:
             new_n = self.n_to_prime + 1
@@ -100,6 +100,24 @@ cdef class RobinHoodHash(object):
             elif self.data[loc].key == kp1:
                 return self.data[loc].value
         return 0
+
+    cdef size_t shrink_to_fit(self) nogil:
+        cdef size_t n_removals = 0
+        cdef size_t i
+        for i in range(self.data.size()):
+            if self.data[i].key != 0 and self.data[i].value == 0:
+                n_removals += 1
+                self.data[i].key = 0
+                self.data[i].value = 0
+                self.data[i].dib = 0
+
+        cdef size_t new_n = 1
+        if n_removals > 0:
+            while prime_by_n(new_n) < (self.inserted - n_removals):
+                new_n += 1
+            if new_n < self.n_to_prime:
+                self.n_to_prime = new_n
+                self._resize(prime_by_n(new_n))
 
     def _get(self, size_t key):
         return self.get(key)

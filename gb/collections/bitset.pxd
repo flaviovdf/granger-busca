@@ -13,6 +13,6 @@ cdef class BitSet(object):
     cdef int size
     cdef uint64_t[::1] data
 
-    cdef void add(self, int i) nogil
-    cdef void remove(self, int i) nogil
-    cdef int get(self, int i) nogil
+    cdef void add(self, size_t i) nogil
+    cdef void remove(self, size_t i) nogil
+    cdef int get(self, size_t i) nogil

@@ -25,3 +25,4 @@ cdef class RobinHoodHash(object):
     cdef void set(self, size_t key, size_t delta) nogil
     cdef size_t get(self, size_t key) nogil
     cdef size_t size(self) nogil
+    cdef size_t shrink_to_fit(self) nogil
