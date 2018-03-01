@@ -653,32 +653,32 @@ struct __pyx_obj_2gb_11collections_6fptree_FPTree;
  * from libcpp.vector cimport vector
  * 
  * cdef class FPTree:             # <<<<<<<<<<<<<<
- *     cdef int size
+ *     cdef size_t size
  *     cdef vector[double] values # values[0] == T in the paper
  */
 struct __pyx_obj_2gb_11collections_6fptree_FPTree {
   PyObject_HEAD
   struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *__pyx_vtab;
-  int size;
+  size_t size;
   std::vector<double>  values;
 };
 
 
 
-/* "gb/collections/fptree.pyx":44
+/* "gb/collections/fptree.pyx":45
  * 
  * 
  * cdef class FPTree:             # <<<<<<<<<<<<<<
  * 
- *     def __init__(self, int size):
+ *     def __init__(self, size_t size):
  */
 
 struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree {
   void (*reset)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *);
-  void (*_build)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, int);
-  void (*set_value)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, int, double);
-  double (*get_value)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, int);
-  int (*sample)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, double);
+  void (*_build)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, size_t);
+  void (*set_value)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, size_t, double);
+  double (*get_value)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, size_t);
+  size_t (*sample)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, double);
   double (*get_total)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *);
 };
 static struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *__pyx_vtabptr_2gb_11collections_6fptree_FPTree;
@@ -919,11 +919,8 @@ static void __Pyx_CppExn2PyErr() {
 }
 #endif
 
-/* CIntToPy.proto */
-static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
-
 /* CIntFromPy.proto */
-static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *);
+static CYTHON_INLINE size_t __Pyx_PyInt_As_size_t(PyObject *);
 
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
@@ -931,17 +928,20 @@ static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
 /* CIntFromPy.proto */
 static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *);
 
+/* CIntFromPy.proto */
+static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *);
+
 /* CheckBinaryVersion.proto */
 static int __Pyx_check_binary_version(void);
 
 /* InitStrings.proto */
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
-static void __pyx_f_2gb_11collections_6fptree_6FPTree__build(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, int __pyx_v_size); /* proto*/
+static void __pyx_f_2gb_11collections_6fptree_6FPTree__build(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, size_t __pyx_v_size); /* proto*/
 static void __pyx_f_2gb_11collections_6fptree_6FPTree_reset(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self); /* proto*/
-static double __pyx_f_2gb_11collections_6fptree_6FPTree_get_value(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, int __pyx_v_i); /* proto*/
-static void __pyx_f_2gb_11collections_6fptree_6FPTree_set_value(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, int __pyx_v_i, double __pyx_v_value); /* proto*/
-static int __pyx_f_2gb_11collections_6fptree_6FPTree_sample(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, double __pyx_v_urnd); /* proto*/
+static double __pyx_f_2gb_11collections_6fptree_6FPTree_get_value(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, size_t __pyx_v_i); /* proto*/
+static void __pyx_f_2gb_11collections_6fptree_6FPTree_set_value(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, size_t __pyx_v_i, double __pyx_v_value); /* proto*/
+static size_t __pyx_f_2gb_11collections_6fptree_6FPTree_sample(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, double __pyx_v_urnd); /* proto*/
 static double __pyx_f_2gb_11collections_6fptree_6FPTree_get_total(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self); /* proto*/
 
 /* Module declarations from 'libcpp.vector' */
@@ -970,18 +970,18 @@ static PyObject *__pyx_n_s_reset;
 static PyObject *__pyx_n_s_size;
 static PyObject *__pyx_n_s_test;
 static PyObject *__pyx_n_s_value;
-static int __pyx_pf_2gb_11collections_6fptree_6FPTree___init__(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, int __pyx_v_size); /* proto */
+static int __pyx_pf_2gb_11collections_6fptree_6FPTree___init__(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, size_t __pyx_v_size); /* proto */
 static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_2reset(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_4_get_value(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, int __pyx_v_i); /* proto */
-static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_6_set_value(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, int __pyx_v_i, double __pyx_v_value); /* proto */
+static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_4_get_value(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, size_t __pyx_v_i); /* proto */
+static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_6_set_value(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, size_t __pyx_v_i, double __pyx_v_value); /* proto */
 static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_8_sample(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, double __pyx_v_urnd); /* proto */
 static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_10_get_total(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self); /* proto */
 static PyObject *__pyx_tp_new_2gb_11collections_6fptree_FPTree(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 
-/* "gb/collections/fptree.pyx":46
+/* "gb/collections/fptree.pyx":47
  * cdef class FPTree:
  * 
- *     def __init__(self, int size):             # <<<<<<<<<<<<<<
+ *     def __init__(self, size_t size):             # <<<<<<<<<<<<<<
  *         self._build(size)
  * 
  */
@@ -989,7 +989,7 @@ static PyObject *__pyx_tp_new_2gb_11collections_6fptree_FPTree(PyTypeObject *t, 
 /* Python wrapper */
 static int __pyx_pw_2gb_11collections_6fptree_6FPTree_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static int __pyx_pw_2gb_11collections_6fptree_6FPTree_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  int __pyx_v_size;
+  size_t __pyx_v_size;
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__init__ (wrapper)", 0);
@@ -1011,18 +1011,18 @@ static int __pyx_pw_2gb_11collections_6fptree_6FPTree_1__init__(PyObject *__pyx_
         else goto __pyx_L5_argtuple_error;
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 46, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 47, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 1) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
     }
-    __pyx_v_size = __Pyx_PyInt_As_int(values[0]); if (unlikely((__pyx_v_size == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 46, __pyx_L3_error)
+    __pyx_v_size = __Pyx_PyInt_As_size_t(values[0]); if (unlikely((__pyx_v_size == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 47, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__init__", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 46, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__init__", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 47, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gb.collections.fptree.FPTree.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -1035,24 +1035,24 @@ static int __pyx_pw_2gb_11collections_6fptree_6FPTree_1__init__(PyObject *__pyx_
   return __pyx_r;
 }
 
-static int __pyx_pf_2gb_11collections_6fptree_6FPTree___init__(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, int __pyx_v_size) {
+static int __pyx_pf_2gb_11collections_6fptree_6FPTree___init__(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, size_t __pyx_v_size) {
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__init__", 0);
 
-  /* "gb/collections/fptree.pyx":47
+  /* "gb/collections/fptree.pyx":48
  * 
- *     def __init__(self, int size):
+ *     def __init__(self, size_t size):
  *         self._build(size)             # <<<<<<<<<<<<<<
  * 
- *     cdef void _build(self, int size) nogil:
+ *     cdef void _build(self, size_t size) nogil:
  */
   ((struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *)__pyx_v_self->__pyx_vtab)->_build(__pyx_v_self, __pyx_v_size);
 
-  /* "gb/collections/fptree.pyx":46
+  /* "gb/collections/fptree.pyx":47
  * cdef class FPTree:
  * 
- *     def __init__(self, int size):             # <<<<<<<<<<<<<<
+ *     def __init__(self, size_t size):             # <<<<<<<<<<<<<<
  *         self._build(size)
  * 
  */
@@ -1063,43 +1063,43 @@ static int __pyx_pf_2gb_11collections_6fptree_6FPTree___init__(struct __pyx_obj_
   return __pyx_r;
 }
 
-/* "gb/collections/fptree.pyx":49
+/* "gb/collections/fptree.pyx":50
  *         self._build(size)
  * 
- *     cdef void _build(self, int size) nogil:             # <<<<<<<<<<<<<<
+ *     cdef void _build(self, size_t size) nogil:             # <<<<<<<<<<<<<<
  *         self.size = size
- *         cdef int t_pos = 1
+ *         cdef size_t t_pos = 1
  */
 
-static void __pyx_f_2gb_11collections_6fptree_6FPTree__build(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, int __pyx_v_size) {
-  int __pyx_v_t_pos;
+static void __pyx_f_2gb_11collections_6fptree_6FPTree__build(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, size_t __pyx_v_size) {
+  size_t __pyx_v_t_pos;
   CYTHON_UNUSED double __pyx_v_init_val;
-  int __pyx_v_i;
+  size_t __pyx_v_i;
   int __pyx_t_1;
-  int __pyx_t_2;
-  int __pyx_t_3;
+  size_t __pyx_t_2;
+  size_t __pyx_t_3;
 
-  /* "gb/collections/fptree.pyx":50
+  /* "gb/collections/fptree.pyx":51
  * 
- *     cdef void _build(self, int size) nogil:
+ *     cdef void _build(self, size_t size) nogil:
  *         self.size = size             # <<<<<<<<<<<<<<
- *         cdef int t_pos = 1
+ *         cdef size_t t_pos = 1
  *         while t_pos < size:
  */
   __pyx_v_self->size = __pyx_v_size;
 
-  /* "gb/collections/fptree.pyx":51
- *     cdef void _build(self, int size) nogil:
+  /* "gb/collections/fptree.pyx":52
+ *     cdef void _build(self, size_t size) nogil:
  *         self.size = size
- *         cdef int t_pos = 1             # <<<<<<<<<<<<<<
+ *         cdef size_t t_pos = 1             # <<<<<<<<<<<<<<
  *         while t_pos < size:
  *             t_pos *= 2
  */
   __pyx_v_t_pos = 1;
 
-  /* "gb/collections/fptree.pyx":52
+  /* "gb/collections/fptree.pyx":53
  *         self.size = size
- *         cdef int t_pos = 1
+ *         cdef size_t t_pos = 1
  *         while t_pos < size:             # <<<<<<<<<<<<<<
  *             t_pos *= 2
  *         cdef double init_val = 0.0
@@ -1108,8 +1108,8 @@ static void __pyx_f_2gb_11collections_6fptree_6FPTree__build(struct __pyx_obj_2g
     __pyx_t_1 = ((__pyx_v_t_pos < __pyx_v_size) != 0);
     if (!__pyx_t_1) break;
 
-    /* "gb/collections/fptree.pyx":53
- *         cdef int t_pos = 1
+    /* "gb/collections/fptree.pyx":54
+ *         cdef size_t t_pos = 1
  *         while t_pos < size:
  *             t_pos *= 2             # <<<<<<<<<<<<<<
  *         cdef double init_val = 0.0
@@ -1118,21 +1118,21 @@ static void __pyx_f_2gb_11collections_6fptree_6FPTree__build(struct __pyx_obj_2g
     __pyx_v_t_pos = (__pyx_v_t_pos * 2);
   }
 
-  /* "gb/collections/fptree.pyx":54
+  /* "gb/collections/fptree.pyx":55
  *         while t_pos < size:
  *             t_pos *= 2
  *         cdef double init_val = 0.0             # <<<<<<<<<<<<<<
  *         self.values.resize(2 * t_pos)
- *         cdef int i
+ *         cdef size_t i
  */
   __pyx_v_init_val = 0.0;
 
-  /* "gb/collections/fptree.pyx":55
+  /* "gb/collections/fptree.pyx":56
  *             t_pos *= 2
  *         cdef double init_val = 0.0
  *         self.values.resize(2 * t_pos)             # <<<<<<<<<<<<<<
- *         cdef int i
- *         for i in range(1, <int>self.values.size()):
+ *         cdef size_t i
+ *         for i in range(1, self.values.size()):
  */
   try {
     __pyx_v_self->values.resize((2 * __pyx_v_t_pos));
@@ -1144,23 +1144,23 @@ static void __pyx_f_2gb_11collections_6fptree_6FPTree__build(struct __pyx_obj_2g
     #ifdef WITH_THREAD
     PyGILState_Release(__pyx_gilstate_save);
     #endif
-    __PYX_ERR(0, 55, __pyx_L1_error)
+    __PYX_ERR(0, 56, __pyx_L1_error)
   }
 
-  /* "gb/collections/fptree.pyx":57
+  /* "gb/collections/fptree.pyx":58
  *         self.values.resize(2 * t_pos)
- *         cdef int i
- *         for i in range(1, <int>self.values.size()):             # <<<<<<<<<<<<<<
+ *         cdef size_t i
+ *         for i in range(1, self.values.size()):             # <<<<<<<<<<<<<<
  *             self.values[i] = 0.0
  *         # values[0] == T --> where the probabilities start
  */
-  __pyx_t_2 = ((int)__pyx_v_self->values.size());
+  __pyx_t_2 = __pyx_v_self->values.size();
   for (__pyx_t_3 = 1; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "gb/collections/fptree.pyx":58
- *         cdef int i
- *         for i in range(1, <int>self.values.size()):
+    /* "gb/collections/fptree.pyx":59
+ *         cdef size_t i
+ *         for i in range(1, self.values.size()):
  *             self.values[i] = 0.0             # <<<<<<<<<<<<<<
  *         # values[0] == T --> where the probabilities start
  *         # values[1] will be the root of the FPTree
@@ -1168,7 +1168,7 @@ static void __pyx_f_2gb_11collections_6fptree_6FPTree__build(struct __pyx_obj_2g
     (__pyx_v_self->values[__pyx_v_i]) = 0.0;
   }
 
-  /* "gb/collections/fptree.pyx":61
+  /* "gb/collections/fptree.pyx":62
  *         # values[0] == T --> where the probabilities start
  *         # values[1] will be the root of the FPTree
  *         self.values[0] = t_pos             # <<<<<<<<<<<<<<
@@ -1177,12 +1177,12 @@ static void __pyx_f_2gb_11collections_6fptree_6FPTree__build(struct __pyx_obj_2g
  */
   (__pyx_v_self->values[0]) = __pyx_v_t_pos;
 
-  /* "gb/collections/fptree.pyx":49
+  /* "gb/collections/fptree.pyx":50
  *         self._build(size)
  * 
- *     cdef void _build(self, int size) nogil:             # <<<<<<<<<<<<<<
+ *     cdef void _build(self, size_t size) nogil:             # <<<<<<<<<<<<<<
  *         self.size = size
- *         cdef int t_pos = 1
+ *         cdef size_t t_pos = 1
  */
 
   /* function exit code */
@@ -1192,33 +1192,33 @@ static void __pyx_f_2gb_11collections_6fptree_6FPTree__build(struct __pyx_obj_2g
   __pyx_L0:;
 }
 
-/* "gb/collections/fptree.pyx":63
+/* "gb/collections/fptree.pyx":64
  *         self.values[0] = t_pos
  * 
  *     cdef void reset(self) nogil:             # <<<<<<<<<<<<<<
- *         cdef int i
- *         for i in range(1, <int>self.values.size()):
+ *         cdef size_t i
+ *         for i in range(1, <size_t>self.values.size()):
  */
 
 static void __pyx_f_2gb_11collections_6fptree_6FPTree_reset(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self) {
-  int __pyx_v_i;
-  int __pyx_t_1;
-  int __pyx_t_2;
+  size_t __pyx_v_i;
+  size_t __pyx_t_1;
+  size_t __pyx_t_2;
 
-  /* "gb/collections/fptree.pyx":65
+  /* "gb/collections/fptree.pyx":66
  *     cdef void reset(self) nogil:
- *         cdef int i
- *         for i in range(1, <int>self.values.size()):             # <<<<<<<<<<<<<<
+ *         cdef size_t i
+ *         for i in range(1, <size_t>self.values.size()):             # <<<<<<<<<<<<<<
  *             self.values[i] = 0.0
  * 
  */
-  __pyx_t_1 = ((int)__pyx_v_self->values.size());
+  __pyx_t_1 = ((size_t)__pyx_v_self->values.size());
   for (__pyx_t_2 = 1; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
     __pyx_v_i = __pyx_t_2;
 
-    /* "gb/collections/fptree.pyx":66
- *         cdef int i
- *         for i in range(1, <int>self.values.size()):
+    /* "gb/collections/fptree.pyx":67
+ *         cdef size_t i
+ *         for i in range(1, <size_t>self.values.size()):
  *             self.values[i] = 0.0             # <<<<<<<<<<<<<<
  * 
  *     def reset(self):
@@ -1226,18 +1226,18 @@ static void __pyx_f_2gb_11collections_6fptree_6FPTree_reset(struct __pyx_obj_2gb
     (__pyx_v_self->values[__pyx_v_i]) = 0.0;
   }
 
-  /* "gb/collections/fptree.pyx":63
+  /* "gb/collections/fptree.pyx":64
  *         self.values[0] = t_pos
  * 
  *     cdef void reset(self) nogil:             # <<<<<<<<<<<<<<
- *         cdef int i
- *         for i in range(1, <int>self.values.size()):
+ *         cdef size_t i
+ *         for i in range(1, <size_t>self.values.size()):
  */
 
   /* function exit code */
 }
 
-/* "gb/collections/fptree.pyx":68
+/* "gb/collections/fptree.pyx":69
  *             self.values[i] = 0.0
  * 
  *     def reset(self):             # <<<<<<<<<<<<<<
@@ -1266,14 +1266,14 @@ static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_2reset(struct __pyx_
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("reset", 0);
 
-  /* "gb/collections/fptree.pyx":69
+  /* "gb/collections/fptree.pyx":70
  * 
  *     def reset(self):
  *         self.reset()             # <<<<<<<<<<<<<<
  * 
- *     cdef double get_value(self, int i) nogil:
+ *     cdef double get_value(self, size_t i) nogil:
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_reset); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 69, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_reset); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 70, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -1286,16 +1286,16 @@ static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_2reset(struct __pyx_
     }
   }
   if (__pyx_t_3) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 69, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 70, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   } else {
-    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 69, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 70, __pyx_L1_error)
   }
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "gb/collections/fptree.pyx":68
+  /* "gb/collections/fptree.pyx":69
  *             self.values[i] = 0.0
  * 
  *     def reset(self):             # <<<<<<<<<<<<<<
@@ -1318,42 +1318,42 @@ static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_2reset(struct __pyx_
   return __pyx_r;
 }
 
-/* "gb/collections/fptree.pyx":71
+/* "gb/collections/fptree.pyx":72
  *         self.reset()
  * 
- *     cdef double get_value(self, int i) nogil:             # <<<<<<<<<<<<<<
- *         cdef int t_pos = <int>self.values[0]
+ *     cdef double get_value(self, size_t i) nogil:             # <<<<<<<<<<<<<<
+ *         cdef size_t t_pos = <size_t>self.values[0]
  *         return self.values[i + t_pos]
  */
 
-static double __pyx_f_2gb_11collections_6fptree_6FPTree_get_value(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, int __pyx_v_i) {
-  int __pyx_v_t_pos;
+static double __pyx_f_2gb_11collections_6fptree_6FPTree_get_value(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, size_t __pyx_v_i) {
+  size_t __pyx_v_t_pos;
   double __pyx_r;
 
-  /* "gb/collections/fptree.pyx":72
+  /* "gb/collections/fptree.pyx":73
  * 
- *     cdef double get_value(self, int i) nogil:
- *         cdef int t_pos = <int>self.values[0]             # <<<<<<<<<<<<<<
+ *     cdef double get_value(self, size_t i) nogil:
+ *         cdef size_t t_pos = <size_t>self.values[0]             # <<<<<<<<<<<<<<
  *         return self.values[i + t_pos]
  * 
  */
-  __pyx_v_t_pos = ((int)(__pyx_v_self->values[0]));
+  __pyx_v_t_pos = ((size_t)(__pyx_v_self->values[0]));
 
-  /* "gb/collections/fptree.pyx":73
- *     cdef double get_value(self, int i) nogil:
- *         cdef int t_pos = <int>self.values[0]
+  /* "gb/collections/fptree.pyx":74
+ *     cdef double get_value(self, size_t i) nogil:
+ *         cdef size_t t_pos = <size_t>self.values[0]
  *         return self.values[i + t_pos]             # <<<<<<<<<<<<<<
  * 
- *     def _get_value(self, int i):
+ *     def _get_value(self, size_t i):
  */
   __pyx_r = (__pyx_v_self->values[(__pyx_v_i + __pyx_v_t_pos)]);
   goto __pyx_L0;
 
-  /* "gb/collections/fptree.pyx":71
+  /* "gb/collections/fptree.pyx":72
  *         self.reset()
  * 
- *     cdef double get_value(self, int i) nogil:             # <<<<<<<<<<<<<<
- *         cdef int t_pos = <int>self.values[0]
+ *     cdef double get_value(self, size_t i) nogil:             # <<<<<<<<<<<<<<
+ *         cdef size_t t_pos = <size_t>self.values[0]
  *         return self.values[i + t_pos]
  */
 
@@ -1362,10 +1362,10 @@ static double __pyx_f_2gb_11collections_6fptree_6FPTree_get_value(struct __pyx_o
   return __pyx_r;
 }
 
-/* "gb/collections/fptree.pyx":75
+/* "gb/collections/fptree.pyx":76
  *         return self.values[i + t_pos]
  * 
- *     def _get_value(self, int i):             # <<<<<<<<<<<<<<
+ *     def _get_value(self, size_t i):             # <<<<<<<<<<<<<<
  *         return self.get_value(i)
  * 
  */
@@ -1373,12 +1373,12 @@ static double __pyx_f_2gb_11collections_6fptree_6FPTree_get_value(struct __pyx_o
 /* Python wrapper */
 static PyObject *__pyx_pw_2gb_11collections_6fptree_6FPTree_5_get_value(PyObject *__pyx_v_self, PyObject *__pyx_arg_i); /*proto*/
 static PyObject *__pyx_pw_2gb_11collections_6fptree_6FPTree_5_get_value(PyObject *__pyx_v_self, PyObject *__pyx_arg_i) {
-  int __pyx_v_i;
+  size_t __pyx_v_i;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("_get_value (wrapper)", 0);
   assert(__pyx_arg_i); {
-    __pyx_v_i = __Pyx_PyInt_As_int(__pyx_arg_i); if (unlikely((__pyx_v_i == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 75, __pyx_L3_error)
+    __pyx_v_i = __Pyx_PyInt_As_size_t(__pyx_arg_i); if (unlikely((__pyx_v_i == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 76, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -1386,37 +1386,37 @@ static PyObject *__pyx_pw_2gb_11collections_6fptree_6FPTree_5_get_value(PyObject
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_2gb_11collections_6fptree_6FPTree_4_get_value(((struct __pyx_obj_2gb_11collections_6fptree_FPTree *)__pyx_v_self), ((int)__pyx_v_i));
+  __pyx_r = __pyx_pf_2gb_11collections_6fptree_6FPTree_4_get_value(((struct __pyx_obj_2gb_11collections_6fptree_FPTree *)__pyx_v_self), ((size_t)__pyx_v_i));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_4_get_value(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, int __pyx_v_i) {
+static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_4_get_value(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, size_t __pyx_v_i) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("_get_value", 0);
 
-  /* "gb/collections/fptree.pyx":76
+  /* "gb/collections/fptree.pyx":77
  * 
- *     def _get_value(self, int i):
+ *     def _get_value(self, size_t i):
  *         return self.get_value(i)             # <<<<<<<<<<<<<<
  * 
- *     cdef void set_value(self, int i, double value) nogil:
+ *     cdef void set_value(self, size_t i, double value) nogil:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(((struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *)__pyx_v_self->__pyx_vtab)->get_value(__pyx_v_self, __pyx_v_i)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 76, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(((struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *)__pyx_v_self->__pyx_vtab)->get_value(__pyx_v_self, __pyx_v_i)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 77, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "gb/collections/fptree.pyx":75
+  /* "gb/collections/fptree.pyx":76
  *         return self.values[i + t_pos]
  * 
- *     def _get_value(self, int i):             # <<<<<<<<<<<<<<
+ *     def _get_value(self, size_t i):             # <<<<<<<<<<<<<<
  *         return self.get_value(i)
  * 
  */
@@ -1432,61 +1432,61 @@ static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_4_get_value(struct _
   return __pyx_r;
 }
 
-/* "gb/collections/fptree.pyx":78
+/* "gb/collections/fptree.pyx":79
  *         return self.get_value(i)
  * 
- *     cdef void set_value(self, int i, double value) nogil:             # <<<<<<<<<<<<<<
+ *     cdef void set_value(self, size_t i, double value) nogil:             # <<<<<<<<<<<<<<
  *         if value < 0: value = 0
- *         cdef int t_pos = <int>self.values[0]
+ *         cdef size_t t_pos = <size_t>self.values[0]
  */
 
-static void __pyx_f_2gb_11collections_6fptree_6FPTree_set_value(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, int __pyx_v_i, double __pyx_v_value) {
-  int __pyx_v_t_pos;
-  int __pyx_v_pos;
+static void __pyx_f_2gb_11collections_6fptree_6FPTree_set_value(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, size_t __pyx_v_i, double __pyx_v_value) {
+  size_t __pyx_v_t_pos;
+  size_t __pyx_v_pos;
   int __pyx_t_1;
-  int __pyx_t_2;
+  size_t __pyx_t_2;
 
-  /* "gb/collections/fptree.pyx":79
+  /* "gb/collections/fptree.pyx":80
  * 
- *     cdef void set_value(self, int i, double value) nogil:
+ *     cdef void set_value(self, size_t i, double value) nogil:
  *         if value < 0: value = 0             # <<<<<<<<<<<<<<
- *         cdef int t_pos = <int>self.values[0]
- *         cdef int pos = i + t_pos
+ *         cdef size_t t_pos = <size_t>self.values[0]
+ *         cdef size_t pos = i + t_pos
  */
   __pyx_t_1 = ((__pyx_v_value < 0.0) != 0);
   if (__pyx_t_1) {
     __pyx_v_value = 0.0;
   }
 
-  /* "gb/collections/fptree.pyx":80
- *     cdef void set_value(self, int i, double value) nogil:
+  /* "gb/collections/fptree.pyx":81
+ *     cdef void set_value(self, size_t i, double value) nogil:
  *         if value < 0: value = 0
- *         cdef int t_pos = <int>self.values[0]             # <<<<<<<<<<<<<<
- *         cdef int pos = i + t_pos
+ *         cdef size_t t_pos = <size_t>self.values[0]             # <<<<<<<<<<<<<<
+ *         cdef size_t pos = i + t_pos
  *         value -= self.values[pos]
  */
-  __pyx_v_t_pos = ((int)(__pyx_v_self->values[0]));
+  __pyx_v_t_pos = ((size_t)(__pyx_v_self->values[0]));
 
-  /* "gb/collections/fptree.pyx":81
+  /* "gb/collections/fptree.pyx":82
  *         if value < 0: value = 0
- *         cdef int t_pos = <int>self.values[0]
- *         cdef int pos = i + t_pos             # <<<<<<<<<<<<<<
+ *         cdef size_t t_pos = <size_t>self.values[0]
+ *         cdef size_t pos = i + t_pos             # <<<<<<<<<<<<<<
  *         value -= self.values[pos]
  *         while pos > 0:
  */
   __pyx_v_pos = (__pyx_v_i + __pyx_v_t_pos);
 
-  /* "gb/collections/fptree.pyx":82
- *         cdef int t_pos = <int>self.values[0]
- *         cdef int pos = i + t_pos
+  /* "gb/collections/fptree.pyx":83
+ *         cdef size_t t_pos = <size_t>self.values[0]
+ *         cdef size_t pos = i + t_pos
  *         value -= self.values[pos]             # <<<<<<<<<<<<<<
  *         while pos > 0:
  *             self.values[pos] += value
  */
   __pyx_v_value = (__pyx_v_value - (__pyx_v_self->values[__pyx_v_pos]));
 
-  /* "gb/collections/fptree.pyx":83
- *         cdef int pos = i + t_pos
+  /* "gb/collections/fptree.pyx":84
+ *         cdef size_t pos = i + t_pos
  *         value -= self.values[pos]
  *         while pos > 0:             # <<<<<<<<<<<<<<
  *             self.values[pos] += value
@@ -1496,7 +1496,7 @@ static void __pyx_f_2gb_11collections_6fptree_6FPTree_set_value(struct __pyx_obj
     __pyx_t_1 = ((__pyx_v_pos > 0) != 0);
     if (!__pyx_t_1) break;
 
-    /* "gb/collections/fptree.pyx":84
+    /* "gb/collections/fptree.pyx":85
  *         value -= self.values[pos]
  *         while pos > 0:
  *             self.values[pos] += value             # <<<<<<<<<<<<<<
@@ -1506,31 +1506,31 @@ static void __pyx_f_2gb_11collections_6fptree_6FPTree_set_value(struct __pyx_obj
     __pyx_t_2 = __pyx_v_pos;
     (__pyx_v_self->values[__pyx_t_2]) = ((__pyx_v_self->values[__pyx_t_2]) + __pyx_v_value);
 
-    /* "gb/collections/fptree.pyx":85
+    /* "gb/collections/fptree.pyx":86
  *         while pos > 0:
  *             self.values[pos] += value
  *             pos >>= 1             # <<<<<<<<<<<<<<
  * 
- *     def _set_value(self, int i, double value):
+ *     def _set_value(self, size_t i, double value):
  */
     __pyx_v_pos = (__pyx_v_pos >> 1);
   }
 
-  /* "gb/collections/fptree.pyx":78
+  /* "gb/collections/fptree.pyx":79
  *         return self.get_value(i)
  * 
- *     cdef void set_value(self, int i, double value) nogil:             # <<<<<<<<<<<<<<
+ *     cdef void set_value(self, size_t i, double value) nogil:             # <<<<<<<<<<<<<<
  *         if value < 0: value = 0
- *         cdef int t_pos = <int>self.values[0]
+ *         cdef size_t t_pos = <size_t>self.values[0]
  */
 
   /* function exit code */
 }
 
-/* "gb/collections/fptree.pyx":87
+/* "gb/collections/fptree.pyx":88
  *             pos >>= 1
  * 
- *     def _set_value(self, int i, double value):             # <<<<<<<<<<<<<<
+ *     def _set_value(self, size_t i, double value):             # <<<<<<<<<<<<<<
  *         self.set_value(i, value)
  * 
  */
@@ -1538,7 +1538,7 @@ static void __pyx_f_2gb_11collections_6fptree_6FPTree_set_value(struct __pyx_obj
 /* Python wrapper */
 static PyObject *__pyx_pw_2gb_11collections_6fptree_6FPTree_7_set_value(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static PyObject *__pyx_pw_2gb_11collections_6fptree_6FPTree_7_set_value(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  int __pyx_v_i;
+  size_t __pyx_v_i;
   double __pyx_v_value;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
@@ -1563,11 +1563,11 @@ static PyObject *__pyx_pw_2gb_11collections_6fptree_6FPTree_7_set_value(PyObject
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_value)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("_set_value", 1, 2, 2, 1); __PYX_ERR(0, 87, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("_set_value", 1, 2, 2, 1); __PYX_ERR(0, 88, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_set_value") < 0)) __PYX_ERR(0, 87, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_set_value") < 0)) __PYX_ERR(0, 88, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -1575,12 +1575,12 @@ static PyObject *__pyx_pw_2gb_11collections_6fptree_6FPTree_7_set_value(PyObject
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
-    __pyx_v_i = __Pyx_PyInt_As_int(values[0]); if (unlikely((__pyx_v_i == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 87, __pyx_L3_error)
-    __pyx_v_value = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_value == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 87, __pyx_L3_error)
+    __pyx_v_i = __Pyx_PyInt_As_size_t(values[0]); if (unlikely((__pyx_v_i == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 88, __pyx_L3_error)
+    __pyx_v_value = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_value == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 88, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("_set_value", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 87, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("_set_value", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 88, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gb.collections.fptree.FPTree._set_value", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -1593,24 +1593,24 @@ static PyObject *__pyx_pw_2gb_11collections_6fptree_6FPTree_7_set_value(PyObject
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_6_set_value(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, int __pyx_v_i, double __pyx_v_value) {
+static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_6_set_value(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, size_t __pyx_v_i, double __pyx_v_value) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("_set_value", 0);
 
-  /* "gb/collections/fptree.pyx":88
+  /* "gb/collections/fptree.pyx":89
  * 
- *     def _set_value(self, int i, double value):
+ *     def _set_value(self, size_t i, double value):
  *         self.set_value(i, value)             # <<<<<<<<<<<<<<
  * 
- *     cdef int sample(self, double urnd) nogil:
+ *     cdef size_t sample(self, double urnd) nogil:
  */
   ((struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *)__pyx_v_self->__pyx_vtab)->set_value(__pyx_v_self, __pyx_v_i, __pyx_v_value);
 
-  /* "gb/collections/fptree.pyx":87
+  /* "gb/collections/fptree.pyx":88
  *             pos >>= 1
  * 
- *     def _set_value(self, int i, double value):             # <<<<<<<<<<<<<<
+ *     def _set_value(self, size_t i, double value):             # <<<<<<<<<<<<<<
  *         self.set_value(i, value)
  * 
  */
@@ -1622,41 +1622,41 @@ static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_6_set_value(struct _
   return __pyx_r;
 }
 
-/* "gb/collections/fptree.pyx":90
+/* "gb/collections/fptree.pyx":91
  *         self.set_value(i, value)
  * 
- *     cdef int sample(self, double urnd) nogil:             # <<<<<<<<<<<<<<
+ *     cdef size_t sample(self, double urnd) nogil:             # <<<<<<<<<<<<<<
  *         # urnd: uniformly random number between [0, tree_total]
- *         cdef int t_pos = <int> self.values[0]
+ *         cdef size_t t_pos = <size_t> self.values[0]
  */
 
-static int __pyx_f_2gb_11collections_6fptree_6FPTree_sample(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, double __pyx_v_urnd) {
-  int __pyx_v_t_pos;
-  int __pyx_v_pos;
-  int __pyx_r;
+static size_t __pyx_f_2gb_11collections_6fptree_6FPTree_sample(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, double __pyx_v_urnd) {
+  size_t __pyx_v_t_pos;
+  size_t __pyx_v_pos;
+  size_t __pyx_r;
   int __pyx_t_1;
 
-  /* "gb/collections/fptree.pyx":92
- *     cdef int sample(self, double urnd) nogil:
+  /* "gb/collections/fptree.pyx":93
+ *     cdef size_t sample(self, double urnd) nogil:
  *         # urnd: uniformly random number between [0, tree_total]
- *         cdef int t_pos = <int> self.values[0]             # <<<<<<<<<<<<<<
- *         cdef int pos = 1
+ *         cdef size_t t_pos = <size_t> self.values[0]             # <<<<<<<<<<<<<<
+ *         cdef size_t pos = 1
  *         while pos < t_pos:
  */
-  __pyx_v_t_pos = ((int)(__pyx_v_self->values[0]));
+  __pyx_v_t_pos = ((size_t)(__pyx_v_self->values[0]));
 
-  /* "gb/collections/fptree.pyx":93
+  /* "gb/collections/fptree.pyx":94
  *         # urnd: uniformly random number between [0, tree_total]
- *         cdef int t_pos = <int> self.values[0]
- *         cdef int pos = 1             # <<<<<<<<<<<<<<
+ *         cdef size_t t_pos = <size_t> self.values[0]
+ *         cdef size_t pos = 1             # <<<<<<<<<<<<<<
  *         while pos < t_pos:
  *             pos <<= 1
  */
   __pyx_v_pos = 1;
 
-  /* "gb/collections/fptree.pyx":94
- *         cdef int t_pos = <int> self.values[0]
- *         cdef int pos = 1
+  /* "gb/collections/fptree.pyx":95
+ *         cdef size_t t_pos = <size_t> self.values[0]
+ *         cdef size_t pos = 1
  *         while pos < t_pos:             # <<<<<<<<<<<<<<
  *             pos <<= 1
  *             if urnd >= self.values[pos]:
@@ -1665,8 +1665,8 @@ static int __pyx_f_2gb_11collections_6fptree_6FPTree_sample(struct __pyx_obj_2gb
     __pyx_t_1 = ((__pyx_v_pos < __pyx_v_t_pos) != 0);
     if (!__pyx_t_1) break;
 
-    /* "gb/collections/fptree.pyx":95
- *         cdef int pos = 1
+    /* "gb/collections/fptree.pyx":96
+ *         cdef size_t pos = 1
  *         while pos < t_pos:
  *             pos <<= 1             # <<<<<<<<<<<<<<
  *             if urnd >= self.values[pos]:
@@ -1674,7 +1674,7 @@ static int __pyx_f_2gb_11collections_6fptree_6FPTree_sample(struct __pyx_obj_2gb
  */
     __pyx_v_pos = (__pyx_v_pos << 1);
 
-    /* "gb/collections/fptree.pyx":96
+    /* "gb/collections/fptree.pyx":97
  *         while pos < t_pos:
  *             pos <<= 1
  *             if urnd >= self.values[pos]:             # <<<<<<<<<<<<<<
@@ -1684,7 +1684,7 @@ static int __pyx_f_2gb_11collections_6fptree_6FPTree_sample(struct __pyx_obj_2gb
     __pyx_t_1 = ((__pyx_v_urnd >= (__pyx_v_self->values[__pyx_v_pos])) != 0);
     if (__pyx_t_1) {
 
-      /* "gb/collections/fptree.pyx":97
+      /* "gb/collections/fptree.pyx":98
  *             pos <<= 1
  *             if urnd >= self.values[pos]:
  *                 urnd -= self.values[pos]             # <<<<<<<<<<<<<<
@@ -1693,7 +1693,7 @@ static int __pyx_f_2gb_11collections_6fptree_6FPTree_sample(struct __pyx_obj_2gb
  */
       __pyx_v_urnd = (__pyx_v_urnd - (__pyx_v_self->values[__pyx_v_pos]));
 
-      /* "gb/collections/fptree.pyx":98
+      /* "gb/collections/fptree.pyx":99
  *             if urnd >= self.values[pos]:
  *                 urnd -= self.values[pos]
  *                 pos += 1             # <<<<<<<<<<<<<<
@@ -1702,7 +1702,7 @@ static int __pyx_f_2gb_11collections_6fptree_6FPTree_sample(struct __pyx_obj_2gb
  */
       __pyx_v_pos = (__pyx_v_pos + 1);
 
-      /* "gb/collections/fptree.pyx":96
+      /* "gb/collections/fptree.pyx":97
  *         while pos < t_pos:
  *             pos <<= 1
  *             if urnd >= self.values[pos]:             # <<<<<<<<<<<<<<
@@ -1712,7 +1712,7 @@ static int __pyx_f_2gb_11collections_6fptree_6FPTree_sample(struct __pyx_obj_2gb
     }
   }
 
-  /* "gb/collections/fptree.pyx":99
+  /* "gb/collections/fptree.pyx":100
  *                 urnd -= self.values[pos]
  *                 pos += 1
  *         return pos - t_pos             # <<<<<<<<<<<<<<
@@ -1722,12 +1722,12 @@ static int __pyx_f_2gb_11collections_6fptree_6FPTree_sample(struct __pyx_obj_2gb
   __pyx_r = (__pyx_v_pos - __pyx_v_t_pos);
   goto __pyx_L0;
 
-  /* "gb/collections/fptree.pyx":90
+  /* "gb/collections/fptree.pyx":91
  *         self.set_value(i, value)
  * 
- *     cdef int sample(self, double urnd) nogil:             # <<<<<<<<<<<<<<
+ *     cdef size_t sample(self, double urnd) nogil:             # <<<<<<<<<<<<<<
  *         # urnd: uniformly random number between [0, tree_total]
- *         cdef int t_pos = <int> self.values[0]
+ *         cdef size_t t_pos = <size_t> self.values[0]
  */
 
   /* function exit code */
@@ -1735,7 +1735,7 @@ static int __pyx_f_2gb_11collections_6fptree_6FPTree_sample(struct __pyx_obj_2gb
   return __pyx_r;
 }
 
-/* "gb/collections/fptree.pyx":101
+/* "gb/collections/fptree.pyx":102
  *         return pos - t_pos
  * 
  *     def _sample(self, double urnd):             # <<<<<<<<<<<<<<
@@ -1751,7 +1751,7 @@ static PyObject *__pyx_pw_2gb_11collections_6fptree_6FPTree_9_sample(PyObject *_
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("_sample (wrapper)", 0);
   assert(__pyx_arg_urnd); {
-    __pyx_v_urnd = __pyx_PyFloat_AsDouble(__pyx_arg_urnd); if (unlikely((__pyx_v_urnd == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 101, __pyx_L3_error)
+    __pyx_v_urnd = __pyx_PyFloat_AsDouble(__pyx_arg_urnd); if (unlikely((__pyx_v_urnd == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 102, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -1772,7 +1772,7 @@ static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_8_sample(struct __py
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("_sample", 0);
 
-  /* "gb/collections/fptree.pyx":102
+  /* "gb/collections/fptree.pyx":103
  * 
  *     def _sample(self, double urnd):
  *         return self.sample(urnd)             # <<<<<<<<<<<<<<
@@ -1780,13 +1780,13 @@ static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_8_sample(struct __py
  *     cdef double get_total(self) nogil:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_int(((struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *)__pyx_v_self->__pyx_vtab)->sample(__pyx_v_self, __pyx_v_urnd)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 102, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_FromSize_t(((struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *)__pyx_v_self->__pyx_vtab)->sample(__pyx_v_self, __pyx_v_urnd)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 103, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "gb/collections/fptree.pyx":101
+  /* "gb/collections/fptree.pyx":102
  *         return pos - t_pos
  * 
  *     def _sample(self, double urnd):             # <<<<<<<<<<<<<<
@@ -1805,7 +1805,7 @@ static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_8_sample(struct __py
   return __pyx_r;
 }
 
-/* "gb/collections/fptree.pyx":104
+/* "gb/collections/fptree.pyx":105
  *         return self.sample(urnd)
  * 
  *     cdef double get_total(self) nogil:             # <<<<<<<<<<<<<<
@@ -1816,7 +1816,7 @@ static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_8_sample(struct __py
 static double __pyx_f_2gb_11collections_6fptree_6FPTree_get_total(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self) {
   double __pyx_r;
 
-  /* "gb/collections/fptree.pyx":105
+  /* "gb/collections/fptree.pyx":106
  * 
  *     cdef double get_total(self) nogil:
  *         return self.values[1]             # <<<<<<<<<<<<<<
@@ -1826,7 +1826,7 @@ static double __pyx_f_2gb_11collections_6fptree_6FPTree_get_total(struct __pyx_o
   __pyx_r = (__pyx_v_self->values[1]);
   goto __pyx_L0;
 
-  /* "gb/collections/fptree.pyx":104
+  /* "gb/collections/fptree.pyx":105
  *         return self.sample(urnd)
  * 
  *     cdef double get_total(self) nogil:             # <<<<<<<<<<<<<<
@@ -1839,7 +1839,7 @@ static double __pyx_f_2gb_11collections_6fptree_6FPTree_get_total(struct __pyx_o
   return __pyx_r;
 }
 
-/* "gb/collections/fptree.pyx":107
+/* "gb/collections/fptree.pyx":108
  *         return self.values[1]
  * 
  *     def _get_total(self):             # <<<<<<<<<<<<<<
@@ -1865,19 +1865,19 @@ static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_10_get_total(struct 
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("_get_total", 0);
 
-  /* "gb/collections/fptree.pyx":108
+  /* "gb/collections/fptree.pyx":109
  * 
  *     def _get_total(self):
  *         return self.get_total()             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(((struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *)__pyx_v_self->__pyx_vtab)->get_total(__pyx_v_self)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 108, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(((struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *)__pyx_v_self->__pyx_vtab)->get_total(__pyx_v_self)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 109, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "gb/collections/fptree.pyx":107
+  /* "gb/collections/fptree.pyx":108
  *         return self.values[1]
  * 
  *     def _get_total(self):             # <<<<<<<<<<<<<<
@@ -2023,7 +2023,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0, 0, 0, 0}
 };
 static int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 57, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 58, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -2129,15 +2129,15 @@ PyMODINIT_FUNC PyInit_fptree(void)
   /*--- Type init code ---*/
   __pyx_vtabptr_2gb_11collections_6fptree_FPTree = &__pyx_vtable_2gb_11collections_6fptree_FPTree;
   __pyx_vtable_2gb_11collections_6fptree_FPTree.reset = (void (*)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *))__pyx_f_2gb_11collections_6fptree_6FPTree_reset;
-  __pyx_vtable_2gb_11collections_6fptree_FPTree._build = (void (*)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, int))__pyx_f_2gb_11collections_6fptree_6FPTree__build;
-  __pyx_vtable_2gb_11collections_6fptree_FPTree.set_value = (void (*)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, int, double))__pyx_f_2gb_11collections_6fptree_6FPTree_set_value;
-  __pyx_vtable_2gb_11collections_6fptree_FPTree.get_value = (double (*)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, int))__pyx_f_2gb_11collections_6fptree_6FPTree_get_value;
-  __pyx_vtable_2gb_11collections_6fptree_FPTree.sample = (int (*)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, double))__pyx_f_2gb_11collections_6fptree_6FPTree_sample;
+  __pyx_vtable_2gb_11collections_6fptree_FPTree._build = (void (*)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, size_t))__pyx_f_2gb_11collections_6fptree_6FPTree__build;
+  __pyx_vtable_2gb_11collections_6fptree_FPTree.set_value = (void (*)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, size_t, double))__pyx_f_2gb_11collections_6fptree_6FPTree_set_value;
+  __pyx_vtable_2gb_11collections_6fptree_FPTree.get_value = (double (*)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, size_t))__pyx_f_2gb_11collections_6fptree_6FPTree_get_value;
+  __pyx_vtable_2gb_11collections_6fptree_FPTree.sample = (size_t (*)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, double))__pyx_f_2gb_11collections_6fptree_6FPTree_sample;
   __pyx_vtable_2gb_11collections_6fptree_FPTree.get_total = (double (*)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *))__pyx_f_2gb_11collections_6fptree_6FPTree_get_total;
-  if (PyType_Ready(&__pyx_type_2gb_11collections_6fptree_FPTree) < 0) __PYX_ERR(0, 44, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_2gb_11collections_6fptree_FPTree) < 0) __PYX_ERR(0, 45, __pyx_L1_error)
   __pyx_type_2gb_11collections_6fptree_FPTree.tp_print = 0;
-  if (__Pyx_SetVtable(__pyx_type_2gb_11collections_6fptree_FPTree.tp_dict, __pyx_vtabptr_2gb_11collections_6fptree_FPTree) < 0) __PYX_ERR(0, 44, __pyx_L1_error)
-  if (PyObject_SetAttrString(__pyx_m, "FPTree", (PyObject *)&__pyx_type_2gb_11collections_6fptree_FPTree) < 0) __PYX_ERR(0, 44, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_type_2gb_11collections_6fptree_FPTree.tp_dict, __pyx_vtabptr_2gb_11collections_6fptree_FPTree) < 0) __PYX_ERR(0, 45, __pyx_L1_error)
+  if (PyObject_SetAttrString(__pyx_m, "FPTree", (PyObject *)&__pyx_type_2gb_11collections_6fptree_FPTree) < 0) __PYX_ERR(0, 45, __pyx_L1_error)
   __pyx_ptype_2gb_11collections_6fptree_FPTree = &__pyx_type_2gb_11collections_6fptree_FPTree;
   /*--- Type import code ---*/
   /*--- Variable import code ---*/
@@ -2863,51 +2863,20 @@ bad:
         return (target_type) value;\
     }
 
-/* CIntToPy */
-    static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
-    const int neg_one = (int) -1, const_zero = (int) 0;
-    const int is_unsigned = neg_one > const_zero;
-    if (is_unsigned) {
-        if (sizeof(int) < sizeof(long)) {
-            return PyInt_FromLong((long) value);
-        } else if (sizeof(int) <= sizeof(unsigned long)) {
-            return PyLong_FromUnsignedLong((unsigned long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(int) <= sizeof(unsigned PY_LONG_LONG)) {
-            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
-#endif
-        }
-    } else {
-        if (sizeof(int) <= sizeof(long)) {
-            return PyInt_FromLong((long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(int) <= sizeof(PY_LONG_LONG)) {
-            return PyLong_FromLongLong((PY_LONG_LONG) value);
-#endif
-        }
-    }
-    {
-        int one = 1; int little = (int)*(unsigned char *)&one;
-        unsigned char *bytes = (unsigned char *)&value;
-        return _PyLong_FromByteArray(bytes, sizeof(int),
-                                     little, !is_unsigned);
-    }
-}
-
 /* CIntFromPy */
-    static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *x) {
-    const int neg_one = (int) -1, const_zero = (int) 0;
+    static CYTHON_INLINE size_t __Pyx_PyInt_As_size_t(PyObject *x) {
+    const size_t neg_one = (size_t) -1, const_zero = (size_t) 0;
     const int is_unsigned = neg_one > const_zero;
 #if PY_MAJOR_VERSION < 3
     if (likely(PyInt_Check(x))) {
-        if (sizeof(int) < sizeof(long)) {
-            __PYX_VERIFY_RETURN_INT(int, long, PyInt_AS_LONG(x))
+        if (sizeof(size_t) < sizeof(long)) {
+            __PYX_VERIFY_RETURN_INT(size_t, long, PyInt_AS_LONG(x))
         } else {
             long val = PyInt_AS_LONG(x);
             if (is_unsigned && unlikely(val < 0)) {
                 goto raise_neg_overflow;
             }
-            return (int) val;
+            return (size_t) val;
         }
     } else
 #endif
@@ -2916,32 +2885,32 @@ bad:
 #if CYTHON_USE_PYLONG_INTERNALS
             const digit* digits = ((PyLongObject*)x)->ob_digit;
             switch (Py_SIZE(x)) {
-                case  0: return (int) 0;
-                case  1: __PYX_VERIFY_RETURN_INT(int, digit, digits[0])
+                case  0: return (size_t) 0;
+                case  1: __PYX_VERIFY_RETURN_INT(size_t, digit, digits[0])
                 case 2:
-                    if (8 * sizeof(int) > 1 * PyLong_SHIFT) {
+                    if (8 * sizeof(size_t) > 1 * PyLong_SHIFT) {
                         if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(int) >= 2 * PyLong_SHIFT) {
-                            return (int) (((((int)digits[1]) << PyLong_SHIFT) | (int)digits[0]));
+                            __PYX_VERIFY_RETURN_INT(size_t, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) >= 2 * PyLong_SHIFT) {
+                            return (size_t) (((((size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0]));
                         }
                     }
                     break;
                 case 3:
-                    if (8 * sizeof(int) > 2 * PyLong_SHIFT) {
+                    if (8 * sizeof(size_t) > 2 * PyLong_SHIFT) {
                         if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(int) >= 3 * PyLong_SHIFT) {
-                            return (int) (((((((int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0]));
+                            __PYX_VERIFY_RETURN_INT(size_t, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) >= 3 * PyLong_SHIFT) {
+                            return (size_t) (((((((size_t)digits[2]) << PyLong_SHIFT) | (size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0]));
                         }
                     }
                     break;
                 case 4:
-                    if (8 * sizeof(int) > 3 * PyLong_SHIFT) {
+                    if (8 * sizeof(size_t) > 3 * PyLong_SHIFT) {
                         if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(int) >= 4 * PyLong_SHIFT) {
-                            return (int) (((((((((int)digits[3]) << PyLong_SHIFT) | (int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0]));
+                            __PYX_VERIFY_RETURN_INT(size_t, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) >= 4 * PyLong_SHIFT) {
+                            return (size_t) (((((((((size_t)digits[3]) << PyLong_SHIFT) | (size_t)digits[2]) << PyLong_SHIFT) | (size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0]));
                         }
                     }
                     break;
@@ -2955,86 +2924,86 @@ bad:
             {
                 int result = PyObject_RichCompareBool(x, Py_False, Py_LT);
                 if (unlikely(result < 0))
-                    return (int) -1;
+                    return (size_t) -1;
                 if (unlikely(result == 1))
                     goto raise_neg_overflow;
             }
 #endif
-            if (sizeof(int) <= sizeof(unsigned long)) {
-                __PYX_VERIFY_RETURN_INT_EXC(int, unsigned long, PyLong_AsUnsignedLong(x))
+            if (sizeof(size_t) <= sizeof(unsigned long)) {
+                __PYX_VERIFY_RETURN_INT_EXC(size_t, unsigned long, PyLong_AsUnsignedLong(x))
 #ifdef HAVE_LONG_LONG
-            } else if (sizeof(int) <= sizeof(unsigned PY_LONG_LONG)) {
-                __PYX_VERIFY_RETURN_INT_EXC(int, unsigned PY_LONG_LONG, PyLong_AsUnsignedLongLong(x))
+            } else if (sizeof(size_t) <= sizeof(unsigned PY_LONG_LONG)) {
+                __PYX_VERIFY_RETURN_INT_EXC(size_t, unsigned PY_LONG_LONG, PyLong_AsUnsignedLongLong(x))
 #endif
             }
         } else {
 #if CYTHON_USE_PYLONG_INTERNALS
             const digit* digits = ((PyLongObject*)x)->ob_digit;
             switch (Py_SIZE(x)) {
-                case  0: return (int) 0;
-                case -1: __PYX_VERIFY_RETURN_INT(int, sdigit, (sdigit) (-(sdigit)digits[0]))
-                case  1: __PYX_VERIFY_RETURN_INT(int,  digit, +digits[0])
+                case  0: return (size_t) 0;
+                case -1: __PYX_VERIFY_RETURN_INT(size_t, sdigit, (sdigit) (-(sdigit)digits[0]))
+                case  1: __PYX_VERIFY_RETURN_INT(size_t,  digit, +digits[0])
                 case -2:
-                    if (8 * sizeof(int) - 1 > 1 * PyLong_SHIFT) {
+                    if (8 * sizeof(size_t) - 1 > 1 * PyLong_SHIFT) {
                         if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(int, long, -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(int) - 1 > 2 * PyLong_SHIFT) {
-                            return (int) (((int)-1)*(((((int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
+                            __PYX_VERIFY_RETURN_INT(size_t, long, -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) - 1 > 2 * PyLong_SHIFT) {
+                            return (size_t) (((size_t)-1)*(((((size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0])));
                         }
                     }
                     break;
                 case 2:
-                    if (8 * sizeof(int) > 1 * PyLong_SHIFT) {
+                    if (8 * sizeof(size_t) > 1 * PyLong_SHIFT) {
                         if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(int) - 1 > 2 * PyLong_SHIFT) {
-                            return (int) ((((((int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
+                            __PYX_VERIFY_RETURN_INT(size_t, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) - 1 > 2 * PyLong_SHIFT) {
+                            return (size_t) ((((((size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0])));
                         }
                     }
                     break;
                 case -3:
-                    if (8 * sizeof(int) - 1 > 2 * PyLong_SHIFT) {
+                    if (8 * sizeof(size_t) - 1 > 2 * PyLong_SHIFT) {
                         if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(int, long, -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(int) - 1 > 3 * PyLong_SHIFT) {
-                            return (int) (((int)-1)*(((((((int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
+                            __PYX_VERIFY_RETURN_INT(size_t, long, -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) - 1 > 3 * PyLong_SHIFT) {
+                            return (size_t) (((size_t)-1)*(((((((size_t)digits[2]) << PyLong_SHIFT) | (size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0])));
                         }
                     }
                     break;
                 case 3:
-                    if (8 * sizeof(int) > 2 * PyLong_SHIFT) {
+                    if (8 * sizeof(size_t) > 2 * PyLong_SHIFT) {
                         if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(int) - 1 > 3 * PyLong_SHIFT) {
-                            return (int) ((((((((int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
+                            __PYX_VERIFY_RETURN_INT(size_t, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) - 1 > 3 * PyLong_SHIFT) {
+                            return (size_t) ((((((((size_t)digits[2]) << PyLong_SHIFT) | (size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0])));
                         }
                     }
                     break;
                 case -4:
-                    if (8 * sizeof(int) - 1 > 3 * PyLong_SHIFT) {
+                    if (8 * sizeof(size_t) - 1 > 3 * PyLong_SHIFT) {
                         if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(int, long, -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(int) - 1 > 4 * PyLong_SHIFT) {
-                            return (int) (((int)-1)*(((((((((int)digits[3]) << PyLong_SHIFT) | (int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
+                            __PYX_VERIFY_RETURN_INT(size_t, long, -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) - 1 > 4 * PyLong_SHIFT) {
+                            return (size_t) (((size_t)-1)*(((((((((size_t)digits[3]) << PyLong_SHIFT) | (size_t)digits[2]) << PyLong_SHIFT) | (size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0])));
                         }
                     }
                     break;
                 case 4:
-                    if (8 * sizeof(int) > 3 * PyLong_SHIFT) {
+                    if (8 * sizeof(size_t) > 3 * PyLong_SHIFT) {
                         if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(int) - 1 > 4 * PyLong_SHIFT) {
-                            return (int) ((((((((((int)digits[3]) << PyLong_SHIFT) | (int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
+                            __PYX_VERIFY_RETURN_INT(size_t, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) - 1 > 4 * PyLong_SHIFT) {
+                            return (size_t) ((((((((((size_t)digits[3]) << PyLong_SHIFT) | (size_t)digits[2]) << PyLong_SHIFT) | (size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0])));
                         }
                     }
                     break;
             }
 #endif
-            if (sizeof(int) <= sizeof(long)) {
-                __PYX_VERIFY_RETURN_INT_EXC(int, long, PyLong_AsLong(x))
+            if (sizeof(size_t) <= sizeof(long)) {
+                __PYX_VERIFY_RETURN_INT_EXC(size_t, long, PyLong_AsLong(x))
 #ifdef HAVE_LONG_LONG
-            } else if (sizeof(int) <= sizeof(PY_LONG_LONG)) {
-                __PYX_VERIFY_RETURN_INT_EXC(int, PY_LONG_LONG, PyLong_AsLongLong(x))
+            } else if (sizeof(size_t) <= sizeof(PY_LONG_LONG)) {
+                __PYX_VERIFY_RETURN_INT_EXC(size_t, PY_LONG_LONG, PyLong_AsLongLong(x))
 #endif
             }
         }
@@ -3043,7 +3012,7 @@ bad:
             PyErr_SetString(PyExc_RuntimeError,
                             "_PyLong_AsByteArray() not available in PyPy, cannot convert large numbers");
 #else
-            int val;
+            size_t val;
             PyObject *v = __Pyx_PyNumber_IntOrLong(x);
  #if PY_MAJOR_VERSION < 3
             if (likely(v) && !PyLong_Check(v)) {
@@ -3063,24 +3032,24 @@ bad:
                     return val;
             }
 #endif
-            return (int) -1;
+            return (size_t) -1;
         }
     } else {
-        int val;
+        size_t val;
         PyObject *tmp = __Pyx_PyNumber_IntOrLong(x);
-        if (!tmp) return (int) -1;
-        val = __Pyx_PyInt_As_int(tmp);
+        if (!tmp) return (size_t) -1;
+        val = __Pyx_PyInt_As_size_t(tmp);
         Py_DECREF(tmp);
         return val;
     }
 raise_overflow:
     PyErr_SetString(PyExc_OverflowError,
-        "value too large to convert to int");
-    return (int) -1;
+        "value too large to convert to size_t");
+    return (size_t) -1;
 raise_neg_overflow:
     PyErr_SetString(PyExc_OverflowError,
-        "can't convert negative value to int");
-    return (int) -1;
+        "can't convert negative value to size_t");
+    return (size_t) -1;
 }
 
 /* CIntToPy */
@@ -3301,6 +3270,195 @@ raise_neg_overflow:
     PyErr_SetString(PyExc_OverflowError,
         "can't convert negative value to long");
     return (long) -1;
+}
+
+/* CIntFromPy */
+    static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *x) {
+    const int neg_one = (int) -1, const_zero = (int) 0;
+    const int is_unsigned = neg_one > const_zero;
+#if PY_MAJOR_VERSION < 3
+    if (likely(PyInt_Check(x))) {
+        if (sizeof(int) < sizeof(long)) {
+            __PYX_VERIFY_RETURN_INT(int, long, PyInt_AS_LONG(x))
+        } else {
+            long val = PyInt_AS_LONG(x);
+            if (is_unsigned && unlikely(val < 0)) {
+                goto raise_neg_overflow;
+            }
+            return (int) val;
+        }
+    } else
+#endif
+    if (likely(PyLong_Check(x))) {
+        if (is_unsigned) {
+#if CYTHON_USE_PYLONG_INTERNALS
+            const digit* digits = ((PyLongObject*)x)->ob_digit;
+            switch (Py_SIZE(x)) {
+                case  0: return (int) 0;
+                case  1: __PYX_VERIFY_RETURN_INT(int, digit, digits[0])
+                case 2:
+                    if (8 * sizeof(int) > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(int) >= 2 * PyLong_SHIFT) {
+                            return (int) (((((int)digits[1]) << PyLong_SHIFT) | (int)digits[0]));
+                        }
+                    }
+                    break;
+                case 3:
+                    if (8 * sizeof(int) > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(int) >= 3 * PyLong_SHIFT) {
+                            return (int) (((((((int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0]));
+                        }
+                    }
+                    break;
+                case 4:
+                    if (8 * sizeof(int) > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(int) >= 4 * PyLong_SHIFT) {
+                            return (int) (((((((((int)digits[3]) << PyLong_SHIFT) | (int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0]));
+                        }
+                    }
+                    break;
+            }
+#endif
+#if CYTHON_COMPILING_IN_CPYTHON
+            if (unlikely(Py_SIZE(x) < 0)) {
+                goto raise_neg_overflow;
+            }
+#else
+            {
+                int result = PyObject_RichCompareBool(x, Py_False, Py_LT);
+                if (unlikely(result < 0))
+                    return (int) -1;
+                if (unlikely(result == 1))
+                    goto raise_neg_overflow;
+            }
+#endif
+            if (sizeof(int) <= sizeof(unsigned long)) {
+                __PYX_VERIFY_RETURN_INT_EXC(int, unsigned long, PyLong_AsUnsignedLong(x))
+#ifdef HAVE_LONG_LONG
+            } else if (sizeof(int) <= sizeof(unsigned PY_LONG_LONG)) {
+                __PYX_VERIFY_RETURN_INT_EXC(int, unsigned PY_LONG_LONG, PyLong_AsUnsignedLongLong(x))
+#endif
+            }
+        } else {
+#if CYTHON_USE_PYLONG_INTERNALS
+            const digit* digits = ((PyLongObject*)x)->ob_digit;
+            switch (Py_SIZE(x)) {
+                case  0: return (int) 0;
+                case -1: __PYX_VERIFY_RETURN_INT(int, sdigit, (sdigit) (-(sdigit)digits[0]))
+                case  1: __PYX_VERIFY_RETURN_INT(int,  digit, +digits[0])
+                case -2:
+                    if (8 * sizeof(int) - 1 > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(int, long, -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(int) - 1 > 2 * PyLong_SHIFT) {
+                            return (int) (((int)-1)*(((((int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
+                        }
+                    }
+                    break;
+                case 2:
+                    if (8 * sizeof(int) > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(int) - 1 > 2 * PyLong_SHIFT) {
+                            return (int) ((((((int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
+                        }
+                    }
+                    break;
+                case -3:
+                    if (8 * sizeof(int) - 1 > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(int, long, -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(int) - 1 > 3 * PyLong_SHIFT) {
+                            return (int) (((int)-1)*(((((((int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
+                        }
+                    }
+                    break;
+                case 3:
+                    if (8 * sizeof(int) > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(int) - 1 > 3 * PyLong_SHIFT) {
+                            return (int) ((((((((int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
+                        }
+                    }
+                    break;
+                case -4:
+                    if (8 * sizeof(int) - 1 > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(int, long, -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(int) - 1 > 4 * PyLong_SHIFT) {
+                            return (int) (((int)-1)*(((((((((int)digits[3]) << PyLong_SHIFT) | (int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
+                        }
+                    }
+                    break;
+                case 4:
+                    if (8 * sizeof(int) > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(int) - 1 > 4 * PyLong_SHIFT) {
+                            return (int) ((((((((((int)digits[3]) << PyLong_SHIFT) | (int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
+                        }
+                    }
+                    break;
+            }
+#endif
+            if (sizeof(int) <= sizeof(long)) {
+                __PYX_VERIFY_RETURN_INT_EXC(int, long, PyLong_AsLong(x))
+#ifdef HAVE_LONG_LONG
+            } else if (sizeof(int) <= sizeof(PY_LONG_LONG)) {
+                __PYX_VERIFY_RETURN_INT_EXC(int, PY_LONG_LONG, PyLong_AsLongLong(x))
+#endif
+            }
+        }
+        {
+#if CYTHON_COMPILING_IN_PYPY && !defined(_PyLong_AsByteArray)
+            PyErr_SetString(PyExc_RuntimeError,
+                            "_PyLong_AsByteArray() not available in PyPy, cannot convert large numbers");
+#else
+            int val;
+            PyObject *v = __Pyx_PyNumber_IntOrLong(x);
+ #if PY_MAJOR_VERSION < 3
+            if (likely(v) && !PyLong_Check(v)) {
+                PyObject *tmp = v;
+                v = PyNumber_Long(tmp);
+                Py_DECREF(tmp);
+            }
+ #endif
+            if (likely(v)) {
+                int one = 1; int is_little = (int)*(unsigned char *)&one;
+                unsigned char *bytes = (unsigned char *)&val;
+                int ret = _PyLong_AsByteArray((PyLongObject *)v,
+                                              bytes, sizeof(val),
+                                              is_little, !is_unsigned);
+                Py_DECREF(v);
+                if (likely(!ret))
+                    return val;
+            }
+#endif
+            return (int) -1;
+        }
+    } else {
+        int val;
+        PyObject *tmp = __Pyx_PyNumber_IntOrLong(x);
+        if (!tmp) return (int) -1;
+        val = __Pyx_PyInt_As_int(tmp);
+        Py_DECREF(tmp);
+        return val;
+    }
+raise_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "value too large to convert to int");
+    return (int) -1;
+raise_neg_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "can't convert negative value to int");
+    return (int) -1;
 }
 
 /* CheckBinaryVersion */
