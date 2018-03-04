@@ -23,11 +23,6 @@ ctypedef struct rh_hash_t:
     entry_t *data
 
 
-cdef void rh_set(rh_hash_t *table, size_t key, uint64_t value) nogil
-cdef uint64_t rh_get(rh_hash_t *table, size_t key) nogil
-cdef size_t rh_size(rh_hash_t *table) nogil
-
-
 cdef class Table(object):
     cdef rh_hash_t *rows
     cdef size_t n_rows

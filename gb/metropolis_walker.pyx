@@ -16,6 +16,9 @@ from libc.stdio cimport printf
 
 from libcpp.algorithm cimport sort as stdsort
 from libcpp.vector cimport vector
+cdef extern from "<algorithm>" namespace "std" nogil:
+    void nth_element(vector.iterator first, vector.iterator nth,
+                     vector.iterator last)
 
 import numpy as np
 

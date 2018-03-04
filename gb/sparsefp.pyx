@@ -33,7 +33,6 @@ cdef class FenwickSampler(object):
         self.tree.reset()
 
         cdef size_t b
-        cdef double prob
         for b in range(self.n_proc):
             self.tree.set_value(b, self.get_probability(b))
 

@@ -128,9 +128,9 @@ cdef size_t rh_size(rh_hash_t *table) nogil:
 
 cdef class Table(object):
 
-    def __init__(self, size_t n_rows, double load_factor=0.95):
+    def __cinit__(self, size_t n_rows, double load_factor=0.95):
         self.n_rows = n_rows
-        self.rows = <rh_hash_t *> malloc(sizeof(n_rows) * sizeof(rh_hash_t))
+        self.rows = <rh_hash_t *> malloc(n_rows * sizeof(rh_hash_t))
         if self.rows == NULL:
             raise MemoryError()
         cdef size_t i
@@ -139,20 +139,28 @@ cdef class Table(object):
 
     def __dealloc__(self):
         cdef size_t i
-        for i in range(self.n_rows):
-            free(self.rows[i].data)
-        free(self.rows)
+        if self.rows != NULL:
+            for i in range(self.n_rows):
+                if self.rows[i].data != NULL:
+                    free(self.rows[i].data)
+            free(self.rows)
 
     cdef uint64_t get_cell(self, size_t row, size_t col) nogil:
         return rh_get(&self.rows[row], col)
 
+    def _get_cell(self, size_t row, size_t col):
+        return self.get_cell(row, col)
+
     cdef void set_cell(self, size_t row, size_t col, uint64_t value) nogil:
         rh_set(&self.rows[row], col, value)
+
+    def _set_cell(self, size_t row, size_t col, uint64_t value):
+        return self.set_cell(row, col, value)
 
 
 cdef class RobinHoodHash(object):
 
-    def __init__(self, double load_factor=0.95):
+    def __cinit__(self, double load_factor=0.95):
         self.table = <rh_hash_t *> malloc(sizeof(rh_hash_t))
         if self.table == NULL:
             raise MemoryError('Robin Hash out of mem')
