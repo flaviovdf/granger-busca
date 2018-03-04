@@ -7,18 +7,13 @@
 
 
 from gb.collections.table cimport Table
+from gb.mstep cimport MStep
 from gb.randomkit.random cimport rand
 from gb.stamps cimport Timestamps
 from gb.sparsefp cimport FenwickSampler
 
 from libc.stdint cimport uint64_t
 from libc.stdio cimport printf
-
-from libcpp.algorithm cimport sort as stdsort
-from libcpp.vector cimport vector
-cdef extern from "<algorithm>" namespace "std" nogil:
-    void nth_element(vector.iterator first, vector.iterator nth,
-                     vector.iterator last)
 
 import numpy as np
 
@@ -28,53 +23,6 @@ cdef double E = 2.718281828459045
 
 cdef extern from 'math.h':
     double exp(double) nogil
-
-
-cdef void update_mu_rate(size_t proc_a, Timestamps all_stamps,
-                         double count_background, double[::1] mu_rates) nogil:
-
-    cdef double[::1] timestamps_proc_a = all_stamps.get_stamps(proc_a)
-    cdef size_t n_events = timestamps_proc_a.shape[0]
-    cdef double T = timestamps_proc_a[n_events-1]
-    cdef double rate
-    if T == 0:
-        rate = 0
-    else:
-        rate = count_background / T
-    mu_rates[proc_a] = rate
-
-
-cdef void update_beta_rate(size_t proc_a, Timestamps all_stamps,
-                           double[::1] beta_rates) nogil:
-
-    cdef vector[double] all_deltas
-    cdef size_t n_proc = beta_rates.shape[0]
-    cdef size_t proc_b, i
-    cdef double ti, tp
-    cdef double max_ti = 0
-    cdef double[::1] stamps_b
-    cdef size_t[::1] state_b
-    cdef size_t n_elements = 0
-    for proc_b in range(n_proc):
-        stamps_b = all_stamps.get_stamps(proc_b)
-        state_b = all_stamps.get_causes(proc_b)
-        for i in range(<size_t>stamps_b.shape[0]):
-            if state_b[i] == proc_a:
-                ti = stamps_b[i]
-                if ti > max_ti:
-                    max_ti = ti
-                tp = all_stamps.find_previous(proc_a, ti)
-                all_deltas.push_back(ti - tp)
-                n_elements += 1
-
-    if n_elements >= 1:
-        stdsort(all_deltas.begin(), all_deltas.end())
-        beta_rates[proc_a] = all_deltas[all_deltas.size() // 2]
-        if n_elements % 2 == 0:
-            beta_rates[proc_a] += all_deltas[(all_deltas.size() // 2)-1]
-            beta_rates[proc_a] = beta_rates[proc_a] / 2
-    else:
-        beta_rates[proc_a] = max_ti
 
 
 cdef double busca_probability(size_t i, size_t proc_a, size_t proc_b,
@@ -177,38 +125,38 @@ cdef void sample_alpha(size_t proc_a, Timestamps all_stamps,
 
 
 cdef void sampleone(Timestamps all_stamps, FenwickSampler sampler,
-                    uint64_t[::1] num_background, double[::1] mu_rates,
-                    double[::1] beta_rates, size_t n_iter) nogil:
+                    MStep mstep, uint64_t[::1] num_background,
+                    double[::1] mu_rates, double[::1] beta_rates,
+                    size_t n_iter) nogil:
 
-    cdef size_t n_proc = mu_rates.shape[0]
-    cdef size_t a
     printf("[logger]\t Learning mu.\n")
-    for a in range(n_proc):
-        update_mu_rate(a, all_stamps, num_background[a], mu_rates)
+    mstep.update_mu_rates(all_stamps, num_background, mu_rates)
 
     printf("[logger]\t Learning beta.\n")
-    for a in range(n_proc):
-        update_beta_rate(a, all_stamps, beta_rates)
+    mstep.update_beta_rates(all_stamps, beta_rates)
 
     printf("[logger]\t Sampling Alpha.\n")
-    for a in range(n_proc):
-        sampler.set_current_process(a)
-        sample_alpha(a, all_stamps, sampler, num_background, mu_rates,
+    cdef size_t n_proc = mu_rates.shape[0]
+    cdef size_t proc_a
+    for proc_a in range(n_proc):
+        sampler.set_current_process(proc_a)
+        sample_alpha(proc_a, all_stamps, sampler, num_background, mu_rates,
                      beta_rates)
 
 
 cdef void cfit(Timestamps all_stamps, FenwickSampler sampler,
-               uint64_t[::1] num_background, double[::1] mu_rates,
-               double[::1] beta_rates, size_t n_iter) nogil:
+               MStep mstep, uint64_t[::1] num_background,
+               double[::1] mu_rates, double[::1] beta_rates,
+               size_t n_iter) nogil:
     printf("[logger] Sampler is starting\n")
     printf("[logger]\t n_proc=%ld\n", mu_rates.shape[0])
     printf("\n")
 
-    cdef size_t iteration, a, b
+    cdef size_t iteration
     for iteration in range(n_iter):
         printf("[logger] Iter=%lu. Sampling...\n", iteration)
-        sampleone(all_stamps, sampler, num_background, mu_rates, beta_rates,
-                  n_iter)
+        sampleone(all_stamps, sampler, mstep, num_background, mu_rates,
+                  beta_rates, n_iter)
 
 
 def fit(dict all_timestamps, double alpha_prior, size_t n_iter):
@@ -237,11 +185,13 @@ def fit(dict all_timestamps, double alpha_prior, size_t n_iter):
 
     cdef FenwickSampler sampler = FenwickSampler(causal_counts, all_stamps,
                                                  sum_b, alpha_prior, 0)
+    cdef MStep mstep = MStep()
 
     cdef double[::1] mu_rates = np.zeros(n_proc, dtype='d', order='C')
     cdef double[::1] beta_rates = np.zeros(n_proc, dtype='d', order='C')
 
-    cfit(all_stamps, sampler, num_background, mu_rates, beta_rates, n_iter)
+    cfit(all_stamps, sampler, mstep, num_background, mu_rates, beta_rates,
+         n_iter)
 
     Alpha = {}
     curr_state = {}
