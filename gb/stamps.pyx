@@ -62,3 +62,6 @@ cdef class Timestamps(object):
         if tp >= t:
             tp = 0
         return tp
+
+    def _find_previous(self, size_t process, double t):
+        return self.find_previous(process, t)

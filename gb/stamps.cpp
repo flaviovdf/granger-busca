@@ -1654,6 +1654,7 @@ static PyObject *__pyx_builtin_IndexError;
 static const char __pyx_k_O[] = "O";
 static const char __pyx_k_c[] = "c";
 static const char __pyx_k_d[] = "d";
+static const char __pyx_k_t[] = "t";
 static const char __pyx_k_id[] = "id";
 static const char __pyx_k_np[] = "np";
 static const char __pyx_k_new[] = "__new__";
@@ -1691,6 +1692,7 @@ static const char __pyx_k_unpack[] = "unpack";
 static const char __pyx_k_update[] = "update";
 static const char __pyx_k_fortran[] = "fortran";
 static const char __pyx_k_memview[] = "memview";
+static const char __pyx_k_process[] = "process";
 static const char __pyx_k_Ellipsis[] = "Ellipsis";
 static const char __pyx_k_getstate[] = "__getstate__";
 static const char __pyx_k_itemsize[] = "itemsize";
@@ -1808,6 +1810,7 @@ static PyObject *__pyx_n_s_numpy;
 static PyObject *__pyx_n_s_obj;
 static PyObject *__pyx_n_s_pack;
 static PyObject *__pyx_n_s_pickle;
+static PyObject *__pyx_n_s_process;
 static PyObject *__pyx_n_s_process_stamps;
 static PyObject *__pyx_n_s_pyx_PickleError;
 static PyObject *__pyx_n_s_pyx_checksum;
@@ -1834,6 +1837,7 @@ static PyObject *__pyx_kp_s_strided_and_direct_or_indirect;
 static PyObject *__pyx_kp_s_strided_and_indirect;
 static PyObject *__pyx_kp_s_stringsource;
 static PyObject *__pyx_n_s_struct;
+static PyObject *__pyx_n_s_t;
 static PyObject *__pyx_n_s_test;
 static PyObject *__pyx_n_s_uint64;
 static PyObject *__pyx_kp_s_unable_to_allocate_array_data;
@@ -1844,8 +1848,9 @@ static PyObject *__pyx_n_s_zeros;
 static int __pyx_pf_2gb_6stamps_10Timestamps___init__(struct __pyx_obj_2gb_6stamps_Timestamps *__pyx_v_self, PyObject *__pyx_v_process_stamps); /* proto */
 static PyObject *__pyx_pf_2gb_6stamps_10Timestamps_2_get_stamps(struct __pyx_obj_2gb_6stamps_Timestamps *__pyx_v_self, size_t __pyx_v_process); /* proto */
 static PyObject *__pyx_pf_2gb_6stamps_10Timestamps_4_get_causes(struct __pyx_obj_2gb_6stamps_Timestamps *__pyx_v_self, size_t __pyx_v_process); /* proto */
-static PyObject *__pyx_pf_2gb_6stamps_10Timestamps_6__reduce_cython__(struct __pyx_obj_2gb_6stamps_Timestamps *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_2gb_6stamps_10Timestamps_8__setstate_cython__(struct __pyx_obj_2gb_6stamps_Timestamps *__pyx_v_self, PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_pf_2gb_6stamps_10Timestamps_6_find_previous(struct __pyx_obj_2gb_6stamps_Timestamps *__pyx_v_self, size_t __pyx_v_process, double __pyx_v_t); /* proto */
+static PyObject *__pyx_pf_2gb_6stamps_10Timestamps_8__reduce_cython__(struct __pyx_obj_2gb_6stamps_Timestamps *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_2gb_6stamps_10Timestamps_10__setstate_cython__(struct __pyx_obj_2gb_6stamps_Timestamps *__pyx_v_self, PyObject *__pyx_v___pyx_state); /* proto */
 static PyObject *__pyx_pf_2gb_6stamps___pyx_unpickle_Timestamps(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __pyx_array_obj *__pyx_v_self, PyObject *__pyx_v_shape, Py_ssize_t __pyx_v_itemsize, PyObject *__pyx_v_format, PyObject *__pyx_v_mode, int __pyx_v_allocate_buffer); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array_2__getbuffer__(struct __pyx_array_obj *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /* proto */
@@ -2747,6 +2752,7 @@ static double __pyx_f_2gb_6stamps_10Timestamps_find_previous(struct __pyx_obj_2g
  *         if tp >= t:
  *             tp = 0             # <<<<<<<<<<<<<<
  *         return tp
+ * 
  */
     __pyx_v_tp = 0.0;
 
@@ -2763,6 +2769,8 @@ static double __pyx_f_2gb_6stamps_10Timestamps_find_previous(struct __pyx_obj_2g
  *         if tp >= t:
  *             tp = 0
  *         return tp             # <<<<<<<<<<<<<<
+ * 
+ *     def _find_previous(self, size_t process, double t):
  */
   __pyx_r = __pyx_v_tp;
   goto __pyx_L0;
@@ -2785,6 +2793,110 @@ static double __pyx_f_2gb_6stamps_10Timestamps_find_previous(struct __pyx_obj_2g
   return __pyx_r;
 }
 
+/* "gb/stamps.pyx":66
+ *         return tp
+ * 
+ *     def _find_previous(self, size_t process, double t):             # <<<<<<<<<<<<<<
+ *         return self.find_previous(process, t)
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_2gb_6stamps_10Timestamps_7_find_previous(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_2gb_6stamps_10Timestamps_7_find_previous(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  size_t __pyx_v_process;
+  double __pyx_v_t;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("_find_previous (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_process,&__pyx_n_s_t,0};
+    PyObject* values[2] = {0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_process)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_t)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("_find_previous", 1, 2, 2, 1); __PYX_ERR(0, 66, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_find_previous") < 0)) __PYX_ERR(0, 66, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+    }
+    __pyx_v_process = __Pyx_PyInt_As_size_t(values[0]); if (unlikely((__pyx_v_process == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 66, __pyx_L3_error)
+    __pyx_v_t = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_t == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 66, __pyx_L3_error)
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("_find_previous", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 66, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("gb.stamps.Timestamps._find_previous", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_2gb_6stamps_10Timestamps_6_find_previous(((struct __pyx_obj_2gb_6stamps_Timestamps *)__pyx_v_self), __pyx_v_process, __pyx_v_t);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_2gb_6stamps_10Timestamps_6_find_previous(struct __pyx_obj_2gb_6stamps_Timestamps *__pyx_v_self, size_t __pyx_v_process, double __pyx_v_t) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  __Pyx_RefNannySetupContext("_find_previous", 0);
+
+  /* "gb/stamps.pyx":67
+ * 
+ *     def _find_previous(self, size_t process, double t):
+ *         return self.find_previous(process, t)             # <<<<<<<<<<<<<<
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble(((struct __pyx_vtabstruct_2gb_6stamps_Timestamps *)__pyx_v_self->__pyx_vtab)->find_previous(__pyx_v_self, __pyx_v_process, __pyx_v_t)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 67, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "gb/stamps.pyx":66
+ *         return tp
+ * 
+ *     def _find_previous(self, size_t process, double t):             # <<<<<<<<<<<<<<
+ *         return self.find_previous(process, t)
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("gb.stamps.Timestamps._find_previous", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
 /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
  *     cdef bint use_setstate
@@ -2792,19 +2904,19 @@ static double __pyx_f_2gb_6stamps_10Timestamps_find_previous(struct __pyx_obj_2g
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_2gb_6stamps_10Timestamps_7__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_2gb_6stamps_10Timestamps_7__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_2gb_6stamps_10Timestamps_9__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_2gb_6stamps_10Timestamps_9__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__reduce_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_2gb_6stamps_10Timestamps_6__reduce_cython__(((struct __pyx_obj_2gb_6stamps_Timestamps *)__pyx_v_self));
+  __pyx_r = __pyx_pf_2gb_6stamps_10Timestamps_8__reduce_cython__(((struct __pyx_obj_2gb_6stamps_Timestamps *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_2gb_6stamps_10Timestamps_6__reduce_cython__(struct __pyx_obj_2gb_6stamps_Timestamps *__pyx_v_self) {
+static PyObject *__pyx_pf_2gb_6stamps_10Timestamps_8__reduce_cython__(struct __pyx_obj_2gb_6stamps_Timestamps *__pyx_v_self) {
   int __pyx_v_use_setstate;
   PyObject *__pyx_v_state = NULL;
   PyObject *__pyx_v__dict = NULL;
@@ -3044,19 +3156,19 @@ static PyObject *__pyx_pf_2gb_6stamps_10Timestamps_6__reduce_cython__(struct __p
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_2gb_6stamps_10Timestamps_9__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
-static PyObject *__pyx_pw_2gb_6stamps_10Timestamps_9__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pw_2gb_6stamps_10Timestamps_11__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
+static PyObject *__pyx_pw_2gb_6stamps_10Timestamps_11__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__setstate_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_2gb_6stamps_10Timestamps_8__setstate_cython__(((struct __pyx_obj_2gb_6stamps_Timestamps *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
+  __pyx_r = __pyx_pf_2gb_6stamps_10Timestamps_10__setstate_cython__(((struct __pyx_obj_2gb_6stamps_Timestamps *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_2gb_6stamps_10Timestamps_8__setstate_cython__(struct __pyx_obj_2gb_6stamps_Timestamps *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_2gb_6stamps_10Timestamps_10__setstate_cython__(struct __pyx_obj_2gb_6stamps_Timestamps *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -16667,8 +16779,9 @@ static void __pyx_tp_dealloc_2gb_6stamps_Timestamps(PyObject *o) {
 static PyMethodDef __pyx_methods_2gb_6stamps_Timestamps[] = {
   {"_get_stamps", (PyCFunction)__pyx_pw_2gb_6stamps_10Timestamps_3_get_stamps, METH_O, 0},
   {"_get_causes", (PyCFunction)__pyx_pw_2gb_6stamps_10Timestamps_5_get_causes, METH_O, 0},
-  {"__reduce_cython__", (PyCFunction)__pyx_pw_2gb_6stamps_10Timestamps_7__reduce_cython__, METH_NOARGS, 0},
-  {"__setstate_cython__", (PyCFunction)__pyx_pw_2gb_6stamps_10Timestamps_9__setstate_cython__, METH_O, 0},
+  {"_find_previous", (PyCFunction)__pyx_pw_2gb_6stamps_10Timestamps_7_find_previous, METH_VARARGS|METH_KEYWORDS, 0},
+  {"__reduce_cython__", (PyCFunction)__pyx_pw_2gb_6stamps_10Timestamps_9__reduce_cython__, METH_NOARGS, 0},
+  {"__setstate_cython__", (PyCFunction)__pyx_pw_2gb_6stamps_10Timestamps_11__setstate_cython__, METH_O, 0},
   {0, 0, 0, 0}
 };
 
@@ -17487,6 +17600,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_obj, __pyx_k_obj, sizeof(__pyx_k_obj), 0, 0, 1, 1},
   {&__pyx_n_s_pack, __pyx_k_pack, sizeof(__pyx_k_pack), 0, 0, 1, 1},
   {&__pyx_n_s_pickle, __pyx_k_pickle, sizeof(__pyx_k_pickle), 0, 0, 1, 1},
+  {&__pyx_n_s_process, __pyx_k_process, sizeof(__pyx_k_process), 0, 0, 1, 1},
   {&__pyx_n_s_process_stamps, __pyx_k_process_stamps, sizeof(__pyx_k_process_stamps), 0, 0, 1, 1},
   {&__pyx_n_s_pyx_PickleError, __pyx_k_pyx_PickleError, sizeof(__pyx_k_pyx_PickleError), 0, 0, 1, 1},
   {&__pyx_n_s_pyx_checksum, __pyx_k_pyx_checksum, sizeof(__pyx_k_pyx_checksum), 0, 0, 1, 1},
@@ -17513,6 +17627,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_strided_and_indirect, __pyx_k_strided_and_indirect, sizeof(__pyx_k_strided_and_indirect), 0, 0, 1, 0},
   {&__pyx_kp_s_stringsource, __pyx_k_stringsource, sizeof(__pyx_k_stringsource), 0, 0, 1, 0},
   {&__pyx_n_s_struct, __pyx_k_struct, sizeof(__pyx_k_struct), 0, 0, 1, 1},
+  {&__pyx_n_s_t, __pyx_k_t, sizeof(__pyx_k_t), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
   {&__pyx_n_s_uint64, __pyx_k_uint64, sizeof(__pyx_k_uint64), 0, 0, 1, 1},
   {&__pyx_kp_s_unable_to_allocate_array_data, __pyx_k_unable_to_allocate_array_data, sizeof(__pyx_k_unable_to_allocate_array_data), 0, 0, 1, 0},
