@@ -40,25 +40,20 @@ class GrangerBusca(object):
     def fit(self, timestamps):
         self._init_timestamps(timestamps)
 
-        if self.metropolis:
-            fit = metropolis_fit
-        else:
-            fit = gibbs_fit
-
         now = time.time()
         self.Alpha_, self.mu_, self.beta_, self.back_, self.curr_state_ = \
-            fit(self.timestamps, self.alpha_p, self.num_iter)
+            metropolis_fit(self.timestamps, self.alpha_p, self.num_iter)
         dt = time.time() - now
         self.training_time = dt
 
         vals = []
         rows = []
         cols = []
-        for row in self.Alpha_:
-            for col in self.Alpha_[row]:
+        for col in self.Alpha_:
+            for row in self.Alpha_[col]:
                 rows.append(row)
                 cols.append(col)
-                vals.append(self.Alpha_[row][col])
+                vals.append(self.Alpha_[col][row])
         self.Alpha_ = sp.csr_matrix((vals, (rows, cols)), dtype='d')
         self.mu_ = self.mu_
         self.beta_ = self.beta_

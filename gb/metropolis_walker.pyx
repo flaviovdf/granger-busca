@@ -63,9 +63,8 @@ cdef size_t metropolis_step(size_t i, size_t proc_a, Timestamps all_stamps,
     cdef size_t[::1] causes = all_stamps.get_causes(proc_a)
 
     cdef double mu_rate = mu_rates[proc_a]
-    cdef double ti = stamps[i]
     cdef double mu_prob = mu_rate * background_delta * \
-            exp(-mu_rate*background_delta)
+            exp(-mu_rate * background_delta)
 
     if rand() < mu_prob:
         return n_proc
@@ -84,7 +83,7 @@ cdef size_t metropolis_step(size_t i, size_t proc_a, Timestamps all_stamps,
                                         alpha_ca, beta_rates[candidate])
 
     cdef int choice
-    if rand() < min(1, (p_c / p_b)):
+    if rand() < min(1, (p_c * alpha_ba) / (p_b * alpha_ca)):
         choice = candidate
     else:
         choice = proc_b
@@ -169,13 +168,17 @@ def fit(dict all_timestamps, double alpha_prior, size_t n_iter):
     cdef uint64_t[::1] num_background = np.zeros(n_proc, dtype='uint64',
                                                  order='C')
 
-    cdef size_t a, b
+    cdef size_t a, b, i
     cdef uint64_t count
     cdef size_t[::1] causes
+    cdef size_t[::1] init_state
     for a in range(n_proc):
         causes = all_stamps.get_causes(a)
-        causes[:] = np.random.randint(n_proc + 1, causes.shape[0])
-        for b in causes:
+        init_state = np.random.randint(0, n_proc + 1,
+                                       size=causes.shape[0], dtype='uint64')
+        for i in range(<size_t>causes.shape[0]):
+            b = init_state[i]
+            causes[i] = b
             if b == n_proc:
                 num_background[a] += 1
             else:
@@ -205,5 +208,5 @@ def fit(dict all_timestamps, double alpha_prior, size_t n_iter):
                     Alpha[a][b] = 0
                 Alpha[a][b] += 1
 
-    return Alpha, np.array(mu_rates), np.array(beta_rates), num_background, \
-        curr_state
+    return Alpha, np.array(mu_rates), np.array(beta_rates), \
+        np.array(num_background), curr_state
