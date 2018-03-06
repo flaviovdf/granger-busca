@@ -5,7 +5,7 @@ from gb.sorting.binsearch import _searchsorted
 import numpy as np
 
 
-def test_searchsorted():
+def test_searchsorted_size0():
     x = np.zeros(shape=(0, ), dtype='d')
     p = _searchsorted(x, 1)
     assert p == 0
@@ -16,6 +16,8 @@ def test_searchsorted():
     p = _searchsorted(x, -1)
     assert p == 0
 
+
+def test_searchsorted_size1():
     x = np.zeros(shape=(1, ), dtype='d')
     x[0] = 10
     p = _searchsorted(x, 1)
@@ -33,6 +35,8 @@ def test_searchsorted():
     p = _searchsorted(x, 11)
     assert p == 1
 
+
+def test_searchsorted_size2():
     x = np.zeros(shape=(2, ), dtype='d')
     x[0] = 2
     x[1] = 8

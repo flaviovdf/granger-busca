@@ -172,8 +172,10 @@ def fit(dict all_timestamps, double alpha_prior, size_t n_iter):
     cdef uint64_t count
     cdef size_t[::1] causes
     cdef size_t[::1] init_state
+    cdef size_t n_stamps = 0
     for a in range(n_proc):
         causes = all_stamps.get_causes(a)
+        n_stamps += causes.shape[0]
         init_state = np.random.randint(0, n_proc + 1,
                                        size=causes.shape[0], dtype='uint64')
         for i in range(<size_t>causes.shape[0]):
@@ -188,7 +190,7 @@ def fit(dict all_timestamps, double alpha_prior, size_t n_iter):
 
     cdef FenwickSampler sampler = FenwickSampler(causal_counts, all_stamps,
                                                  sum_b, alpha_prior, 0)
-    cdef MStep mstep = MStep()
+    cdef MStep mstep = MStep(n_stamps)
 
     cdef double[::1] mu_rates = np.zeros(n_proc, dtype='d', order='C')
     cdef double[::1] beta_rates = np.zeros(n_proc, dtype='d', order='C')

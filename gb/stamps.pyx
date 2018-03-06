@@ -57,7 +57,9 @@ cdef class Timestamps(object):
 
     cdef double find_previous(self, size_t process, double t) nogil:
         cdef double[::1] timestamps = self.get_stamps(process)
-        cdef size_t tp_idx = max(searchsorted(timestamps, t, 0) - 1, 0)
+        cdef size_t tp_idx = searchsorted(timestamps, t, 0)
+        if tp_idx > 0:
+            tp_idx = tp_idx - 1
         cdef double tp = timestamps[tp_idx]
         if tp >= t:
             tp = 0

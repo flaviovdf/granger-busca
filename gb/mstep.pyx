@@ -6,8 +6,7 @@
 # cython: wraparound=False
 
 
-from libcpp.algorithm cimport sort as stdsort
-from libcpp.vector cimport vector
+import numpy as np
 
 
 cdef inline void update_mu_rate(size_t proc_a, Timestamps all_stamps,
@@ -15,8 +14,7 @@ cdef inline void update_mu_rate(size_t proc_a, Timestamps all_stamps,
                                 double[::1] mu_rates) nogil:
 
     cdef double[::1] timestamps_proc_a = all_stamps.get_stamps(proc_a)
-    cdef size_t n_events = timestamps_proc_a.shape[0]
-    cdef double T = timestamps_proc_a[n_events-1]
+    cdef double T = timestamps_proc_a[timestamps_proc_a.shape[0]-1]
     cdef double rate
     if T == 0:
         rate = 0
@@ -26,9 +24,8 @@ cdef inline void update_mu_rate(size_t proc_a, Timestamps all_stamps,
 
 
 cdef inline void update_beta_rate(size_t proc_a, Timestamps all_stamps,
-                                  double[::1] beta_rates) nogil:
-
-    cdef vector[double] all_deltas
+                                  double[::1] beta_rates,
+                                  double[::1] all_deltas) nogil:
     cdef size_t n_proc = beta_rates.shape[0]
     cdef size_t proc_b, i
     cdef double ti, tp
@@ -45,20 +42,19 @@ cdef inline void update_beta_rate(size_t proc_a, Timestamps all_stamps,
                 if ti > max_ti:
                     max_ti = ti
                 tp = all_stamps.find_previous(proc_a, ti)
-                all_deltas.push_back(ti - tp)
+                all_deltas[n_elements] = ti - tp
                 n_elements += 1
 
     if n_elements >= 1:
-        stdsort(all_deltas.begin(), all_deltas.end())
-        beta_rates[proc_a] = all_deltas[all_deltas.size() // 2]
-        if n_elements % 2 == 0:
-            beta_rates[proc_a] += all_deltas[(all_deltas.size() // 2)-1]
-            beta_rates[proc_a] = beta_rates[proc_a] / 2
+        beta_rates[proc_a] = quick_median(all_deltas[:n_elements])
     else:
         beta_rates[proc_a] = max_ti
 
 
 cdef class MStep(object):
+
+    def __init__(self, size_t n_events):
+        self.all_stamps_buffer = np.zeros(n_events, dtype='d')
 
     cdef void update_mu_rates(self, Timestamps all_stamps,
                               uint64_t[::1] num_background,
@@ -74,4 +70,5 @@ cdef class MStep(object):
         cdef size_t n_proc = beta_rates.shape[0]
         cdef size_t proc_a
         for proc_a in range(n_proc):
-            update_beta_rate(proc_a, all_stamps, beta_rates)
+            update_beta_rate(proc_a, all_stamps, beta_rates,
+                             self.all_stamps_buffer)

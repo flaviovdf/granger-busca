@@ -493,11 +493,6 @@ static CYTHON_INLINE float __PYX_NAN() {
 
 #define __PYX_HAVE__gb__sorting__binsearch
 #define __PYX_HAVE_API__gb__sorting__binsearch
-#include <vector>
-#include "ios"
-#include "new"
-#include "stdexcept"
-#include "typeinfo"
 #include "pythread.h"
 #include <string.h>
 #include <stdlib.h>
@@ -1419,9 +1414,6 @@ static int __Pyx_ValidateAndInit_memviewslice(
 /* ObjectToMemviewSlice.proto */
 static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dc_double(PyObject *);
 
-/* CIntToPy.proto */
-static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
-
 /* MemviewSliceCopyTemplate.proto */
 static __Pyx_memviewslice
 __pyx_memoryview_copy_new_contig(const __Pyx_memviewslice *from_mvs,
@@ -1430,10 +1422,16 @@ __pyx_memoryview_copy_new_contig(const __Pyx_memviewslice *from_mvs,
                                  int dtype_is_object);
 
 /* CIntFromPy.proto */
+static CYTHON_INLINE size_t __Pyx_PyInt_As_size_t(PyObject *);
+
+/* CIntFromPy.proto */
 static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *);
 
 /* CIntFromPy.proto */
 static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *);
+
+/* CIntToPy.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
 
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
@@ -1461,10 +1459,6 @@ static PyObject *__pyx_memoryview_assign_item_from_object(struct __pyx_memoryvie
 static PyObject *__pyx_memoryviewslice_convert_item_to_object(struct __pyx_memoryviewslice_obj *__pyx_v_self, char *__pyx_v_itemp); /* proto*/
 static PyObject *__pyx_memoryviewslice_assign_item_from_object(struct __pyx_memoryviewslice_obj *__pyx_v_self, char *__pyx_v_itemp, PyObject *__pyx_v_value); /* proto*/
 
-/* Module declarations from 'libcpp.vector' */
-
-/* Module declarations from 'libcpp' */
-
 /* Module declarations from 'gb.sorting.binsearch' */
 static PyTypeObject *__pyx_array_type = 0;
 static PyTypeObject *__pyx_MemviewEnum_type = 0;
@@ -1477,7 +1471,7 @@ static PyObject *contiguous = 0;
 static PyObject *indirect_contiguous = 0;
 static int __pyx_memoryview_thread_locks_used;
 static PyThread_type_lock __pyx_memoryview_thread_locks[8];
-static int __pyx_f_2gb_7sorting_9binsearch_searchsorted(__Pyx_memviewslice, double, int); /*proto*/
+static size_t __pyx_f_2gb_7sorting_9binsearch_searchsorted(__Pyx_memviewslice, double, size_t); /*proto*/
 static struct __pyx_array_obj *__pyx_array_new(PyObject *, Py_ssize_t, char *, char *, char *); /*proto*/
 static void *__pyx_align_pointer(void *, size_t); /*proto*/
 static PyObject *__pyx_memoryview_new(PyObject *, int, int, __Pyx_TypeInfo *); /*proto*/
@@ -1702,7 +1696,7 @@ static PyObject *__pyx_kp_s_unable_to_allocate_shape_and_str;
 static PyObject *__pyx_n_s_unpack;
 static PyObject *__pyx_n_s_update;
 static PyObject *__pyx_n_s_value;
-static PyObject *__pyx_pf_2gb_7sorting_9binsearch__searchsorted(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_array, double __pyx_v_value, int __pyx_v_lower); /* proto */
+static PyObject *__pyx_pf_2gb_7sorting_9binsearch__searchsorted(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_array, double __pyx_v_value, size_t __pyx_v_lower); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __pyx_array_obj *__pyx_v_self, PyObject *__pyx_v_shape, Py_ssize_t __pyx_v_itemsize, PyObject *__pyx_v_format, PyObject *__pyx_v_mode, int __pyx_v_allocate_buffer); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array_2__getbuffer__(struct __pyx_array_obj *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /* proto */
 static void __pyx_array___pyx_pf_15View_dot_MemoryView_5array_4__dealloc__(struct __pyx_array_obj *__pyx_v_self); /* proto */
@@ -1782,52 +1776,75 @@ static PyObject *__pyx_tuple__27;
 static PyObject *__pyx_codeobj__21;
 static PyObject *__pyx_codeobj__28;
 
-/* "gb/sorting/binsearch.pyx":13
+/* "gb/sorting/binsearch.pyx":9
  * 
  * 
- * cdef int searchsorted(double[::1] array, double value, int lower) nogil:             # <<<<<<<<<<<<<<
+ * cdef size_t searchsorted(double[::1] array, double value, size_t lower) nogil:             # <<<<<<<<<<<<<<
  *     '''
  *     Finds the first element in the array where the given is OR should have been
  */
 
-static int __pyx_f_2gb_7sorting_9binsearch_searchsorted(__Pyx_memviewslice __pyx_v_array, double __pyx_v_value, int __pyx_v_lower) {
-  int __pyx_v_upper;
-  int __pyx_v_half;
-  int __pyx_v_idx;
-  int __pyx_r;
+static size_t __pyx_f_2gb_7sorting_9binsearch_searchsorted(__Pyx_memviewslice __pyx_v_array, double __pyx_v_value, size_t __pyx_v_lower) {
+  size_t __pyx_v_n;
+  size_t __pyx_v_upper;
+  size_t __pyx_v_half;
+  size_t __pyx_v_idx;
+  size_t __pyx_r;
   int __pyx_t_1;
-  Py_ssize_t __pyx_t_2;
-  Py_ssize_t __pyx_t_3;
+  size_t __pyx_t_2;
+  size_t __pyx_t_3;
 
-  /* "gb/sorting/binsearch.pyx":26
+  /* "gb/sorting/binsearch.pyx":22
  *     '''
  * 
- *     cdef int upper = array.shape[0] - 1  # closed interval             # <<<<<<<<<<<<<<
- *     cdef int half = 0
- *     cdef int idx = -1
- */
-  __pyx_v_upper = ((__pyx_v_array.shape[0]) - 1);
-
-  /* "gb/sorting/binsearch.pyx":27
+ *     cdef size_t n = array.shape[0]             # <<<<<<<<<<<<<<
+ *     if n == 0: return 0
  * 
- *     cdef int upper = array.shape[0] - 1  # closed interval
- *     cdef int half = 0             # <<<<<<<<<<<<<<
- *     cdef int idx = -1
+ */
+  __pyx_v_n = (__pyx_v_array.shape[0]);
+
+  /* "gb/sorting/binsearch.pyx":23
+ * 
+ *     cdef size_t n = array.shape[0]
+ *     if n == 0: return 0             # <<<<<<<<<<<<<<
+ * 
+ *     cdef size_t upper = n - 1  # closed interval
+ */
+  __pyx_t_1 = ((__pyx_v_n == 0) != 0);
+  if (__pyx_t_1) {
+    __pyx_r = 0;
+    goto __pyx_L0;
+  }
+
+  /* "gb/sorting/binsearch.pyx":25
+ *     if n == 0: return 0
+ * 
+ *     cdef size_t upper = n - 1  # closed interval             # <<<<<<<<<<<<<<
+ *     cdef size_t half = 0
+ *     cdef size_t idx = n
+ */
+  __pyx_v_upper = (__pyx_v_n - 1);
+
+  /* "gb/sorting/binsearch.pyx":26
+ * 
+ *     cdef size_t upper = n - 1  # closed interval
+ *     cdef size_t half = 0             # <<<<<<<<<<<<<<
+ *     cdef size_t idx = n
  * 
  */
   __pyx_v_half = 0;
 
-  /* "gb/sorting/binsearch.pyx":28
- *     cdef int upper = array.shape[0] - 1  # closed interval
- *     cdef int half = 0
- *     cdef int idx = -1             # <<<<<<<<<<<<<<
+  /* "gb/sorting/binsearch.pyx":27
+ *     cdef size_t upper = n - 1  # closed interval
+ *     cdef size_t half = 0
+ *     cdef size_t idx = n             # <<<<<<<<<<<<<<
  * 
  *     while upper >= lower:
  */
-  __pyx_v_idx = -1;
+  __pyx_v_idx = __pyx_v_n;
 
-  /* "gb/sorting/binsearch.pyx":30
- *     cdef int idx = -1
+  /* "gb/sorting/binsearch.pyx":29
+ *     cdef size_t idx = n
  * 
  *     while upper >= lower:             # <<<<<<<<<<<<<<
  *         half = lower + ((upper - lower) // 2)
@@ -1837,7 +1854,7 @@ static int __pyx_f_2gb_7sorting_9binsearch_searchsorted(__Pyx_memviewslice __pyx
     __pyx_t_1 = ((__pyx_v_upper >= __pyx_v_lower) != 0);
     if (!__pyx_t_1) break;
 
-    /* "gb/sorting/binsearch.pyx":31
+    /* "gb/sorting/binsearch.pyx":30
  * 
  *     while upper >= lower:
  *         half = lower + ((upper - lower) // 2)             # <<<<<<<<<<<<<<
@@ -1846,7 +1863,7 @@ static int __pyx_f_2gb_7sorting_9binsearch_searchsorted(__Pyx_memviewslice __pyx
  */
     __pyx_v_half = (__pyx_v_lower + ((__pyx_v_upper - __pyx_v_lower) / 2));
 
-    /* "gb/sorting/binsearch.pyx":32
+    /* "gb/sorting/binsearch.pyx":31
  *     while upper >= lower:
  *         half = lower + ((upper - lower) // 2)
  *         if value == array[half]:             # <<<<<<<<<<<<<<
@@ -1857,7 +1874,7 @@ static int __pyx_f_2gb_7sorting_9binsearch_searchsorted(__Pyx_memviewslice __pyx
     __pyx_t_1 = ((__pyx_v_value == (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_array.data) + __pyx_t_2)) )))) != 0);
     if (__pyx_t_1) {
 
-      /* "gb/sorting/binsearch.pyx":33
+      /* "gb/sorting/binsearch.pyx":32
  *         half = lower + ((upper - lower) // 2)
  *         if value == array[half]:
  *             idx = half             # <<<<<<<<<<<<<<
@@ -1866,16 +1883,16 @@ static int __pyx_f_2gb_7sorting_9binsearch_searchsorted(__Pyx_memviewslice __pyx
  */
       __pyx_v_idx = __pyx_v_half;
 
-      /* "gb/sorting/binsearch.pyx":34
+      /* "gb/sorting/binsearch.pyx":33
  *         if value == array[half]:
  *             idx = half
  *             break             # <<<<<<<<<<<<<<
  *         elif value > array[half]:
  *             lower = half + 1
  */
-      goto __pyx_L4_break;
+      goto __pyx_L5_break;
 
-      /* "gb/sorting/binsearch.pyx":32
+      /* "gb/sorting/binsearch.pyx":31
  *     while upper >= lower:
  *         half = lower + ((upper - lower) // 2)
  *         if value == array[half]:             # <<<<<<<<<<<<<<
@@ -1884,79 +1901,108 @@ static int __pyx_f_2gb_7sorting_9binsearch_searchsorted(__Pyx_memviewslice __pyx
  */
     }
 
-    /* "gb/sorting/binsearch.pyx":35
+    /* "gb/sorting/binsearch.pyx":34
  *             idx = half
  *             break
  *         elif value > array[half]:             # <<<<<<<<<<<<<<
  *             lower = half + 1
- *         else:
+ *         elif half > 0:
  */
     __pyx_t_3 = __pyx_v_half;
     __pyx_t_1 = ((__pyx_v_value > (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_array.data) + __pyx_t_3)) )))) != 0);
     if (__pyx_t_1) {
 
-      /* "gb/sorting/binsearch.pyx":36
+      /* "gb/sorting/binsearch.pyx":35
  *             break
  *         elif value > array[half]:
  *             lower = half + 1             # <<<<<<<<<<<<<<
- *         else:
+ *         elif half > 0:
  *             upper = half - 1
  */
       __pyx_v_lower = (__pyx_v_half + 1);
 
-      /* "gb/sorting/binsearch.pyx":35
+      /* "gb/sorting/binsearch.pyx":34
  *             idx = half
  *             break
  *         elif value > array[half]:             # <<<<<<<<<<<<<<
  *             lower = half + 1
- *         else:
+ *         elif half > 0:
  */
-      goto __pyx_L5;
+      goto __pyx_L6;
     }
 
-    /* "gb/sorting/binsearch.pyx":38
+    /* "gb/sorting/binsearch.pyx":36
+ *         elif value > array[half]:
  *             lower = half + 1
+ *         elif half > 0:             # <<<<<<<<<<<<<<
+ *             upper = half - 1
  *         else:
+ */
+    __pyx_t_1 = ((__pyx_v_half > 0) != 0);
+    if (__pyx_t_1) {
+
+      /* "gb/sorting/binsearch.pyx":37
+ *             lower = half + 1
+ *         elif half > 0:
  *             upper = half - 1             # <<<<<<<<<<<<<<
+ *         else:
+ *             break
+ */
+      __pyx_v_upper = (__pyx_v_half - 1);
+
+      /* "gb/sorting/binsearch.pyx":36
+ *         elif value > array[half]:
+ *             lower = half + 1
+ *         elif half > 0:             # <<<<<<<<<<<<<<
+ *             upper = half - 1
+ *         else:
+ */
+      goto __pyx_L6;
+    }
+
+    /* "gb/sorting/binsearch.pyx":39
+ *             upper = half - 1
+ *         else:
+ *             break             # <<<<<<<<<<<<<<
  * 
- *     if idx == -1:  # Element not found, return where it should be
+ *     # Element not found, return where it should be
  */
     /*else*/ {
-      __pyx_v_upper = (__pyx_v_half - 1);
+      goto __pyx_L5_break;
     }
-    __pyx_L5:;
+    __pyx_L6:;
   }
-  __pyx_L4_break:;
+  __pyx_L5_break:;
 
-  /* "gb/sorting/binsearch.pyx":40
- *             upper = half - 1
+  /* "gb/sorting/binsearch.pyx":42
  * 
- *     if idx == -1:  # Element not found, return where it should be             # <<<<<<<<<<<<<<
+ *     # Element not found, return where it should be
+ *     if idx == n:             # <<<<<<<<<<<<<<
  *         idx = lower
  * 
  */
-  __pyx_t_1 = ((__pyx_v_idx == -1L) != 0);
+  __pyx_t_1 = ((__pyx_v_idx == __pyx_v_n) != 0);
   if (__pyx_t_1) {
 
-    /* "gb/sorting/binsearch.pyx":41
- * 
- *     if idx == -1:  # Element not found, return where it should be
+    /* "gb/sorting/binsearch.pyx":43
+ *     # Element not found, return where it should be
+ *     if idx == n:
  *         idx = lower             # <<<<<<<<<<<<<<
  * 
  *     return idx
  */
     __pyx_v_idx = __pyx_v_lower;
 
-    /* "gb/sorting/binsearch.pyx":40
- *             upper = half - 1
+    /* "gb/sorting/binsearch.pyx":42
  * 
- *     if idx == -1:  # Element not found, return where it should be             # <<<<<<<<<<<<<<
+ *     # Element not found, return where it should be
+ *     if idx == n:             # <<<<<<<<<<<<<<
  *         idx = lower
  * 
  */
   }
 
-  /* "gb/sorting/binsearch.pyx":43
+  /* "gb/sorting/binsearch.pyx":45
  *         idx = lower
  * 
  *     return idx             # <<<<<<<<<<<<<<
@@ -1966,10 +2012,10 @@ static int __pyx_f_2gb_7sorting_9binsearch_searchsorted(__Pyx_memviewslice __pyx
   __pyx_r = __pyx_v_idx;
   goto __pyx_L0;
 
-  /* "gb/sorting/binsearch.pyx":13
+  /* "gb/sorting/binsearch.pyx":9
  * 
  * 
- * cdef int searchsorted(double[::1] array, double value, int lower) nogil:             # <<<<<<<<<<<<<<
+ * cdef size_t searchsorted(double[::1] array, double value, size_t lower) nogil:             # <<<<<<<<<<<<<<
  *     '''
  *     Finds the first element in the array where the given is OR should have been
  */
@@ -1979,10 +2025,10 @@ static int __pyx_f_2gb_7sorting_9binsearch_searchsorted(__Pyx_memviewslice __pyx
   return __pyx_r;
 }
 
-/* "gb/sorting/binsearch.pyx":46
+/* "gb/sorting/binsearch.pyx":48
  * 
  * 
- * def _searchsorted(double[::1] array, double value, int lower=0):             # <<<<<<<<<<<<<<
+ * def _searchsorted(double[::1] array, double value, size_t lower=0):             # <<<<<<<<<<<<<<
  *     return searchsorted(array, value, lower)
  */
 
@@ -1992,7 +2038,7 @@ static PyMethodDef __pyx_mdef_2gb_7sorting_9binsearch_1_searchsorted = {"_search
 static PyObject *__pyx_pw_2gb_7sorting_9binsearch_1_searchsorted(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   __Pyx_memviewslice __pyx_v_array = { 0, 0, { 0 }, { 0 }, { 0 } };
   double __pyx_v_value;
-  int __pyx_v_lower;
+  size_t __pyx_v_lower;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("_searchsorted (wrapper)", 0);
@@ -2021,7 +2067,7 @@ static PyObject *__pyx_pw_2gb_7sorting_9binsearch_1_searchsorted(PyObject *__pyx
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_value)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("_searchsorted", 0, 2, 3, 1); __PYX_ERR(0, 46, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("_searchsorted", 0, 2, 3, 1); __PYX_ERR(0, 48, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
@@ -2031,7 +2077,7 @@ static PyObject *__pyx_pw_2gb_7sorting_9binsearch_1_searchsorted(PyObject *__pyx
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_searchsorted") < 0)) __PYX_ERR(0, 46, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_searchsorted") < 0)) __PYX_ERR(0, 48, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -2043,17 +2089,17 @@ static PyObject *__pyx_pw_2gb_7sorting_9binsearch_1_searchsorted(PyObject *__pyx
         default: goto __pyx_L5_argtuple_error;
       }
     }
-    __pyx_v_array = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[0]); if (unlikely(!__pyx_v_array.memview)) __PYX_ERR(0, 46, __pyx_L3_error)
-    __pyx_v_value = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_value == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 46, __pyx_L3_error)
+    __pyx_v_array = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[0]); if (unlikely(!__pyx_v_array.memview)) __PYX_ERR(0, 48, __pyx_L3_error)
+    __pyx_v_value = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_value == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 48, __pyx_L3_error)
     if (values[2]) {
-      __pyx_v_lower = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_lower == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 46, __pyx_L3_error)
+      __pyx_v_lower = __Pyx_PyInt_As_size_t(values[2]); if (unlikely((__pyx_v_lower == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 48, __pyx_L3_error)
     } else {
-      __pyx_v_lower = ((int)0);
+      __pyx_v_lower = ((size_t)0);
     }
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("_searchsorted", 0, 2, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 46, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("_searchsorted", 0, 2, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 48, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gb.sorting.binsearch._searchsorted", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -2066,28 +2112,28 @@ static PyObject *__pyx_pw_2gb_7sorting_9binsearch_1_searchsorted(PyObject *__pyx
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_2gb_7sorting_9binsearch__searchsorted(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_array, double __pyx_v_value, int __pyx_v_lower) {
+static PyObject *__pyx_pf_2gb_7sorting_9binsearch__searchsorted(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_array, double __pyx_v_value, size_t __pyx_v_lower) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("_searchsorted", 0);
 
-  /* "gb/sorting/binsearch.pyx":47
+  /* "gb/sorting/binsearch.pyx":49
  * 
- * def _searchsorted(double[::1] array, double value, int lower=0):
+ * def _searchsorted(double[::1] array, double value, size_t lower=0):
  *     return searchsorted(array, value, lower)             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_f_2gb_7sorting_9binsearch_searchsorted(__pyx_v_array, __pyx_v_value, __pyx_v_lower)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 47, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_FromSize_t(__pyx_f_2gb_7sorting_9binsearch_searchsorted(__pyx_v_array, __pyx_v_value, __pyx_v_lower)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "gb/sorting/binsearch.pyx":46
+  /* "gb/sorting/binsearch.pyx":48
  * 
  * 
- * def _searchsorted(double[::1] array, double value, int lower=0):             # <<<<<<<<<<<<<<
+ * def _searchsorted(double[::1] array, double value, size_t lower=0):             # <<<<<<<<<<<<<<
  *     return searchsorted(array, value, lower)
  */
 
@@ -15920,16 +15966,16 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__19);
   __Pyx_GIVEREF(__pyx_tuple__19);
 
-  /* "gb/sorting/binsearch.pyx":46
+  /* "gb/sorting/binsearch.pyx":48
  * 
  * 
- * def _searchsorted(double[::1] array, double value, int lower=0):             # <<<<<<<<<<<<<<
+ * def _searchsorted(double[::1] array, double value, size_t lower=0):             # <<<<<<<<<<<<<<
  *     return searchsorted(array, value, lower)
  */
-  __pyx_tuple__20 = PyTuple_Pack(3, __pyx_n_s_array, __pyx_n_s_value, __pyx_n_s_lower); if (unlikely(!__pyx_tuple__20)) __PYX_ERR(0, 46, __pyx_L1_error)
+  __pyx_tuple__20 = PyTuple_Pack(3, __pyx_n_s_array, __pyx_n_s_value, __pyx_n_s_lower); if (unlikely(!__pyx_tuple__20)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__20);
   __Pyx_GIVEREF(__pyx_tuple__20);
-  __pyx_codeobj__21 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__20, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_gb_sorting_binsearch_pyx, __pyx_n_s_searchsorted, 46, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__21)) __PYX_ERR(0, 46, __pyx_L1_error)
+  __pyx_codeobj__21 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__20, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_gb_sorting_binsearch_pyx, __pyx_n_s_searchsorted, 48, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__21)) __PYX_ERR(0, 48, __pyx_L1_error)
 
   /* "View.MemoryView":284
  *         return self.name
@@ -16103,7 +16149,7 @@ PyMODINIT_FUNC PyInit_binsearch(void)
   indirect_contiguous = Py_None; Py_INCREF(Py_None);
   /*--- Variable export code ---*/
   /*--- Function export code ---*/
-  if (__Pyx_ExportFunction("searchsorted", (void (*)(void))__pyx_f_2gb_7sorting_9binsearch_searchsorted, "int (__Pyx_memviewslice, double, int)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportFunction("searchsorted", (void (*)(void))__pyx_f_2gb_7sorting_9binsearch_searchsorted, "size_t (__Pyx_memviewslice, double, size_t)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   /*--- Type init code ---*/
   __pyx_vtabptr_array = &__pyx_vtable_array;
   __pyx_vtable_array.get_memview = (PyObject *(*)(struct __pyx_array_obj *))__pyx_array_get_memview;
@@ -16147,15 +16193,15 @@ PyMODINIT_FUNC PyInit_binsearch(void)
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "gb/sorting/binsearch.pyx":46
+  /* "gb/sorting/binsearch.pyx":48
  * 
  * 
- * def _searchsorted(double[::1] array, double value, int lower=0):             # <<<<<<<<<<<<<<
+ * def _searchsorted(double[::1] array, double value, size_t lower=0):             # <<<<<<<<<<<<<<
  *     return searchsorted(array, value, lower)
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_2gb_7sorting_9binsearch_1_searchsorted, NULL, __pyx_n_s_gb_sorting_binsearch); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 46, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_2gb_7sorting_9binsearch_1_searchsorted, NULL, __pyx_n_s_gb_sorting_binsearch); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_searchsorted, __pyx_t_1) < 0) __PYX_ERR(0, 46, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_searchsorted, __pyx_t_1) < 0) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "gb/sorting/binsearch.pyx":1
@@ -19034,37 +19080,6 @@ __pyx_fail:
         return (target_type) value;\
     }
 
-/* CIntToPy */
-        static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
-    const int neg_one = (int) -1, const_zero = (int) 0;
-    const int is_unsigned = neg_one > const_zero;
-    if (is_unsigned) {
-        if (sizeof(int) < sizeof(long)) {
-            return PyInt_FromLong((long) value);
-        } else if (sizeof(int) <= sizeof(unsigned long)) {
-            return PyLong_FromUnsignedLong((unsigned long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(int) <= sizeof(unsigned PY_LONG_LONG)) {
-            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
-#endif
-        }
-    } else {
-        if (sizeof(int) <= sizeof(long)) {
-            return PyInt_FromLong((long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(int) <= sizeof(PY_LONG_LONG)) {
-            return PyLong_FromLongLong((PY_LONG_LONG) value);
-#endif
-        }
-    }
-    {
-        int one = 1; int little = (int)*(unsigned char *)&one;
-        unsigned char *bytes = (unsigned char *)&value;
-        return _PyLong_FromByteArray(bytes, sizeof(int),
-                                     little, !is_unsigned);
-    }
-}
-
 /* MemviewSliceCopyTemplate */
         static __Pyx_memviewslice
 __pyx_memoryview_copy_new_contig(const __Pyx_memviewslice *from_mvs,
@@ -19130,6 +19145,195 @@ no_fail:
     __Pyx_XDECREF(array_obj);
     __Pyx_RefNannyFinishContext();
     return new_mvs;
+}
+
+/* CIntFromPy */
+        static CYTHON_INLINE size_t __Pyx_PyInt_As_size_t(PyObject *x) {
+    const size_t neg_one = (size_t) -1, const_zero = (size_t) 0;
+    const int is_unsigned = neg_one > const_zero;
+#if PY_MAJOR_VERSION < 3
+    if (likely(PyInt_Check(x))) {
+        if (sizeof(size_t) < sizeof(long)) {
+            __PYX_VERIFY_RETURN_INT(size_t, long, PyInt_AS_LONG(x))
+        } else {
+            long val = PyInt_AS_LONG(x);
+            if (is_unsigned && unlikely(val < 0)) {
+                goto raise_neg_overflow;
+            }
+            return (size_t) val;
+        }
+    } else
+#endif
+    if (likely(PyLong_Check(x))) {
+        if (is_unsigned) {
+#if CYTHON_USE_PYLONG_INTERNALS
+            const digit* digits = ((PyLongObject*)x)->ob_digit;
+            switch (Py_SIZE(x)) {
+                case  0: return (size_t) 0;
+                case  1: __PYX_VERIFY_RETURN_INT(size_t, digit, digits[0])
+                case 2:
+                    if (8 * sizeof(size_t) > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(size_t, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) >= 2 * PyLong_SHIFT) {
+                            return (size_t) (((((size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0]));
+                        }
+                    }
+                    break;
+                case 3:
+                    if (8 * sizeof(size_t) > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(size_t, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) >= 3 * PyLong_SHIFT) {
+                            return (size_t) (((((((size_t)digits[2]) << PyLong_SHIFT) | (size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0]));
+                        }
+                    }
+                    break;
+                case 4:
+                    if (8 * sizeof(size_t) > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(size_t, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) >= 4 * PyLong_SHIFT) {
+                            return (size_t) (((((((((size_t)digits[3]) << PyLong_SHIFT) | (size_t)digits[2]) << PyLong_SHIFT) | (size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0]));
+                        }
+                    }
+                    break;
+            }
+#endif
+#if CYTHON_COMPILING_IN_CPYTHON
+            if (unlikely(Py_SIZE(x) < 0)) {
+                goto raise_neg_overflow;
+            }
+#else
+            {
+                int result = PyObject_RichCompareBool(x, Py_False, Py_LT);
+                if (unlikely(result < 0))
+                    return (size_t) -1;
+                if (unlikely(result == 1))
+                    goto raise_neg_overflow;
+            }
+#endif
+            if (sizeof(size_t) <= sizeof(unsigned long)) {
+                __PYX_VERIFY_RETURN_INT_EXC(size_t, unsigned long, PyLong_AsUnsignedLong(x))
+#ifdef HAVE_LONG_LONG
+            } else if (sizeof(size_t) <= sizeof(unsigned PY_LONG_LONG)) {
+                __PYX_VERIFY_RETURN_INT_EXC(size_t, unsigned PY_LONG_LONG, PyLong_AsUnsignedLongLong(x))
+#endif
+            }
+        } else {
+#if CYTHON_USE_PYLONG_INTERNALS
+            const digit* digits = ((PyLongObject*)x)->ob_digit;
+            switch (Py_SIZE(x)) {
+                case  0: return (size_t) 0;
+                case -1: __PYX_VERIFY_RETURN_INT(size_t, sdigit, (sdigit) (-(sdigit)digits[0]))
+                case  1: __PYX_VERIFY_RETURN_INT(size_t,  digit, +digits[0])
+                case -2:
+                    if (8 * sizeof(size_t) - 1 > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(size_t, long, -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) - 1 > 2 * PyLong_SHIFT) {
+                            return (size_t) (((size_t)-1)*(((((size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0])));
+                        }
+                    }
+                    break;
+                case 2:
+                    if (8 * sizeof(size_t) > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(size_t, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) - 1 > 2 * PyLong_SHIFT) {
+                            return (size_t) ((((((size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0])));
+                        }
+                    }
+                    break;
+                case -3:
+                    if (8 * sizeof(size_t) - 1 > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(size_t, long, -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) - 1 > 3 * PyLong_SHIFT) {
+                            return (size_t) (((size_t)-1)*(((((((size_t)digits[2]) << PyLong_SHIFT) | (size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0])));
+                        }
+                    }
+                    break;
+                case 3:
+                    if (8 * sizeof(size_t) > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(size_t, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) - 1 > 3 * PyLong_SHIFT) {
+                            return (size_t) ((((((((size_t)digits[2]) << PyLong_SHIFT) | (size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0])));
+                        }
+                    }
+                    break;
+                case -4:
+                    if (8 * sizeof(size_t) - 1 > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(size_t, long, -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) - 1 > 4 * PyLong_SHIFT) {
+                            return (size_t) (((size_t)-1)*(((((((((size_t)digits[3]) << PyLong_SHIFT) | (size_t)digits[2]) << PyLong_SHIFT) | (size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0])));
+                        }
+                    }
+                    break;
+                case 4:
+                    if (8 * sizeof(size_t) > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(size_t, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) - 1 > 4 * PyLong_SHIFT) {
+                            return (size_t) ((((((((((size_t)digits[3]) << PyLong_SHIFT) | (size_t)digits[2]) << PyLong_SHIFT) | (size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0])));
+                        }
+                    }
+                    break;
+            }
+#endif
+            if (sizeof(size_t) <= sizeof(long)) {
+                __PYX_VERIFY_RETURN_INT_EXC(size_t, long, PyLong_AsLong(x))
+#ifdef HAVE_LONG_LONG
+            } else if (sizeof(size_t) <= sizeof(PY_LONG_LONG)) {
+                __PYX_VERIFY_RETURN_INT_EXC(size_t, PY_LONG_LONG, PyLong_AsLongLong(x))
+#endif
+            }
+        }
+        {
+#if CYTHON_COMPILING_IN_PYPY && !defined(_PyLong_AsByteArray)
+            PyErr_SetString(PyExc_RuntimeError,
+                            "_PyLong_AsByteArray() not available in PyPy, cannot convert large numbers");
+#else
+            size_t val;
+            PyObject *v = __Pyx_PyNumber_IntOrLong(x);
+ #if PY_MAJOR_VERSION < 3
+            if (likely(v) && !PyLong_Check(v)) {
+                PyObject *tmp = v;
+                v = PyNumber_Long(tmp);
+                Py_DECREF(tmp);
+            }
+ #endif
+            if (likely(v)) {
+                int one = 1; int is_little = (int)*(unsigned char *)&one;
+                unsigned char *bytes = (unsigned char *)&val;
+                int ret = _PyLong_AsByteArray((PyLongObject *)v,
+                                              bytes, sizeof(val),
+                                              is_little, !is_unsigned);
+                Py_DECREF(v);
+                if (likely(!ret))
+                    return val;
+            }
+#endif
+            return (size_t) -1;
+        }
+    } else {
+        size_t val;
+        PyObject *tmp = __Pyx_PyNumber_IntOrLong(x);
+        if (!tmp) return (size_t) -1;
+        val = __Pyx_PyInt_As_size_t(tmp);
+        Py_DECREF(tmp);
+        return val;
+    }
+raise_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "value too large to convert to size_t");
+    return (size_t) -1;
+raise_neg_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "can't convert negative value to size_t");
+    return (size_t) -1;
 }
 
 /* CIntFromPy */
@@ -19508,6 +19712,37 @@ raise_neg_overflow:
     PyErr_SetString(PyExc_OverflowError,
         "can't convert negative value to long");
     return (long) -1;
+}
+
+/* CIntToPy */
+        static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
+    const int neg_one = (int) -1, const_zero = (int) 0;
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(int) < sizeof(long)) {
+            return PyInt_FromLong((long) value);
+        } else if (sizeof(int) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(int) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(int) <= sizeof(long)) {
+            return PyInt_FromLong((long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(int) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+#endif
+        }
+    }
+    {
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&value;
+        return _PyLong_FromByteArray(bytes, sizeof(int),
+                                     little, !is_unsigned);
+    }
 }
 
 /* CIntToPy */
