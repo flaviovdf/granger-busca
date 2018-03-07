@@ -1,6 +1,6 @@
 # -*- coding: utf8
 
-from gb.metropolis_walker import fit as metropolis_fit
+from gb.fit import fit as cyfit
 
 from scipy import sparse as sp
 
@@ -42,7 +42,8 @@ class GrangerBusca(object):
 
         now = time.time()
         self.Alpha_, self.mu_, self.beta_, self.back_, self.curr_state_ = \
-            metropolis_fit(self.timestamps, self.alpha_p, self.num_iter)
+            cyfit(self.timestamps, self.alpha_p, self.num_iter,
+                  int(self.metropolis))
         dt = time.time() - now
         self.training_time = dt
 

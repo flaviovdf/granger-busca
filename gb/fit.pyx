@@ -7,10 +7,17 @@
 
 
 from gb.collections.table cimport Table
+
 from gb.mstep cimport MStep
+
 from gb.randomkit.random cimport rand
+
+from gb.samplers cimport AbstractSampler
+from gb.samplers cimport BaseSampler
+from gb.samplers cimport CollapsedGibbsSampler
+from gb.samplers cimport FenwickSampler
+
 from gb.stamps cimport Timestamps
-from gb.sparsefp cimport FenwickSampler
 
 from libc.stdint cimport uint64_t
 from libc.stdio cimport printf
@@ -18,50 +25,15 @@ from libc.stdio cimport printf
 import numpy as np
 
 
-cdef double E = 2.718281828459045
-
-
 cdef extern from 'math.h':
     double exp(double) nogil
 
 
-cdef double busca_probability(size_t i, size_t proc_a, size_t proc_b,
-                              Timestamps all_stamps, double alpha_ba,
-                              double beta_rate) nogil:
-    cdef double[::1] stamps = all_stamps.get_stamps(proc_a)
-    cdef double t = stamps[i]
-    cdef double tp
-    cdef double tpp
-    if i > 0:
-        tp = stamps[i-1]
-    else:
-        tp = 0
-    if tp != 0:
-        if proc_a == proc_b:
-            if i > 1:
-                tpp = stamps[i-2]
-            else:
-                tpp = 0
-        else:
-            tpp = all_stamps.find_previous(proc_b, tp)
-    else:
-        tpp = 0
-
-    cdef double rate = alpha_ba / (beta_rate/E + tp - tpp)
-    return rate
-
-
-
-cdef size_t metropolis_step(size_t i, size_t proc_a, Timestamps all_stamps,
-                            FenwickSampler sampler, double[::1] mu_rates,
-                            double[::1] beta_rates,
-                            double background_delta) nogil:
+cdef size_t sample_one(size_t i, size_t proc_a, AbstractSampler sampler,
+                       double[::1] mu_rates, double[::1] beta_rates,
+                       double background_delta) nogil:
 
     cdef size_t n_proc = mu_rates.shape[0]
-
-    cdef double[::1] stamps = all_stamps.get_stamps(proc_a)
-    cdef size_t[::1] causes = all_stamps.get_causes(proc_a)
-
     cdef double mu_rate = mu_rates[proc_a]
     cdef double mu_prob = mu_rate * background_delta * \
             exp(-mu_rate * background_delta)
@@ -69,29 +41,11 @@ cdef size_t metropolis_step(size_t i, size_t proc_a, Timestamps all_stamps,
     if rand() < mu_prob:
         return n_proc
 
-    cdef size_t candidate = sampler.sample()
-    cdef size_t proc_b = causes[i]
-    if proc_b == n_proc:
-        return candidate
-
-    cdef double alpha_ba = sampler.get_probability(proc_b)
-    cdef double alpha_ca = sampler.get_probability(candidate)
-
-    cdef double p_b = busca_probability(i, proc_a, proc_b, all_stamps,
-                                        alpha_ba, beta_rates[proc_b])
-    cdef double p_c = busca_probability(i, proc_a, candidate, all_stamps,
-                                        alpha_ca, beta_rates[candidate])
-
-    cdef int choice
-    if rand() < min(1, (p_c * alpha_ba) / (p_b * alpha_ca)):
-        choice = candidate
-    else:
-        choice = proc_b
-    return choice
+    return sampler.sample_for_idx(i, beta_rates)
 
 
 cdef void sample_alpha(size_t proc_a, Timestamps all_stamps,
-                       FenwickSampler sampler, uint64_t[::1] num_background,
+                       AbstractSampler sampler, uint64_t[::1] num_background,
                        double[::1] mu_rates, double[::1] beta_rates) nogil:
     cdef size_t i
     cdef size_t influencer
@@ -111,9 +65,8 @@ cdef void sample_alpha(size_t proc_a, Timestamps all_stamps,
         else:
             sampler.dec_one(influencer)
 
-        new_influencer = metropolis_step(i, proc_a, all_stamps, sampler,
-                                         mu_rates, beta_rates,
-                                         stamps[i] - prev_back_t)
+        new_influencer = sample_one(i, proc_a, sampler, mu_rates, beta_rates,
+                                    stamps[i] - prev_back_t)
 
         if new_influencer == n_proc:
             num_background[proc_a] += 1
@@ -123,7 +76,7 @@ cdef void sample_alpha(size_t proc_a, Timestamps all_stamps,
         prev_back_t = prev_back_t_aux
 
 
-cdef void sampleone(Timestamps all_stamps, FenwickSampler sampler,
+cdef void sampleone(Timestamps all_stamps, AbstractSampler sampler,
                     MStep mstep, uint64_t[::1] num_background,
                     double[::1] mu_rates, double[::1] beta_rates,
                     size_t n_iter) nogil:
@@ -143,7 +96,7 @@ cdef void sampleone(Timestamps all_stamps, FenwickSampler sampler,
                      beta_rates)
 
 
-cdef void cfit(Timestamps all_stamps, FenwickSampler sampler,
+cdef void cfit(Timestamps all_stamps, AbstractSampler sampler,
                MStep mstep, uint64_t[::1] num_background,
                double[::1] mu_rates, double[::1] beta_rates,
                size_t n_iter) nogil:
@@ -158,7 +111,8 @@ cdef void cfit(Timestamps all_stamps, FenwickSampler sampler,
                   beta_rates, n_iter)
 
 
-def fit(dict all_timestamps, double alpha_prior, size_t n_iter):
+def fit(dict all_timestamps, double alpha_prior, size_t n_iter,
+        int metropolis_walker=True):
 
     cdef size_t n_proc = len(all_timestamps)
     cdef Timestamps all_stamps = Timestamps(all_timestamps)
@@ -188,8 +142,14 @@ def fit(dict all_timestamps, double alpha_prior, size_t n_iter):
                 causal_counts.set_cell(a, b, count + 1)
                 sum_b[b] += 1
 
-    cdef FenwickSampler sampler = FenwickSampler(causal_counts, all_stamps,
-                                                 sum_b, alpha_prior, 0)
+    cdef BaseSampler base_sampler = BaseSampler(causal_counts, all_stamps,
+                                                sum_b, alpha_prior, 0)
+    cdef AbstractSampler sampler
+    if metropolis_walker == 1:
+        sampler = FenwickSampler(base_sampler, n_proc)
+    else:
+        sampler = CollapsedGibbsSampler(base_sampler, n_proc)
+
     cdef MStep mstep = MStep(n_stamps)
 
     cdef double[::1] mu_rates = np.zeros(n_proc, dtype='d', order='C')

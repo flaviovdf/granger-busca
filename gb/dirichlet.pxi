@@ -11,16 +11,28 @@ cdef inline double dirmulti_posterior(int n_ab, int n_b, int n,
     return (n_ab + prior) / (n_b + n * prior)
 
 
-cdef inline double numerator(double p, int n_b, int n, double prior) nogil:
-    return p * (n_b + n * prior)
+cdef inline double busca_probability(size_t i, size_t proc_a, size_t proc_b,
+                                     Timestamps all_stamps, double alpha_ba,
+                                     double beta_rate) nogil:
+    cdef double E = 2.718281828459045
+    cdef double[::1] stamps = all_stamps.get_stamps(proc_a)
+    cdef double t = stamps[i]
+    cdef double tp
+    cdef double tpp
+    if i > 0:
+        tp = stamps[i-1]
+    else:
+        tp = 0
+    if tp != 0:
+        if proc_a == proc_b:
+            if i > 1:
+                tpp = stamps[i-2]
+            else:
+                tpp = 0
+        else:
+            tpp = all_stamps.find_previous(proc_b, tp)
+    else:
+        tpp = 0
 
-
-cdef inline double renormalize(double p, int n_b, int n, double prior) nogil:
-    return p / (n_b + n * prior)
-
-
-cdef inline double inc(int n_ab, int n_b, int n, double prior,
-                       double delta) nogil:
-    cdef double b = n_b + n * prior
-    cdef double a = n_ab + prior
-    return (b * delta - a * delta) / (b * (b + delta))
+    cdef double rate = alpha_ba / (beta_rate/E + tp - tpp)
+    return rate

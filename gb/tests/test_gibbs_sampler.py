@@ -2,7 +2,7 @@
 
 from gb.collections.table import Table
 from gb.samplers import BaseSampler
-from gb.samplers import FenwickSampler
+from gb.samplers import CollapsedGibbsSampler
 from gb.stamps import Timestamps
 
 from numpy.testing import assert_equal
@@ -23,7 +23,7 @@ def test_get_probability():
     stamps = Timestamps(d)
 
     nb = np.array([3, 11], dtype='uint64')
-    sampler = FenwickSampler(BaseSampler(table, stamps, nb, 0.1, 0), 2)
+    sampler = CollapsedGibbsSampler(BaseSampler(table, stamps, nb, 0.1, 0), 2)
     assert_equal(0.911764705882353, sampler._get_probability(0))
     assert_equal(0.3596491228070175, sampler._get_probability(1))
 
@@ -45,7 +45,7 @@ def test_inc_dec():
     stamps = Timestamps(d)
 
     nb = np.array([3, 11], dtype='uint64')
-    sampler = FenwickSampler(BaseSampler(table, stamps, nb, 0.1, 0), 2)
+    sampler = CollapsedGibbsSampler(BaseSampler(table, stamps, nb, 0.1, 0), 2)
     assert_equal(0.911764705882353, sampler._get_probability(0))
     assert_equal(0.3596491228070175, sampler._get_probability(1))
 
