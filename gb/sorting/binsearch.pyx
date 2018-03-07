@@ -1,10 +1,12 @@
 # -*- coding: utf8
+# cython: boundscheck=False
+# cython: cdivision=True
+# cython: initializedcheck=False
+# cython: nonecheck=False
+# cython: wraparound=False
 
-from libcpp cimport bool
-from libcpp.vector cimport vector
 
-
-cdef int searchsorted(vector[double] &array, double value, int lower) nogil:
+cdef size_t searchsorted(double[::1] array, double value, size_t lower) nogil:
     '''
     Finds the first element in the array where the given is OR should have been
     in the given array. This is simply a binary search, but if the element is
@@ -14,12 +16,15 @@ cdef int searchsorted(vector[double] &array, double value, int lower) nogil:
     ----------
     array: vector of doubles
     value: double to look for
-    lower: int to start search from [lower, n)
+    lower: size_t to start search from [lower, n)
     '''
 
-    cdef int upper = array.size() - 1  # closed interval
-    cdef int half = 0
-    cdef int idx = -1
+    cdef size_t n = array.shape[0]
+    if n == 0: return 0
+
+    cdef size_t upper = n - 1  # closed interval
+    cdef size_t half = 0
+    cdef size_t idx = n
 
     while upper >= lower:
         half = lower + ((upper - lower) // 2)
@@ -28,18 +33,17 @@ cdef int searchsorted(vector[double] &array, double value, int lower) nogil:
             break
         elif value > array[half]:
             lower = half + 1
-        else:
+        elif half > 0:
             upper = half - 1
+        else:
+            break
 
-    if idx == -1:  # Element not found, return where it should be
+    # Element not found, return where it should be
+    if idx == n:
         idx = lower
 
     return idx
 
 
-def _searchsorted(double[::1] array, double value, int lower=0):
-    cdef vector[double] copy
-    cdef int i
-    for i in range(array.shape[0]):
-        copy.push_back(array[i])
-    return searchsorted(copy, value, lower)
+def _searchsorted(double[::1] array, double value, size_t lower=0):
+    return searchsorted(array, value, lower)

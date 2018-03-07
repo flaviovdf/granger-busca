@@ -5,4 +5,6 @@
 # cython: nonecheck=False
 # cython: wraparound=False
 
-cdef size_t searchsorted(double[::1] array, double value, size_t lower) nogil
+cdef double k_largest(double[::1] array, size_t k) nogil
+
+cdef double quick_median(double[::1] array) nogil

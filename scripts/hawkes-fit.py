@@ -2,7 +2,7 @@
 
 from gb import GrangerBusca
 
-import tick.hawkes.simulation as hk
+import tick.simulation as hk
 import numpy as np
 
 # Simulation of a 10-dimensional Hawkes process
@@ -39,5 +39,5 @@ print(granger_model.back_)
 print(granger_model.mu_)
 print(granger_model.beta_)
 np.set_printoptions(precision=2)
-print(granger_model.Alpha_.toarray().T)
+print(np.array(granger_model.Alpha_.toarray(), dtype='i').T)
 print(np.array(Alpha > 0, dtype='i'))

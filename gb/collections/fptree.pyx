@@ -1,3 +1,11 @@
+# -*- coding: utf8
+# cython: boundscheck=False
+# cython: cdivision=True
+# cython: initializedcheck=False
+# cython: nonecheck=False
+# cython: wraparound=False
+
+
 '''
 Fenwick Tree Sampling Implementation. Ported from the Nomad LDA paper:
 http://bigdata.ices.utexas.edu/publication/nomad-lda/
@@ -30,62 +38,58 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
-from libcpp.vector cimport vector
+
+import numpy as np
 
 
 cdef class FPTree:
 
-    def __cinit__(self, int size):
-        self._build(size)
-
-    def __init__(self, int size):
-        self._build(size)
-
-    cdef void _build(self, int size) nogil:
+    def __init__(self, size_t size):
         self.size = size
-        cdef int t_pos = 1
+        cdef size_t t_pos = 1
         while t_pos < size:
             t_pos *= 2
         cdef double init_val = 0.0
-        self.values.resize(2 * t_pos)
-        cdef int i
-        for i in range(1, <int>self.values.size()):
+        self.values = np.zeros(2 * t_pos, dtype='d')
+        cdef size_t i
+        for i in range(1, <size_t>self.values.shape[0]):
             self.values[i] = 0.0
         # values[0] == T --> where the probabilities start
         # values[1] will be the root of the FPTree
+        self.t_pos = t_pos
         self.values[0] = t_pos
 
     cdef void reset(self) nogil:
-        cdef int i
-        for i in range(1, <int>self.values.size()):
+        cdef size_t i
+        for i in range(1, <size_t>self.values.shape[0]):
             self.values[i] = 0.0
 
-    def reset(self):
+    def _reset(self):
         self.reset()
 
-    cdef double get_value(self, int i) nogil:
-        cdef int t_pos = <int>self.values[0]
+    cdef double get_value(self, size_t i) nogil:
+        cdef size_t t_pos = self.t_pos
         return self.values[i + t_pos]
 
-    def _get_value(self, int i):
+    def _get_value(self, size_t i):
         return self.get_value(i)
 
-    cdef void set_value(self, int i, double value) nogil:
+    cdef void set_value(self, size_t i, double value) nogil:
         if value < 0: value = 0
-        cdef int t_pos = <int>self.values[0]
-        cdef int pos = i + t_pos
+        cdef size_t t_pos = self.t_pos
+        cdef size_t pos = i + t_pos
         value -= self.values[pos]
         while pos > 0:
             self.values[pos] += value
             pos >>= 1
 
-    def _set_value(self, int i, double value):
+    def _set_value(self, size_t i, double value):
         self.set_value(i, value)
 
-    cdef int sample(self, double urnd) nogil:
+    cdef size_t sample(self, double urnd) nogil:
         # urnd: uniformly random number between [0, tree_total]
-        cdef int t_pos = <int> self.values[0]
-        cdef int pos = 1
+        cdef size_t t_pos = self.t_pos
+        cdef size_t pos = 1
         while pos < t_pos:
             pos <<= 1
             if urnd >= self.values[pos]:
