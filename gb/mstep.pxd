@@ -6,10 +6,9 @@
 # cython: wraparound=False
 
 
-from libc.stdint cimport uint64_t
-
-from gb.sorting.largest cimport quick_median
 from gb.stamps cimport Timestamps
+
+from libc.stdint cimport uint64_t
 
 
 cdef class MStep(object):

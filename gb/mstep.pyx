@@ -6,6 +6,8 @@
 # cython: wraparound=False
 
 
+from gb.sorting.largest cimport quick_median
+
 import numpy as np
 
 

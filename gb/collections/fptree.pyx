@@ -39,38 +39,36 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
 
-from libcpp.vector cimport vector
+import numpy as np
 
 
 cdef class FPTree:
 
     def __init__(self, size_t size):
-        self._build(size)
-
-    cdef void _build(self, size_t size) nogil:
         self.size = size
         cdef size_t t_pos = 1
         while t_pos < size:
             t_pos *= 2
         cdef double init_val = 0.0
-        self.values.resize(2 * t_pos)
+        self.values = np.zeros(2 * t_pos, dtype='d')
         cdef size_t i
-        for i in range(1, self.values.size()):
+        for i in range(1, <size_t>self.values.shape[0]):
             self.values[i] = 0.0
         # values[0] == T --> where the probabilities start
         # values[1] will be the root of the FPTree
+        self.t_pos = t_pos
         self.values[0] = t_pos
 
     cdef void reset(self) nogil:
         cdef size_t i
-        for i in range(1, <size_t>self.values.size()):
+        for i in range(1, <size_t>self.values.shape[0]):
             self.values[i] = 0.0
 
     def _reset(self):
         self.reset()
 
     cdef double get_value(self, size_t i) nogil:
-        cdef size_t t_pos = <size_t>self.values[0]
+        cdef size_t t_pos = self.t_pos
         return self.values[i + t_pos]
 
     def _get_value(self, size_t i):
@@ -78,7 +76,7 @@ cdef class FPTree:
 
     cdef void set_value(self, size_t i, double value) nogil:
         if value < 0: value = 0
-        cdef size_t t_pos = <size_t>self.values[0]
+        cdef size_t t_pos = self.t_pos
         cdef size_t pos = i + t_pos
         value -= self.values[pos]
         while pos > 0:
@@ -90,7 +88,7 @@ cdef class FPTree:
 
     cdef size_t sample(self, double urnd) nogil:
         # urnd: uniformly random number between [0, tree_total]
-        cdef size_t t_pos = <size_t> self.values[0]
+        cdef size_t t_pos = self.t_pos
         cdef size_t pos = 1
         while pos < t_pos:
             pos <<= 1

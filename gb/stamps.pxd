@@ -6,7 +6,7 @@
 # cython: wraparound=False
 
 
-from libcpp.unordered_map cimport unordered_map
+from gb.collections.table cimport RobinHoodHash
 
 
 cdef class Timestamps(object):
@@ -14,7 +14,7 @@ cdef class Timestamps(object):
     cdef double[::1] all_stamps
     cdef size_t[::1] causes
     cdef size_t n_stamps
-    cdef unordered_map[size_t, size_t] start_positions
+    cdef RobinHoodHash start_positions
 
     cdef double[::1] get_stamps(self, size_t process) nogil
     cdef size_t[::1] get_causes(self, size_t process) nogil
