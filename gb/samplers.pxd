@@ -9,6 +9,7 @@
 from gb.collections.table cimport Table
 from gb.collections.fptree cimport FPTree
 
+from gb.kernels cimport AbstractKernel
 from gb.stamps cimport Timestamps
 
 from libc.stdint cimport uint64_t
@@ -20,7 +21,7 @@ cdef class AbstractSampler(object):
     cdef double get_probability(self, size_t b) nogil
     cdef void inc_one(self, size_t b) nogil
     cdef void dec_one(self, size_t b) nogil
-    cdef size_t sample_for_idx(self, size_t i, double[::1] beta_rates) nogil
+    cdef size_t sample_for_idx(self, size_t i, AbstractKernel kernel) nogil
 
 
 cdef class BaseSampler(AbstractSampler):
@@ -38,6 +39,7 @@ cdef class BaseSampler(AbstractSampler):
 cdef class FenwickSampler(AbstractSampler):
     cdef BaseSampler base
     cdef FPTree tree
+    cdef size_t n_proc
 
 cdef class CollapsedGibbsSampler(AbstractSampler):
     cdef BaseSampler base

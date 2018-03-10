@@ -8,7 +8,10 @@
 
 from gb.collections.table cimport Table
 
-from gb.mstep cimport MStep
+from gb.kernels cimport AbstractKernel
+from gb.kernels cimport PoissonKernel
+from gb.kernels cimport BuscaKernel
+from gb.kernels cimport TruncatedHawkesKernel
 
 from gb.randomkit.random cimport rand
 
@@ -25,32 +28,13 @@ from libc.stdio cimport printf
 import numpy as np
 
 
-cdef extern from 'math.h':
-    double exp(double) nogil
-
-
-cdef size_t sample_one(size_t i, size_t proc_a, AbstractSampler sampler,
-                       double[::1] mu_rates, double[::1] beta_rates,
-                       double background_delta) nogil:
-
-    cdef size_t n_proc = mu_rates.shape[0]
-    cdef double mu_rate = mu_rates[proc_a]
-    cdef double mu_prob = mu_rate * background_delta * \
-            exp(-mu_rate * background_delta)
-
-    if rand() < mu_prob:
-        return n_proc
-
-    return sampler.sample_for_idx(i, beta_rates)
-
-
 cdef void sample_alpha(size_t proc_a, Timestamps all_stamps,
-                       AbstractSampler sampler, uint64_t[::1] num_background,
-                       double[::1] mu_rates, double[::1] beta_rates) nogil:
+                       AbstractSampler sampler,  AbstractKernel kernel,
+                       uint64_t[::1] num_background) nogil:
     cdef size_t i
     cdef size_t influencer
     cdef size_t new_influencer
-    cdef size_t n_proc = mu_rates.shape[0]
+    cdef size_t n_proc = num_background.shape[0]
 
     cdef double[::1] stamps = all_stamps.get_stamps(proc_a)
     cdef size_t[::1] causes = all_stamps.get_causes(proc_a)
@@ -65,8 +49,10 @@ cdef void sample_alpha(size_t proc_a, Timestamps all_stamps,
         else:
             sampler.dec_one(influencer)
 
-        new_influencer = sample_one(i, proc_a, sampler, mu_rates, beta_rates,
-                                    stamps[i] - prev_back_t)
+        if rand() < kernel.background_probability(stamps[i] - prev_back_t):
+            new_influencer = n_proc
+        else:
+            new_influencer = sampler.sample_for_idx(i, kernel)
 
         if new_influencer == n_proc:
             num_background[proc_a] += 1
@@ -77,38 +63,33 @@ cdef void sample_alpha(size_t proc_a, Timestamps all_stamps,
 
 
 cdef void sampleone(Timestamps all_stamps, AbstractSampler sampler,
-                    MStep mstep, uint64_t[::1] num_background,
-                    double[::1] mu_rates, double[::1] beta_rates,
+                    AbstractKernel kernel, uint64_t[::1] num_background,
                     size_t n_iter) nogil:
 
-    printf("[logger]\t Learning mu.\n")
-    mstep.update_mu_rates(all_stamps, num_background, mu_rates)
-
-    printf("[logger]\t Learning beta.\n")
-    mstep.update_beta_rates(all_stamps, beta_rates)
-
-    printf("[logger]\t Sampling Alpha.\n")
-    cdef size_t n_proc = mu_rates.shape[0]
+    cdef size_t n_proc = num_background.shape[0]
     cdef size_t proc_a
     for proc_a in range(n_proc):
+        kernel.set_current_process(proc_a)
+        kernel.update_mu_rate(num_background[proc_a])
+        kernel.update_cross_rates()
+
+    for proc_a in range(n_proc):
         sampler.set_current_process(proc_a)
-        sample_alpha(proc_a, all_stamps, sampler, num_background, mu_rates,
-                     beta_rates)
+        kernel.set_current_process(proc_a)
+        sample_alpha(proc_a, all_stamps, sampler, kernel, num_background)
 
 
 cdef void cfit(Timestamps all_stamps, AbstractSampler sampler,
-               MStep mstep, uint64_t[::1] num_background,
-               double[::1] mu_rates, double[::1] beta_rates,
+               AbstractKernel kernel, uint64_t[::1] num_background,
                size_t n_iter) nogil:
     printf("[logger] Sampler is starting\n")
-    printf("[logger]\t n_proc=%ld\n", mu_rates.shape[0])
+    printf("[logger]\t n_proc=%ld\n", num_background.shape[0])
     printf("\n")
 
     cdef size_t iteration
     for iteration in range(n_iter):
         printf("[logger] Iter=%lu. Sampling...\n", iteration)
-        sampleone(all_stamps, sampler, mstep, num_background, mu_rates,
-                  beta_rates, n_iter)
+        sampleone(all_stamps, sampler, kernel, num_background, n_iter)
 
 
 def fit(dict all_timestamps, double alpha_prior, size_t n_iter,
@@ -150,13 +131,11 @@ def fit(dict all_timestamps, double alpha_prior, size_t n_iter,
     else:
         sampler = CollapsedGibbsSampler(base_sampler, n_proc)
 
-    cdef MStep mstep = MStep(n_stamps)
+    cdef PoissonKernel poisson = PoissonKernel(all_stamps, n_proc)
+    cdef AbstractKernel kernel = BuscaKernel(poisson, all_stamps,
+                                             n_proc, n_stamps)
 
-    cdef double[::1] mu_rates = np.zeros(n_proc, dtype='d', order='C')
-    cdef double[::1] beta_rates = np.zeros(n_proc, dtype='d', order='C')
-
-    cfit(all_stamps, sampler, mstep, num_background, mu_rates, beta_rates,
-         n_iter)
+    cfit(all_stamps, sampler, kernel, num_background, n_iter)
 
     Alpha = {}
     curr_state = {}
@@ -170,5 +149,5 @@ def fit(dict all_timestamps, double alpha_prior, size_t n_iter,
                     Alpha[a][b] = 0
                 Alpha[a][b] += 1
 
-    return Alpha, np.array(mu_rates), np.array(beta_rates), \
-        np.array(num_background), curr_state
+    return Alpha, np.array(poisson.get_mu_rates()), \
+        np.array(kernel.get_beta_rates()), np.array(num_background), curr_state
