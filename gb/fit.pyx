@@ -22,6 +22,8 @@ from gb.samplers cimport FenwickSampler
 
 from gb.stamps cimport Timestamps
 
+from gb.sloppy cimport SloppyCounter
+
 from libc.stdint cimport uint64_t
 from libc.stdio cimport printf
 
@@ -92,11 +94,10 @@ cdef void cfit(Timestamps all_stamps, AbstractSampler sampler,
         sampleone(all_stamps, sampler, kernel, num_background, n_iter)
 
 
-def fit(dict all_timestamps, double alpha_prior, size_t n_iter,
-        int metropolis_walker=True):
+def fit(Timestamps all_stamps, SloppyCounter sloppy, double alpha_prior,
+        size_t n_iter, size_t[::1] workload, int metropolis_walker=True):
 
-    cdef size_t n_proc = len(all_timestamps)
-    cdef Timestamps all_stamps = Timestamps(all_timestamps)
+    cdef size_t n_proc = all_stamps.num_proc()
     cdef Table causal_counts = Table(n_proc)
 
     cdef uint64_t[::1] sum_b = np.zeros(n_proc, dtype='uint64', order='C')

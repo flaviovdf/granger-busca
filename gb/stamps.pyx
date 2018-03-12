@@ -15,7 +15,7 @@ cdef class Timestamps(object):
 
     def __init__(self, dict process_stamps):
         cdef size_t n_proc = len(process_stamps)
-
+        self.n_proc = n_proc
         self.n_stamps = 0
         cdef size_t proc_a
         for proc_a in range(n_proc):
@@ -68,3 +68,6 @@ cdef class Timestamps(object):
 
     def _find_previous(self, size_t process, double t):
         return self.find_previous(process, t)
+
+    cdef size_t num_proc(self) nogil:
+        return self.n_proc
