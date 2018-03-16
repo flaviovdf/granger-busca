@@ -40,17 +40,18 @@ class GrangerBusca(object):
         self.num_jobs = num_jobs
         self.metropolis = metropolis
 
-    def _init_timestamps(self, timestamps):
+    def _init_timestamps(self, timestamps, sort):
         min_all = np.float('inf')
         max_all = 0
         copy_of_timestamps = {}
         n_proc = len(timestamps)
         for i in range(n_proc):
-            assert (np.asanyarray(timestamps[i]) >= 0).all()
-            min_all = min(min_all, np.min(timestamps[i]))
-            max_all = max(max_all, np.max(timestamps[i]))
-            tis = np.sort(timestamps[i])
-            copy_of_timestamps[i] = np.asanyarray(tis, dtype='d', order='C')
+            tis = np.asanyarray(timestamps[i], dtype='d', order='C').copy()
+            min_all = min(min_all, tis.min())
+            max_all = max(max_all, tis.max())
+            if sort:
+                tis.sort()
+            copy_of_timestamps[i] = tis
 
         timestamps = copy_of_timestamps
         max_all -= min_all
@@ -82,8 +83,8 @@ class GrangerBusca(object):
         return state_keeper, SloppyCounter(n_workers, self.sloppy,
                                            global_state, local_state)
 
-    def fit(self, timestamps):
-        self._init_timestamps(timestamps)
+    def fit(self, timestamps, sort=False):
+        self._init_timestamps(timestamps, sort)
 
         now = time.time()
         schedule, inverse_schedule = greedy_schedule(self.timestamps,
