@@ -18,9 +18,6 @@ import numpy as np
 
 
 cdef class AbstractSampler(object):
-    cdef void update_denominators(self, uint64_t[::1] denominators) nogil:
-        printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')
-        abort()
     cdef void set_current_process(self, size_t a) nogil:
         printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')
         abort()
@@ -40,40 +37,47 @@ cdef class AbstractSampler(object):
 
 cdef class BaseSampler(AbstractSampler):
 
-    def __init__(self, Table joint_counts, Timestamps timestamps,
-                 uint64_t[::1] denominators, double alpha_prior,
-                 size_t initial_process):
-        self.n_proc = denominators.shape[0]
+    def __init__(self, Timestamps timestamps, SloppyCounter sloppy, size_t id,
+                 double alpha_prior):
+        self.n_proc = timestamps.num_proc()
         self.alpha_prior = alpha_prior
-        self.denominators = denominators
-        self.joint_counts = joint_counts
+        self.sloppy = sloppy
+        self.id = id
         self.timestamps = timestamps
-        self.set_current_process(initial_process)
-
-    cdef void update_denominators(self, uint64_t[::1] denominators) nogil:
-        self.denominators = denominators
+        self.nab = np.zeros(self.n_proc, dtype='uint64')
 
     cdef void set_current_process(self, size_t a) nogil:
         self.current_process = a
-        self.current_process_size = self.timestamps.get_stamps(a).shape[0]
+        cdef size_t[::1] causes = self.timestamps.get_causes(a)
+        self.current_process_size = causes.shape[0]
+
+        cdef size_t b, i
+        for b in range(self.timestamps.num_proc()):
+            self.nab[b] = 0
+        for i in range(self.current_process_size):
+            b = causes[i]
+            if b != self.timestamps.num_proc():
+                self.nab[b] += 1
+
+        self.sloppy.update_counts(self.id)
+        self.denominators = self.sloppy.get_local_counts(self.id)
 
     cdef double get_probability(self, size_t b) nogil:
         cdef size_t a = self.current_process
-        cdef uint64_t joint_count = self.joint_counts.get_cell(a, b)
-        return dirmulti_posterior(joint_count, self.denominators[b],
+        return dirmulti_posterior(self.nab[b], self.denominators[b],
                                   self.current_process_size, self.alpha_prior)
 
     cdef void inc_one(self, size_t b) nogil:
         cdef size_t a = self.current_process
-        cdef uint64_t joint_count = self.joint_counts.get_cell(a, b)
         self.denominators[b] += 1
-        self.joint_counts.set_cell(a, b, joint_count + 1)
+        self.nab[b] += 1
+        self.sloppy.inc_one(self.id, b)
 
     cdef void dec_one(self, size_t b) nogil:
         cdef size_t a = self.current_process
-        cdef uint64_t joint_count = self.joint_counts.get_cell(a, b)
         self.denominators[b] -= 1
-        self.joint_counts.set_cell(a, b, joint_count - 1)
+        self.nab[b] -= 1
+        self.sloppy.dec_one(self.id, b)
 
 
 cdef class FenwickSampler(AbstractSampler):
@@ -82,12 +86,6 @@ cdef class FenwickSampler(AbstractSampler):
         self.base = base
         self.tree = FPTree(n_proc)
         self.n_proc = n_proc
-
-    cdef void update_denominators(self, uint64_t[::1] denominators) nogil:
-        self.base.update_denominators(denominators)
-
-    def _update_denominators(self, uint64_t[::1] denominators):
-        return self.update_denominators(denominators)
 
     cdef void set_current_process(self, size_t a) nogil:
         self.base.set_current_process(a)
@@ -148,12 +146,6 @@ cdef class CollapsedGibbsSampler(AbstractSampler):
     def __init__(self, BaseSampler base, size_t n_proc):
         self.base = base
         self.buffer = np.zeros(n_proc, dtype='d')
-
-    cdef void update_denominators(self, uint64_t[::1] denominators) nogil:
-        self.base.update_denominators(denominators)
-
-    def _update_denominators(self, uint64_t[::1] denominators):
-        return self.update_denominators(denominators)
 
     cdef void set_current_process(self, size_t a) nogil:
         self.base.set_current_process(a)

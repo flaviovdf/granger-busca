@@ -6,8 +6,6 @@
 # cython: wraparound=False
 
 
-from gb.collections.table cimport Table
-
 from gb.kernels cimport AbstractKernel
 from gb.kernels cimport PoissonKernel
 from gb.kernels cimport BuscaKernel
@@ -31,12 +29,11 @@ import numpy as np
 
 
 cdef void sample_alpha(size_t proc_a, Timestamps all_stamps,
-                       AbstractSampler sampler,  AbstractKernel kernel,
-                       uint64_t[::1] num_background) nogil:
+                       AbstractSampler sampler,  AbstractKernel kernel) nogil:
     cdef size_t i
     cdef size_t influencer
     cdef size_t new_influencer
-    cdef size_t n_proc = num_background.shape[0]
+    cdef size_t n_proc = all_stamps.num_proc()
 
     cdef double[::1] stamps = all_stamps.get_stamps(proc_a)
     cdef size_t[::1] causes = all_stamps.get_causes(proc_a)
@@ -46,7 +43,6 @@ cdef void sample_alpha(size_t proc_a, Timestamps all_stamps,
     for i in range(<size_t>stamps.shape[0]):
         influencer = causes[i]
         if influencer == n_proc:
-            num_background[proc_a] -= 1
             prev_back_t_aux = stamps[i] # found a background ts
         else:
             sampler.dec_one(influencer)
@@ -56,76 +52,33 @@ cdef void sample_alpha(size_t proc_a, Timestamps all_stamps,
         else:
             new_influencer = sampler.sample_for_idx(i, kernel)
 
-        if new_influencer == n_proc:
-            num_background[proc_a] += 1
-        else:
+        if new_influencer != n_proc:
             sampler.inc_one(new_influencer)
         causes[i] = new_influencer
         prev_back_t = prev_back_t_aux
 
 
-cdef void sampleone(Timestamps all_stamps, AbstractSampler sampler,
-                    AbstractKernel kernel, uint64_t[::1] num_background,
-                    size_t n_iter) nogil:
-
-    cdef size_t n_proc = num_background.shape[0]
-    cdef size_t proc_a
-    for proc_a in range(n_proc):
-        kernel.set_current_process(proc_a)
-        kernel.update_mu_rate(num_background[proc_a])
-        kernel.update_cross_rates()
-
-    for proc_a in range(n_proc):
-        sampler.set_current_process(proc_a)
-        kernel.set_current_process(proc_a)
-        sample_alpha(proc_a, all_stamps, sampler, kernel, num_background)
-
-
-cdef void cfit(Timestamps all_stamps, AbstractSampler sampler,
-               AbstractKernel kernel, uint64_t[::1] num_background,
-               size_t n_iter) nogil:
-    printf("[logger] Sampler is starting\n")
-    printf("[logger]\t n_proc=%ld\n", num_background.shape[0])
-    printf("\n")
+cdef void do_work(Timestamps all_stamps, SloppyCounter sloppy,
+                  AbstractSampler sampler, AbstractKernel kernel,
+                  size_t n_iter, size_t worker_id, size_t[::1] workload) nogil:
 
     cdef size_t iteration
+    cdef size_t proc_a
     for iteration in range(n_iter):
-        printf("[logger] Iter=%lu. Sampling...\n", iteration)
-        sampleone(all_stamps, sampler, kernel, num_background, n_iter)
+        for i in range(<size_t>workload.shape[0]):
+            proc_a = workload[i]
+            sampler.set_current_process(proc_a)
+            kernel.set_current_process(proc_a)
+            sample_alpha(proc_a, all_stamps, sampler, kernel)
 
 
 def fit(Timestamps all_stamps, SloppyCounter sloppy, double alpha_prior,
-        size_t n_iter, size_t[::1] workload, int metropolis_walker=True):
+        size_t n_iter, size_t worker_id, size_t[::1] workload,
+        int metropolis_walker=True):
 
     cdef size_t n_proc = all_stamps.num_proc()
-    cdef Table causal_counts = Table(n_proc)
-
-    cdef uint64_t[::1] sum_b = np.zeros(n_proc, dtype='uint64', order='C')
-    cdef uint64_t[::1] num_background = np.zeros(n_proc, dtype='uint64',
-                                                 order='C')
-
-    cdef size_t a, b, i
-    cdef uint64_t count
-    cdef size_t[::1] causes
-    cdef size_t[::1] init_state
-    cdef size_t n_stamps = 0
-    for a in range(n_proc):
-        causes = all_stamps.get_causes(a)
-        n_stamps += causes.shape[0]
-        init_state = np.random.randint(0, n_proc + 1,
-                                       size=causes.shape[0], dtype='uint64')
-        for i in range(<size_t>causes.shape[0]):
-            b = init_state[i]
-            causes[i] = b
-            if b == n_proc:
-                num_background[a] += 1
-            else:
-                count = causal_counts.get_cell(a, b)
-                causal_counts.set_cell(a, b, count + 1)
-                sum_b[b] += 1
-
-    cdef BaseSampler base_sampler = BaseSampler(causal_counts, all_stamps,
-                                                sum_b, alpha_prior, 0)
+    cdef BaseSampler base_sampler = BaseSampler(all_stamps, sloppy, worker_id,
+                                                alpha_prior)
     cdef AbstractSampler sampler
     if metropolis_walker == 1:
         sampler = FenwickSampler(base_sampler, n_proc)
@@ -133,22 +86,38 @@ def fit(Timestamps all_stamps, SloppyCounter sloppy, double alpha_prior,
         sampler = CollapsedGibbsSampler(base_sampler, n_proc)
 
     cdef PoissonKernel poisson = PoissonKernel(all_stamps, n_proc)
-    cdef AbstractKernel kernel = BuscaKernel(poisson, all_stamps,
-                                             n_proc, n_stamps)
+    cdef AbstractKernel kernel = BuscaKernel(poisson, n_proc)
 
-    cfit(all_stamps, sampler, kernel, num_background, n_iter)
+    printf("Worker %lu starting\n", worker_id)
+    with nogil:
+        do_work(all_stamps, sloppy, sampler, kernel, n_iter, worker_id,
+                workload)
+    printf("Worker %lu done\n", worker_id)
 
     Alpha = {}
     curr_state = {}
-    for a in range(n_proc):
+    Beta = {}
+    cdef size_t a, b, i, j
+    cdef size_t[::1] causes
+    cdef int[::1] num_background = np.zeros(n_proc, dtype='i')
+    for i in range(<size_t>workload.shape[0]):
+        a = workload[i]
         Alpha[a] = {}
         causes = all_stamps.get_causes(a)
         curr_state[a] = np.array(causes)
-        for b in causes:
+        for j in range(<size_t>causes.shape[0]):
+            b = causes[j]
             if b != n_proc:
                 if b not in Alpha[a]:
                     Alpha[a][b] = 0
                 Alpha[a][b] += 1
+            else:
+                num_background[a] += 1
 
-    return Alpha, np.array(poisson.get_mu_rates()), \
-        np.array(kernel.get_beta_rates()), np.array(num_background), curr_state
+        Beta[a] = {}
+        kernel.set_current_process(a)
+        for b in Alpha[a]:
+            Beta[a][b] = kernel.get_beta_rates()[b]
+
+    return Alpha, np.array(poisson.get_mu_rates()), Beta, \
+        np.array(num_background), curr_state

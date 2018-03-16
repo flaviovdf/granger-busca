@@ -422,19 +422,33 @@
   #endif
 #endif
 
+#ifndef __cplusplus
+  #error "Cython files generated with the C++ option must be compiled with a C++ compiler."
+#endif
 #ifndef CYTHON_INLINE
   #if defined(__clang__)
     #define CYTHON_INLINE __inline__ __attribute__ ((__unused__))
-  #elif defined(__GNUC__)
-    #define CYTHON_INLINE __inline__
-  #elif defined(_MSC_VER)
-    #define CYTHON_INLINE __inline
-  #elif defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
-    #define CYTHON_INLINE inline
   #else
-    #define CYTHON_INLINE
+    #define CYTHON_INLINE inline
   #endif
 #endif
+template<typename T>
+void __Pyx_call_destructor(T& x) {
+    x.~T();
+}
+template<typename T>
+class __Pyx_FakeReference {
+  public:
+    __Pyx_FakeReference() : ptr(NULL) { }
+    __Pyx_FakeReference(const T& ref) : ptr(const_cast<T*>(&ref)) { }
+    T *operator->() { return ptr; }
+    T *operator&() { return ptr; }
+    operator T&() { return *ptr; }
+    template<typename U> bool operator ==(U other) { return *ptr == other; }
+    template<typename U> bool operator !=(U other) { return *ptr != other; }
+  private:
+    T *ptr;
+};
 
 #if defined(WIN32) || defined(MS_WINDOWS)
   #define _USE_MATH_DEFINES
@@ -477,9 +491,8 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE__gb__collections__bitset
-#define __PYX_HAVE_API__gb__collections__bitset
-#include <stdint.h>
+#define __PYX_HAVE__gb__collections__fptree
+#define __PYX_HAVE_API__gb__collections__fptree
 #include "pythread.h"
 #include <string.h>
 #include <stdlib.h>
@@ -685,7 +698,7 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "gb/collections/bitset.pyx",
+  "gb/collections/fptree.pyx",
   "stringsource",
 };
 /* MemviewSliceStruct.proto */
@@ -785,24 +798,25 @@ typedef volatile __pyx_atomic_int_type __pyx_atomic_int;
 
 
 /*--- Type declarations ---*/
-struct __pyx_obj_2gb_11collections_6bitset_BitSet;
+struct __pyx_obj_2gb_11collections_6fptree_FPTree;
 struct __pyx_array_obj;
 struct __pyx_MemviewEnum_obj;
 struct __pyx_memoryview_obj;
 struct __pyx_memoryviewslice_obj;
 
-/* "gb/collections/bitset.pxd":12
+/* "gb/collections/fptree.pxd":9
  * 
  * 
- * cdef class BitSet(object):             # <<<<<<<<<<<<<<
- *     cdef int size
- *     cdef uint64_t[::1] data
+ * cdef class FPTree:             # <<<<<<<<<<<<<<
+ *     cdef size_t size
+ *     cdef size_t t_pos
  */
-struct __pyx_obj_2gb_11collections_6bitset_BitSet {
+struct __pyx_obj_2gb_11collections_6fptree_FPTree {
   PyObject_HEAD
-  struct __pyx_vtabstruct_2gb_11collections_6bitset_BitSet *__pyx_vtab;
-  int size;
-  __Pyx_memviewslice data;
+  struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *__pyx_vtab;
+  size_t size;
+  size_t t_pos;
+  __Pyx_memviewslice values;
 };
 
 
@@ -884,20 +898,22 @@ struct __pyx_memoryviewslice_obj {
 
 
 
-/* "gb/collections/bitset.pyx":12
+/* "gb/collections/fptree.pyx":45
  * 
  * 
- * cdef class BitSet(object):             # <<<<<<<<<<<<<<
+ * cdef class FPTree:             # <<<<<<<<<<<<<<
  * 
  *     def __init__(self, size_t size):
  */
 
-struct __pyx_vtabstruct_2gb_11collections_6bitset_BitSet {
-  void (*add)(struct __pyx_obj_2gb_11collections_6bitset_BitSet *, size_t);
-  void (*remove)(struct __pyx_obj_2gb_11collections_6bitset_BitSet *, size_t);
-  int (*get)(struct __pyx_obj_2gb_11collections_6bitset_BitSet *, size_t);
+struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree {
+  void (*reset)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *);
+  void (*set_value)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, size_t, double);
+  double (*get_value)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, size_t);
+  size_t (*sample)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, double);
+  double (*get_total)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *);
 };
-static struct __pyx_vtabstruct_2gb_11collections_6bitset_BitSet *__pyx_vtabptr_2gb_11collections_6bitset_BitSet;
+static struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *__pyx_vtabptr_2gb_11collections_6fptree_FPTree;
 
 
 /* "View.MemoryView":103
@@ -1011,18 +1027,6 @@ static struct __pyx_vtabstruct__memoryviewslice *__pyx_vtabptr__memoryviewslice;
 #define __Pyx_CLEAR(r)    do { PyObject* tmp = ((PyObject*)(r)); r = NULL; __Pyx_DECREF(tmp);} while(0)
 #define __Pyx_XCLEAR(r)   do { if((r) != NULL) {PyObject* tmp = ((PyObject*)(r)); r = NULL; __Pyx_DECREF(tmp);}} while(0)
 
-/* RaiseDoubleKeywords.proto */
-static void __Pyx_RaiseDoubleKeywordsError(const char* func_name, PyObject* kw_name);
-
-/* ParseKeywords.proto */
-static int __Pyx_ParseOptionalKeywords(PyObject *kwds, PyObject **argnames[],\
-    PyObject *kwds2, PyObject *values[], Py_ssize_t num_pos_args,\
-    const char* function_name);
-
-/* RaiseArgTupleInvalid.proto */
-static void __Pyx_RaiseArgtupleInvalid(const char* func_name, int exact,
-    Py_ssize_t num_min, Py_ssize_t num_max, Py_ssize_t num_found);
-
 /* PyObjectGetAttrStr.proto */
 #if CYTHON_USE_TYPE_SLOTS
 static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject* attr_name) {
@@ -1041,6 +1045,18 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject
 
 /* GetBuiltinName.proto */
 static PyObject *__Pyx_GetBuiltinName(PyObject *name);
+
+/* RaiseDoubleKeywords.proto */
+static void __Pyx_RaiseDoubleKeywordsError(const char* func_name, PyObject* kw_name);
+
+/* ParseKeywords.proto */
+static int __Pyx_ParseOptionalKeywords(PyObject *kwds, PyObject **argnames[],\
+    PyObject *kwds2, PyObject *values[], Py_ssize_t num_pos_args,\
+    const char* function_name);
+
+/* RaiseArgTupleInvalid.proto */
+static void __Pyx_RaiseArgtupleInvalid(const char* func_name, int exact,
+    Py_ssize_t num_min, Py_ssize_t num_max, Py_ssize_t num_found);
 
 /* GetModuleGlobalName.proto */
 static CYTHON_INLINE PyObject *__Pyx_GetModuleGlobalName(PyObject *name);
@@ -1416,12 +1432,9 @@ static int __pyx_slices_overlap(__Pyx_memviewslice *slice1,
 /* Capsule.proto */
 static CYTHON_INLINE PyObject *__pyx_capsule_create(void *p, const char *sig);
 
-/* CIntToPy.proto */
-static CYTHON_INLINE PyObject* __Pyx_PyInt_From_uint64_t(uint64_t value);
-
 /* MemviewDtypeToObject.proto */
-static CYTHON_INLINE PyObject *__pyx_memview_get_nn_uint64_t(const char *itemp);
-static CYTHON_INLINE int __pyx_memview_set_nn_uint64_t(const char *itemp, PyObject *obj);
+static CYTHON_INLINE PyObject *__pyx_memview_get_double(const char *itemp);
+static CYTHON_INLINE int __pyx_memview_set_double(const char *itemp, PyObject *obj);
 
 /* TypeInfoCompare.proto */
 static int __pyx_typeinfo_cmp(__Pyx_TypeInfo *a, __Pyx_TypeInfo *b);
@@ -1438,10 +1451,7 @@ static int __Pyx_ValidateAndInit_memviewslice(
                 PyObject *original_obj);
 
 /* ObjectToMemviewSlice.proto */
-static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dc_nn_uint64_t(PyObject *);
-
-/* CIntToPy.proto */
-static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
+static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dc_double(PyObject *);
 
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
@@ -1454,16 +1464,16 @@ __pyx_memoryview_copy_new_contig(const __Pyx_memviewslice *from_mvs,
                                  int dtype_is_object);
 
 /* CIntFromPy.proto */
-static CYTHON_INLINE uint64_t __Pyx_PyInt_As_uint64_t(PyObject *);
-
-/* CIntFromPy.proto */
-static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *);
-
-/* CIntFromPy.proto */
 static CYTHON_INLINE size_t __Pyx_PyInt_As_size_t(PyObject *);
 
 /* CIntFromPy.proto */
 static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *);
+
+/* CIntFromPy.proto */
+static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *);
+
+/* CIntToPy.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
 
 /* CIntFromPy.proto */
 static CYTHON_INLINE char __Pyx_PyInt_As_char(PyObject *);
@@ -1474,9 +1484,11 @@ static int __Pyx_check_binary_version(void);
 /* InitStrings.proto */
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
-static void __pyx_f_2gb_11collections_6bitset_6BitSet_add(struct __pyx_obj_2gb_11collections_6bitset_BitSet *__pyx_v_self, size_t __pyx_v_i); /* proto*/
-static void __pyx_f_2gb_11collections_6bitset_6BitSet_remove(struct __pyx_obj_2gb_11collections_6bitset_BitSet *__pyx_v_self, size_t __pyx_v_i); /* proto*/
-static int __pyx_f_2gb_11collections_6bitset_6BitSet_get(struct __pyx_obj_2gb_11collections_6bitset_BitSet *__pyx_v_self, size_t __pyx_v_i); /* proto*/
+static void __pyx_f_2gb_11collections_6fptree_6FPTree_reset(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self); /* proto*/
+static double __pyx_f_2gb_11collections_6fptree_6FPTree_get_value(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, size_t __pyx_v_i); /* proto*/
+static void __pyx_f_2gb_11collections_6fptree_6FPTree_set_value(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, size_t __pyx_v_i, double __pyx_v_value); /* proto*/
+static size_t __pyx_f_2gb_11collections_6fptree_6FPTree_sample(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, double __pyx_v_urnd); /* proto*/
+static double __pyx_f_2gb_11collections_6fptree_6FPTree_get_total(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self); /* proto*/
 static PyObject *__pyx_array_get_memview(struct __pyx_array_obj *__pyx_v_self); /* proto*/
 static char *__pyx_memoryview_get_item_pointer(struct __pyx_memoryview_obj *__pyx_v_self, PyObject *__pyx_v_index); /* proto*/
 static PyObject *__pyx_memoryview_is_slice(struct __pyx_memoryview_obj *__pyx_v_self, PyObject *__pyx_v_obj); /* proto*/
@@ -1488,10 +1500,8 @@ static PyObject *__pyx_memoryview_assign_item_from_object(struct __pyx_memoryvie
 static PyObject *__pyx_memoryviewslice_convert_item_to_object(struct __pyx_memoryviewslice_obj *__pyx_v_self, char *__pyx_v_itemp); /* proto*/
 static PyObject *__pyx_memoryviewslice_assign_item_from_object(struct __pyx_memoryviewslice_obj *__pyx_v_self, char *__pyx_v_itemp, PyObject *__pyx_v_value); /* proto*/
 
-/* Module declarations from 'libc.stdint' */
-
-/* Module declarations from 'gb.collections.bitset' */
-static PyTypeObject *__pyx_ptype_2gb_11collections_6bitset_BitSet = 0;
+/* Module declarations from 'gb.collections.fptree' */
+static PyTypeObject *__pyx_ptype_2gb_11collections_6fptree_FPTree = 0;
 static PyTypeObject *__pyx_array_type = 0;
 static PyTypeObject *__pyx_MemviewEnum_type = 0;
 static PyTypeObject *__pyx_memoryview_type = 0;
@@ -1503,7 +1513,7 @@ static PyObject *contiguous = 0;
 static PyObject *indirect_contiguous = 0;
 static int __pyx_memoryview_thread_locks_used;
 static PyThread_type_lock __pyx_memoryview_thread_locks[8];
-static PyObject *__pyx_f_2gb_11collections_6bitset___pyx_unpickle_BitSet__set_state(struct __pyx_obj_2gb_11collections_6bitset_BitSet *, PyObject *); /*proto*/
+static PyObject *__pyx_f_2gb_11collections_6fptree___pyx_unpickle_FPTree__set_state(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, PyObject *); /*proto*/
 static struct __pyx_array_obj *__pyx_array_new(PyObject *, Py_ssize_t, char *, char *, char *); /*proto*/
 static void *__pyx_align_pointer(void *, size_t); /*proto*/
 static PyObject *__pyx_memoryview_new(PyObject *, int, int, __Pyx_TypeInfo *); /*proto*/
@@ -1537,21 +1547,23 @@ static void __pyx_memoryview_refcount_objects_in_slice(char *, Py_ssize_t *, Py_
 static void __pyx_memoryview_slice_assign_scalar(__Pyx_memviewslice *, int, size_t, void *, int); /*proto*/
 static void __pyx_memoryview__slice_assign_scalar(char *, Py_ssize_t *, Py_ssize_t *, int, size_t, void *); /*proto*/
 static PyObject *__pyx_unpickle_Enum__set_state(struct __pyx_MemviewEnum_obj *, PyObject *); /*proto*/
-static __Pyx_TypeInfo __Pyx_TypeInfo_nn_uint64_t = { "uint64_t", NULL, sizeof(uint64_t), { 0 }, 0, IS_UNSIGNED(uint64_t) ? 'U' : 'I', IS_UNSIGNED(uint64_t), 0 };
-#define __Pyx_MODULE_NAME "gb.collections.bitset"
-int __pyx_module_is_main_gb__collections__bitset = 0;
+static __Pyx_TypeInfo __Pyx_TypeInfo_double = { "double", NULL, sizeof(double), { 0 }, 0, 'R', 0, 0 };
+#define __Pyx_MODULE_NAME "gb.collections.fptree"
+int __pyx_module_is_main_gb__collections__fptree = 0;
 
-/* Implementation of 'gb.collections.bitset' */
+/* Implementation of 'gb.collections.fptree' */
+static PyObject *__pyx_builtin_range;
 static PyObject *__pyx_builtin_ValueError;
 static PyObject *__pyx_builtin_MemoryError;
 static PyObject *__pyx_builtin_enumerate;
-static PyObject *__pyx_builtin_range;
 static PyObject *__pyx_builtin_TypeError;
 static PyObject *__pyx_builtin_Ellipsis;
 static PyObject *__pyx_builtin_id;
 static PyObject *__pyx_builtin_IndexError;
 static const char __pyx_k_O[] = "O";
 static const char __pyx_k_c[] = "c";
+static const char __pyx_k_d[] = "d";
+static const char __pyx_k_i[] = "i";
 static const char __pyx_k_id[] = "id";
 static const char __pyx_k_np[] = "np";
 static const char __pyx_k_new[] = "__new__";
@@ -1576,6 +1588,7 @@ static const char __pyx_k_numpy[] = "numpy";
 static const char __pyx_k_range[] = "range";
 static const char __pyx_k_shape[] = "shape";
 static const char __pyx_k_start[] = "start";
+static const char __pyx_k_value[] = "value";
 static const char __pyx_k_zeros[] = "zeros";
 static const char __pyx_k_encode[] = "encode";
 static const char __pyx_k_format[] = "format";
@@ -1584,7 +1597,6 @@ static const char __pyx_k_name_2[] = "__name__";
 static const char __pyx_k_pickle[] = "pickle";
 static const char __pyx_k_reduce[] = "__reduce__";
 static const char __pyx_k_struct[] = "struct";
-static const char __pyx_k_uint64[] = "uint64";
 static const char __pyx_k_unpack[] = "unpack";
 static const char __pyx_k_update[] = "update";
 static const char __pyx_k_fortran[] = "fortran";
@@ -1616,10 +1628,10 @@ static const char __pyx_k_setstate_cython[] = "__setstate_cython__";
 static const char __pyx_k_pyx_unpickle_Enum[] = "__pyx_unpickle_Enum";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_strided_and_direct[] = "<strided and direct>";
-static const char __pyx_k_pyx_unpickle_BitSet[] = "__pyx_unpickle_BitSet";
+static const char __pyx_k_pyx_unpickle_FPTree[] = "__pyx_unpickle_FPTree";
 static const char __pyx_k_strided_and_indirect[] = "<strided and indirect>";
 static const char __pyx_k_contiguous_and_direct[] = "<contiguous and direct>";
-static const char __pyx_k_gb_collections_bitset[] = "gb.collections.bitset";
+static const char __pyx_k_gb_collections_fptree[] = "gb.collections.fptree";
 static const char __pyx_k_MemoryView_of_r_object[] = "<MemoryView of %r object>";
 static const char __pyx_k_MemoryView_of_r_at_0x_x[] = "<MemoryView of %r at 0x%x>";
 static const char __pyx_k_contiguous_and_indirect[] = "<contiguous and indirect>";
@@ -1628,11 +1640,12 @@ static const char __pyx_k_Invalid_shape_in_axis_d_d[] = "Invalid shape in axis %
 static const char __pyx_k_itemsize_0_for_cython_array[] = "itemsize <= 0 for cython.array";
 static const char __pyx_k_unable_to_allocate_array_data[] = "unable to allocate array data.";
 static const char __pyx_k_strided_and_direct_or_indirect[] = "<strided and direct or indirect>";
+static const char __pyx_k_Fenwick_Tree_Sampling_Implement[] = "\nFenwick Tree Sampling Implementation. Ported from the Nomad LDA paper:\nhttp://bigdata.ices.utexas.edu/publication/nomad-lda/\n\nCopyright (c) 2014-2015 The NOMAD-LDA Project. All rights reserved.\n\nRedistribution and use in source and binary forms, with or without\nmodification, are permitted provided that the following conditions are met:\n\n1. Redistributions of source code must retain the above copyright notice,\n   this list of conditions and the following disclaimer.\n\n2. Redistributions in binary form must reproduce the above copyright notice,\n   this list of conditions and the following disclaimer in the documentation\n   and/or other materials provided with the distribution.\n\n3. Neither name of copyright holders nor the names of its contributors may be\n   used to endorse or promote products derived from this software without\n   specific prior written permission.\n\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''\nAND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\nIMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\nDISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY\nDIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\n(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\nLOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON\nANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\n(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\nSOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n";
 static const char __pyx_k_Buffer_view_does_not_expose_stri[] = "Buffer view does not expose strides";
 static const char __pyx_k_Can_only_create_a_buffer_that_is[] = "Can only create a buffer that is contiguous in memory.";
 static const char __pyx_k_Empty_shape_tuple_for_cython_arr[] = "Empty shape tuple for cython.array";
 static const char __pyx_k_Incompatible_checksums_s_vs_0xb0[] = "Incompatible checksums (%s vs 0xb068931 = (name))";
-static const char __pyx_k_Incompatible_checksums_s_vs_0xe0[] = "Incompatible checksums (%s vs 0xe0b4bd3 = (data, size))";
+static const char __pyx_k_Incompatible_checksums_s_vs_0xc6[] = "Incompatible checksums (%s vs 0xc67247b = (size, t_pos, values))";
 static const char __pyx_k_Indirect_dimensions_not_supporte[] = "Indirect dimensions not supported";
 static const char __pyx_k_Invalid_mode_expected_c_or_fortr[] = "Invalid mode, expected 'c' or 'fortran', got %s";
 static const char __pyx_k_Out_of_bounds_on_buffer_access_a[] = "Out of bounds on buffer access (axis %d)";
@@ -1647,7 +1660,7 @@ static PyObject *__pyx_kp_s_Cannot_index_with_type_s;
 static PyObject *__pyx_n_s_Ellipsis;
 static PyObject *__pyx_kp_s_Empty_shape_tuple_for_cython_arr;
 static PyObject *__pyx_kp_s_Incompatible_checksums_s_vs_0xb0;
-static PyObject *__pyx_kp_s_Incompatible_checksums_s_vs_0xe0;
+static PyObject *__pyx_kp_s_Incompatible_checksums_s_vs_0xc6;
 static PyObject *__pyx_n_s_IndexError;
 static PyObject *__pyx_kp_s_Indirect_dimensions_not_supporte;
 static PyObject *__pyx_kp_s_Invalid_mode_expected_c_or_fortr;
@@ -1670,6 +1683,7 @@ static PyObject *__pyx_n_s_class;
 static PyObject *__pyx_n_s_cline_in_traceback;
 static PyObject *__pyx_kp_s_contiguous_and_direct;
 static PyObject *__pyx_kp_s_contiguous_and_indirect;
+static PyObject *__pyx_n_s_d;
 static PyObject *__pyx_n_s_dict;
 static PyObject *__pyx_n_s_dtype;
 static PyObject *__pyx_n_s_dtype_is_object;
@@ -1680,9 +1694,10 @@ static PyObject *__pyx_n_s_flags;
 static PyObject *__pyx_n_s_format;
 static PyObject *__pyx_n_s_fortran;
 static PyObject *__pyx_n_u_fortran;
-static PyObject *__pyx_n_s_gb_collections_bitset;
+static PyObject *__pyx_n_s_gb_collections_fptree;
 static PyObject *__pyx_n_s_getstate;
 static PyObject *__pyx_kp_s_got_differing_extents_in_dimensi;
+static PyObject *__pyx_n_s_i;
 static PyObject *__pyx_n_s_id;
 static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_itemsize;
@@ -1706,8 +1721,8 @@ static PyObject *__pyx_n_s_pyx_getbuffer;
 static PyObject *__pyx_n_s_pyx_result;
 static PyObject *__pyx_n_s_pyx_state;
 static PyObject *__pyx_n_s_pyx_type;
-static PyObject *__pyx_n_s_pyx_unpickle_BitSet;
 static PyObject *__pyx_n_s_pyx_unpickle_Enum;
+static PyObject *__pyx_n_s_pyx_unpickle_FPTree;
 static PyObject *__pyx_n_s_pyx_vtable;
 static PyObject *__pyx_n_s_range;
 static PyObject *__pyx_n_s_reduce;
@@ -1726,19 +1741,21 @@ static PyObject *__pyx_kp_s_strided_and_indirect;
 static PyObject *__pyx_kp_s_stringsource;
 static PyObject *__pyx_n_s_struct;
 static PyObject *__pyx_n_s_test;
-static PyObject *__pyx_n_s_uint64;
 static PyObject *__pyx_kp_s_unable_to_allocate_array_data;
 static PyObject *__pyx_kp_s_unable_to_allocate_shape_and_str;
 static PyObject *__pyx_n_s_unpack;
 static PyObject *__pyx_n_s_update;
+static PyObject *__pyx_n_s_value;
 static PyObject *__pyx_n_s_zeros;
-static int __pyx_pf_2gb_11collections_6bitset_6BitSet___init__(struct __pyx_obj_2gb_11collections_6bitset_BitSet *__pyx_v_self, size_t __pyx_v_size); /* proto */
-static PyObject *__pyx_pf_2gb_11collections_6bitset_6BitSet_2_add(struct __pyx_obj_2gb_11collections_6bitset_BitSet *__pyx_v_self, size_t __pyx_v_i); /* proto */
-static PyObject *__pyx_pf_2gb_11collections_6bitset_6BitSet_4_remove(struct __pyx_obj_2gb_11collections_6bitset_BitSet *__pyx_v_self, size_t __pyx_v_i); /* proto */
-static PyObject *__pyx_pf_2gb_11collections_6bitset_6BitSet_6_get(struct __pyx_obj_2gb_11collections_6bitset_BitSet *__pyx_v_self, size_t __pyx_v_i); /* proto */
-static PyObject *__pyx_pf_2gb_11collections_6bitset_6BitSet_8__reduce_cython__(struct __pyx_obj_2gb_11collections_6bitset_BitSet *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_2gb_11collections_6bitset_6BitSet_10__setstate_cython__(struct __pyx_obj_2gb_11collections_6bitset_BitSet *__pyx_v_self, PyObject *__pyx_v___pyx_state); /* proto */
-static PyObject *__pyx_pf_2gb_11collections_6bitset___pyx_unpickle_BitSet(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state); /* proto */
+static int __pyx_pf_2gb_11collections_6fptree_6FPTree___init__(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, size_t __pyx_v_size); /* proto */
+static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_2_reset(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_4_get_value(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, size_t __pyx_v_i); /* proto */
+static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_6_set_value(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, size_t __pyx_v_i, double __pyx_v_value); /* proto */
+static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_8_sample(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, double __pyx_v_urnd); /* proto */
+static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_10_get_total(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_12__reduce_cython__(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_14__setstate_cython__(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_pf_2gb_11collections_6fptree___pyx_unpickle_FPTree(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __pyx_array_obj *__pyx_v_self, PyObject *__pyx_v_shape, Py_ssize_t __pyx_v_itemsize, PyObject *__pyx_v_format, PyObject *__pyx_v_mode, int __pyx_v_allocate_buffer); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array_2__getbuffer__(struct __pyx_array_obj *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /* proto */
 static void __pyx_array___pyx_pf_15View_dot_MemoryView_5array_4__dealloc__(struct __pyx_array_obj *__pyx_v_self); /* proto */
@@ -1781,7 +1798,7 @@ static PyObject *__pyx_pf_15View_dot_MemoryView_16_memoryviewslice_4base___get__
 static PyObject *__pyx_pf___pyx_memoryviewslice___reduce_cython__(CYTHON_UNUSED struct __pyx_memoryviewslice_obj *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf___pyx_memoryviewslice_2__setstate_cython__(CYTHON_UNUSED struct __pyx_memoryviewslice_obj *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
 static PyObject *__pyx_pf_15View_dot_MemoryView___pyx_unpickle_Enum(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state); /* proto */
-static PyObject *__pyx_tp_new_2gb_11collections_6bitset_BitSet(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static PyObject *__pyx_tp_new_2gb_11collections_6fptree_FPTree(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_array(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_Enum(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_memoryview(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
@@ -1789,7 +1806,7 @@ static PyObject *__pyx_tp_new__memoryviewslice(PyTypeObject *t, PyObject *a, PyO
 static PyObject *__pyx_int_0;
 static PyObject *__pyx_int_1;
 static PyObject *__pyx_int_184977713;
-static PyObject *__pyx_int_235621331;
+static PyObject *__pyx_int_208086139;
 static PyObject *__pyx_int_neg_1;
 static PyObject *__pyx_tuple_;
 static PyObject *__pyx_tuple__2;
@@ -1820,17 +1837,17 @@ static PyObject *__pyx_tuple__27;
 static PyObject *__pyx_codeobj__21;
 static PyObject *__pyx_codeobj__28;
 
-/* "gb/collections/bitset.pyx":14
- * cdef class BitSet(object):
+/* "gb/collections/fptree.pyx":47
+ * cdef class FPTree:
  * 
  *     def __init__(self, size_t size):             # <<<<<<<<<<<<<<
- *         cdef size_t data_size = 1 + ((size-1) // 64)
  *         self.size = size
+ *         cdef size_t t_pos = 1
  */
 
 /* Python wrapper */
-static int __pyx_pw_2gb_11collections_6bitset_6BitSet_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static int __pyx_pw_2gb_11collections_6bitset_6BitSet_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static int __pyx_pw_2gb_11collections_6fptree_6FPTree_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static int __pyx_pw_2gb_11collections_6fptree_6FPTree_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   size_t __pyx_v_size;
   int __pyx_r;
   __Pyx_RefNannyDeclarations
@@ -1854,200 +1871,283 @@ static int __pyx_pw_2gb_11collections_6bitset_6BitSet_1__init__(PyObject *__pyx_
         else goto __pyx_L5_argtuple_error;
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 14, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 47, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 1) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
     }
-    __pyx_v_size = __Pyx_PyInt_As_size_t(values[0]); if (unlikely((__pyx_v_size == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 14, __pyx_L3_error)
+    __pyx_v_size = __Pyx_PyInt_As_size_t(values[0]); if (unlikely((__pyx_v_size == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 47, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__init__", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 14, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__init__", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 47, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("gb.collections.bitset.BitSet.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("gb.collections.fptree.FPTree.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_2gb_11collections_6bitset_6BitSet___init__(((struct __pyx_obj_2gb_11collections_6bitset_BitSet *)__pyx_v_self), __pyx_v_size);
+  __pyx_r = __pyx_pf_2gb_11collections_6fptree_6FPTree___init__(((struct __pyx_obj_2gb_11collections_6fptree_FPTree *)__pyx_v_self), __pyx_v_size);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static int __pyx_pf_2gb_11collections_6bitset_6BitSet___init__(struct __pyx_obj_2gb_11collections_6bitset_BitSet *__pyx_v_self, size_t __pyx_v_size) {
-  size_t __pyx_v_data_size;
+static int __pyx_pf_2gb_11collections_6fptree_6FPTree___init__(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, size_t __pyx_v_size) {
+  size_t __pyx_v_t_pos;
+  CYTHON_UNUSED double __pyx_v_init_val;
+  size_t __pyx_v_i;
   int __pyx_r;
   __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
+  int __pyx_t_1;
   PyObject *__pyx_t_2 = NULL;
   PyObject *__pyx_t_3 = NULL;
   PyObject *__pyx_t_4 = NULL;
-  __Pyx_memviewslice __pyx_t_5 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  PyObject *__pyx_t_5 = NULL;
+  __Pyx_memviewslice __pyx_t_6 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  size_t __pyx_t_7;
+  size_t __pyx_t_8;
+  size_t __pyx_t_9;
+  Py_ssize_t __pyx_t_10;
   __Pyx_RefNannySetupContext("__init__", 0);
 
-  /* "gb/collections/bitset.pyx":15
+  /* "gb/collections/fptree.pyx":48
  * 
  *     def __init__(self, size_t size):
- *         cdef size_t data_size = 1 + ((size-1) // 64)             # <<<<<<<<<<<<<<
- *         self.size = size
- *         self.data = np.zeros(data_size, dtype='uint64')
- */
-  __pyx_v_data_size = (1 + ((__pyx_v_size - 1) / 64));
-
-  /* "gb/collections/bitset.pyx":16
- *     def __init__(self, size_t size):
- *         cdef size_t data_size = 1 + ((size-1) // 64)
  *         self.size = size             # <<<<<<<<<<<<<<
- *         self.data = np.zeros(data_size, dtype='uint64')
- * 
+ *         cdef size_t t_pos = 1
+ *         while t_pos < size:
  */
   __pyx_v_self->size = __pyx_v_size;
 
-  /* "gb/collections/bitset.pyx":17
- *         cdef size_t data_size = 1 + ((size-1) // 64)
+  /* "gb/collections/fptree.pyx":49
+ *     def __init__(self, size_t size):
  *         self.size = size
- *         self.data = np.zeros(data_size, dtype='uint64')             # <<<<<<<<<<<<<<
- * 
- *     cdef void add(self, size_t i) nogil:
+ *         cdef size_t t_pos = 1             # <<<<<<<<<<<<<<
+ *         while t_pos < size:
+ *             t_pos *= 2
  */
-  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 17, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 17, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyInt_FromSize_t(__pyx_v_data_size); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 17, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 17, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GIVEREF(__pyx_t_1);
-  PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1);
-  __pyx_t_1 = 0;
-  __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 17, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_n_s_uint64) < 0) __PYX_ERR(0, 17, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 17, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_dc_nn_uint64_t(__pyx_t_4);
-  if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 17, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __PYX_XDEC_MEMVIEW(&__pyx_v_self->data, 0);
-  __pyx_v_self->data = __pyx_t_5;
-  __pyx_t_5.memview = NULL;
-  __pyx_t_5.data = NULL;
+  __pyx_v_t_pos = 1;
 
-  /* "gb/collections/bitset.pyx":14
- * cdef class BitSet(object):
+  /* "gb/collections/fptree.pyx":50
+ *         self.size = size
+ *         cdef size_t t_pos = 1
+ *         while t_pos < size:             # <<<<<<<<<<<<<<
+ *             t_pos *= 2
+ *         cdef double init_val = 0.0
+ */
+  while (1) {
+    __pyx_t_1 = ((__pyx_v_t_pos < __pyx_v_size) != 0);
+    if (!__pyx_t_1) break;
+
+    /* "gb/collections/fptree.pyx":51
+ *         cdef size_t t_pos = 1
+ *         while t_pos < size:
+ *             t_pos *= 2             # <<<<<<<<<<<<<<
+ *         cdef double init_val = 0.0
+ *         self.values = np.zeros(2 * t_pos, dtype='d')
+ */
+    __pyx_v_t_pos = (__pyx_v_t_pos * 2);
+  }
+
+  /* "gb/collections/fptree.pyx":52
+ *         while t_pos < size:
+ *             t_pos *= 2
+ *         cdef double init_val = 0.0             # <<<<<<<<<<<<<<
+ *         self.values = np.zeros(2 * t_pos, dtype='d')
+ *         cdef size_t i
+ */
+  __pyx_v_init_val = 0.0;
+
+  /* "gb/collections/fptree.pyx":53
+ *             t_pos *= 2
+ *         cdef double init_val = 0.0
+ *         self.values = np.zeros(2 * t_pos, dtype='d')             # <<<<<<<<<<<<<<
+ *         cdef size_t i
+ *         for i in range(1, <size_t>self.values.shape[0]):
+ */
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 53, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_zeros); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 53, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_PyInt_FromSize_t((2 * __pyx_v_t_pos)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 53, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 53, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_GIVEREF(__pyx_t_2);
+  PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_2);
+  __pyx_t_2 = 0;
+  __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 53, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, __pyx_n_s_d) < 0) __PYX_ERR(0, 53, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 53, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_5);
+  if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 53, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __PYX_XDEC_MEMVIEW(&__pyx_v_self->values, 0);
+  __pyx_v_self->values = __pyx_t_6;
+  __pyx_t_6.memview = NULL;
+  __pyx_t_6.data = NULL;
+
+  /* "gb/collections/fptree.pyx":55
+ *         self.values = np.zeros(2 * t_pos, dtype='d')
+ *         cdef size_t i
+ *         for i in range(1, <size_t>self.values.shape[0]):             # <<<<<<<<<<<<<<
+ *             self.values[i] = 0.0
+ *         # values[0] == T --> where the probabilities start
+ */
+  __pyx_t_7 = ((size_t)(__pyx_v_self->values.shape[0]));
+  for (__pyx_t_8 = 1; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
+    __pyx_v_i = __pyx_t_8;
+
+    /* "gb/collections/fptree.pyx":56
+ *         cdef size_t i
+ *         for i in range(1, <size_t>self.values.shape[0]):
+ *             self.values[i] = 0.0             # <<<<<<<<<<<<<<
+ *         # values[0] == T --> where the probabilities start
+ *         # values[1] will be the root of the FPTree
+ */
+    __pyx_t_9 = __pyx_v_i;
+    *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_self->values.data) + __pyx_t_9)) )) = 0.0;
+  }
+
+  /* "gb/collections/fptree.pyx":59
+ *         # values[0] == T --> where the probabilities start
+ *         # values[1] will be the root of the FPTree
+ *         self.t_pos = t_pos             # <<<<<<<<<<<<<<
+ *         self.values[0] = t_pos
+ * 
+ */
+  __pyx_v_self->t_pos = __pyx_v_t_pos;
+
+  /* "gb/collections/fptree.pyx":60
+ *         # values[1] will be the root of the FPTree
+ *         self.t_pos = t_pos
+ *         self.values[0] = t_pos             # <<<<<<<<<<<<<<
+ * 
+ *     cdef void reset(self) nogil:
+ */
+  __pyx_t_10 = 0;
+  *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_self->values.data) + __pyx_t_10)) )) = __pyx_v_t_pos;
+
+  /* "gb/collections/fptree.pyx":47
+ * cdef class FPTree:
  * 
  *     def __init__(self, size_t size):             # <<<<<<<<<<<<<<
- *         cdef size_t data_size = 1 + ((size-1) // 64)
  *         self.size = size
+ *         cdef size_t t_pos = 1
  */
 
   /* function exit code */
   __pyx_r = 0;
   goto __pyx_L0;
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_5, 1);
-  __Pyx_AddTraceback("gb.collections.bitset.BitSet.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_XDECREF(__pyx_t_5);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_6, 1);
+  __Pyx_AddTraceback("gb.collections.fptree.FPTree.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "gb/collections/bitset.pyx":19
- *         self.data = np.zeros(data_size, dtype='uint64')
+/* "gb/collections/fptree.pyx":62
+ *         self.values[0] = t_pos
  * 
- *     cdef void add(self, size_t i) nogil:             # <<<<<<<<<<<<<<
- *         self.data[i >> 6] |= ((<uint64_t>1) << (i & 63))
- * 
+ *     cdef void reset(self) nogil:             # <<<<<<<<<<<<<<
+ *         cdef size_t i
+ *         for i in range(1, <size_t>self.values.shape[0]):
  */
 
-static void __pyx_f_2gb_11collections_6bitset_6BitSet_add(struct __pyx_obj_2gb_11collections_6bitset_BitSet *__pyx_v_self, size_t __pyx_v_i) {
+static void __pyx_f_2gb_11collections_6fptree_6FPTree_reset(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self) {
+  size_t __pyx_v_i;
   size_t __pyx_t_1;
+  size_t __pyx_t_2;
+  size_t __pyx_t_3;
 
-  /* "gb/collections/bitset.pyx":20
+  /* "gb/collections/fptree.pyx":64
+ *     cdef void reset(self) nogil:
+ *         cdef size_t i
+ *         for i in range(1, <size_t>self.values.shape[0]):             # <<<<<<<<<<<<<<
+ *             self.values[i] = 0.0
  * 
- *     cdef void add(self, size_t i) nogil:
- *         self.data[i >> 6] |= ((<uint64_t>1) << (i & 63))             # <<<<<<<<<<<<<<
- * 
- *     def _add(self, size_t i):
  */
-  __pyx_t_1 = (__pyx_v_i >> 6);
-  *((uint64_t *) ( /* dim=0 */ ((char *) (((uint64_t *) __pyx_v_self->data.data) + __pyx_t_1)) )) |= (((uint64_t)1) << (__pyx_v_i & 63));
+  __pyx_t_1 = ((size_t)(__pyx_v_self->values.shape[0]));
+  for (__pyx_t_2 = 1; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
+    __pyx_v_i = __pyx_t_2;
 
-  /* "gb/collections/bitset.pyx":19
- *         self.data = np.zeros(data_size, dtype='uint64')
+    /* "gb/collections/fptree.pyx":65
+ *         cdef size_t i
+ *         for i in range(1, <size_t>self.values.shape[0]):
+ *             self.values[i] = 0.0             # <<<<<<<<<<<<<<
  * 
- *     cdef void add(self, size_t i) nogil:             # <<<<<<<<<<<<<<
- *         self.data[i >> 6] |= ((<uint64_t>1) << (i & 63))
+ *     def _reset(self):
+ */
+    __pyx_t_3 = __pyx_v_i;
+    *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_self->values.data) + __pyx_t_3)) )) = 0.0;
+  }
+
+  /* "gb/collections/fptree.pyx":62
+ *         self.values[0] = t_pos
  * 
+ *     cdef void reset(self) nogil:             # <<<<<<<<<<<<<<
+ *         cdef size_t i
+ *         for i in range(1, <size_t>self.values.shape[0]):
  */
 
   /* function exit code */
 }
 
-/* "gb/collections/bitset.pyx":22
- *         self.data[i >> 6] |= ((<uint64_t>1) << (i & 63))
+/* "gb/collections/fptree.pyx":67
+ *             self.values[i] = 0.0
  * 
- *     def _add(self, size_t i):             # <<<<<<<<<<<<<<
- *         self.add(i)
+ *     def _reset(self):             # <<<<<<<<<<<<<<
+ *         self.reset()
  * 
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_2gb_11collections_6bitset_6BitSet_3_add(PyObject *__pyx_v_self, PyObject *__pyx_arg_i); /*proto*/
-static PyObject *__pyx_pw_2gb_11collections_6bitset_6BitSet_3_add(PyObject *__pyx_v_self, PyObject *__pyx_arg_i) {
-  size_t __pyx_v_i;
+static PyObject *__pyx_pw_2gb_11collections_6fptree_6FPTree_3_reset(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_2gb_11collections_6fptree_6FPTree_3_reset(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("_add (wrapper)", 0);
-  assert(__pyx_arg_i); {
-    __pyx_v_i = __Pyx_PyInt_As_size_t(__pyx_arg_i); if (unlikely((__pyx_v_i == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 22, __pyx_L3_error)
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("gb.collections.bitset.BitSet._add", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_2gb_11collections_6bitset_6BitSet_2_add(((struct __pyx_obj_2gb_11collections_6bitset_BitSet *)__pyx_v_self), ((size_t)__pyx_v_i));
+  __Pyx_RefNannySetupContext("_reset (wrapper)", 0);
+  __pyx_r = __pyx_pf_2gb_11collections_6fptree_6FPTree_2_reset(((struct __pyx_obj_2gb_11collections_6fptree_FPTree *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_2gb_11collections_6bitset_6BitSet_2_add(struct __pyx_obj_2gb_11collections_6bitset_BitSet *__pyx_v_self, size_t __pyx_v_i) {
+static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_2_reset(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("_add", 0);
+  __Pyx_RefNannySetupContext("_reset", 0);
 
-  /* "gb/collections/bitset.pyx":23
+  /* "gb/collections/fptree.pyx":68
  * 
- *     def _add(self, size_t i):
- *         self.add(i)             # <<<<<<<<<<<<<<
+ *     def _reset(self):
+ *         self.reset()             # <<<<<<<<<<<<<<
  * 
- *     cdef void remove(self, size_t i) nogil:
+ *     cdef double get_value(self, size_t i) nogil:
  */
-  ((struct __pyx_vtabstruct_2gb_11collections_6bitset_BitSet *)__pyx_v_self->__pyx_vtab)->add(__pyx_v_self, __pyx_v_i);
+  ((struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *)__pyx_v_self->__pyx_vtab)->reset(__pyx_v_self);
 
-  /* "gb/collections/bitset.pyx":22
- *         self.data[i >> 6] |= ((<uint64_t>1) << (i & 63))
+  /* "gb/collections/fptree.pyx":67
+ *             self.values[i] = 0.0
  * 
- *     def _add(self, size_t i):             # <<<<<<<<<<<<<<
- *         self.add(i)
+ *     def _reset(self):             # <<<<<<<<<<<<<<
+ *         self.reset()
  * 
  */
 
@@ -2058,126 +2158,535 @@ static PyObject *__pyx_pf_2gb_11collections_6bitset_6BitSet_2_add(struct __pyx_o
   return __pyx_r;
 }
 
-/* "gb/collections/bitset.pyx":25
- *         self.add(i)
+/* "gb/collections/fptree.pyx":70
+ *         self.reset()
  * 
- *     cdef void remove(self, size_t i) nogil:             # <<<<<<<<<<<<<<
- *         self.data[i >> 6] &= ~((<uint64_t>1) << (i & 63))
- * 
+ *     cdef double get_value(self, size_t i) nogil:             # <<<<<<<<<<<<<<
+ *         cdef size_t t_pos = self.t_pos
+ *         return self.values[i + t_pos]
  */
 
-static void __pyx_f_2gb_11collections_6bitset_6BitSet_remove(struct __pyx_obj_2gb_11collections_6bitset_BitSet *__pyx_v_self, size_t __pyx_v_i) {
+static double __pyx_f_2gb_11collections_6fptree_6FPTree_get_value(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, size_t __pyx_v_i) {
+  size_t __pyx_v_t_pos;
+  double __pyx_r;
   size_t __pyx_t_1;
 
-  /* "gb/collections/bitset.pyx":26
+  /* "gb/collections/fptree.pyx":71
  * 
- *     cdef void remove(self, size_t i) nogil:
- *         self.data[i >> 6] &= ~((<uint64_t>1) << (i & 63))             # <<<<<<<<<<<<<<
- * 
- *     def _remove(self, size_t i):
- */
-  __pyx_t_1 = (__pyx_v_i >> 6);
-  *((uint64_t *) ( /* dim=0 */ ((char *) (((uint64_t *) __pyx_v_self->data.data) + __pyx_t_1)) )) &= (~(((uint64_t)1) << (__pyx_v_i & 63)));
-
-  /* "gb/collections/bitset.pyx":25
- *         self.add(i)
- * 
- *     cdef void remove(self, size_t i) nogil:             # <<<<<<<<<<<<<<
- *         self.data[i >> 6] &= ~((<uint64_t>1) << (i & 63))
+ *     cdef double get_value(self, size_t i) nogil:
+ *         cdef size_t t_pos = self.t_pos             # <<<<<<<<<<<<<<
+ *         return self.values[i + t_pos]
  * 
  */
+  __pyx_t_1 = __pyx_v_self->t_pos;
+  __pyx_v_t_pos = __pyx_t_1;
 
-  /* function exit code */
-}
-
-/* "gb/collections/bitset.pyx":28
- *         self.data[i >> 6] &= ~((<uint64_t>1) << (i & 63))
+  /* "gb/collections/fptree.pyx":72
+ *     cdef double get_value(self, size_t i) nogil:
+ *         cdef size_t t_pos = self.t_pos
+ *         return self.values[i + t_pos]             # <<<<<<<<<<<<<<
  * 
- *     def _remove(self, size_t i):             # <<<<<<<<<<<<<<
- *         self.remove(i)
- * 
+ *     def _get_value(self, size_t i):
  */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_2gb_11collections_6bitset_6BitSet_5_remove(PyObject *__pyx_v_self, PyObject *__pyx_arg_i); /*proto*/
-static PyObject *__pyx_pw_2gb_11collections_6bitset_6BitSet_5_remove(PyObject *__pyx_v_self, PyObject *__pyx_arg_i) {
-  size_t __pyx_v_i;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("_remove (wrapper)", 0);
-  assert(__pyx_arg_i); {
-    __pyx_v_i = __Pyx_PyInt_As_size_t(__pyx_arg_i); if (unlikely((__pyx_v_i == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 28, __pyx_L3_error)
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("gb.collections.bitset.BitSet._remove", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_2gb_11collections_6bitset_6BitSet_4_remove(((struct __pyx_obj_2gb_11collections_6bitset_BitSet *)__pyx_v_self), ((size_t)__pyx_v_i));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_2gb_11collections_6bitset_6BitSet_4_remove(struct __pyx_obj_2gb_11collections_6bitset_BitSet *__pyx_v_self, size_t __pyx_v_i) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("_remove", 0);
-
-  /* "gb/collections/bitset.pyx":29
- * 
- *     def _remove(self, size_t i):
- *         self.remove(i)             # <<<<<<<<<<<<<<
- * 
- *     cdef int get(self, size_t i) nogil:
- */
-  ((struct __pyx_vtabstruct_2gb_11collections_6bitset_BitSet *)__pyx_v_self->__pyx_vtab)->remove(__pyx_v_self, __pyx_v_i);
-
-  /* "gb/collections/bitset.pyx":28
- *         self.data[i >> 6] &= ~((<uint64_t>1) << (i & 63))
- * 
- *     def _remove(self, size_t i):             # <<<<<<<<<<<<<<
- *         self.remove(i)
- * 
- */
-
-  /* function exit code */
-  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "gb/collections/bitset.pyx":31
- *         self.remove(i)
- * 
- *     cdef int get(self, size_t i) nogil:             # <<<<<<<<<<<<<<
- *         return (self.data[i >> 6] & ((<uint64_t>1) << (i & 63))) > 0
- * 
- */
-
-static int __pyx_f_2gb_11collections_6bitset_6BitSet_get(struct __pyx_obj_2gb_11collections_6bitset_BitSet *__pyx_v_self, size_t __pyx_v_i) {
-  int __pyx_r;
-  size_t __pyx_t_1;
-
-  /* "gb/collections/bitset.pyx":32
- * 
- *     cdef int get(self, size_t i) nogil:
- *         return (self.data[i >> 6] & ((<uint64_t>1) << (i & 63))) > 0             # <<<<<<<<<<<<<<
- * 
- *     def _get(self, size_t i):
- */
-  __pyx_t_1 = (__pyx_v_i >> 6);
-  __pyx_r = (((*((uint64_t *) ( /* dim=0 */ ((char *) (((uint64_t *) __pyx_v_self->data.data) + __pyx_t_1)) ))) & (((uint64_t)1) << (__pyx_v_i & 63))) > 0);
+  __pyx_t_1 = (__pyx_v_i + __pyx_v_t_pos);
+  __pyx_r = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_self->values.data) + __pyx_t_1)) )));
   goto __pyx_L0;
 
-  /* "gb/collections/bitset.pyx":31
- *         self.remove(i)
+  /* "gb/collections/fptree.pyx":70
+ *         self.reset()
  * 
- *     cdef int get(self, size_t i) nogil:             # <<<<<<<<<<<<<<
- *         return (self.data[i >> 6] & ((<uint64_t>1) << (i & 63))) > 0
+ *     cdef double get_value(self, size_t i) nogil:             # <<<<<<<<<<<<<<
+ *         cdef size_t t_pos = self.t_pos
+ *         return self.values[i + t_pos]
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
+}
+
+/* "gb/collections/fptree.pyx":74
+ *         return self.values[i + t_pos]
+ * 
+ *     def _get_value(self, size_t i):             # <<<<<<<<<<<<<<
+ *         return self.get_value(i)
+ * 
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_2gb_11collections_6fptree_6FPTree_5_get_value(PyObject *__pyx_v_self, PyObject *__pyx_arg_i); /*proto*/
+static PyObject *__pyx_pw_2gb_11collections_6fptree_6FPTree_5_get_value(PyObject *__pyx_v_self, PyObject *__pyx_arg_i) {
+  size_t __pyx_v_i;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("_get_value (wrapper)", 0);
+  assert(__pyx_arg_i); {
+    __pyx_v_i = __Pyx_PyInt_As_size_t(__pyx_arg_i); if (unlikely((__pyx_v_i == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 74, __pyx_L3_error)
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("gb.collections.fptree.FPTree._get_value", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_2gb_11collections_6fptree_6FPTree_4_get_value(((struct __pyx_obj_2gb_11collections_6fptree_FPTree *)__pyx_v_self), ((size_t)__pyx_v_i));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_4_get_value(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, size_t __pyx_v_i) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  __Pyx_RefNannySetupContext("_get_value", 0);
+
+  /* "gb/collections/fptree.pyx":75
+ * 
+ *     def _get_value(self, size_t i):
+ *         return self.get_value(i)             # <<<<<<<<<<<<<<
+ * 
+ *     cdef void set_value(self, size_t i, double value) nogil:
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble(((struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *)__pyx_v_self->__pyx_vtab)->get_value(__pyx_v_self, __pyx_v_i)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 75, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "gb/collections/fptree.pyx":74
+ *         return self.values[i + t_pos]
+ * 
+ *     def _get_value(self, size_t i):             # <<<<<<<<<<<<<<
+ *         return self.get_value(i)
+ * 
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("gb.collections.fptree.FPTree._get_value", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "gb/collections/fptree.pyx":77
+ *         return self.get_value(i)
+ * 
+ *     cdef void set_value(self, size_t i, double value) nogil:             # <<<<<<<<<<<<<<
+ *         if value < 0: value = 0
+ *         cdef size_t t_pos = self.t_pos
+ */
+
+static void __pyx_f_2gb_11collections_6fptree_6FPTree_set_value(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, size_t __pyx_v_i, double __pyx_v_value) {
+  size_t __pyx_v_t_pos;
+  size_t __pyx_v_pos;
+  int __pyx_t_1;
+  size_t __pyx_t_2;
+  size_t __pyx_t_3;
+
+  /* "gb/collections/fptree.pyx":78
+ * 
+ *     cdef void set_value(self, size_t i, double value) nogil:
+ *         if value < 0: value = 0             # <<<<<<<<<<<<<<
+ *         cdef size_t t_pos = self.t_pos
+ *         cdef size_t pos = i + t_pos
+ */
+  __pyx_t_1 = ((__pyx_v_value < 0.0) != 0);
+  if (__pyx_t_1) {
+    __pyx_v_value = 0.0;
+  }
+
+  /* "gb/collections/fptree.pyx":79
+ *     cdef void set_value(self, size_t i, double value) nogil:
+ *         if value < 0: value = 0
+ *         cdef size_t t_pos = self.t_pos             # <<<<<<<<<<<<<<
+ *         cdef size_t pos = i + t_pos
+ *         value -= self.values[pos]
+ */
+  __pyx_t_2 = __pyx_v_self->t_pos;
+  __pyx_v_t_pos = __pyx_t_2;
+
+  /* "gb/collections/fptree.pyx":80
+ *         if value < 0: value = 0
+ *         cdef size_t t_pos = self.t_pos
+ *         cdef size_t pos = i + t_pos             # <<<<<<<<<<<<<<
+ *         value -= self.values[pos]
+ *         while pos > 0:
+ */
+  __pyx_v_pos = (__pyx_v_i + __pyx_v_t_pos);
+
+  /* "gb/collections/fptree.pyx":81
+ *         cdef size_t t_pos = self.t_pos
+ *         cdef size_t pos = i + t_pos
+ *         value -= self.values[pos]             # <<<<<<<<<<<<<<
+ *         while pos > 0:
+ *             self.values[pos] += value
+ */
+  __pyx_t_2 = __pyx_v_pos;
+  __pyx_v_value = (__pyx_v_value - (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_self->values.data) + __pyx_t_2)) ))));
+
+  /* "gb/collections/fptree.pyx":82
+ *         cdef size_t pos = i + t_pos
+ *         value -= self.values[pos]
+ *         while pos > 0:             # <<<<<<<<<<<<<<
+ *             self.values[pos] += value
+ *             pos >>= 1
+ */
+  while (1) {
+    __pyx_t_1 = ((__pyx_v_pos > 0) != 0);
+    if (!__pyx_t_1) break;
+
+    /* "gb/collections/fptree.pyx":83
+ *         value -= self.values[pos]
+ *         while pos > 0:
+ *             self.values[pos] += value             # <<<<<<<<<<<<<<
+ *             pos >>= 1
+ * 
+ */
+    __pyx_t_3 = __pyx_v_pos;
+    *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_self->values.data) + __pyx_t_3)) )) += __pyx_v_value;
+
+    /* "gb/collections/fptree.pyx":84
+ *         while pos > 0:
+ *             self.values[pos] += value
+ *             pos >>= 1             # <<<<<<<<<<<<<<
+ * 
+ *     def _set_value(self, size_t i, double value):
+ */
+    __pyx_v_pos = (__pyx_v_pos >> 1);
+  }
+
+  /* "gb/collections/fptree.pyx":77
+ *         return self.get_value(i)
+ * 
+ *     cdef void set_value(self, size_t i, double value) nogil:             # <<<<<<<<<<<<<<
+ *         if value < 0: value = 0
+ *         cdef size_t t_pos = self.t_pos
+ */
+
+  /* function exit code */
+}
+
+/* "gb/collections/fptree.pyx":86
+ *             pos >>= 1
+ * 
+ *     def _set_value(self, size_t i, double value):             # <<<<<<<<<<<<<<
+ *         self.set_value(i, value)
+ * 
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_2gb_11collections_6fptree_6FPTree_7_set_value(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_2gb_11collections_6fptree_6FPTree_7_set_value(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  size_t __pyx_v_i;
+  double __pyx_v_value;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("_set_value (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_i,&__pyx_n_s_value,0};
+    PyObject* values[2] = {0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_i)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_value)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("_set_value", 1, 2, 2, 1); __PYX_ERR(0, 86, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_set_value") < 0)) __PYX_ERR(0, 86, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+    }
+    __pyx_v_i = __Pyx_PyInt_As_size_t(values[0]); if (unlikely((__pyx_v_i == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 86, __pyx_L3_error)
+    __pyx_v_value = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_value == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 86, __pyx_L3_error)
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("_set_value", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 86, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("gb.collections.fptree.FPTree._set_value", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_2gb_11collections_6fptree_6FPTree_6_set_value(((struct __pyx_obj_2gb_11collections_6fptree_FPTree *)__pyx_v_self), __pyx_v_i, __pyx_v_value);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_6_set_value(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, size_t __pyx_v_i, double __pyx_v_value) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("_set_value", 0);
+
+  /* "gb/collections/fptree.pyx":87
+ * 
+ *     def _set_value(self, size_t i, double value):
+ *         self.set_value(i, value)             # <<<<<<<<<<<<<<
+ * 
+ *     cdef size_t sample(self, double urnd) nogil:
+ */
+  ((struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *)__pyx_v_self->__pyx_vtab)->set_value(__pyx_v_self, __pyx_v_i, __pyx_v_value);
+
+  /* "gb/collections/fptree.pyx":86
+ *             pos >>= 1
+ * 
+ *     def _set_value(self, size_t i, double value):             # <<<<<<<<<<<<<<
+ *         self.set_value(i, value)
+ * 
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "gb/collections/fptree.pyx":89
+ *         self.set_value(i, value)
+ * 
+ *     cdef size_t sample(self, double urnd) nogil:             # <<<<<<<<<<<<<<
+ *         # urnd: uniformly random number between [0, tree_total]
+ *         cdef size_t t_pos = self.t_pos
+ */
+
+static size_t __pyx_f_2gb_11collections_6fptree_6FPTree_sample(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, double __pyx_v_urnd) {
+  size_t __pyx_v_t_pos;
+  size_t __pyx_v_pos;
+  size_t __pyx_r;
+  size_t __pyx_t_1;
+  int __pyx_t_2;
+  size_t __pyx_t_3;
+
+  /* "gb/collections/fptree.pyx":91
+ *     cdef size_t sample(self, double urnd) nogil:
+ *         # urnd: uniformly random number between [0, tree_total]
+ *         cdef size_t t_pos = self.t_pos             # <<<<<<<<<<<<<<
+ *         cdef size_t pos = 1
+ *         while pos < t_pos:
+ */
+  __pyx_t_1 = __pyx_v_self->t_pos;
+  __pyx_v_t_pos = __pyx_t_1;
+
+  /* "gb/collections/fptree.pyx":92
+ *         # urnd: uniformly random number between [0, tree_total]
+ *         cdef size_t t_pos = self.t_pos
+ *         cdef size_t pos = 1             # <<<<<<<<<<<<<<
+ *         while pos < t_pos:
+ *             pos <<= 1
+ */
+  __pyx_v_pos = 1;
+
+  /* "gb/collections/fptree.pyx":93
+ *         cdef size_t t_pos = self.t_pos
+ *         cdef size_t pos = 1
+ *         while pos < t_pos:             # <<<<<<<<<<<<<<
+ *             pos <<= 1
+ *             if urnd >= self.values[pos]:
+ */
+  while (1) {
+    __pyx_t_2 = ((__pyx_v_pos < __pyx_v_t_pos) != 0);
+    if (!__pyx_t_2) break;
+
+    /* "gb/collections/fptree.pyx":94
+ *         cdef size_t pos = 1
+ *         while pos < t_pos:
+ *             pos <<= 1             # <<<<<<<<<<<<<<
+ *             if urnd >= self.values[pos]:
+ *                 urnd -= self.values[pos]
+ */
+    __pyx_v_pos = (__pyx_v_pos << 1);
+
+    /* "gb/collections/fptree.pyx":95
+ *         while pos < t_pos:
+ *             pos <<= 1
+ *             if urnd >= self.values[pos]:             # <<<<<<<<<<<<<<
+ *                 urnd -= self.values[pos]
+ *                 pos += 1
+ */
+    __pyx_t_1 = __pyx_v_pos;
+    __pyx_t_2 = ((__pyx_v_urnd >= (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_self->values.data) + __pyx_t_1)) )))) != 0);
+    if (__pyx_t_2) {
+
+      /* "gb/collections/fptree.pyx":96
+ *             pos <<= 1
+ *             if urnd >= self.values[pos]:
+ *                 urnd -= self.values[pos]             # <<<<<<<<<<<<<<
+ *                 pos += 1
+ *         return pos - t_pos
+ */
+      __pyx_t_3 = __pyx_v_pos;
+      __pyx_v_urnd = (__pyx_v_urnd - (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_self->values.data) + __pyx_t_3)) ))));
+
+      /* "gb/collections/fptree.pyx":97
+ *             if urnd >= self.values[pos]:
+ *                 urnd -= self.values[pos]
+ *                 pos += 1             # <<<<<<<<<<<<<<
+ *         return pos - t_pos
+ * 
+ */
+      __pyx_v_pos = (__pyx_v_pos + 1);
+
+      /* "gb/collections/fptree.pyx":95
+ *         while pos < t_pos:
+ *             pos <<= 1
+ *             if urnd >= self.values[pos]:             # <<<<<<<<<<<<<<
+ *                 urnd -= self.values[pos]
+ *                 pos += 1
+ */
+    }
+  }
+
+  /* "gb/collections/fptree.pyx":98
+ *                 urnd -= self.values[pos]
+ *                 pos += 1
+ *         return pos - t_pos             # <<<<<<<<<<<<<<
+ * 
+ *     def _sample(self, double urnd):
+ */
+  __pyx_r = (__pyx_v_pos - __pyx_v_t_pos);
+  goto __pyx_L0;
+
+  /* "gb/collections/fptree.pyx":89
+ *         self.set_value(i, value)
+ * 
+ *     cdef size_t sample(self, double urnd) nogil:             # <<<<<<<<<<<<<<
+ *         # urnd: uniformly random number between [0, tree_total]
+ *         cdef size_t t_pos = self.t_pos
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
+}
+
+/* "gb/collections/fptree.pyx":100
+ *         return pos - t_pos
+ * 
+ *     def _sample(self, double urnd):             # <<<<<<<<<<<<<<
+ *         return self.sample(urnd)
+ * 
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_2gb_11collections_6fptree_6FPTree_9_sample(PyObject *__pyx_v_self, PyObject *__pyx_arg_urnd); /*proto*/
+static PyObject *__pyx_pw_2gb_11collections_6fptree_6FPTree_9_sample(PyObject *__pyx_v_self, PyObject *__pyx_arg_urnd) {
+  double __pyx_v_urnd;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("_sample (wrapper)", 0);
+  assert(__pyx_arg_urnd); {
+    __pyx_v_urnd = __pyx_PyFloat_AsDouble(__pyx_arg_urnd); if (unlikely((__pyx_v_urnd == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 100, __pyx_L3_error)
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("gb.collections.fptree.FPTree._sample", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_2gb_11collections_6fptree_6FPTree_8_sample(((struct __pyx_obj_2gb_11collections_6fptree_FPTree *)__pyx_v_self), ((double)__pyx_v_urnd));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_8_sample(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, double __pyx_v_urnd) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  __Pyx_RefNannySetupContext("_sample", 0);
+
+  /* "gb/collections/fptree.pyx":101
+ * 
+ *     def _sample(self, double urnd):
+ *         return self.sample(urnd)             # <<<<<<<<<<<<<<
+ * 
+ *     cdef double get_total(self) nogil:
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyInt_FromSize_t(((struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *)__pyx_v_self->__pyx_vtab)->sample(__pyx_v_self, __pyx_v_urnd)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 101, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "gb/collections/fptree.pyx":100
+ *         return pos - t_pos
+ * 
+ *     def _sample(self, double urnd):             # <<<<<<<<<<<<<<
+ *         return self.sample(urnd)
+ * 
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("gb.collections.fptree.FPTree._sample", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "gb/collections/fptree.pyx":103
+ *         return self.sample(urnd)
+ * 
+ *     cdef double get_total(self) nogil:             # <<<<<<<<<<<<<<
+ *         return self.values[1]
+ * 
+ */
+
+static double __pyx_f_2gb_11collections_6fptree_6FPTree_get_total(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self) {
+  double __pyx_r;
+  Py_ssize_t __pyx_t_1;
+
+  /* "gb/collections/fptree.pyx":104
+ * 
+ *     cdef double get_total(self) nogil:
+ *         return self.values[1]             # <<<<<<<<<<<<<<
+ * 
+ *     def _get_total(self):
+ */
+  __pyx_t_1 = 1;
+  __pyx_r = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_self->values.data) + __pyx_t_1)) )));
+  goto __pyx_L0;
+
+  /* "gb/collections/fptree.pyx":103
+ *         return self.sample(urnd)
+ * 
+ *     cdef double get_total(self) nogil:             # <<<<<<<<<<<<<<
+ *         return self.values[1]
  * 
  */
 
@@ -2186,65 +2695,55 @@ static int __pyx_f_2gb_11collections_6bitset_6BitSet_get(struct __pyx_obj_2gb_11
   return __pyx_r;
 }
 
-/* "gb/collections/bitset.pyx":34
- *         return (self.data[i >> 6] & ((<uint64_t>1) << (i & 63))) > 0
+/* "gb/collections/fptree.pyx":106
+ *         return self.values[1]
  * 
- *     def _get(self, size_t i):             # <<<<<<<<<<<<<<
- *         return self.get(i)
+ *     def _get_total(self):             # <<<<<<<<<<<<<<
+ *         return self.get_total()
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_2gb_11collections_6bitset_6BitSet_7_get(PyObject *__pyx_v_self, PyObject *__pyx_arg_i); /*proto*/
-static PyObject *__pyx_pw_2gb_11collections_6bitset_6BitSet_7_get(PyObject *__pyx_v_self, PyObject *__pyx_arg_i) {
-  size_t __pyx_v_i;
+static PyObject *__pyx_pw_2gb_11collections_6fptree_6FPTree_11_get_total(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_2gb_11collections_6fptree_6FPTree_11_get_total(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("_get (wrapper)", 0);
-  assert(__pyx_arg_i); {
-    __pyx_v_i = __Pyx_PyInt_As_size_t(__pyx_arg_i); if (unlikely((__pyx_v_i == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 34, __pyx_L3_error)
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("gb.collections.bitset.BitSet._get", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_2gb_11collections_6bitset_6BitSet_6_get(((struct __pyx_obj_2gb_11collections_6bitset_BitSet *)__pyx_v_self), ((size_t)__pyx_v_i));
+  __Pyx_RefNannySetupContext("_get_total (wrapper)", 0);
+  __pyx_r = __pyx_pf_2gb_11collections_6fptree_6FPTree_10_get_total(((struct __pyx_obj_2gb_11collections_6fptree_FPTree *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_2gb_11collections_6bitset_6BitSet_6_get(struct __pyx_obj_2gb_11collections_6bitset_BitSet *__pyx_v_self, size_t __pyx_v_i) {
+static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_10_get_total(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
-  __Pyx_RefNannySetupContext("_get", 0);
+  __Pyx_RefNannySetupContext("_get_total", 0);
 
-  /* "gb/collections/bitset.pyx":35
+  /* "gb/collections/fptree.pyx":107
  * 
- *     def _get(self, size_t i):
- *         return self.get(i)             # <<<<<<<<<<<<<<
+ *     def _get_total(self):
+ *         return self.get_total()             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_int(((struct __pyx_vtabstruct_2gb_11collections_6bitset_BitSet *)__pyx_v_self->__pyx_vtab)->get(__pyx_v_self, __pyx_v_i)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 35, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(((struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *)__pyx_v_self->__pyx_vtab)->get_total(__pyx_v_self)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 107, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "gb/collections/bitset.pyx":34
- *         return (self.data[i >> 6] & ((<uint64_t>1) << (i & 63))) > 0
+  /* "gb/collections/fptree.pyx":106
+ *         return self.values[1]
  * 
- *     def _get(self, size_t i):             # <<<<<<<<<<<<<<
- *         return self.get(i)
+ *     def _get_total(self):             # <<<<<<<<<<<<<<
+ *         return self.get_total()
  */
 
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("gb.collections.bitset.BitSet._get", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("gb.collections.fptree.FPTree._get_total", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -2255,23 +2754,23 @@ static PyObject *__pyx_pf_2gb_11collections_6bitset_6BitSet_6_get(struct __pyx_o
 /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
  *     cdef bint use_setstate
- *     state = (self.data, self.size)
+ *     state = (self.size, self.t_pos, self.values)
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_2gb_11collections_6bitset_6BitSet_9__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_2gb_11collections_6bitset_6BitSet_9__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_2gb_11collections_6fptree_6FPTree_13__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_2gb_11collections_6fptree_6FPTree_13__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__reduce_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_2gb_11collections_6bitset_6BitSet_8__reduce_cython__(((struct __pyx_obj_2gb_11collections_6bitset_BitSet *)__pyx_v_self));
+  __pyx_r = __pyx_pf_2gb_11collections_6fptree_6FPTree_12__reduce_cython__(((struct __pyx_obj_2gb_11collections_6fptree_FPTree *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_2gb_11collections_6bitset_6BitSet_8__reduce_cython__(struct __pyx_obj_2gb_11collections_6bitset_BitSet *__pyx_v_self) {
+static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_12__reduce_cython__(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self) {
   int __pyx_v_use_setstate;
   PyObject *__pyx_v_state = NULL;
   PyObject *__pyx_v__dict = NULL;
@@ -2280,54 +2779,60 @@ static PyObject *__pyx_pf_2gb_11collections_6bitset_6BitSet_8__reduce_cython__(s
   PyObject *__pyx_t_1 = NULL;
   PyObject *__pyx_t_2 = NULL;
   PyObject *__pyx_t_3 = NULL;
-  int __pyx_t_4;
+  PyObject *__pyx_t_4 = NULL;
   int __pyx_t_5;
+  int __pyx_t_6;
   __Pyx_RefNannySetupContext("__reduce_cython__", 0);
 
   /* "(tree fragment)":3
  * def __reduce_cython__(self):
  *     cdef bint use_setstate
- *     state = (self.data, self.size)             # <<<<<<<<<<<<<<
+ *     state = (self.size, self.t_pos, self.values)             # <<<<<<<<<<<<<<
  *     _dict = getattr(self, '__dict__', None)
  *     if _dict is not None:
  */
-  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_self->data, 1, (PyObject *(*)(char *)) __pyx_memview_get_nn_uint64_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn_uint64_t, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 3, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_FromSize_t(__pyx_v_self->size); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 3, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->size); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 3, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_FromSize_t(__pyx_v_self->t_pos); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 3, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 3, __pyx_L1_error)
+  __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_v_self->values, 1, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 3, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 3, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
   __Pyx_GIVEREF(__pyx_t_1);
-  PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1);
+  PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_2);
-  PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_2);
+  PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_2);
+  __Pyx_GIVEREF(__pyx_t_3);
+  PyTuple_SET_ITEM(__pyx_t_4, 2, __pyx_t_3);
   __pyx_t_1 = 0;
   __pyx_t_2 = 0;
-  __pyx_v_state = __pyx_t_3;
   __pyx_t_3 = 0;
+  __pyx_v_state = __pyx_t_4;
+  __pyx_t_4 = 0;
 
   /* "(tree fragment)":4
  *     cdef bint use_setstate
- *     state = (self.data, self.size)
+ *     state = (self.size, self.t_pos, self.values)
  *     _dict = getattr(self, '__dict__', None)             # <<<<<<<<<<<<<<
  *     if _dict is not None:
  *         state += (_dict,)
  */
-  __pyx_t_3 = __Pyx_GetAttr3(((PyObject *)__pyx_v_self), __pyx_n_s_dict, Py_None); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 4, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_v__dict = __pyx_t_3;
-  __pyx_t_3 = 0;
+  __pyx_t_4 = __Pyx_GetAttr3(((PyObject *)__pyx_v_self), __pyx_n_s_dict, Py_None); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 4, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_v__dict = __pyx_t_4;
+  __pyx_t_4 = 0;
 
   /* "(tree fragment)":5
- *     state = (self.data, self.size)
+ *     state = (self.size, self.t_pos, self.values)
  *     _dict = getattr(self, '__dict__', None)
  *     if _dict is not None:             # <<<<<<<<<<<<<<
  *         state += (_dict,)
  *         use_setstate = True
  */
-  __pyx_t_4 = (__pyx_v__dict != Py_None);
-  __pyx_t_5 = (__pyx_t_4 != 0);
-  if (__pyx_t_5) {
+  __pyx_t_5 = (__pyx_v__dict != Py_None);
+  __pyx_t_6 = (__pyx_t_5 != 0);
+  if (__pyx_t_6) {
 
     /* "(tree fragment)":6
  *     _dict = getattr(self, '__dict__', None)
@@ -2336,16 +2841,16 @@ static PyObject *__pyx_pf_2gb_11collections_6bitset_6BitSet_8__reduce_cython__(s
  *         use_setstate = True
  *     else:
  */
-    __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 6, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 6, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
     __Pyx_INCREF(__pyx_v__dict);
     __Pyx_GIVEREF(__pyx_v__dict);
-    PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_v__dict);
-    __pyx_t_2 = PyNumber_InPlaceAdd(__pyx_v_state, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 6, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __Pyx_DECREF_SET(__pyx_v_state, __pyx_t_2);
-    __pyx_t_2 = 0;
+    PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_v__dict);
+    __pyx_t_3 = PyNumber_InPlaceAdd(__pyx_v_state, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 6, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __Pyx_DECREF_SET(__pyx_v_state, __pyx_t_3);
+    __pyx_t_3 = 0;
 
     /* "(tree fragment)":7
  *     if _dict is not None:
@@ -2357,7 +2862,7 @@ static PyObject *__pyx_pf_2gb_11collections_6bitset_6BitSet_8__reduce_cython__(s
     __pyx_v_use_setstate = 1;
 
     /* "(tree fragment)":5
- *     state = (self.data, self.size)
+ *     state = (self.size, self.t_pos, self.values)
  *     _dict = getattr(self, '__dict__', None)
  *     if _dict is not None:             # <<<<<<<<<<<<<<
  *         state += (_dict,)
@@ -2371,7 +2876,7 @@ static PyObject *__pyx_pf_2gb_11collections_6bitset_6BitSet_8__reduce_cython__(s
  *     else:
  *         use_setstate = False             # <<<<<<<<<<<<<<
  *     if use_setstate:
- *         return __pyx_unpickle_BitSet, (type(self), 0xe0b4bd3, None), state
+ *         return __pyx_unpickle_FPTree, (type(self), 0xc67247b, None), state
  */
   /*else*/ {
     __pyx_v_use_setstate = 0;
@@ -2382,96 +2887,96 @@ static PyObject *__pyx_pf_2gb_11collections_6bitset_6BitSet_8__reduce_cython__(s
  *     else:
  *         use_setstate = False
  *     if use_setstate:             # <<<<<<<<<<<<<<
- *         return __pyx_unpickle_BitSet, (type(self), 0xe0b4bd3, None), state
+ *         return __pyx_unpickle_FPTree, (type(self), 0xc67247b, None), state
  *     else:
  */
-  __pyx_t_5 = (__pyx_v_use_setstate != 0);
-  if (__pyx_t_5) {
+  __pyx_t_6 = (__pyx_v_use_setstate != 0);
+  if (__pyx_t_6) {
 
     /* "(tree fragment)":11
  *         use_setstate = False
  *     if use_setstate:
- *         return __pyx_unpickle_BitSet, (type(self), 0xe0b4bd3, None), state             # <<<<<<<<<<<<<<
+ *         return __pyx_unpickle_FPTree, (type(self), 0xc67247b, None), state             # <<<<<<<<<<<<<<
  *     else:
- *         return __pyx_unpickle_BitSet, (type(self), 0xe0b4bd3, state)
+ *         return __pyx_unpickle_FPTree, (type(self), 0xc67247b, state)
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_pyx_unpickle_BitSet); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 11, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 11, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_pyx_unpickle_FPTree); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 11, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 11, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
     __Pyx_INCREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
     __Pyx_GIVEREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    PyTuple_SET_ITEM(__pyx_t_3, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    __Pyx_INCREF(__pyx_int_235621331);
-    __Pyx_GIVEREF(__pyx_int_235621331);
-    PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_int_235621331);
+    PyTuple_SET_ITEM(__pyx_t_4, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
+    __Pyx_INCREF(__pyx_int_208086139);
+    __Pyx_GIVEREF(__pyx_int_208086139);
+    PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_int_208086139);
     __Pyx_INCREF(Py_None);
     __Pyx_GIVEREF(Py_None);
-    PyTuple_SET_ITEM(__pyx_t_3, 2, Py_None);
-    __pyx_t_1 = PyTuple_New(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 11, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_GIVEREF(__pyx_t_2);
-    PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_2);
+    PyTuple_SET_ITEM(__pyx_t_4, 2, Py_None);
+    __pyx_t_2 = PyTuple_New(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 11, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
     __Pyx_GIVEREF(__pyx_t_3);
-    PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_t_3);
+    PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_3);
+    __Pyx_GIVEREF(__pyx_t_4);
+    PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_t_4);
     __Pyx_INCREF(__pyx_v_state);
     __Pyx_GIVEREF(__pyx_v_state);
-    PyTuple_SET_ITEM(__pyx_t_1, 2, __pyx_v_state);
-    __pyx_t_2 = 0;
+    PyTuple_SET_ITEM(__pyx_t_2, 2, __pyx_v_state);
     __pyx_t_3 = 0;
-    __pyx_r = __pyx_t_1;
-    __pyx_t_1 = 0;
+    __pyx_t_4 = 0;
+    __pyx_r = __pyx_t_2;
+    __pyx_t_2 = 0;
     goto __pyx_L0;
 
     /* "(tree fragment)":10
  *     else:
  *         use_setstate = False
  *     if use_setstate:             # <<<<<<<<<<<<<<
- *         return __pyx_unpickle_BitSet, (type(self), 0xe0b4bd3, None), state
+ *         return __pyx_unpickle_FPTree, (type(self), 0xc67247b, None), state
  *     else:
  */
   }
 
   /* "(tree fragment)":13
- *         return __pyx_unpickle_BitSet, (type(self), 0xe0b4bd3, None), state
+ *         return __pyx_unpickle_FPTree, (type(self), 0xc67247b, None), state
  *     else:
- *         return __pyx_unpickle_BitSet, (type(self), 0xe0b4bd3, state)             # <<<<<<<<<<<<<<
+ *         return __pyx_unpickle_FPTree, (type(self), 0xc67247b, state)             # <<<<<<<<<<<<<<
  * def __setstate_cython__(self, __pyx_state):
- *     __pyx_unpickle_BitSet__set_state(self, __pyx_state)
+ *     __pyx_unpickle_FPTree__set_state(self, __pyx_state)
  */
   /*else*/ {
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_pyx_unpickle_BitSet); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 13, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 13, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_pyx_unpickle_FPTree); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 13, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 13, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
     __Pyx_INCREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
     __Pyx_GIVEREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    PyTuple_SET_ITEM(__pyx_t_3, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    __Pyx_INCREF(__pyx_int_235621331);
-    __Pyx_GIVEREF(__pyx_int_235621331);
-    PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_int_235621331);
+    PyTuple_SET_ITEM(__pyx_t_4, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
+    __Pyx_INCREF(__pyx_int_208086139);
+    __Pyx_GIVEREF(__pyx_int_208086139);
+    PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_int_208086139);
     __Pyx_INCREF(__pyx_v_state);
     __Pyx_GIVEREF(__pyx_v_state);
-    PyTuple_SET_ITEM(__pyx_t_3, 2, __pyx_v_state);
-    __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 13, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_GIVEREF(__pyx_t_1);
-    PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
-    __Pyx_GIVEREF(__pyx_t_3);
-    PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_t_3);
-    __pyx_t_1 = 0;
-    __pyx_t_3 = 0;
-    __pyx_r = __pyx_t_2;
+    PyTuple_SET_ITEM(__pyx_t_4, 2, __pyx_v_state);
+    __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 13, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_GIVEREF(__pyx_t_2);
+    PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_2);
+    __Pyx_GIVEREF(__pyx_t_4);
+    PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_4);
     __pyx_t_2 = 0;
+    __pyx_t_4 = 0;
+    __pyx_r = __pyx_t_3;
+    __pyx_t_3 = 0;
     goto __pyx_L0;
   }
 
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
  *     cdef bint use_setstate
- *     state = (self.data, self.size)
+ *     state = (self.size, self.t_pos, self.values)
  */
 
   /* function exit code */
@@ -2479,7 +2984,8 @@ static PyObject *__pyx_pf_2gb_11collections_6bitset_6BitSet_8__reduce_cython__(s
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("gb.collections.bitset.BitSet.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_AddTraceback("gb.collections.fptree.FPTree.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_state);
@@ -2491,45 +2997,45 @@ static PyObject *__pyx_pf_2gb_11collections_6bitset_6BitSet_8__reduce_cython__(s
 
 /* "(tree fragment)":14
  *     else:
- *         return __pyx_unpickle_BitSet, (type(self), 0xe0b4bd3, state)
+ *         return __pyx_unpickle_FPTree, (type(self), 0xc67247b, state)
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
- *     __pyx_unpickle_BitSet__set_state(self, __pyx_state)
+ *     __pyx_unpickle_FPTree__set_state(self, __pyx_state)
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_2gb_11collections_6bitset_6BitSet_11__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
-static PyObject *__pyx_pw_2gb_11collections_6bitset_6BitSet_11__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pw_2gb_11collections_6fptree_6FPTree_15__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
+static PyObject *__pyx_pw_2gb_11collections_6fptree_6FPTree_15__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__setstate_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_2gb_11collections_6bitset_6BitSet_10__setstate_cython__(((struct __pyx_obj_2gb_11collections_6bitset_BitSet *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
+  __pyx_r = __pyx_pf_2gb_11collections_6fptree_6FPTree_14__setstate_cython__(((struct __pyx_obj_2gb_11collections_6fptree_FPTree *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_2gb_11collections_6bitset_6BitSet_10__setstate_cython__(struct __pyx_obj_2gb_11collections_6bitset_BitSet *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_2gb_11collections_6fptree_6FPTree_14__setstate_cython__(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("__setstate_cython__", 0);
 
   /* "(tree fragment)":15
- *         return __pyx_unpickle_BitSet, (type(self), 0xe0b4bd3, state)
+ *         return __pyx_unpickle_FPTree, (type(self), 0xc67247b, state)
  * def __setstate_cython__(self, __pyx_state):
- *     __pyx_unpickle_BitSet__set_state(self, __pyx_state)             # <<<<<<<<<<<<<<
+ *     __pyx_unpickle_FPTree__set_state(self, __pyx_state)             # <<<<<<<<<<<<<<
  */
   if (!(likely(PyTuple_CheckExact(__pyx_v___pyx_state))||((__pyx_v___pyx_state) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "tuple", Py_TYPE(__pyx_v___pyx_state)->tp_name), 0))) __PYX_ERR(1, 15, __pyx_L1_error)
-  __pyx_t_1 = __pyx_f_2gb_11collections_6bitset___pyx_unpickle_BitSet__set_state(__pyx_v_self, ((PyObject*)__pyx_v___pyx_state)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 15, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_2gb_11collections_6fptree___pyx_unpickle_FPTree__set_state(__pyx_v_self, ((PyObject*)__pyx_v___pyx_state)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 15, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "(tree fragment)":14
  *     else:
- *         return __pyx_unpickle_BitSet, (type(self), 0xe0b4bd3, state)
+ *         return __pyx_unpickle_FPTree, (type(self), 0xc67247b, state)
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
- *     __pyx_unpickle_BitSet__set_state(self, __pyx_state)
+ *     __pyx_unpickle_FPTree__set_state(self, __pyx_state)
  */
 
   /* function exit code */
@@ -2537,7 +3043,7 @@ static PyObject *__pyx_pf_2gb_11collections_6bitset_6BitSet_10__setstate_cython_
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("gb.collections.bitset.BitSet.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("gb.collections.fptree.FPTree.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -2546,21 +3052,21 @@ static PyObject *__pyx_pf_2gb_11collections_6bitset_6BitSet_10__setstate_cython_
 }
 
 /* "(tree fragment)":1
- * def __pyx_unpickle_BitSet(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
- *     if __pyx_checksum != 0xe0b4bd3:
+ * def __pyx_unpickle_FPTree(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
+ *     if __pyx_checksum != 0xc67247b:
  *         from pickle import PickleError as __pyx_PickleError
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_2gb_11collections_6bitset_1__pyx_unpickle_BitSet(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_2gb_11collections_6bitset_1__pyx_unpickle_BitSet = {"__pyx_unpickle_BitSet", (PyCFunction)__pyx_pw_2gb_11collections_6bitset_1__pyx_unpickle_BitSet, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_2gb_11collections_6bitset_1__pyx_unpickle_BitSet(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_2gb_11collections_6fptree_1__pyx_unpickle_FPTree(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_2gb_11collections_6fptree_1__pyx_unpickle_FPTree = {"__pyx_unpickle_FPTree", (PyCFunction)__pyx_pw_2gb_11collections_6fptree_1__pyx_unpickle_FPTree, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_2gb_11collections_6fptree_1__pyx_unpickle_FPTree(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v___pyx_type = 0;
   long __pyx_v___pyx_checksum;
   PyObject *__pyx_v___pyx_state = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__pyx_unpickle_BitSet (wrapper)", 0);
+  __Pyx_RefNannySetupContext("__pyx_unpickle_FPTree (wrapper)", 0);
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_pyx_type,&__pyx_n_s_pyx_checksum,&__pyx_n_s_pyx_state,0};
     PyObject* values[3] = {0,0,0};
@@ -2586,17 +3092,17 @@ static PyObject *__pyx_pw_2gb_11collections_6bitset_1__pyx_unpickle_BitSet(PyObj
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_pyx_checksum)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__pyx_unpickle_BitSet", 1, 3, 3, 1); __PYX_ERR(1, 1, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__pyx_unpickle_FPTree", 1, 3, 3, 1); __PYX_ERR(1, 1, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_pyx_state)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__pyx_unpickle_BitSet", 1, 3, 3, 2); __PYX_ERR(1, 1, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__pyx_unpickle_FPTree", 1, 3, 3, 2); __PYX_ERR(1, 1, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__pyx_unpickle_BitSet") < 0)) __PYX_ERR(1, 1, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__pyx_unpickle_FPTree") < 0)) __PYX_ERR(1, 1, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
       goto __pyx_L5_argtuple_error;
@@ -2611,20 +3117,20 @@ static PyObject *__pyx_pw_2gb_11collections_6bitset_1__pyx_unpickle_BitSet(PyObj
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__pyx_unpickle_BitSet", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 1, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__pyx_unpickle_FPTree", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 1, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("gb.collections.bitset.__pyx_unpickle_BitSet", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("gb.collections.fptree.__pyx_unpickle_FPTree", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_2gb_11collections_6bitset___pyx_unpickle_BitSet(__pyx_self, __pyx_v___pyx_type, __pyx_v___pyx_checksum, __pyx_v___pyx_state);
+  __pyx_r = __pyx_pf_2gb_11collections_6fptree___pyx_unpickle_FPTree(__pyx_self, __pyx_v___pyx_type, __pyx_v___pyx_checksum, __pyx_v___pyx_state);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_2gb_11collections_6bitset___pyx_unpickle_BitSet(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_2gb_11collections_6fptree___pyx_unpickle_FPTree(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_v___pyx_PickleError = NULL;
   PyObject *__pyx_v___pyx_result = NULL;
   PyObject *__pyx_r = NULL;
@@ -2636,23 +3142,23 @@ static PyObject *__pyx_pf_2gb_11collections_6bitset___pyx_unpickle_BitSet(CYTHON
   PyObject *__pyx_t_5 = NULL;
   PyObject *__pyx_t_6 = NULL;
   int __pyx_t_7;
-  __Pyx_RefNannySetupContext("__pyx_unpickle_BitSet", 0);
+  __Pyx_RefNannySetupContext("__pyx_unpickle_FPTree", 0);
 
   /* "(tree fragment)":2
- * def __pyx_unpickle_BitSet(__pyx_type, long __pyx_checksum, __pyx_state):
- *     if __pyx_checksum != 0xe0b4bd3:             # <<<<<<<<<<<<<<
+ * def __pyx_unpickle_FPTree(__pyx_type, long __pyx_checksum, __pyx_state):
+ *     if __pyx_checksum != 0xc67247b:             # <<<<<<<<<<<<<<
  *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xe0b4bd3 = (data, size))" % __pyx_checksum)
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xc67247b = (size, t_pos, values))" % __pyx_checksum)
  */
-  __pyx_t_1 = ((__pyx_v___pyx_checksum != 0xe0b4bd3) != 0);
+  __pyx_t_1 = ((__pyx_v___pyx_checksum != 0xc67247b) != 0);
   if (__pyx_t_1) {
 
     /* "(tree fragment)":3
- * def __pyx_unpickle_BitSet(__pyx_type, long __pyx_checksum, __pyx_state):
- *     if __pyx_checksum != 0xe0b4bd3:
+ * def __pyx_unpickle_FPTree(__pyx_type, long __pyx_checksum, __pyx_state):
+ *     if __pyx_checksum != 0xc67247b:
  *         from pickle import PickleError as __pyx_PickleError             # <<<<<<<<<<<<<<
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xe0b4bd3 = (data, size))" % __pyx_checksum)
- *     __pyx_result = BitSet.__new__(__pyx_type)
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xc67247b = (size, t_pos, values))" % __pyx_checksum)
+ *     __pyx_result = FPTree.__new__(__pyx_type)
  */
     __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 3, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
@@ -2670,15 +3176,15 @@ static PyObject *__pyx_pf_2gb_11collections_6bitset___pyx_unpickle_BitSet(CYTHON
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
     /* "(tree fragment)":4
- *     if __pyx_checksum != 0xe0b4bd3:
+ *     if __pyx_checksum != 0xc67247b:
  *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xe0b4bd3 = (data, size))" % __pyx_checksum)             # <<<<<<<<<<<<<<
- *     __pyx_result = BitSet.__new__(__pyx_type)
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xc67247b = (size, t_pos, values))" % __pyx_checksum)             # <<<<<<<<<<<<<<
+ *     __pyx_result = FPTree.__new__(__pyx_type)
  *     if __pyx_state is not None:
  */
     __pyx_t_2 = __Pyx_PyInt_From_long(__pyx_v___pyx_checksum); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 4, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = __Pyx_PyString_Format(__pyx_kp_s_Incompatible_checksums_s_vs_0xe0, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 4, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyString_Format(__pyx_kp_s_Incompatible_checksums_s_vs_0xc6, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 4, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_INCREF(__pyx_v___pyx_PickleError);
@@ -2733,21 +3239,21 @@ static PyObject *__pyx_pf_2gb_11collections_6bitset___pyx_unpickle_BitSet(CYTHON
     __PYX_ERR(1, 4, __pyx_L1_error)
 
     /* "(tree fragment)":2
- * def __pyx_unpickle_BitSet(__pyx_type, long __pyx_checksum, __pyx_state):
- *     if __pyx_checksum != 0xe0b4bd3:             # <<<<<<<<<<<<<<
+ * def __pyx_unpickle_FPTree(__pyx_type, long __pyx_checksum, __pyx_state):
+ *     if __pyx_checksum != 0xc67247b:             # <<<<<<<<<<<<<<
  *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xe0b4bd3 = (data, size))" % __pyx_checksum)
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xc67247b = (size, t_pos, values))" % __pyx_checksum)
  */
   }
 
   /* "(tree fragment)":5
  *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xe0b4bd3 = (data, size))" % __pyx_checksum)
- *     __pyx_result = BitSet.__new__(__pyx_type)             # <<<<<<<<<<<<<<
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xc67247b = (size, t_pos, values))" % __pyx_checksum)
+ *     __pyx_result = FPTree.__new__(__pyx_type)             # <<<<<<<<<<<<<<
  *     if __pyx_state is not None:
- *         __pyx_unpickle_BitSet__set_state(<BitSet> __pyx_result, __pyx_state)
+ *         __pyx_unpickle_FPTree__set_state(<FPTree> __pyx_result, __pyx_state)
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_2gb_11collections_6bitset_BitSet), __pyx_n_s_new); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_2gb_11collections_6fptree_FPTree), __pyx_n_s_new); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 5, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_6 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -2796,10 +3302,10 @@ static PyObject *__pyx_pf_2gb_11collections_6bitset___pyx_unpickle_BitSet(CYTHON
   __pyx_t_3 = 0;
 
   /* "(tree fragment)":6
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xe0b4bd3 = (data, size))" % __pyx_checksum)
- *     __pyx_result = BitSet.__new__(__pyx_type)
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xc67247b = (size, t_pos, values))" % __pyx_checksum)
+ *     __pyx_result = FPTree.__new__(__pyx_type)
  *     if __pyx_state is not None:             # <<<<<<<<<<<<<<
- *         __pyx_unpickle_BitSet__set_state(<BitSet> __pyx_result, __pyx_state)
+ *         __pyx_unpickle_FPTree__set_state(<FPTree> __pyx_result, __pyx_state)
  *     return __pyx_result
  */
   __pyx_t_1 = (__pyx_v___pyx_state != Py_None);
@@ -2807,32 +3313,32 @@ static PyObject *__pyx_pf_2gb_11collections_6bitset___pyx_unpickle_BitSet(CYTHON
   if (__pyx_t_7) {
 
     /* "(tree fragment)":7
- *     __pyx_result = BitSet.__new__(__pyx_type)
+ *     __pyx_result = FPTree.__new__(__pyx_type)
  *     if __pyx_state is not None:
- *         __pyx_unpickle_BitSet__set_state(<BitSet> __pyx_result, __pyx_state)             # <<<<<<<<<<<<<<
+ *         __pyx_unpickle_FPTree__set_state(<FPTree> __pyx_result, __pyx_state)             # <<<<<<<<<<<<<<
  *     return __pyx_result
- * cdef __pyx_unpickle_BitSet__set_state(BitSet __pyx_result, tuple __pyx_state):
+ * cdef __pyx_unpickle_FPTree__set_state(FPTree __pyx_result, tuple __pyx_state):
  */
     if (!(likely(PyTuple_CheckExact(__pyx_v___pyx_state))||((__pyx_v___pyx_state) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "tuple", Py_TYPE(__pyx_v___pyx_state)->tp_name), 0))) __PYX_ERR(1, 7, __pyx_L1_error)
-    __pyx_t_3 = __pyx_f_2gb_11collections_6bitset___pyx_unpickle_BitSet__set_state(((struct __pyx_obj_2gb_11collections_6bitset_BitSet *)__pyx_v___pyx_result), ((PyObject*)__pyx_v___pyx_state)); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 7, __pyx_L1_error)
+    __pyx_t_3 = __pyx_f_2gb_11collections_6fptree___pyx_unpickle_FPTree__set_state(((struct __pyx_obj_2gb_11collections_6fptree_FPTree *)__pyx_v___pyx_result), ((PyObject*)__pyx_v___pyx_state)); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 7, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
     /* "(tree fragment)":6
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xe0b4bd3 = (data, size))" % __pyx_checksum)
- *     __pyx_result = BitSet.__new__(__pyx_type)
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xc67247b = (size, t_pos, values))" % __pyx_checksum)
+ *     __pyx_result = FPTree.__new__(__pyx_type)
  *     if __pyx_state is not None:             # <<<<<<<<<<<<<<
- *         __pyx_unpickle_BitSet__set_state(<BitSet> __pyx_result, __pyx_state)
+ *         __pyx_unpickle_FPTree__set_state(<FPTree> __pyx_result, __pyx_state)
  *     return __pyx_result
  */
   }
 
   /* "(tree fragment)":8
  *     if __pyx_state is not None:
- *         __pyx_unpickle_BitSet__set_state(<BitSet> __pyx_result, __pyx_state)
+ *         __pyx_unpickle_FPTree__set_state(<FPTree> __pyx_result, __pyx_state)
  *     return __pyx_result             # <<<<<<<<<<<<<<
- * cdef __pyx_unpickle_BitSet__set_state(BitSet __pyx_result, tuple __pyx_state):
- *     __pyx_result.data = __pyx_state[0]; __pyx_result.size = __pyx_state[1]
+ * cdef __pyx_unpickle_FPTree__set_state(FPTree __pyx_result, tuple __pyx_state):
+ *     __pyx_result.size = __pyx_state[0]; __pyx_result.t_pos = __pyx_state[1]; __pyx_result.values = __pyx_state[2]
  */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(__pyx_v___pyx_result);
@@ -2840,8 +3346,8 @@ static PyObject *__pyx_pf_2gb_11collections_6bitset___pyx_unpickle_BitSet(CYTHON
   goto __pyx_L0;
 
   /* "(tree fragment)":1
- * def __pyx_unpickle_BitSet(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
- *     if __pyx_checksum != 0xe0b4bd3:
+ * def __pyx_unpickle_FPTree(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
+ *     if __pyx_checksum != 0xc67247b:
  *         from pickle import PickleError as __pyx_PickleError
  */
 
@@ -2852,7 +3358,7 @@ static PyObject *__pyx_pf_2gb_11collections_6bitset___pyx_unpickle_BitSet(CYTHON
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_AddTraceback("gb.collections.bitset.__pyx_unpickle_BitSet", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("gb.collections.fptree.__pyx_unpickle_FPTree", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v___pyx_PickleError);
@@ -2863,18 +3369,18 @@ static PyObject *__pyx_pf_2gb_11collections_6bitset___pyx_unpickle_BitSet(CYTHON
 }
 
 /* "(tree fragment)":9
- *         __pyx_unpickle_BitSet__set_state(<BitSet> __pyx_result, __pyx_state)
+ *         __pyx_unpickle_FPTree__set_state(<FPTree> __pyx_result, __pyx_state)
  *     return __pyx_result
- * cdef __pyx_unpickle_BitSet__set_state(BitSet __pyx_result, tuple __pyx_state):             # <<<<<<<<<<<<<<
- *     __pyx_result.data = __pyx_state[0]; __pyx_result.size = __pyx_state[1]
- *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):
+ * cdef __pyx_unpickle_FPTree__set_state(FPTree __pyx_result, tuple __pyx_state):             # <<<<<<<<<<<<<<
+ *     __pyx_result.size = __pyx_state[0]; __pyx_result.t_pos = __pyx_state[1]; __pyx_result.values = __pyx_state[2]
+ *     if len(__pyx_state) > 3 and hasattr(__pyx_result, '__dict__'):
  */
 
-static PyObject *__pyx_f_2gb_11collections_6bitset___pyx_unpickle_BitSet__set_state(struct __pyx_obj_2gb_11collections_6bitset_BitSet *__pyx_v___pyx_result, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_f_2gb_11collections_6fptree___pyx_unpickle_FPTree__set_state(struct __pyx_obj_2gb_11collections_6fptree_FPTree *__pyx_v___pyx_result, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  __Pyx_memviewslice __pyx_t_1 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  int __pyx_t_2;
+  size_t __pyx_t_1;
+  __Pyx_memviewslice __pyx_t_2 = { 0, 0, { 0 }, { 0 }, { 0 } };
   int __pyx_t_3;
   Py_ssize_t __pyx_t_4;
   int __pyx_t_5;
@@ -2883,44 +3389,50 @@ static PyObject *__pyx_f_2gb_11collections_6bitset___pyx_unpickle_BitSet__set_st
   PyObject *__pyx_t_8 = NULL;
   PyObject *__pyx_t_9 = NULL;
   PyObject *__pyx_t_10 = NULL;
-  __Pyx_RefNannySetupContext("__pyx_unpickle_BitSet__set_state", 0);
+  __Pyx_RefNannySetupContext("__pyx_unpickle_FPTree__set_state", 0);
 
   /* "(tree fragment)":10
  *     return __pyx_result
- * cdef __pyx_unpickle_BitSet__set_state(BitSet __pyx_result, tuple __pyx_state):
- *     __pyx_result.data = __pyx_state[0]; __pyx_result.size = __pyx_state[1]             # <<<<<<<<<<<<<<
- *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):
- *         __pyx_result.__dict__.update(__pyx_state[2])
+ * cdef __pyx_unpickle_FPTree__set_state(FPTree __pyx_result, tuple __pyx_state):
+ *     __pyx_result.size = __pyx_state[0]; __pyx_result.t_pos = __pyx_state[1]; __pyx_result.values = __pyx_state[2]             # <<<<<<<<<<<<<<
+ *     if len(__pyx_state) > 3 and hasattr(__pyx_result, '__dict__'):
+ *         __pyx_result.__dict__.update(__pyx_state[3])
  */
   if (unlikely(__pyx_v___pyx_state == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(1, 10, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_dc_nn_uint64_t(PyTuple_GET_ITEM(__pyx_v___pyx_state, 0));
-  if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(1, 10, __pyx_L1_error)
-  __PYX_XDEC_MEMVIEW(&__pyx_v___pyx_result->data, 0);
-  __pyx_v___pyx_result->data = __pyx_t_1;
-  __pyx_t_1.memview = NULL;
-  __pyx_t_1.data = NULL;
+  __pyx_t_1 = __Pyx_PyInt_As_size_t(PyTuple_GET_ITEM(__pyx_v___pyx_state, 0)); if (unlikely((__pyx_t_1 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(1, 10, __pyx_L1_error)
+  __pyx_v___pyx_result->size = __pyx_t_1;
   if (unlikely(__pyx_v___pyx_state == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(1, 10, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_PyInt_As_int(PyTuple_GET_ITEM(__pyx_v___pyx_state, 1)); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 10, __pyx_L1_error)
-  __pyx_v___pyx_result->size = __pyx_t_2;
+  __pyx_t_1 = __Pyx_PyInt_As_size_t(PyTuple_GET_ITEM(__pyx_v___pyx_state, 1)); if (unlikely((__pyx_t_1 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(1, 10, __pyx_L1_error)
+  __pyx_v___pyx_result->t_pos = __pyx_t_1;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 10, __pyx_L1_error)
+  }
+  __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(PyTuple_GET_ITEM(__pyx_v___pyx_state, 2));
+  if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(1, 10, __pyx_L1_error)
+  __PYX_XDEC_MEMVIEW(&__pyx_v___pyx_result->values, 0);
+  __pyx_v___pyx_result->values = __pyx_t_2;
+  __pyx_t_2.memview = NULL;
+  __pyx_t_2.data = NULL;
 
   /* "(tree fragment)":11
- * cdef __pyx_unpickle_BitSet__set_state(BitSet __pyx_result, tuple __pyx_state):
- *     __pyx_result.data = __pyx_state[0]; __pyx_result.size = __pyx_state[1]
- *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
- *         __pyx_result.__dict__.update(__pyx_state[2])
+ * cdef __pyx_unpickle_FPTree__set_state(FPTree __pyx_result, tuple __pyx_state):
+ *     __pyx_result.size = __pyx_state[0]; __pyx_result.t_pos = __pyx_state[1]; __pyx_result.values = __pyx_state[2]
+ *     if len(__pyx_state) > 3 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
+ *         __pyx_result.__dict__.update(__pyx_state[3])
  */
   if (unlikely(__pyx_v___pyx_state == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
     __PYX_ERR(1, 11, __pyx_L1_error)
   }
   __pyx_t_4 = PyTuple_GET_SIZE(__pyx_v___pyx_state); if (unlikely(__pyx_t_4 == -1)) __PYX_ERR(1, 11, __pyx_L1_error)
-  __pyx_t_5 = ((__pyx_t_4 > 2) != 0);
+  __pyx_t_5 = ((__pyx_t_4 > 3) != 0);
   if (__pyx_t_5) {
   } else {
     __pyx_t_3 = __pyx_t_5;
@@ -2933,9 +3445,9 @@ static PyObject *__pyx_f_2gb_11collections_6bitset___pyx_unpickle_BitSet__set_st
   if (__pyx_t_3) {
 
     /* "(tree fragment)":12
- *     __pyx_result.data = __pyx_state[0]; __pyx_result.size = __pyx_state[1]
- *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):
- *         __pyx_result.__dict__.update(__pyx_state[2])             # <<<<<<<<<<<<<<
+ *     __pyx_result.size = __pyx_state[0]; __pyx_result.t_pos = __pyx_state[1]; __pyx_result.values = __pyx_state[2]
+ *     if len(__pyx_state) > 3 and hasattr(__pyx_result, '__dict__'):
+ *         __pyx_result.__dict__.update(__pyx_state[3])             # <<<<<<<<<<<<<<
  */
     __pyx_t_8 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v___pyx_result), __pyx_n_s_dict); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 12, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
@@ -2957,12 +3469,12 @@ static PyObject *__pyx_f_2gb_11collections_6bitset___pyx_unpickle_BitSet__set_st
       }
     }
     if (!__pyx_t_8) {
-      __pyx_t_7 = __Pyx_PyObject_CallOneArg(__pyx_t_9, PyTuple_GET_ITEM(__pyx_v___pyx_state, 2)); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 12, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyObject_CallOneArg(__pyx_t_9, PyTuple_GET_ITEM(__pyx_v___pyx_state, 3)); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 12, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
     } else {
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_9)) {
-        PyObject *__pyx_temp[2] = {__pyx_t_8, PyTuple_GET_ITEM(__pyx_v___pyx_state, 2)};
+        PyObject *__pyx_temp[2] = {__pyx_t_8, PyTuple_GET_ITEM(__pyx_v___pyx_state, 3)};
         __pyx_t_7 = __Pyx_PyFunction_FastCall(__pyx_t_9, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 12, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
         __Pyx_GOTREF(__pyx_t_7);
@@ -2970,7 +3482,7 @@ static PyObject *__pyx_f_2gb_11collections_6bitset___pyx_unpickle_BitSet__set_st
       #endif
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_9)) {
-        PyObject *__pyx_temp[2] = {__pyx_t_8, PyTuple_GET_ITEM(__pyx_v___pyx_state, 2)};
+        PyObject *__pyx_temp[2] = {__pyx_t_8, PyTuple_GET_ITEM(__pyx_v___pyx_state, 3)};
         __pyx_t_7 = __Pyx_PyCFunction_FastCall(__pyx_t_9, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 12, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
         __Pyx_GOTREF(__pyx_t_7);
@@ -2980,9 +3492,9 @@ static PyObject *__pyx_f_2gb_11collections_6bitset___pyx_unpickle_BitSet__set_st
         __pyx_t_10 = PyTuple_New(1+1); if (unlikely(!__pyx_t_10)) __PYX_ERR(1, 12, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_10);
         __Pyx_GIVEREF(__pyx_t_8); PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_t_8); __pyx_t_8 = NULL;
-        __Pyx_INCREF(PyTuple_GET_ITEM(__pyx_v___pyx_state, 2));
-        __Pyx_GIVEREF(PyTuple_GET_ITEM(__pyx_v___pyx_state, 2));
-        PyTuple_SET_ITEM(__pyx_t_10, 0+1, PyTuple_GET_ITEM(__pyx_v___pyx_state, 2));
+        __Pyx_INCREF(PyTuple_GET_ITEM(__pyx_v___pyx_state, 3));
+        __Pyx_GIVEREF(PyTuple_GET_ITEM(__pyx_v___pyx_state, 3));
+        PyTuple_SET_ITEM(__pyx_t_10, 0+1, PyTuple_GET_ITEM(__pyx_v___pyx_state, 3));
         __pyx_t_7 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_t_10, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 12, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
         __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
@@ -2992,31 +3504,31 @@ static PyObject *__pyx_f_2gb_11collections_6bitset___pyx_unpickle_BitSet__set_st
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
     /* "(tree fragment)":11
- * cdef __pyx_unpickle_BitSet__set_state(BitSet __pyx_result, tuple __pyx_state):
- *     __pyx_result.data = __pyx_state[0]; __pyx_result.size = __pyx_state[1]
- *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
- *         __pyx_result.__dict__.update(__pyx_state[2])
+ * cdef __pyx_unpickle_FPTree__set_state(FPTree __pyx_result, tuple __pyx_state):
+ *     __pyx_result.size = __pyx_state[0]; __pyx_result.t_pos = __pyx_state[1]; __pyx_result.values = __pyx_state[2]
+ *     if len(__pyx_state) > 3 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
+ *         __pyx_result.__dict__.update(__pyx_state[3])
  */
   }
 
   /* "(tree fragment)":9
- *         __pyx_unpickle_BitSet__set_state(<BitSet> __pyx_result, __pyx_state)
+ *         __pyx_unpickle_FPTree__set_state(<FPTree> __pyx_result, __pyx_state)
  *     return __pyx_result
- * cdef __pyx_unpickle_BitSet__set_state(BitSet __pyx_result, tuple __pyx_state):             # <<<<<<<<<<<<<<
- *     __pyx_result.data = __pyx_state[0]; __pyx_result.size = __pyx_state[1]
- *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):
+ * cdef __pyx_unpickle_FPTree__set_state(FPTree __pyx_result, tuple __pyx_state):             # <<<<<<<<<<<<<<
+ *     __pyx_result.size = __pyx_state[0]; __pyx_result.t_pos = __pyx_state[1]; __pyx_result.values = __pyx_state[2]
+ *     if len(__pyx_state) > 3 and hasattr(__pyx_result, '__dict__'):
  */
 
   /* function exit code */
   __pyx_r = Py_None; __Pyx_INCREF(Py_None);
   goto __pyx_L0;
   __pyx_L1_error:;
-  __PYX_XDEC_MEMVIEW(&__pyx_t_1, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_2, 1);
   __Pyx_XDECREF(__pyx_t_7);
   __Pyx_XDECREF(__pyx_t_8);
   __Pyx_XDECREF(__pyx_t_9);
   __Pyx_XDECREF(__pyx_t_10);
-  __Pyx_AddTraceback("gb.collections.bitset.__pyx_unpickle_BitSet__set_state", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("gb.collections.fptree.__pyx_unpickle_FPTree__set_state", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -15833,10 +16345,10 @@ static PyObject *__pyx_unpickle_Enum__set_state(struct __pyx_MemviewEnum_obj *__
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
-static struct __pyx_vtabstruct_2gb_11collections_6bitset_BitSet __pyx_vtable_2gb_11collections_6bitset_BitSet;
+static struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree __pyx_vtable_2gb_11collections_6fptree_FPTree;
 
-static PyObject *__pyx_tp_new_2gb_11collections_6bitset_BitSet(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
-  struct __pyx_obj_2gb_11collections_6bitset_BitSet *p;
+static PyObject *__pyx_tp_new_2gb_11collections_6fptree_FPTree(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
+  struct __pyx_obj_2gb_11collections_6fptree_FPTree *p;
   PyObject *o;
   if (likely((t->tp_flags & Py_TPFLAGS_IS_ABSTRACT) == 0)) {
     o = (*t->tp_alloc)(t, 0);
@@ -15844,39 +16356,41 @@ static PyObject *__pyx_tp_new_2gb_11collections_6bitset_BitSet(PyTypeObject *t, 
     o = (PyObject *) PyBaseObject_Type.tp_new(t, __pyx_empty_tuple, 0);
   }
   if (unlikely(!o)) return 0;
-  p = ((struct __pyx_obj_2gb_11collections_6bitset_BitSet *)o);
-  p->__pyx_vtab = __pyx_vtabptr_2gb_11collections_6bitset_BitSet;
-  p->data.data = NULL;
-  p->data.memview = NULL;
+  p = ((struct __pyx_obj_2gb_11collections_6fptree_FPTree *)o);
+  p->__pyx_vtab = __pyx_vtabptr_2gb_11collections_6fptree_FPTree;
+  p->values.data = NULL;
+  p->values.memview = NULL;
   return o;
 }
 
-static void __pyx_tp_dealloc_2gb_11collections_6bitset_BitSet(PyObject *o) {
-  struct __pyx_obj_2gb_11collections_6bitset_BitSet *p = (struct __pyx_obj_2gb_11collections_6bitset_BitSet *)o;
+static void __pyx_tp_dealloc_2gb_11collections_6fptree_FPTree(PyObject *o) {
+  struct __pyx_obj_2gb_11collections_6fptree_FPTree *p = (struct __pyx_obj_2gb_11collections_6fptree_FPTree *)o;
   #if PY_VERSION_HEX >= 0x030400a1
   if (unlikely(PyType_HasFeature(Py_TYPE(o), Py_TPFLAGS_HAVE_FINALIZE) && Py_TYPE(o)->tp_finalize) && (!PyType_IS_GC(Py_TYPE(o)) || !_PyGC_FINALIZED(o))) {
     if (PyObject_CallFinalizerFromDealloc(o)) return;
   }
   #endif
-  __PYX_XDEC_MEMVIEW(&p->data, 1);
+  __PYX_XDEC_MEMVIEW(&p->values, 1);
   (*Py_TYPE(o)->tp_free)(o);
 }
 
-static PyMethodDef __pyx_methods_2gb_11collections_6bitset_BitSet[] = {
-  {"_add", (PyCFunction)__pyx_pw_2gb_11collections_6bitset_6BitSet_3_add, METH_O, 0},
-  {"_remove", (PyCFunction)__pyx_pw_2gb_11collections_6bitset_6BitSet_5_remove, METH_O, 0},
-  {"_get", (PyCFunction)__pyx_pw_2gb_11collections_6bitset_6BitSet_7_get, METH_O, 0},
-  {"__reduce_cython__", (PyCFunction)__pyx_pw_2gb_11collections_6bitset_6BitSet_9__reduce_cython__, METH_NOARGS, 0},
-  {"__setstate_cython__", (PyCFunction)__pyx_pw_2gb_11collections_6bitset_6BitSet_11__setstate_cython__, METH_O, 0},
+static PyMethodDef __pyx_methods_2gb_11collections_6fptree_FPTree[] = {
+  {"_reset", (PyCFunction)__pyx_pw_2gb_11collections_6fptree_6FPTree_3_reset, METH_NOARGS, 0},
+  {"_get_value", (PyCFunction)__pyx_pw_2gb_11collections_6fptree_6FPTree_5_get_value, METH_O, 0},
+  {"_set_value", (PyCFunction)__pyx_pw_2gb_11collections_6fptree_6FPTree_7_set_value, METH_VARARGS|METH_KEYWORDS, 0},
+  {"_sample", (PyCFunction)__pyx_pw_2gb_11collections_6fptree_6FPTree_9_sample, METH_O, 0},
+  {"_get_total", (PyCFunction)__pyx_pw_2gb_11collections_6fptree_6FPTree_11_get_total, METH_NOARGS, 0},
+  {"__reduce_cython__", (PyCFunction)__pyx_pw_2gb_11collections_6fptree_6FPTree_13__reduce_cython__, METH_NOARGS, 0},
+  {"__setstate_cython__", (PyCFunction)__pyx_pw_2gb_11collections_6fptree_6FPTree_15__setstate_cython__, METH_O, 0},
   {0, 0, 0, 0}
 };
 
-static PyTypeObject __pyx_type_2gb_11collections_6bitset_BitSet = {
+static PyTypeObject __pyx_type_2gb_11collections_6fptree_FPTree = {
   PyVarObject_HEAD_INIT(0, 0)
-  "gb.collections.bitset.BitSet", /*tp_name*/
-  sizeof(struct __pyx_obj_2gb_11collections_6bitset_BitSet), /*tp_basicsize*/
+  "gb.collections.fptree.FPTree", /*tp_name*/
+  sizeof(struct __pyx_obj_2gb_11collections_6fptree_FPTree), /*tp_basicsize*/
   0, /*tp_itemsize*/
-  __pyx_tp_dealloc_2gb_11collections_6bitset_BitSet, /*tp_dealloc*/
+  __pyx_tp_dealloc_2gb_11collections_6fptree_FPTree, /*tp_dealloc*/
   0, /*tp_print*/
   0, /*tp_getattr*/
   0, /*tp_setattr*/
@@ -15904,7 +16418,7 @@ static PyTypeObject __pyx_type_2gb_11collections_6bitset_BitSet = {
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
   0, /*tp_iternext*/
-  __pyx_methods_2gb_11collections_6bitset_BitSet, /*tp_methods*/
+  __pyx_methods_2gb_11collections_6fptree_FPTree, /*tp_methods*/
   0, /*tp_members*/
   0, /*tp_getset*/
   0, /*tp_base*/
@@ -15912,9 +16426,9 @@ static PyTypeObject __pyx_type_2gb_11collections_6bitset_BitSet = {
   0, /*tp_descr_get*/
   0, /*tp_descr_set*/
   0, /*tp_dictoffset*/
-  __pyx_pw_2gb_11collections_6bitset_6BitSet_1__init__, /*tp_init*/
+  __pyx_pw_2gb_11collections_6fptree_6FPTree_1__init__, /*tp_init*/
   0, /*tp_alloc*/
-  __pyx_tp_new_2gb_11collections_6bitset_BitSet, /*tp_new*/
+  __pyx_tp_new_2gb_11collections_6fptree_FPTree, /*tp_new*/
   0, /*tp_free*/
   0, /*tp_is_gc*/
   0, /*tp_bases*/
@@ -16051,7 +16565,7 @@ static PyBufferProcs __pyx_tp_as_buffer_array = {
 
 static PyTypeObject __pyx_type___pyx_array = {
   PyVarObject_HEAD_INIT(0, 0)
-  "gb.collections.bitset.array", /*tp_name*/
+  "gb.collections.fptree.array", /*tp_name*/
   sizeof(struct __pyx_array_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_array, /*tp_dealloc*/
@@ -16159,7 +16673,7 @@ static PyMethodDef __pyx_methods_Enum[] = {
 
 static PyTypeObject __pyx_type___pyx_MemviewEnum = {
   PyVarObject_HEAD_INIT(0, 0)
-  "gb.collections.bitset.Enum", /*tp_name*/
+  "gb.collections.fptree.Enum", /*tp_name*/
   sizeof(struct __pyx_MemviewEnum_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_Enum, /*tp_dealloc*/
@@ -16409,7 +16923,7 @@ static PyBufferProcs __pyx_tp_as_buffer_memoryview = {
 
 static PyTypeObject __pyx_type___pyx_memoryview = {
   PyVarObject_HEAD_INIT(0, 0)
-  "gb.collections.bitset.memoryview", /*tp_name*/
+  "gb.collections.fptree.memoryview", /*tp_name*/
   sizeof(struct __pyx_memoryview_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_memoryview, /*tp_dealloc*/
@@ -16536,7 +17050,7 @@ static struct PyGetSetDef __pyx_getsets__memoryviewslice[] = {
 
 static PyTypeObject __pyx_type___pyx_memoryviewslice = {
   PyVarObject_HEAD_INIT(0, 0)
-  "gb.collections.bitset._memoryviewslice", /*tp_name*/
+  "gb.collections.fptree._memoryviewslice", /*tp_name*/
   sizeof(struct __pyx_memoryviewslice_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc__memoryviewslice, /*tp_dealloc*/
@@ -16611,8 +17125,8 @@ static struct PyModuleDef __pyx_moduledef = {
   #else
     PyModuleDef_HEAD_INIT,
   #endif
-    "bitset",
-    0, /* m_doc */
+    "fptree",
+    __pyx_k_Fenwick_Tree_Sampling_Implement, /* m_doc */
     -1, /* m_size */
     __pyx_methods /* m_methods */,
     NULL, /* m_reload */
@@ -16630,7 +17144,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_Ellipsis, __pyx_k_Ellipsis, sizeof(__pyx_k_Ellipsis), 0, 0, 1, 1},
   {&__pyx_kp_s_Empty_shape_tuple_for_cython_arr, __pyx_k_Empty_shape_tuple_for_cython_arr, sizeof(__pyx_k_Empty_shape_tuple_for_cython_arr), 0, 0, 1, 0},
   {&__pyx_kp_s_Incompatible_checksums_s_vs_0xb0, __pyx_k_Incompatible_checksums_s_vs_0xb0, sizeof(__pyx_k_Incompatible_checksums_s_vs_0xb0), 0, 0, 1, 0},
-  {&__pyx_kp_s_Incompatible_checksums_s_vs_0xe0, __pyx_k_Incompatible_checksums_s_vs_0xe0, sizeof(__pyx_k_Incompatible_checksums_s_vs_0xe0), 0, 0, 1, 0},
+  {&__pyx_kp_s_Incompatible_checksums_s_vs_0xc6, __pyx_k_Incompatible_checksums_s_vs_0xc6, sizeof(__pyx_k_Incompatible_checksums_s_vs_0xc6), 0, 0, 1, 0},
   {&__pyx_n_s_IndexError, __pyx_k_IndexError, sizeof(__pyx_k_IndexError), 0, 0, 1, 1},
   {&__pyx_kp_s_Indirect_dimensions_not_supporte, __pyx_k_Indirect_dimensions_not_supporte, sizeof(__pyx_k_Indirect_dimensions_not_supporte), 0, 0, 1, 0},
   {&__pyx_kp_s_Invalid_mode_expected_c_or_fortr, __pyx_k_Invalid_mode_expected_c_or_fortr, sizeof(__pyx_k_Invalid_mode_expected_c_or_fortr), 0, 0, 1, 0},
@@ -16653,6 +17167,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
   {&__pyx_kp_s_contiguous_and_direct, __pyx_k_contiguous_and_direct, sizeof(__pyx_k_contiguous_and_direct), 0, 0, 1, 0},
   {&__pyx_kp_s_contiguous_and_indirect, __pyx_k_contiguous_and_indirect, sizeof(__pyx_k_contiguous_and_indirect), 0, 0, 1, 0},
+  {&__pyx_n_s_d, __pyx_k_d, sizeof(__pyx_k_d), 0, 0, 1, 1},
   {&__pyx_n_s_dict, __pyx_k_dict, sizeof(__pyx_k_dict), 0, 0, 1, 1},
   {&__pyx_n_s_dtype, __pyx_k_dtype, sizeof(__pyx_k_dtype), 0, 0, 1, 1},
   {&__pyx_n_s_dtype_is_object, __pyx_k_dtype_is_object, sizeof(__pyx_k_dtype_is_object), 0, 0, 1, 1},
@@ -16663,9 +17178,10 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_format, __pyx_k_format, sizeof(__pyx_k_format), 0, 0, 1, 1},
   {&__pyx_n_s_fortran, __pyx_k_fortran, sizeof(__pyx_k_fortran), 0, 0, 1, 1},
   {&__pyx_n_u_fortran, __pyx_k_fortran, sizeof(__pyx_k_fortran), 0, 1, 0, 1},
-  {&__pyx_n_s_gb_collections_bitset, __pyx_k_gb_collections_bitset, sizeof(__pyx_k_gb_collections_bitset), 0, 0, 1, 1},
+  {&__pyx_n_s_gb_collections_fptree, __pyx_k_gb_collections_fptree, sizeof(__pyx_k_gb_collections_fptree), 0, 0, 1, 1},
   {&__pyx_n_s_getstate, __pyx_k_getstate, sizeof(__pyx_k_getstate), 0, 0, 1, 1},
   {&__pyx_kp_s_got_differing_extents_in_dimensi, __pyx_k_got_differing_extents_in_dimensi, sizeof(__pyx_k_got_differing_extents_in_dimensi), 0, 0, 1, 0},
+  {&__pyx_n_s_i, __pyx_k_i, sizeof(__pyx_k_i), 0, 0, 1, 1},
   {&__pyx_n_s_id, __pyx_k_id, sizeof(__pyx_k_id), 0, 0, 1, 1},
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
   {&__pyx_n_s_itemsize, __pyx_k_itemsize, sizeof(__pyx_k_itemsize), 0, 0, 1, 1},
@@ -16689,8 +17205,8 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_pyx_result, __pyx_k_pyx_result, sizeof(__pyx_k_pyx_result), 0, 0, 1, 1},
   {&__pyx_n_s_pyx_state, __pyx_k_pyx_state, sizeof(__pyx_k_pyx_state), 0, 0, 1, 1},
   {&__pyx_n_s_pyx_type, __pyx_k_pyx_type, sizeof(__pyx_k_pyx_type), 0, 0, 1, 1},
-  {&__pyx_n_s_pyx_unpickle_BitSet, __pyx_k_pyx_unpickle_BitSet, sizeof(__pyx_k_pyx_unpickle_BitSet), 0, 0, 1, 1},
   {&__pyx_n_s_pyx_unpickle_Enum, __pyx_k_pyx_unpickle_Enum, sizeof(__pyx_k_pyx_unpickle_Enum), 0, 0, 1, 1},
+  {&__pyx_n_s_pyx_unpickle_FPTree, __pyx_k_pyx_unpickle_FPTree, sizeof(__pyx_k_pyx_unpickle_FPTree), 0, 0, 1, 1},
   {&__pyx_n_s_pyx_vtable, __pyx_k_pyx_vtable, sizeof(__pyx_k_pyx_vtable), 0, 0, 1, 1},
   {&__pyx_n_s_range, __pyx_k_range, sizeof(__pyx_k_range), 0, 0, 1, 1},
   {&__pyx_n_s_reduce, __pyx_k_reduce, sizeof(__pyx_k_reduce), 0, 0, 1, 1},
@@ -16709,19 +17225,19 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_stringsource, __pyx_k_stringsource, sizeof(__pyx_k_stringsource), 0, 0, 1, 0},
   {&__pyx_n_s_struct, __pyx_k_struct, sizeof(__pyx_k_struct), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
-  {&__pyx_n_s_uint64, __pyx_k_uint64, sizeof(__pyx_k_uint64), 0, 0, 1, 1},
   {&__pyx_kp_s_unable_to_allocate_array_data, __pyx_k_unable_to_allocate_array_data, sizeof(__pyx_k_unable_to_allocate_array_data), 0, 0, 1, 0},
   {&__pyx_kp_s_unable_to_allocate_shape_and_str, __pyx_k_unable_to_allocate_shape_and_str, sizeof(__pyx_k_unable_to_allocate_shape_and_str), 0, 0, 1, 0},
   {&__pyx_n_s_unpack, __pyx_k_unpack, sizeof(__pyx_k_unpack), 0, 0, 1, 1},
   {&__pyx_n_s_update, __pyx_k_update, sizeof(__pyx_k_update), 0, 0, 1, 1},
+  {&__pyx_n_s_value, __pyx_k_value, sizeof(__pyx_k_value), 0, 0, 1, 1},
   {&__pyx_n_s_zeros, __pyx_k_zeros, sizeof(__pyx_k_zeros), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static int __Pyx_InitCachedBuiltins(void) {
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 55, __pyx_L1_error)
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(1, 131, __pyx_L1_error)
   __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(1, 146, __pyx_L1_error)
   __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(1, 149, __pyx_L1_error)
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(1, 178, __pyx_L1_error)
   __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) __PYX_ERR(1, 2, __pyx_L1_error)
   __pyx_builtin_Ellipsis = __Pyx_GetBuiltinName(__pyx_n_s_Ellipsis); if (!__pyx_builtin_Ellipsis) __PYX_ERR(1, 398, __pyx_L1_error)
   __pyx_builtin_id = __Pyx_GetBuiltinName(__pyx_n_s_id); if (!__pyx_builtin_id) __PYX_ERR(1, 601, __pyx_L1_error)
@@ -16939,14 +17455,14 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple__19);
 
   /* "(tree fragment)":1
- * def __pyx_unpickle_BitSet(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
- *     if __pyx_checksum != 0xe0b4bd3:
+ * def __pyx_unpickle_FPTree(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
+ *     if __pyx_checksum != 0xc67247b:
  *         from pickle import PickleError as __pyx_PickleError
  */
   __pyx_tuple__20 = PyTuple_Pack(5, __pyx_n_s_pyx_type, __pyx_n_s_pyx_checksum, __pyx_n_s_pyx_state, __pyx_n_s_pyx_PickleError, __pyx_n_s_pyx_result); if (unlikely(!__pyx_tuple__20)) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__20);
   __Pyx_GIVEREF(__pyx_tuple__20);
-  __pyx_codeobj__21 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__20, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_pyx_unpickle_BitSet, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__21)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __pyx_codeobj__21 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__20, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_pyx_unpickle_FPTree, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__21)) __PYX_ERR(1, 1, __pyx_L1_error)
 
   /* "View.MemoryView":284
  *         return self.name
@@ -17024,7 +17540,7 @@ static int __Pyx_InitGlobals(void) {
   __pyx_int_0 = PyInt_FromLong(0); if (unlikely(!__pyx_int_0)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_1 = PyInt_FromLong(1); if (unlikely(!__pyx_int_1)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_184977713 = PyInt_FromLong(184977713L); if (unlikely(!__pyx_int_184977713)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_235621331 = PyInt_FromLong(235621331L); if (unlikely(!__pyx_int_235621331)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_208086139 = PyInt_FromLong(208086139L); if (unlikely(!__pyx_int_208086139)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_neg_1 = PyInt_FromLong(-1); if (unlikely(!__pyx_int_neg_1)) __PYX_ERR(0, 1, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
@@ -17032,11 +17548,11 @@ static int __Pyx_InitGlobals(void) {
 }
 
 #if PY_MAJOR_VERSION < 3
-PyMODINIT_FUNC initbitset(void); /*proto*/
-PyMODINIT_FUNC initbitset(void)
+PyMODINIT_FUNC initfptree(void); /*proto*/
+PyMODINIT_FUNC initfptree(void)
 #else
-PyMODINIT_FUNC PyInit_bitset(void); /*proto*/
-PyMODINIT_FUNC PyInit_bitset(void)
+PyMODINIT_FUNC PyInit_fptree(void); /*proto*/
+PyMODINIT_FUNC PyInit_fptree(void)
 #endif
 {
   PyObject *__pyx_t_1 = NULL;
@@ -17051,7 +17567,7 @@ PyMODINIT_FUNC PyInit_bitset(void)
           Py_FatalError("failed to import 'refnanny' module");
   }
   #endif
-  __Pyx_RefNannySetupContext("PyMODINIT_FUNC PyInit_bitset(void)", 0);
+  __Pyx_RefNannySetupContext("PyMODINIT_FUNC PyInit_fptree(void)", 0);
   if (__Pyx_check_binary_version() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_empty_tuple = PyTuple_New(0); if (unlikely(!__pyx_empty_tuple)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_empty_bytes = PyBytes_FromStringAndSize("", 0); if (unlikely(!__pyx_empty_bytes)) __PYX_ERR(0, 1, __pyx_L1_error)
@@ -17080,7 +17596,7 @@ PyMODINIT_FUNC PyInit_bitset(void)
   #endif
   /*--- Module creation code ---*/
   #if PY_MAJOR_VERSION < 3
-  __pyx_m = Py_InitModule4("bitset", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
+  __pyx_m = Py_InitModule4("fptree", __pyx_methods, __pyx_k_Fenwick_Tree_Sampling_Implement, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
   #else
   __pyx_m = PyModule_Create(&__pyx_moduledef);
   #endif
@@ -17098,14 +17614,14 @@ PyMODINIT_FUNC PyInit_bitset(void)
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main_gb__collections__bitset) {
+  if (__pyx_module_is_main_gb__collections__fptree) {
     if (PyObject_SetAttrString(__pyx_m, "__name__", __pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "gb.collections.bitset")) {
-      if (unlikely(PyDict_SetItemString(modules, "gb.collections.bitset", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "gb.collections.fptree")) {
+      if (unlikely(PyDict_SetItemString(modules, "gb.collections.fptree", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -17122,16 +17638,18 @@ PyMODINIT_FUNC PyInit_bitset(void)
   /*--- Variable export code ---*/
   /*--- Function export code ---*/
   /*--- Type init code ---*/
-  __pyx_vtabptr_2gb_11collections_6bitset_BitSet = &__pyx_vtable_2gb_11collections_6bitset_BitSet;
-  __pyx_vtable_2gb_11collections_6bitset_BitSet.add = (void (*)(struct __pyx_obj_2gb_11collections_6bitset_BitSet *, size_t))__pyx_f_2gb_11collections_6bitset_6BitSet_add;
-  __pyx_vtable_2gb_11collections_6bitset_BitSet.remove = (void (*)(struct __pyx_obj_2gb_11collections_6bitset_BitSet *, size_t))__pyx_f_2gb_11collections_6bitset_6BitSet_remove;
-  __pyx_vtable_2gb_11collections_6bitset_BitSet.get = (int (*)(struct __pyx_obj_2gb_11collections_6bitset_BitSet *, size_t))__pyx_f_2gb_11collections_6bitset_6BitSet_get;
-  if (PyType_Ready(&__pyx_type_2gb_11collections_6bitset_BitSet) < 0) __PYX_ERR(0, 12, __pyx_L1_error)
-  __pyx_type_2gb_11collections_6bitset_BitSet.tp_print = 0;
-  if (__Pyx_SetVtable(__pyx_type_2gb_11collections_6bitset_BitSet.tp_dict, __pyx_vtabptr_2gb_11collections_6bitset_BitSet) < 0) __PYX_ERR(0, 12, __pyx_L1_error)
-  if (PyObject_SetAttrString(__pyx_m, "BitSet", (PyObject *)&__pyx_type_2gb_11collections_6bitset_BitSet) < 0) __PYX_ERR(0, 12, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_2gb_11collections_6bitset_BitSet) < 0) __PYX_ERR(0, 12, __pyx_L1_error)
-  __pyx_ptype_2gb_11collections_6bitset_BitSet = &__pyx_type_2gb_11collections_6bitset_BitSet;
+  __pyx_vtabptr_2gb_11collections_6fptree_FPTree = &__pyx_vtable_2gb_11collections_6fptree_FPTree;
+  __pyx_vtable_2gb_11collections_6fptree_FPTree.reset = (void (*)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *))__pyx_f_2gb_11collections_6fptree_6FPTree_reset;
+  __pyx_vtable_2gb_11collections_6fptree_FPTree.set_value = (void (*)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, size_t, double))__pyx_f_2gb_11collections_6fptree_6FPTree_set_value;
+  __pyx_vtable_2gb_11collections_6fptree_FPTree.get_value = (double (*)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, size_t))__pyx_f_2gb_11collections_6fptree_6FPTree_get_value;
+  __pyx_vtable_2gb_11collections_6fptree_FPTree.sample = (size_t (*)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *, double))__pyx_f_2gb_11collections_6fptree_6FPTree_sample;
+  __pyx_vtable_2gb_11collections_6fptree_FPTree.get_total = (double (*)(struct __pyx_obj_2gb_11collections_6fptree_FPTree *))__pyx_f_2gb_11collections_6fptree_6FPTree_get_total;
+  if (PyType_Ready(&__pyx_type_2gb_11collections_6fptree_FPTree) < 0) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_type_2gb_11collections_6fptree_FPTree.tp_print = 0;
+  if (__Pyx_SetVtable(__pyx_type_2gb_11collections_6fptree_FPTree.tp_dict, __pyx_vtabptr_2gb_11collections_6fptree_FPTree) < 0) __PYX_ERR(0, 45, __pyx_L1_error)
+  if (PyObject_SetAttrString(__pyx_m, "FPTree", (PyObject *)&__pyx_type_2gb_11collections_6fptree_FPTree) < 0) __PYX_ERR(0, 45, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_2gb_11collections_6fptree_FPTree) < 0) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_ptype_2gb_11collections_6fptree_FPTree = &__pyx_type_2gb_11collections_6fptree_FPTree;
   __pyx_vtabptr_array = &__pyx_vtable_array;
   __pyx_vtable_array.get_memview = (PyObject *(*)(struct __pyx_array_obj *))__pyx_array_get_memview;
   if (PyType_Ready(&__pyx_type___pyx_array) < 0) __PYX_ERR(1, 103, __pyx_L1_error)
@@ -17174,29 +17692,29 @@ PyMODINIT_FUNC PyInit_bitset(void)
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "gb/collections/bitset.pyx":9
+  /* "gb/collections/fptree.pyx":42
  * 
  * 
  * import numpy as np             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_t_1 = __Pyx_Import(__pyx_n_s_numpy, 0, -1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 9, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_numpy, 0, -1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 42, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_1) < 0) __PYX_ERR(0, 9, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_1) < 0) __PYX_ERR(0, 42, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "(tree fragment)":1
- * def __pyx_unpickle_BitSet(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
- *     if __pyx_checksum != 0xe0b4bd3:
+ * def __pyx_unpickle_FPTree(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
+ *     if __pyx_checksum != 0xc67247b:
  *         from pickle import PickleError as __pyx_PickleError
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_2gb_11collections_6bitset_1__pyx_unpickle_BitSet, NULL, __pyx_n_s_gb_collections_bitset); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_2gb_11collections_6fptree_1__pyx_unpickle_FPTree, NULL, __pyx_n_s_gb_collections_fptree); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_pyx_unpickle_BitSet, __pyx_t_1) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_pyx_unpickle_FPTree, __pyx_t_1) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "gb/collections/bitset.pyx":1
+  /* "gb/collections/fptree.pyx":1
  * # -*- coding: utf8             # <<<<<<<<<<<<<<
  * # cython: boundscheck=False
  * # cython: cdivision=True
@@ -17366,11 +17884,11 @@ PyMODINIT_FUNC PyInit_bitset(void)
   __Pyx_XDECREF(__pyx_t_1);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init gb.collections.bitset", 0, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init gb.collections.fptree", 0, __pyx_lineno, __pyx_filename);
     }
     Py_DECREF(__pyx_m); __pyx_m = 0;
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init gb.collections.bitset");
+    PyErr_SetString(PyExc_ImportError, "init gb.collections.fptree");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
@@ -17398,6 +17916,20 @@ end:
     return (__Pyx_RefNannyAPIStruct *)r;
 }
 #endif
+
+/* GetBuiltinName */
+static PyObject *__Pyx_GetBuiltinName(PyObject *name) {
+    PyObject* result = __Pyx_PyObject_GetAttrStr(__pyx_b, name);
+    if (unlikely(!result)) {
+        PyErr_Format(PyExc_NameError,
+#if PY_MAJOR_VERSION >= 3
+            "name '%U' is not defined", name);
+#else
+            "name '%.200s' is not defined", PyString_AS_STRING(name));
+#endif
+    }
+    return result;
+}
 
 /* RaiseDoubleKeywords */
 static void __Pyx_RaiseDoubleKeywordsError(
@@ -17539,20 +18071,6 @@ static void __Pyx_RaiseArgtupleInvalid(
                  "%.200s() takes %.8s %" CYTHON_FORMAT_SSIZE_T "d positional argument%.1s (%" CYTHON_FORMAT_SSIZE_T "d given)",
                  func_name, more_or_less, num_expected,
                  (num_expected == 1) ? "" : "s", num_found);
-}
-
-/* GetBuiltinName */
-static PyObject *__Pyx_GetBuiltinName(PyObject *name) {
-    PyObject* result = __Pyx_PyObject_GetAttrStr(__pyx_b, name);
-    if (unlikely(!result)) {
-        PyErr_Format(PyExc_NameError,
-#if PY_MAJOR_VERSION >= 3
-            "name '%U' is not defined", name);
-#else
-            "name '%.200s' is not defined", PyString_AS_STRING(name));
-#endif
-    }
-    return result;
 }
 
 /* GetModuleGlobalName */
@@ -19804,37 +20322,6 @@ __pyx_capsule_create(void *p, CYTHON_UNUSED const char *sig)
     return cobj;
 }
 
-/* CIntToPy */
-        static CYTHON_INLINE PyObject* __Pyx_PyInt_From_uint64_t(uint64_t value) {
-    const uint64_t neg_one = (uint64_t) -1, const_zero = (uint64_t) 0;
-    const int is_unsigned = neg_one > const_zero;
-    if (is_unsigned) {
-        if (sizeof(uint64_t) < sizeof(long)) {
-            return PyInt_FromLong((long) value);
-        } else if (sizeof(uint64_t) <= sizeof(unsigned long)) {
-            return PyLong_FromUnsignedLong((unsigned long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(uint64_t) <= sizeof(unsigned PY_LONG_LONG)) {
-            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
-#endif
-        }
-    } else {
-        if (sizeof(uint64_t) <= sizeof(long)) {
-            return PyInt_FromLong((long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(uint64_t) <= sizeof(PY_LONG_LONG)) {
-            return PyLong_FromLongLong((PY_LONG_LONG) value);
-#endif
-        }
-    }
-    {
-        int one = 1; int little = (int)*(unsigned char *)&one;
-        unsigned char *bytes = (unsigned char *)&value;
-        return _PyLong_FromByteArray(bytes, sizeof(uint64_t),
-                                     little, !is_unsigned);
-    }
-}
-
 /* CIntFromPyVerify */
         #define __PYX_VERIFY_RETURN_INT(target_type, func_type, func_value)\
     __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 0)
@@ -19858,14 +20345,14 @@ __pyx_capsule_create(void *p, CYTHON_UNUSED const char *sig)
     }
 
 /* MemviewDtypeToObject */
-        static CYTHON_INLINE PyObject *__pyx_memview_get_nn_uint64_t(const char *itemp) {
-    return (PyObject *) __Pyx_PyInt_From_uint64_t(*(uint64_t *) itemp);
+        static CYTHON_INLINE PyObject *__pyx_memview_get_double(const char *itemp) {
+    return (PyObject *) PyFloat_FromDouble(*(double *) itemp);
 }
-static CYTHON_INLINE int __pyx_memview_set_nn_uint64_t(const char *itemp, PyObject *obj) {
-    uint64_t value = __Pyx_PyInt_As_uint64_t(obj);
-    if ((value == ((uint64_t)-1)) && PyErr_Occurred())
+static CYTHON_INLINE int __pyx_memview_set_double(const char *itemp, PyObject *obj) {
+    double value = __pyx_PyFloat_AsDouble(obj);
+    if ((value == (double)-1) && PyErr_Occurred())
         return 0;
-    *(uint64_t *) itemp = value;
+    *(double *) itemp = value;
     return 1;
 }
 
@@ -20093,7 +20580,7 @@ no_fail:
 }
 
 /* ObjectToMemviewSlice */
-        static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dc_nn_uint64_t(PyObject *obj) {
+        static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dc_double(PyObject *obj) {
     __Pyx_memviewslice result = { 0, 0, { 0 }, { 0 }, { 0 } };
     __Pyx_BufFmt_StackElem stack[1];
     int axes_specs[] = { (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_CONTIG) };
@@ -20104,7 +20591,7 @@ no_fail:
     }
     retcode = __Pyx_ValidateAndInit_memviewslice(axes_specs, __Pyx_IS_C_CONTIG,
                                                  (PyBUF_C_CONTIGUOUS | PyBUF_FORMAT | PyBUF_WRITABLE), 1,
-                                                 &__Pyx_TypeInfo_nn_uint64_t, stack,
+                                                 &__Pyx_TypeInfo_double, stack,
                                                  &result, obj);
     if (unlikely(retcode == -1))
         goto __pyx_fail;
@@ -20113,37 +20600,6 @@ __pyx_fail:
     result.memview = NULL;
     result.data = NULL;
     return result;
-}
-
-/* CIntToPy */
-        static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
-    const int neg_one = (int) -1, const_zero = (int) 0;
-    const int is_unsigned = neg_one > const_zero;
-    if (is_unsigned) {
-        if (sizeof(int) < sizeof(long)) {
-            return PyInt_FromLong((long) value);
-        } else if (sizeof(int) <= sizeof(unsigned long)) {
-            return PyLong_FromUnsignedLong((unsigned long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(int) <= sizeof(unsigned PY_LONG_LONG)) {
-            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
-#endif
-        }
-    } else {
-        if (sizeof(int) <= sizeof(long)) {
-            return PyInt_FromLong((long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(int) <= sizeof(PY_LONG_LONG)) {
-            return PyLong_FromLongLong((PY_LONG_LONG) value);
-#endif
-        }
-    }
-    {
-        int one = 1; int little = (int)*(unsigned char *)&one;
-        unsigned char *bytes = (unsigned char *)&value;
-        return _PyLong_FromByteArray(bytes, sizeof(int),
-                                     little, !is_unsigned);
-    }
 }
 
 /* CIntToPy */
@@ -20242,384 +20698,6 @@ no_fail:
     __Pyx_XDECREF(array_obj);
     __Pyx_RefNannyFinishContext();
     return new_mvs;
-}
-
-/* CIntFromPy */
-        static CYTHON_INLINE uint64_t __Pyx_PyInt_As_uint64_t(PyObject *x) {
-    const uint64_t neg_one = (uint64_t) -1, const_zero = (uint64_t) 0;
-    const int is_unsigned = neg_one > const_zero;
-#if PY_MAJOR_VERSION < 3
-    if (likely(PyInt_Check(x))) {
-        if (sizeof(uint64_t) < sizeof(long)) {
-            __PYX_VERIFY_RETURN_INT(uint64_t, long, PyInt_AS_LONG(x))
-        } else {
-            long val = PyInt_AS_LONG(x);
-            if (is_unsigned && unlikely(val < 0)) {
-                goto raise_neg_overflow;
-            }
-            return (uint64_t) val;
-        }
-    } else
-#endif
-    if (likely(PyLong_Check(x))) {
-        if (is_unsigned) {
-#if CYTHON_USE_PYLONG_INTERNALS
-            const digit* digits = ((PyLongObject*)x)->ob_digit;
-            switch (Py_SIZE(x)) {
-                case  0: return (uint64_t) 0;
-                case  1: __PYX_VERIFY_RETURN_INT(uint64_t, digit, digits[0])
-                case 2:
-                    if (8 * sizeof(uint64_t) > 1 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(uint64_t, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(uint64_t) >= 2 * PyLong_SHIFT) {
-                            return (uint64_t) (((((uint64_t)digits[1]) << PyLong_SHIFT) | (uint64_t)digits[0]));
-                        }
-                    }
-                    break;
-                case 3:
-                    if (8 * sizeof(uint64_t) > 2 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(uint64_t, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(uint64_t) >= 3 * PyLong_SHIFT) {
-                            return (uint64_t) (((((((uint64_t)digits[2]) << PyLong_SHIFT) | (uint64_t)digits[1]) << PyLong_SHIFT) | (uint64_t)digits[0]));
-                        }
-                    }
-                    break;
-                case 4:
-                    if (8 * sizeof(uint64_t) > 3 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(uint64_t, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(uint64_t) >= 4 * PyLong_SHIFT) {
-                            return (uint64_t) (((((((((uint64_t)digits[3]) << PyLong_SHIFT) | (uint64_t)digits[2]) << PyLong_SHIFT) | (uint64_t)digits[1]) << PyLong_SHIFT) | (uint64_t)digits[0]));
-                        }
-                    }
-                    break;
-            }
-#endif
-#if CYTHON_COMPILING_IN_CPYTHON
-            if (unlikely(Py_SIZE(x) < 0)) {
-                goto raise_neg_overflow;
-            }
-#else
-            {
-                int result = PyObject_RichCompareBool(x, Py_False, Py_LT);
-                if (unlikely(result < 0))
-                    return (uint64_t) -1;
-                if (unlikely(result == 1))
-                    goto raise_neg_overflow;
-            }
-#endif
-            if (sizeof(uint64_t) <= sizeof(unsigned long)) {
-                __PYX_VERIFY_RETURN_INT_EXC(uint64_t, unsigned long, PyLong_AsUnsignedLong(x))
-#ifdef HAVE_LONG_LONG
-            } else if (sizeof(uint64_t) <= sizeof(unsigned PY_LONG_LONG)) {
-                __PYX_VERIFY_RETURN_INT_EXC(uint64_t, unsigned PY_LONG_LONG, PyLong_AsUnsignedLongLong(x))
-#endif
-            }
-        } else {
-#if CYTHON_USE_PYLONG_INTERNALS
-            const digit* digits = ((PyLongObject*)x)->ob_digit;
-            switch (Py_SIZE(x)) {
-                case  0: return (uint64_t) 0;
-                case -1: __PYX_VERIFY_RETURN_INT(uint64_t, sdigit, (sdigit) (-(sdigit)digits[0]))
-                case  1: __PYX_VERIFY_RETURN_INT(uint64_t,  digit, +digits[0])
-                case -2:
-                    if (8 * sizeof(uint64_t) - 1 > 1 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(uint64_t, long, -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(uint64_t) - 1 > 2 * PyLong_SHIFT) {
-                            return (uint64_t) (((uint64_t)-1)*(((((uint64_t)digits[1]) << PyLong_SHIFT) | (uint64_t)digits[0])));
-                        }
-                    }
-                    break;
-                case 2:
-                    if (8 * sizeof(uint64_t) > 1 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(uint64_t, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(uint64_t) - 1 > 2 * PyLong_SHIFT) {
-                            return (uint64_t) ((((((uint64_t)digits[1]) << PyLong_SHIFT) | (uint64_t)digits[0])));
-                        }
-                    }
-                    break;
-                case -3:
-                    if (8 * sizeof(uint64_t) - 1 > 2 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(uint64_t, long, -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(uint64_t) - 1 > 3 * PyLong_SHIFT) {
-                            return (uint64_t) (((uint64_t)-1)*(((((((uint64_t)digits[2]) << PyLong_SHIFT) | (uint64_t)digits[1]) << PyLong_SHIFT) | (uint64_t)digits[0])));
-                        }
-                    }
-                    break;
-                case 3:
-                    if (8 * sizeof(uint64_t) > 2 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(uint64_t, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(uint64_t) - 1 > 3 * PyLong_SHIFT) {
-                            return (uint64_t) ((((((((uint64_t)digits[2]) << PyLong_SHIFT) | (uint64_t)digits[1]) << PyLong_SHIFT) | (uint64_t)digits[0])));
-                        }
-                    }
-                    break;
-                case -4:
-                    if (8 * sizeof(uint64_t) - 1 > 3 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(uint64_t, long, -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(uint64_t) - 1 > 4 * PyLong_SHIFT) {
-                            return (uint64_t) (((uint64_t)-1)*(((((((((uint64_t)digits[3]) << PyLong_SHIFT) | (uint64_t)digits[2]) << PyLong_SHIFT) | (uint64_t)digits[1]) << PyLong_SHIFT) | (uint64_t)digits[0])));
-                        }
-                    }
-                    break;
-                case 4:
-                    if (8 * sizeof(uint64_t) > 3 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(uint64_t, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(uint64_t) - 1 > 4 * PyLong_SHIFT) {
-                            return (uint64_t) ((((((((((uint64_t)digits[3]) << PyLong_SHIFT) | (uint64_t)digits[2]) << PyLong_SHIFT) | (uint64_t)digits[1]) << PyLong_SHIFT) | (uint64_t)digits[0])));
-                        }
-                    }
-                    break;
-            }
-#endif
-            if (sizeof(uint64_t) <= sizeof(long)) {
-                __PYX_VERIFY_RETURN_INT_EXC(uint64_t, long, PyLong_AsLong(x))
-#ifdef HAVE_LONG_LONG
-            } else if (sizeof(uint64_t) <= sizeof(PY_LONG_LONG)) {
-                __PYX_VERIFY_RETURN_INT_EXC(uint64_t, PY_LONG_LONG, PyLong_AsLongLong(x))
-#endif
-            }
-        }
-        {
-#if CYTHON_COMPILING_IN_PYPY && !defined(_PyLong_AsByteArray)
-            PyErr_SetString(PyExc_RuntimeError,
-                            "_PyLong_AsByteArray() not available in PyPy, cannot convert large numbers");
-#else
-            uint64_t val;
-            PyObject *v = __Pyx_PyNumber_IntOrLong(x);
- #if PY_MAJOR_VERSION < 3
-            if (likely(v) && !PyLong_Check(v)) {
-                PyObject *tmp = v;
-                v = PyNumber_Long(tmp);
-                Py_DECREF(tmp);
-            }
- #endif
-            if (likely(v)) {
-                int one = 1; int is_little = (int)*(unsigned char *)&one;
-                unsigned char *bytes = (unsigned char *)&val;
-                int ret = _PyLong_AsByteArray((PyLongObject *)v,
-                                              bytes, sizeof(val),
-                                              is_little, !is_unsigned);
-                Py_DECREF(v);
-                if (likely(!ret))
-                    return val;
-            }
-#endif
-            return (uint64_t) -1;
-        }
-    } else {
-        uint64_t val;
-        PyObject *tmp = __Pyx_PyNumber_IntOrLong(x);
-        if (!tmp) return (uint64_t) -1;
-        val = __Pyx_PyInt_As_uint64_t(tmp);
-        Py_DECREF(tmp);
-        return val;
-    }
-raise_overflow:
-    PyErr_SetString(PyExc_OverflowError,
-        "value too large to convert to uint64_t");
-    return (uint64_t) -1;
-raise_neg_overflow:
-    PyErr_SetString(PyExc_OverflowError,
-        "can't convert negative value to uint64_t");
-    return (uint64_t) -1;
-}
-
-/* CIntFromPy */
-        static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *x) {
-    const int neg_one = (int) -1, const_zero = (int) 0;
-    const int is_unsigned = neg_one > const_zero;
-#if PY_MAJOR_VERSION < 3
-    if (likely(PyInt_Check(x))) {
-        if (sizeof(int) < sizeof(long)) {
-            __PYX_VERIFY_RETURN_INT(int, long, PyInt_AS_LONG(x))
-        } else {
-            long val = PyInt_AS_LONG(x);
-            if (is_unsigned && unlikely(val < 0)) {
-                goto raise_neg_overflow;
-            }
-            return (int) val;
-        }
-    } else
-#endif
-    if (likely(PyLong_Check(x))) {
-        if (is_unsigned) {
-#if CYTHON_USE_PYLONG_INTERNALS
-            const digit* digits = ((PyLongObject*)x)->ob_digit;
-            switch (Py_SIZE(x)) {
-                case  0: return (int) 0;
-                case  1: __PYX_VERIFY_RETURN_INT(int, digit, digits[0])
-                case 2:
-                    if (8 * sizeof(int) > 1 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(int) >= 2 * PyLong_SHIFT) {
-                            return (int) (((((int)digits[1]) << PyLong_SHIFT) | (int)digits[0]));
-                        }
-                    }
-                    break;
-                case 3:
-                    if (8 * sizeof(int) > 2 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(int) >= 3 * PyLong_SHIFT) {
-                            return (int) (((((((int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0]));
-                        }
-                    }
-                    break;
-                case 4:
-                    if (8 * sizeof(int) > 3 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(int) >= 4 * PyLong_SHIFT) {
-                            return (int) (((((((((int)digits[3]) << PyLong_SHIFT) | (int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0]));
-                        }
-                    }
-                    break;
-            }
-#endif
-#if CYTHON_COMPILING_IN_CPYTHON
-            if (unlikely(Py_SIZE(x) < 0)) {
-                goto raise_neg_overflow;
-            }
-#else
-            {
-                int result = PyObject_RichCompareBool(x, Py_False, Py_LT);
-                if (unlikely(result < 0))
-                    return (int) -1;
-                if (unlikely(result == 1))
-                    goto raise_neg_overflow;
-            }
-#endif
-            if (sizeof(int) <= sizeof(unsigned long)) {
-                __PYX_VERIFY_RETURN_INT_EXC(int, unsigned long, PyLong_AsUnsignedLong(x))
-#ifdef HAVE_LONG_LONG
-            } else if (sizeof(int) <= sizeof(unsigned PY_LONG_LONG)) {
-                __PYX_VERIFY_RETURN_INT_EXC(int, unsigned PY_LONG_LONG, PyLong_AsUnsignedLongLong(x))
-#endif
-            }
-        } else {
-#if CYTHON_USE_PYLONG_INTERNALS
-            const digit* digits = ((PyLongObject*)x)->ob_digit;
-            switch (Py_SIZE(x)) {
-                case  0: return (int) 0;
-                case -1: __PYX_VERIFY_RETURN_INT(int, sdigit, (sdigit) (-(sdigit)digits[0]))
-                case  1: __PYX_VERIFY_RETURN_INT(int,  digit, +digits[0])
-                case -2:
-                    if (8 * sizeof(int) - 1 > 1 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(int, long, -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(int) - 1 > 2 * PyLong_SHIFT) {
-                            return (int) (((int)-1)*(((((int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
-                        }
-                    }
-                    break;
-                case 2:
-                    if (8 * sizeof(int) > 1 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(int) - 1 > 2 * PyLong_SHIFT) {
-                            return (int) ((((((int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
-                        }
-                    }
-                    break;
-                case -3:
-                    if (8 * sizeof(int) - 1 > 2 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(int, long, -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(int) - 1 > 3 * PyLong_SHIFT) {
-                            return (int) (((int)-1)*(((((((int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
-                        }
-                    }
-                    break;
-                case 3:
-                    if (8 * sizeof(int) > 2 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(int) - 1 > 3 * PyLong_SHIFT) {
-                            return (int) ((((((((int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
-                        }
-                    }
-                    break;
-                case -4:
-                    if (8 * sizeof(int) - 1 > 3 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(int, long, -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(int) - 1 > 4 * PyLong_SHIFT) {
-                            return (int) (((int)-1)*(((((((((int)digits[3]) << PyLong_SHIFT) | (int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
-                        }
-                    }
-                    break;
-                case 4:
-                    if (8 * sizeof(int) > 3 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(int) - 1 > 4 * PyLong_SHIFT) {
-                            return (int) ((((((((((int)digits[3]) << PyLong_SHIFT) | (int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
-                        }
-                    }
-                    break;
-            }
-#endif
-            if (sizeof(int) <= sizeof(long)) {
-                __PYX_VERIFY_RETURN_INT_EXC(int, long, PyLong_AsLong(x))
-#ifdef HAVE_LONG_LONG
-            } else if (sizeof(int) <= sizeof(PY_LONG_LONG)) {
-                __PYX_VERIFY_RETURN_INT_EXC(int, PY_LONG_LONG, PyLong_AsLongLong(x))
-#endif
-            }
-        }
-        {
-#if CYTHON_COMPILING_IN_PYPY && !defined(_PyLong_AsByteArray)
-            PyErr_SetString(PyExc_RuntimeError,
-                            "_PyLong_AsByteArray() not available in PyPy, cannot convert large numbers");
-#else
-            int val;
-            PyObject *v = __Pyx_PyNumber_IntOrLong(x);
- #if PY_MAJOR_VERSION < 3
-            if (likely(v) && !PyLong_Check(v)) {
-                PyObject *tmp = v;
-                v = PyNumber_Long(tmp);
-                Py_DECREF(tmp);
-            }
- #endif
-            if (likely(v)) {
-                int one = 1; int is_little = (int)*(unsigned char *)&one;
-                unsigned char *bytes = (unsigned char *)&val;
-                int ret = _PyLong_AsByteArray((PyLongObject *)v,
-                                              bytes, sizeof(val),
-                                              is_little, !is_unsigned);
-                Py_DECREF(v);
-                if (likely(!ret))
-                    return val;
-            }
-#endif
-            return (int) -1;
-        }
-    } else {
-        int val;
-        PyObject *tmp = __Pyx_PyNumber_IntOrLong(x);
-        if (!tmp) return (int) -1;
-        val = __Pyx_PyInt_As_int(tmp);
-        Py_DECREF(tmp);
-        return val;
-    }
-raise_overflow:
-    PyErr_SetString(PyExc_OverflowError,
-        "value too large to convert to int");
-    return (int) -1;
-raise_neg_overflow:
-    PyErr_SetString(PyExc_OverflowError,
-        "can't convert negative value to int");
-    return (int) -1;
 }
 
 /* CIntFromPy */
@@ -20998,6 +21076,226 @@ raise_neg_overflow:
     PyErr_SetString(PyExc_OverflowError,
         "can't convert negative value to long");
     return (long) -1;
+}
+
+/* CIntFromPy */
+        static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *x) {
+    const int neg_one = (int) -1, const_zero = (int) 0;
+    const int is_unsigned = neg_one > const_zero;
+#if PY_MAJOR_VERSION < 3
+    if (likely(PyInt_Check(x))) {
+        if (sizeof(int) < sizeof(long)) {
+            __PYX_VERIFY_RETURN_INT(int, long, PyInt_AS_LONG(x))
+        } else {
+            long val = PyInt_AS_LONG(x);
+            if (is_unsigned && unlikely(val < 0)) {
+                goto raise_neg_overflow;
+            }
+            return (int) val;
+        }
+    } else
+#endif
+    if (likely(PyLong_Check(x))) {
+        if (is_unsigned) {
+#if CYTHON_USE_PYLONG_INTERNALS
+            const digit* digits = ((PyLongObject*)x)->ob_digit;
+            switch (Py_SIZE(x)) {
+                case  0: return (int) 0;
+                case  1: __PYX_VERIFY_RETURN_INT(int, digit, digits[0])
+                case 2:
+                    if (8 * sizeof(int) > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(int) >= 2 * PyLong_SHIFT) {
+                            return (int) (((((int)digits[1]) << PyLong_SHIFT) | (int)digits[0]));
+                        }
+                    }
+                    break;
+                case 3:
+                    if (8 * sizeof(int) > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(int) >= 3 * PyLong_SHIFT) {
+                            return (int) (((((((int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0]));
+                        }
+                    }
+                    break;
+                case 4:
+                    if (8 * sizeof(int) > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(int) >= 4 * PyLong_SHIFT) {
+                            return (int) (((((((((int)digits[3]) << PyLong_SHIFT) | (int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0]));
+                        }
+                    }
+                    break;
+            }
+#endif
+#if CYTHON_COMPILING_IN_CPYTHON
+            if (unlikely(Py_SIZE(x) < 0)) {
+                goto raise_neg_overflow;
+            }
+#else
+            {
+                int result = PyObject_RichCompareBool(x, Py_False, Py_LT);
+                if (unlikely(result < 0))
+                    return (int) -1;
+                if (unlikely(result == 1))
+                    goto raise_neg_overflow;
+            }
+#endif
+            if (sizeof(int) <= sizeof(unsigned long)) {
+                __PYX_VERIFY_RETURN_INT_EXC(int, unsigned long, PyLong_AsUnsignedLong(x))
+#ifdef HAVE_LONG_LONG
+            } else if (sizeof(int) <= sizeof(unsigned PY_LONG_LONG)) {
+                __PYX_VERIFY_RETURN_INT_EXC(int, unsigned PY_LONG_LONG, PyLong_AsUnsignedLongLong(x))
+#endif
+            }
+        } else {
+#if CYTHON_USE_PYLONG_INTERNALS
+            const digit* digits = ((PyLongObject*)x)->ob_digit;
+            switch (Py_SIZE(x)) {
+                case  0: return (int) 0;
+                case -1: __PYX_VERIFY_RETURN_INT(int, sdigit, (sdigit) (-(sdigit)digits[0]))
+                case  1: __PYX_VERIFY_RETURN_INT(int,  digit, +digits[0])
+                case -2:
+                    if (8 * sizeof(int) - 1 > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(int, long, -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(int) - 1 > 2 * PyLong_SHIFT) {
+                            return (int) (((int)-1)*(((((int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
+                        }
+                    }
+                    break;
+                case 2:
+                    if (8 * sizeof(int) > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(int) - 1 > 2 * PyLong_SHIFT) {
+                            return (int) ((((((int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
+                        }
+                    }
+                    break;
+                case -3:
+                    if (8 * sizeof(int) - 1 > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(int, long, -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(int) - 1 > 3 * PyLong_SHIFT) {
+                            return (int) (((int)-1)*(((((((int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
+                        }
+                    }
+                    break;
+                case 3:
+                    if (8 * sizeof(int) > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(int) - 1 > 3 * PyLong_SHIFT) {
+                            return (int) ((((((((int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
+                        }
+                    }
+                    break;
+                case -4:
+                    if (8 * sizeof(int) - 1 > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(int, long, -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(int) - 1 > 4 * PyLong_SHIFT) {
+                            return (int) (((int)-1)*(((((((((int)digits[3]) << PyLong_SHIFT) | (int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
+                        }
+                    }
+                    break;
+                case 4:
+                    if (8 * sizeof(int) > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(int) - 1 > 4 * PyLong_SHIFT) {
+                            return (int) ((((((((((int)digits[3]) << PyLong_SHIFT) | (int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
+                        }
+                    }
+                    break;
+            }
+#endif
+            if (sizeof(int) <= sizeof(long)) {
+                __PYX_VERIFY_RETURN_INT_EXC(int, long, PyLong_AsLong(x))
+#ifdef HAVE_LONG_LONG
+            } else if (sizeof(int) <= sizeof(PY_LONG_LONG)) {
+                __PYX_VERIFY_RETURN_INT_EXC(int, PY_LONG_LONG, PyLong_AsLongLong(x))
+#endif
+            }
+        }
+        {
+#if CYTHON_COMPILING_IN_PYPY && !defined(_PyLong_AsByteArray)
+            PyErr_SetString(PyExc_RuntimeError,
+                            "_PyLong_AsByteArray() not available in PyPy, cannot convert large numbers");
+#else
+            int val;
+            PyObject *v = __Pyx_PyNumber_IntOrLong(x);
+ #if PY_MAJOR_VERSION < 3
+            if (likely(v) && !PyLong_Check(v)) {
+                PyObject *tmp = v;
+                v = PyNumber_Long(tmp);
+                Py_DECREF(tmp);
+            }
+ #endif
+            if (likely(v)) {
+                int one = 1; int is_little = (int)*(unsigned char *)&one;
+                unsigned char *bytes = (unsigned char *)&val;
+                int ret = _PyLong_AsByteArray((PyLongObject *)v,
+                                              bytes, sizeof(val),
+                                              is_little, !is_unsigned);
+                Py_DECREF(v);
+                if (likely(!ret))
+                    return val;
+            }
+#endif
+            return (int) -1;
+        }
+    } else {
+        int val;
+        PyObject *tmp = __Pyx_PyNumber_IntOrLong(x);
+        if (!tmp) return (int) -1;
+        val = __Pyx_PyInt_As_int(tmp);
+        Py_DECREF(tmp);
+        return val;
+    }
+raise_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "value too large to convert to int");
+    return (int) -1;
+raise_neg_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "can't convert negative value to int");
+    return (int) -1;
+}
+
+/* CIntToPy */
+        static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
+    const int neg_one = (int) -1, const_zero = (int) 0;
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(int) < sizeof(long)) {
+            return PyInt_FromLong((long) value);
+        } else if (sizeof(int) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(int) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(int) <= sizeof(long)) {
+            return PyInt_FromLong((long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(int) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+#endif
+        }
+    }
+    {
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&value;
+        return _PyLong_FromByteArray(bytes, sizeof(int),
+                                     little, !is_unsigned);
+    }
 }
 
 /* CIntFromPy */

@@ -18,7 +18,6 @@ def save_model(filename, granger_model):
                         Alpha_indptr=granger_model.Alpha_.indptr,
                         Alpha_shape=granger_model.Alpha_.shape,
                         alpha_p=granger_model.alpha_p,
-                        back_=granger_model.back_,
                         beta_=granger_model.beta_,
                         burn_in=granger_model.burn_in,
                         mu_=granger_model.mu_,
@@ -34,7 +33,6 @@ def load_model(filename):
                                  loader['Alpha_indptr']),
                                  shape=loader['Alpha_shape'])
     model.alpha_p = loader['alpha_p']
-    model.back_ = loader['back_']
     model.beta_ = loader['beta_']
     model.burn_in = loader['burn_in']
     model.mu_ = loader['mu_']

@@ -69,7 +69,7 @@ def get_extensions():
             extra_compile_args = ['-msse', '-msse2', '-mfpmath=sse']
             extension = Extension(module, ext_files,
                                   include_dirs=include_dirs,
-                                  # language='c++',
+                                  language='c++',
                                   extra_compile_args=extra_compile_args)
             extensions.append(extension)
 
