@@ -100,8 +100,8 @@ def fit(Timestamps all_stamps, SloppyCounter sloppy, double alpha_prior,
     cdef size_t[::1] causes
     cdef int[::1] num_background = np.zeros(n_proc, dtype='i')
 
+    printf("Worker %lu starting\n", worker_id)
     with nogil:
-        printf("Worker %lu starting\n", worker_id)
         do_work(all_stamps, sloppy, sampler, kernel, n_iter, worker_id,
                 workload)
 
@@ -123,8 +123,7 @@ def fit(Timestamps all_stamps, SloppyCounter sloppy, double alpha_prior,
             for b in range(n_proc):
                 if Alpha[a].count(b) != 0:
                     Beta[a][b] = kernel.get_beta_rates()[b]
-
-        printf("Worker %lu done\n", worker_id)
+    printf("Worker %lu done\n", worker_id)
 
     return Alpha, np.asanyarray(poisson.get_mu_rates()), Beta, \
         np.asanyarray(num_background), curr_state

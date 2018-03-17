@@ -58,8 +58,6 @@ cdef class BaseSampler(AbstractSampler):
             b = causes[i]
             if b != self.timestamps.num_proc():
                 self.nab[b] += 1
-
-        # self.sloppy.update_counts(self.id)
         self.denominators = self.sloppy.get_local_counts(self.id)
 
     cdef double get_probability(self, size_t b) nogil:
