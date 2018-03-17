@@ -913,7 +913,7 @@ struct __pyx_obj_2gb_6stamps_Timestamps {
   __Pyx_memviewslice all_stamps;
   __Pyx_memviewslice causes;
   size_t n_stamps;
-  struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *start_positions;
+  __Pyx_memviewslice start_positions;
   size_t n_proc;
 };
 
@@ -3472,7 +3472,7 @@ static void __pyx_f_2gb_8samplers_11BaseSampler_set_current_process(struct __pyx
  *             if b != self.timestamps.num_proc():
  *                 self.nab[b] += 1             # <<<<<<<<<<<<<<
  * 
- *         self.sloppy.update_counts(self.id)
+ *         # self.sloppy.update_counts(self.id)
  */
       __pyx_t_7 = __pyx_v_b;
       *((uint64_t *) ( /* dim=0 */ ((char *) (((uint64_t *) __pyx_v_self->nab.data) + __pyx_t_7)) )) += 1;
@@ -3487,18 +3487,9 @@ static void __pyx_f_2gb_8samplers_11BaseSampler_set_current_process(struct __pyx
     }
   }
 
-  /* "gb/samplers.pyx":62
- *                 self.nab[b] += 1
- * 
- *         self.sloppy.update_counts(self.id)             # <<<<<<<<<<<<<<
- *         self.denominators = self.sloppy.get_local_counts(self.id)
- * 
- */
-  ((struct __pyx_vtabstruct_2gb_6sloppy_SloppyCounter *)__pyx_v_self->sloppy->__pyx_vtab)->update_counts(__pyx_v_self->sloppy, __pyx_v_self->id);
-
   /* "gb/samplers.pyx":63
  * 
- *         self.sloppy.update_counts(self.id)
+ *         # self.sloppy.update_counts(self.id)
  *         self.denominators = self.sloppy.get_local_counts(self.id)             # <<<<<<<<<<<<<<
  * 
  *     cdef double get_probability(self, size_t b) nogil:

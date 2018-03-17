@@ -14,7 +14,7 @@ cdef class Timestamps(object):
     cdef double[::1] all_stamps
     cdef size_t[::1] causes
     cdef size_t n_stamps
-    cdef RobinHoodHash start_positions
+    cdef size_t[::1] start_positions
     cdef size_t n_proc
 
     cdef double[::1] get_stamps(self, size_t process) nogil

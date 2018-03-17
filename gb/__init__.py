@@ -28,7 +28,7 @@ def to_csr(sparse_dict, dtype='d'):
 
 class GrangerBusca(object):
 
-    def __init__(self, alpha_prior, num_iter, metropolis=True, sloppy=2,
+    def __init__(self, alpha_prior, num_iter, metropolis=True, sloppy=1,
                  num_jobs=None):
         self.alpha_prior = alpha_prior
         self.num_iter = num_iter

@@ -25,6 +25,9 @@ from gb.sloppy cimport SloppyCounter
 from libc.stdint cimport uint64_t
 from libc.stdio cimport printf
 
+from libcpp.unordered_map cimport unordered_map
+from libcpp.vector cimport vector
+
 import numpy as np
 
 
@@ -70,6 +73,7 @@ cdef void do_work(Timestamps all_stamps, SloppyCounter sloppy,
             sampler.set_current_process(proc_a)
             kernel.set_current_process(proc_a)
             sample_alpha(proc_a, all_stamps, sampler, kernel)
+        sloppy.update_counts(worker_id)
 
 
 def fit(Timestamps all_stamps, SloppyCounter sloppy, double alpha_prior,
@@ -88,36 +92,39 @@ def fit(Timestamps all_stamps, SloppyCounter sloppy, double alpha_prior,
     cdef PoissonKernel poisson = PoissonKernel(all_stamps, n_proc)
     cdef AbstractKernel kernel = BuscaKernel(poisson, n_proc)
 
-    printf("Worker %lu starting\n", worker_id)
-    with nogil:
-        do_work(all_stamps, sloppy, sampler, kernel, n_iter, worker_id,
-                workload)
-    printf("Worker %lu done\n", worker_id)
+    cdef unordered_map[int, unordered_map[int, int]] Alpha
+    cdef unordered_map[int, unordered_map[int, double]] Beta
+    cdef unordered_map[int, vector[int]] curr_state
 
-    Alpha = {}
-    curr_state = {}
-    Beta = {}
     cdef size_t a, b, i, j
     cdef size_t[::1] causes
     cdef int[::1] num_background = np.zeros(n_proc, dtype='i')
-    for i in range(<size_t>workload.shape[0]):
-        a = workload[i]
-        Alpha[a] = {}
-        causes = all_stamps.get_causes(a)
-        curr_state[a] = np.array(causes)
-        for j in range(<size_t>causes.shape[0]):
-            b = causes[j]
-            if b != n_proc:
-                if b not in Alpha[a]:
-                    Alpha[a][b] = 0
-                Alpha[a][b] += 1
-            else:
-                num_background[a] += 1
 
-        Beta[a] = {}
-        kernel.set_current_process(a)
-        for b in Alpha[a]:
-            Beta[a][b] = kernel.get_beta_rates()[b]
+    with nogil:
+        printf("Worker %lu starting\n", worker_id)
+        do_work(all_stamps, sloppy, sampler, kernel, n_iter, worker_id,
+                workload)
 
-    return Alpha, np.array(poisson.get_mu_rates()), Beta, \
-        np.array(num_background), curr_state
+        for i in range(<size_t>workload.shape[0]):
+            a = workload[i]
+            causes = all_stamps.get_causes(a)
+            curr_state[a].resize(causes.shape[0])
+            for j in range(<size_t>causes.shape[0]):
+                b = causes[j]
+                curr_state[a][j] = b
+                if b != n_proc:
+                    if Alpha[a].count(b) == 0:
+                        Alpha[a][b] = 0
+                    Alpha[a][b] += 1
+                else:
+                    num_background[a] += 1
+
+            kernel.set_current_process(a)
+            for b in range(n_proc):
+                if Alpha[a].count(b) != 0:
+                    Beta[a][b] = kernel.get_beta_rates()[b]
+
+        printf("Worker %lu done\n", worker_id)
+
+    return Alpha, np.asanyarray(poisson.get_mu_rates()), Beta, \
+        np.asanyarray(num_background), curr_state

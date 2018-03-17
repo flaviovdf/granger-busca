@@ -27,10 +27,10 @@ cdef class Timestamps(object):
         cdef size_t pos = 0
         cdef size_t n
         cdef double[::1] stamps
-        self.start_positions = RobinHoodHash()
+        self.start_positions = np.zeros(n_proc, dtype='uint64')
         for proc_a in range(n_proc):
             stamps = np.asanyarray(process_stamps[proc_a], dtype='d')
-            self.start_positions.set(proc_a, pos)
+            self.start_positions[proc_a] = pos
 
             n = stamps.shape[0]
             self.all_stamps[pos] = n
@@ -41,7 +41,7 @@ cdef class Timestamps(object):
             pos += n
 
     cdef double[::1] get_stamps(self, size_t process) nogil:
-        cdef size_t pos = self.start_positions.get(process)
+        cdef size_t pos = self.start_positions[process]
         cdef size_t size = self.causes[pos]
         return self.all_stamps[pos+1:pos+1+size]
 
@@ -49,7 +49,7 @@ cdef class Timestamps(object):
         return self.get_stamps(process)
 
     cdef size_t[::1] get_causes(self, size_t process) nogil:
-        cdef size_t pos = self.start_positions.get(process)
+        cdef size_t pos = self.start_positions[process]
         cdef size_t size = self.causes[pos]
         return self.causes[pos+1:pos+1+size]
 

@@ -9,12 +9,8 @@
 from gb.sorting.largest cimport quick_median
 
 from libc.stdio cimport printf
-
 from libc.stdint cimport uint64_t
-
 from libc.stdlib cimport abort
-from libc.stdlib cimport free
-from libc.stdlib cimport malloc
 
 from libcpp.unordered_map cimport unordered_map
 from libcpp.vector cimport vector
@@ -32,23 +28,19 @@ cdef inline double update_beta_rate(size_t proc_a, Timestamps all_stamps,
     cdef size_t n_proc = all_stamps.num_proc()
     cdef unordered_map[size_t, vector[double]] dts
 
-    cdef size_t proc_b
-    cdef uint64_t n_ab
-    for proc_b in range(n_proc):
-        dts[proc_b] = vector[double]()
-
     cdef double ti, tp
     cdef double max_ti = 0
     cdef double[::1] stamps_a = all_stamps.get_stamps(proc_a)
     cdef size_t[::1] state_a = all_stamps.get_causes(proc_a)
-    cdef size_t i
+    cdef size_t proc_b, i
     for i in range(<size_t>stamps_a.shape[0]):
         ti = stamps_a[i]
         proc_b = state_a[i]
         if ti > max_ti:
             max_ti = ti
-        tp = all_stamps.find_previous(proc_b, ti)
-        dts[proc_b].push_back(ti - tp)
+        if proc_b != n_proc:
+            tp = all_stamps.find_previous(proc_b, ti)
+            dts[proc_b].push_back(ti - tp)
 
     for proc_b in range(n_proc):
         if dts[proc_b].size() >= 1:

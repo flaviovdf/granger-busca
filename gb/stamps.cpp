@@ -882,7 +882,7 @@ struct __pyx_obj_2gb_6stamps_Timestamps {
   __Pyx_memviewslice all_stamps;
   __Pyx_memviewslice causes;
   size_t n_stamps;
-  struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *start_positions;
+  __Pyx_memviewslice start_positions;
   size_t n_proc;
 };
 
@@ -1310,9 +1310,6 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObjec
 /* RaiseException.proto */
 static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb, PyObject *cause);
 
-/* ExtTypeTest.proto */
-static CYTHON_INLINE int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type);
-
 /* HasAttr.proto */
 static CYTHON_INLINE int __Pyx_HasAttr(PyObject *, PyObject *);
 
@@ -1366,6 +1363,9 @@ static CYTHON_INLINE void __Pyx_RaiseNeedMoreValuesError(Py_ssize_t index);
 
 /* RaiseNoneIterError.proto */
 static CYTHON_INLINE void __Pyx_RaiseNoneNotIterableError(void);
+
+/* ExtTypeTest.proto */
+static CYTHON_INLINE int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type);
 
 /* SaveResetException.proto */
 #if CYTHON_FAST_THREAD_STATE
@@ -2077,7 +2077,8 @@ static int __pyx_pf_2gb_6stamps_10Timestamps___init__(struct __pyx_obj_2gb_6stam
   __Pyx_memviewslice __pyx_t_9 = { 0, 0, { 0 }, { 0 }, { 0 } };
   size_t __pyx_t_10;
   size_t __pyx_t_11;
-  int __pyx_t_12;
+  size_t __pyx_t_12;
+  int __pyx_t_13;
   __Pyx_RefNannySetupContext("__init__", 0);
 
   /* "gb/stamps.pyx":17
@@ -2232,66 +2233,86 @@ static int __pyx_pf_2gb_6stamps_10Timestamps___init__(struct __pyx_obj_2gb_6stam
   /* "gb/stamps.pyx":30
  *         cdef size_t n
  *         cdef double[::1] stamps
- *         self.start_positions = RobinHoodHash()             # <<<<<<<<<<<<<<
+ *         self.start_positions = np.zeros(n_proc, dtype='uint64')             # <<<<<<<<<<<<<<
  *         for proc_a in range(n_proc):
  *             stamps = np.asanyarray(process_stamps[proc_a], dtype='d')
  */
-  __pyx_t_6 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_2gb_11collections_5table_RobinHoodHash), __pyx_empty_tuple, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 30, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 30, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_zeros); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 30, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_6 = __Pyx_PyInt_FromSize_t(__pyx_v_n_proc); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 30, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 30, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
   __Pyx_GIVEREF(__pyx_t_6);
-  __Pyx_GOTREF(__pyx_v_self->start_positions);
-  __Pyx_DECREF(((PyObject *)__pyx_v_self->start_positions));
-  __pyx_v_self->start_positions = ((struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *)__pyx_t_6);
+  PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_6);
   __pyx_t_6 = 0;
+  __pyx_t_6 = PyDict_New(); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 30, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_dtype, __pyx_n_s_uint64) < 0) __PYX_ERR(0, 30, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_t_4, __pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 30, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_dc_size_t(__pyx_t_5);
+  if (unlikely(!__pyx_t_9.memview)) __PYX_ERR(0, 30, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __PYX_XDEC_MEMVIEW(&__pyx_v_self->start_positions, 0);
+  __pyx_v_self->start_positions = __pyx_t_9;
+  __pyx_t_9.memview = NULL;
+  __pyx_t_9.data = NULL;
 
   /* "gb/stamps.pyx":31
  *         cdef double[::1] stamps
- *         self.start_positions = RobinHoodHash()
+ *         self.start_positions = np.zeros(n_proc, dtype='uint64')
  *         for proc_a in range(n_proc):             # <<<<<<<<<<<<<<
  *             stamps = np.asanyarray(process_stamps[proc_a], dtype='d')
- *             self.start_positions.set(proc_a, pos)
+ *             self.start_positions[proc_a] = pos
  */
   __pyx_t_2 = __pyx_v_n_proc;
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_proc_a = __pyx_t_3;
 
     /* "gb/stamps.pyx":32
- *         self.start_positions = RobinHoodHash()
+ *         self.start_positions = np.zeros(n_proc, dtype='uint64')
  *         for proc_a in range(n_proc):
  *             stamps = np.asanyarray(process_stamps[proc_a], dtype='d')             # <<<<<<<<<<<<<<
- *             self.start_positions.set(proc_a, pos)
+ *             self.start_positions[proc_a] = pos
  * 
  */
-    __pyx_t_6 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 32, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 32, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_asanyarray); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 32, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_asanyarray); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 32, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     if (unlikely(__pyx_v_process_stamps == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
       __PYX_ERR(0, 32, __pyx_L1_error)
     }
-    __pyx_t_6 = __Pyx_PyInt_FromSize_t(__pyx_v_proc_a); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 32, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_process_stamps, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 32, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyInt_FromSize_t(__pyx_v_proc_a); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 32, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_process_stamps, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 32, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_6 = PyTuple_New(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 32, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 32, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
     __Pyx_GIVEREF(__pyx_t_4);
-    PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_4);
+    PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_4);
     __pyx_t_4 = 0;
     __pyx_t_4 = PyDict_New(); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 32, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_dtype, __pyx_n_s_d) < 0) __PYX_ERR(0, 32, __pyx_L1_error)
-    __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_t_6, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 32, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __pyx_t_7 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 32, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_7);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_5);
-    if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 32, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_7);
+    if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 32, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     __PYX_XDEC_MEMVIEW(&__pyx_v_stamps, 1);
     __pyx_v_stamps = __pyx_t_8;
     __pyx_t_8.memview = NULL;
@@ -2300,14 +2321,15 @@ static int __pyx_pf_2gb_6stamps_10Timestamps___init__(struct __pyx_obj_2gb_6stam
     /* "gb/stamps.pyx":33
  *         for proc_a in range(n_proc):
  *             stamps = np.asanyarray(process_stamps[proc_a], dtype='d')
- *             self.start_positions.set(proc_a, pos)             # <<<<<<<<<<<<<<
+ *             self.start_positions[proc_a] = pos             # <<<<<<<<<<<<<<
  * 
  *             n = stamps.shape[0]
  */
-    ((struct __pyx_vtabstruct_2gb_11collections_5table_RobinHoodHash *)__pyx_v_self->start_positions->__pyx_vtab)->set(__pyx_v_self->start_positions, __pyx_v_proc_a, __pyx_v_pos);
+    __pyx_t_10 = __pyx_v_proc_a;
+    *((size_t *) ( /* dim=0 */ ((char *) (((size_t *) __pyx_v_self->start_positions.data) + __pyx_t_10)) )) = __pyx_v_pos;
 
     /* "gb/stamps.pyx":35
- *             self.start_positions.set(proc_a, pos)
+ *             self.start_positions[proc_a] = pos
  * 
  *             n = stamps.shape[0]             # <<<<<<<<<<<<<<
  *             self.all_stamps[pos] = n
@@ -2322,8 +2344,8 @@ static int __pyx_pf_2gb_6stamps_10Timestamps___init__(struct __pyx_obj_2gb_6stam
  *             self.causes[pos] = n
  * 
  */
-    __pyx_t_10 = __pyx_v_pos;
-    *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_self->all_stamps.data) + __pyx_t_10)) )) = __pyx_v_n;
+    __pyx_t_11 = __pyx_v_pos;
+    *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_self->all_stamps.data) + __pyx_t_11)) )) = __pyx_v_n;
 
     /* "gb/stamps.pyx":37
  *             n = stamps.shape[0]
@@ -2332,8 +2354,8 @@ static int __pyx_pf_2gb_6stamps_10Timestamps___init__(struct __pyx_obj_2gb_6stam
  * 
  *             pos += 1
  */
-    __pyx_t_11 = __pyx_v_pos;
-    *((size_t *) ( /* dim=0 */ ((char *) (((size_t *) __pyx_v_self->causes.data) + __pyx_t_11)) )) = __pyx_v_n;
+    __pyx_t_12 = __pyx_v_pos;
+    *((size_t *) ( /* dim=0 */ ((char *) (((size_t *) __pyx_v_self->causes.data) + __pyx_t_12)) )) = __pyx_v_n;
 
     /* "gb/stamps.pyx":39
  *             self.causes[pos] = n
@@ -2354,13 +2376,13 @@ static int __pyx_pf_2gb_6stamps_10Timestamps___init__(struct __pyx_obj_2gb_6stam
     __pyx_t_8.data = __pyx_v_self->all_stamps.data;
     __pyx_t_8.memview = __pyx_v_self->all_stamps.memview;
     __PYX_INC_MEMVIEW(&__pyx_t_8, 0);
-    __pyx_t_12 = -1;
+    __pyx_t_13 = -1;
     if (unlikely(__pyx_memoryview_slice_memviewslice(
     &__pyx_t_8,
     __pyx_v_self->all_stamps.shape[0], __pyx_v_self->all_stamps.strides[0], __pyx_v_self->all_stamps.suboffsets[0],
     0,
     0,
-    &__pyx_t_12,
+    &__pyx_t_13,
     __pyx_v_pos,
     (__pyx_v_pos + __pyx_v_n),
     0,
@@ -2417,7 +2439,7 @@ if (unlikely(__pyx_memoryview_copy_contents(__pyx_v_stamps, __pyx_t_8, 1, 1, 0) 
  *             pos += n
  * 
  *     cdef double[::1] get_stamps(self, size_t process) nogil:             # <<<<<<<<<<<<<<
- *         cdef size_t pos = self.start_positions.get(process)
+ *         cdef size_t pos = self.start_positions[process]
  *         cdef size_t size = self.causes[pos]
  */
 
@@ -2426,45 +2448,47 @@ static __Pyx_memviewslice __pyx_f_2gb_6stamps_10Timestamps_get_stamps(struct __p
   size_t __pyx_v_size;
   __Pyx_memviewslice __pyx_r = { 0, 0, { 0 }, { 0 }, { 0 } };
   size_t __pyx_t_1;
-  __Pyx_memviewslice __pyx_t_2 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  int __pyx_t_3;
+  size_t __pyx_t_2;
+  __Pyx_memviewslice __pyx_t_3 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  int __pyx_t_4;
 
   /* "gb/stamps.pyx":44
  * 
  *     cdef double[::1] get_stamps(self, size_t process) nogil:
- *         cdef size_t pos = self.start_positions.get(process)             # <<<<<<<<<<<<<<
+ *         cdef size_t pos = self.start_positions[process]             # <<<<<<<<<<<<<<
  *         cdef size_t size = self.causes[pos]
  *         return self.all_stamps[pos+1:pos+1+size]
  */
-  __pyx_v_pos = ((struct __pyx_vtabstruct_2gb_11collections_5table_RobinHoodHash *)__pyx_v_self->start_positions->__pyx_vtab)->get(__pyx_v_self->start_positions, __pyx_v_process);
+  __pyx_t_1 = __pyx_v_process;
+  __pyx_v_pos = (*((size_t *) ( /* dim=0 */ ((char *) (((size_t *) __pyx_v_self->start_positions.data) + __pyx_t_1)) )));
 
   /* "gb/stamps.pyx":45
  *     cdef double[::1] get_stamps(self, size_t process) nogil:
- *         cdef size_t pos = self.start_positions.get(process)
+ *         cdef size_t pos = self.start_positions[process]
  *         cdef size_t size = self.causes[pos]             # <<<<<<<<<<<<<<
  *         return self.all_stamps[pos+1:pos+1+size]
  * 
  */
-  __pyx_t_1 = __pyx_v_pos;
-  __pyx_v_size = (*((size_t *) ( /* dim=0 */ ((char *) (((size_t *) __pyx_v_self->causes.data) + __pyx_t_1)) )));
+  __pyx_t_2 = __pyx_v_pos;
+  __pyx_v_size = (*((size_t *) ( /* dim=0 */ ((char *) (((size_t *) __pyx_v_self->causes.data) + __pyx_t_2)) )));
 
   /* "gb/stamps.pyx":46
- *         cdef size_t pos = self.start_positions.get(process)
+ *         cdef size_t pos = self.start_positions[process]
  *         cdef size_t size = self.causes[pos]
  *         return self.all_stamps[pos+1:pos+1+size]             # <<<<<<<<<<<<<<
  * 
  *     def _get_stamps(self, size_t process):
  */
-  __pyx_t_2.data = __pyx_v_self->all_stamps.data;
-  __pyx_t_2.memview = __pyx_v_self->all_stamps.memview;
-  __PYX_INC_MEMVIEW(&__pyx_t_2, 0);
-  __pyx_t_3 = -1;
+  __pyx_t_3.data = __pyx_v_self->all_stamps.data;
+  __pyx_t_3.memview = __pyx_v_self->all_stamps.memview;
+  __PYX_INC_MEMVIEW(&__pyx_t_3, 0);
+  __pyx_t_4 = -1;
   if (unlikely(__pyx_memoryview_slice_memviewslice(
-    &__pyx_t_2,
+    &__pyx_t_3,
     __pyx_v_self->all_stamps.shape[0], __pyx_v_self->all_stamps.strides[0], __pyx_v_self->all_stamps.suboffsets[0],
     0,
     0,
-    &__pyx_t_3,
+    &__pyx_t_4,
     (__pyx_v_pos + 1),
     ((__pyx_v_pos + 1) + __pyx_v_size),
     0,
@@ -2476,22 +2500,22 @@ static __Pyx_memviewslice __pyx_f_2gb_6stamps_10Timestamps_get_stamps(struct __p
     __PYX_ERR(0, 46, __pyx_L1_error)
 }
 
-__pyx_r = __pyx_t_2;
-  __pyx_t_2.memview = NULL;
-  __pyx_t_2.data = NULL;
+__pyx_r = __pyx_t_3;
+  __pyx_t_3.memview = NULL;
+  __pyx_t_3.data = NULL;
   goto __pyx_L0;
 
   /* "gb/stamps.pyx":43
  *             pos += n
  * 
  *     cdef double[::1] get_stamps(self, size_t process) nogil:             # <<<<<<<<<<<<<<
- *         cdef size_t pos = self.start_positions.get(process)
+ *         cdef size_t pos = self.start_positions[process]
  *         cdef size_t size = self.causes[pos]
  */
 
   /* function exit code */
   __pyx_L1_error:;
-  __PYX_XDEC_MEMVIEW(&__pyx_t_2, 0);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_3, 0);
   __pyx_r.data = NULL;
   __pyx_r.memview = NULL;
   {
@@ -2593,7 +2617,7 @@ static PyObject *__pyx_pf_2gb_6stamps_10Timestamps_2_get_stamps(struct __pyx_obj
  *         return self.get_stamps(process)
  * 
  *     cdef size_t[::1] get_causes(self, size_t process) nogil:             # <<<<<<<<<<<<<<
- *         cdef size_t pos = self.start_positions.get(process)
+ *         cdef size_t pos = self.start_positions[process]
  *         cdef size_t size = self.causes[pos]
  */
 
@@ -2602,45 +2626,47 @@ static __Pyx_memviewslice __pyx_f_2gb_6stamps_10Timestamps_get_causes(struct __p
   size_t __pyx_v_size;
   __Pyx_memviewslice __pyx_r = { 0, 0, { 0 }, { 0 }, { 0 } };
   size_t __pyx_t_1;
-  __Pyx_memviewslice __pyx_t_2 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  int __pyx_t_3;
+  size_t __pyx_t_2;
+  __Pyx_memviewslice __pyx_t_3 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  int __pyx_t_4;
 
   /* "gb/stamps.pyx":52
  * 
  *     cdef size_t[::1] get_causes(self, size_t process) nogil:
- *         cdef size_t pos = self.start_positions.get(process)             # <<<<<<<<<<<<<<
+ *         cdef size_t pos = self.start_positions[process]             # <<<<<<<<<<<<<<
  *         cdef size_t size = self.causes[pos]
  *         return self.causes[pos+1:pos+1+size]
  */
-  __pyx_v_pos = ((struct __pyx_vtabstruct_2gb_11collections_5table_RobinHoodHash *)__pyx_v_self->start_positions->__pyx_vtab)->get(__pyx_v_self->start_positions, __pyx_v_process);
+  __pyx_t_1 = __pyx_v_process;
+  __pyx_v_pos = (*((size_t *) ( /* dim=0 */ ((char *) (((size_t *) __pyx_v_self->start_positions.data) + __pyx_t_1)) )));
 
   /* "gb/stamps.pyx":53
  *     cdef size_t[::1] get_causes(self, size_t process) nogil:
- *         cdef size_t pos = self.start_positions.get(process)
+ *         cdef size_t pos = self.start_positions[process]
  *         cdef size_t size = self.causes[pos]             # <<<<<<<<<<<<<<
  *         return self.causes[pos+1:pos+1+size]
  * 
  */
-  __pyx_t_1 = __pyx_v_pos;
-  __pyx_v_size = (*((size_t *) ( /* dim=0 */ ((char *) (((size_t *) __pyx_v_self->causes.data) + __pyx_t_1)) )));
+  __pyx_t_2 = __pyx_v_pos;
+  __pyx_v_size = (*((size_t *) ( /* dim=0 */ ((char *) (((size_t *) __pyx_v_self->causes.data) + __pyx_t_2)) )));
 
   /* "gb/stamps.pyx":54
- *         cdef size_t pos = self.start_positions.get(process)
+ *         cdef size_t pos = self.start_positions[process]
  *         cdef size_t size = self.causes[pos]
  *         return self.causes[pos+1:pos+1+size]             # <<<<<<<<<<<<<<
  * 
  *     def _get_causes(self, size_t process):
  */
-  __pyx_t_2.data = __pyx_v_self->causes.data;
-  __pyx_t_2.memview = __pyx_v_self->causes.memview;
-  __PYX_INC_MEMVIEW(&__pyx_t_2, 0);
-  __pyx_t_3 = -1;
+  __pyx_t_3.data = __pyx_v_self->causes.data;
+  __pyx_t_3.memview = __pyx_v_self->causes.memview;
+  __PYX_INC_MEMVIEW(&__pyx_t_3, 0);
+  __pyx_t_4 = -1;
   if (unlikely(__pyx_memoryview_slice_memviewslice(
-    &__pyx_t_2,
+    &__pyx_t_3,
     __pyx_v_self->causes.shape[0], __pyx_v_self->causes.strides[0], __pyx_v_self->causes.suboffsets[0],
     0,
     0,
-    &__pyx_t_3,
+    &__pyx_t_4,
     (__pyx_v_pos + 1),
     ((__pyx_v_pos + 1) + __pyx_v_size),
     0,
@@ -2652,22 +2678,22 @@ static __Pyx_memviewslice __pyx_f_2gb_6stamps_10Timestamps_get_causes(struct __p
     __PYX_ERR(0, 54, __pyx_L1_error)
 }
 
-__pyx_r = __pyx_t_2;
-  __pyx_t_2.memview = NULL;
-  __pyx_t_2.data = NULL;
+__pyx_r = __pyx_t_3;
+  __pyx_t_3.memview = NULL;
+  __pyx_t_3.data = NULL;
   goto __pyx_L0;
 
   /* "gb/stamps.pyx":51
  *         return self.get_stamps(process)
  * 
  *     cdef size_t[::1] get_causes(self, size_t process) nogil:             # <<<<<<<<<<<<<<
- *         cdef size_t pos = self.start_positions.get(process)
+ *         cdef size_t pos = self.start_positions[process]
  *         cdef size_t size = self.causes[pos]
  */
 
   /* function exit code */
   __pyx_L1_error:;
-  __PYX_XDEC_MEMVIEW(&__pyx_t_2, 0);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_3, 0);
   __pyx_r.data = NULL;
   __pyx_r.memview = NULL;
   {
@@ -3065,8 +3091,9 @@ static PyObject *__pyx_pf_2gb_6stamps_10Timestamps_8__reduce_cython__(struct __p
   PyObject *__pyx_t_3 = NULL;
   PyObject *__pyx_t_4 = NULL;
   PyObject *__pyx_t_5 = NULL;
-  int __pyx_t_6;
+  PyObject *__pyx_t_6 = NULL;
   int __pyx_t_7;
+  int __pyx_t_8;
   __Pyx_RefNannySetupContext("__reduce_cython__", 0);
 
   /* "(tree fragment)":3
@@ -3084,25 +3111,27 @@ static PyObject *__pyx_pf_2gb_6stamps_10Timestamps_8__reduce_cython__(struct __p
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_4 = __Pyx_PyInt_FromSize_t(__pyx_v_self->n_stamps); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 3, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = PyTuple_New(5); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 3, __pyx_L1_error)
+  __pyx_t_5 = __pyx_memoryview_fromslice(__pyx_v_self->start_positions, 1, (PyObject *(*)(char *)) __pyx_memview_get_size_t, (int (*)(char *, PyObject *)) __pyx_memview_set_size_t, 0);; if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 3, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_6 = PyTuple_New(5); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 3, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
   __Pyx_GIVEREF(__pyx_t_1);
-  PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_1);
+  PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_2);
-  PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_t_2);
+  PyTuple_SET_ITEM(__pyx_t_6, 1, __pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_3);
-  PyTuple_SET_ITEM(__pyx_t_5, 2, __pyx_t_3);
+  PyTuple_SET_ITEM(__pyx_t_6, 2, __pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_4);
-  PyTuple_SET_ITEM(__pyx_t_5, 3, __pyx_t_4);
-  __Pyx_INCREF(((PyObject *)__pyx_v_self->start_positions));
-  __Pyx_GIVEREF(((PyObject *)__pyx_v_self->start_positions));
-  PyTuple_SET_ITEM(__pyx_t_5, 4, ((PyObject *)__pyx_v_self->start_positions));
+  PyTuple_SET_ITEM(__pyx_t_6, 3, __pyx_t_4);
+  __Pyx_GIVEREF(__pyx_t_5);
+  PyTuple_SET_ITEM(__pyx_t_6, 4, __pyx_t_5);
   __pyx_t_1 = 0;
   __pyx_t_2 = 0;
   __pyx_t_3 = 0;
   __pyx_t_4 = 0;
-  __pyx_v_state = ((PyObject*)__pyx_t_5);
   __pyx_t_5 = 0;
+  __pyx_v_state = __pyx_t_6;
+  __pyx_t_6 = 0;
 
   /* "(tree fragment)":4
  *     cdef bint use_setstate
@@ -3111,10 +3140,10 @@ static PyObject *__pyx_pf_2gb_6stamps_10Timestamps_8__reduce_cython__(struct __p
  *     if _dict is not None:
  *         state += (_dict,)
  */
-  __pyx_t_5 = __Pyx_GetAttr3(((PyObject *)__pyx_v_self), __pyx_n_s_dict, Py_None); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 4, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __pyx_v__dict = __pyx_t_5;
-  __pyx_t_5 = 0;
+  __pyx_t_6 = __Pyx_GetAttr3(((PyObject *)__pyx_v_self), __pyx_n_s_dict, Py_None); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 4, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_v__dict = __pyx_t_6;
+  __pyx_t_6 = 0;
 
   /* "(tree fragment)":5
  *     state = (self.all_stamps, self.causes, self.n_proc, self.n_stamps, self.start_positions)
@@ -3123,9 +3152,9 @@ static PyObject *__pyx_pf_2gb_6stamps_10Timestamps_8__reduce_cython__(struct __p
  *         state += (_dict,)
  *         use_setstate = True
  */
-  __pyx_t_6 = (__pyx_v__dict != Py_None);
-  __pyx_t_7 = (__pyx_t_6 != 0);
-  if (__pyx_t_7) {
+  __pyx_t_7 = (__pyx_v__dict != Py_None);
+  __pyx_t_8 = (__pyx_t_7 != 0);
+  if (__pyx_t_8) {
 
     /* "(tree fragment)":6
  *     _dict = getattr(self, '__dict__', None)
@@ -3134,23 +3163,23 @@ static PyObject *__pyx_pf_2gb_6stamps_10Timestamps_8__reduce_cython__(struct __p
  *         use_setstate = True
  *     else:
  */
-    __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 6, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_6 = PyTuple_New(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 6, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
     __Pyx_INCREF(__pyx_v__dict);
     __Pyx_GIVEREF(__pyx_v__dict);
-    PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_v__dict);
-    __pyx_t_4 = PyNumber_InPlaceAdd(__pyx_v_state, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 6, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __Pyx_DECREF_SET(__pyx_v_state, ((PyObject*)__pyx_t_4));
-    __pyx_t_4 = 0;
+    PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_v__dict);
+    __pyx_t_5 = PyNumber_InPlaceAdd(__pyx_v_state, __pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 6, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __Pyx_DECREF_SET(__pyx_v_state, __pyx_t_5);
+    __pyx_t_5 = 0;
 
     /* "(tree fragment)":7
  *     if _dict is not None:
  *         state += (_dict,)
  *         use_setstate = True             # <<<<<<<<<<<<<<
  *     else:
- *         use_setstate = self.start_positions is not None
+ *         use_setstate = False
  */
     __pyx_v_use_setstate = 1;
 
@@ -3167,65 +3196,64 @@ static PyObject *__pyx_pf_2gb_6stamps_10Timestamps_8__reduce_cython__(struct __p
   /* "(tree fragment)":9
  *         use_setstate = True
  *     else:
- *         use_setstate = self.start_positions is not None             # <<<<<<<<<<<<<<
+ *         use_setstate = False             # <<<<<<<<<<<<<<
  *     if use_setstate:
  *         return __pyx_unpickle_Timestamps, (type(self), 0xd503ca6, None), state
  */
   /*else*/ {
-    __pyx_t_7 = (((PyObject *)__pyx_v_self->start_positions) != Py_None);
-    __pyx_v_use_setstate = __pyx_t_7;
+    __pyx_v_use_setstate = 0;
   }
   __pyx_L3:;
 
   /* "(tree fragment)":10
  *     else:
- *         use_setstate = self.start_positions is not None
+ *         use_setstate = False
  *     if use_setstate:             # <<<<<<<<<<<<<<
  *         return __pyx_unpickle_Timestamps, (type(self), 0xd503ca6, None), state
  *     else:
  */
-  __pyx_t_7 = (__pyx_v_use_setstate != 0);
-  if (__pyx_t_7) {
+  __pyx_t_8 = (__pyx_v_use_setstate != 0);
+  if (__pyx_t_8) {
 
     /* "(tree fragment)":11
- *         use_setstate = self.start_positions is not None
+ *         use_setstate = False
  *     if use_setstate:
  *         return __pyx_unpickle_Timestamps, (type(self), 0xd503ca6, None), state             # <<<<<<<<<<<<<<
  *     else:
  *         return __pyx_unpickle_Timestamps, (type(self), 0xd503ca6, state)
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_pyx_unpickle_Timestamps); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 11, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = PyTuple_New(3); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 11, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_pyx_unpickle_Timestamps); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 11, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 11, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
     __Pyx_INCREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
     __Pyx_GIVEREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    PyTuple_SET_ITEM(__pyx_t_5, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
+    PyTuple_SET_ITEM(__pyx_t_6, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
     __Pyx_INCREF(__pyx_int_223362214);
     __Pyx_GIVEREF(__pyx_int_223362214);
-    PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_int_223362214);
+    PyTuple_SET_ITEM(__pyx_t_6, 1, __pyx_int_223362214);
     __Pyx_INCREF(Py_None);
     __Pyx_GIVEREF(Py_None);
-    PyTuple_SET_ITEM(__pyx_t_5, 2, Py_None);
-    __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 11, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_GIVEREF(__pyx_t_4);
-    PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_4);
+    PyTuple_SET_ITEM(__pyx_t_6, 2, Py_None);
+    __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 11, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
     __Pyx_GIVEREF(__pyx_t_5);
-    PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_5);
+    PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_5);
+    __Pyx_GIVEREF(__pyx_t_6);
+    PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_6);
     __Pyx_INCREF(__pyx_v_state);
     __Pyx_GIVEREF(__pyx_v_state);
-    PyTuple_SET_ITEM(__pyx_t_3, 2, __pyx_v_state);
-    __pyx_t_4 = 0;
+    PyTuple_SET_ITEM(__pyx_t_4, 2, __pyx_v_state);
     __pyx_t_5 = 0;
-    __pyx_r = __pyx_t_3;
-    __pyx_t_3 = 0;
+    __pyx_t_6 = 0;
+    __pyx_r = __pyx_t_4;
+    __pyx_t_4 = 0;
     goto __pyx_L0;
 
     /* "(tree fragment)":10
  *     else:
- *         use_setstate = self.start_positions is not None
+ *         use_setstate = False
  *     if use_setstate:             # <<<<<<<<<<<<<<
  *         return __pyx_unpickle_Timestamps, (type(self), 0xd503ca6, None), state
  *     else:
@@ -3241,29 +3269,29 @@ static PyObject *__pyx_pf_2gb_6stamps_10Timestamps_8__reduce_cython__(struct __p
  */
   /*else*/ {
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_pyx_unpickle_Timestamps); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 13, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_5 = PyTuple_New(3); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 13, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_pyx_unpickle_Timestamps); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 13, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 13, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
     __Pyx_INCREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
     __Pyx_GIVEREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    PyTuple_SET_ITEM(__pyx_t_5, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
+    PyTuple_SET_ITEM(__pyx_t_6, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
     __Pyx_INCREF(__pyx_int_223362214);
     __Pyx_GIVEREF(__pyx_int_223362214);
-    PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_int_223362214);
+    PyTuple_SET_ITEM(__pyx_t_6, 1, __pyx_int_223362214);
     __Pyx_INCREF(__pyx_v_state);
     __Pyx_GIVEREF(__pyx_v_state);
-    PyTuple_SET_ITEM(__pyx_t_5, 2, __pyx_v_state);
-    __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 13, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_GIVEREF(__pyx_t_3);
-    PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3);
-    __Pyx_GIVEREF(__pyx_t_5);
-    PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_5);
-    __pyx_t_3 = 0;
-    __pyx_t_5 = 0;
-    __pyx_r = __pyx_t_4;
+    PyTuple_SET_ITEM(__pyx_t_6, 2, __pyx_v_state);
+    __pyx_t_5 = PyTuple_New(2); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 13, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_GIVEREF(__pyx_t_4);
+    PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_4);
+    __Pyx_GIVEREF(__pyx_t_6);
+    PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_t_6);
     __pyx_t_4 = 0;
+    __pyx_t_6 = 0;
+    __pyx_r = __pyx_t_5;
+    __pyx_t_5 = 0;
     goto __pyx_L0;
   }
 
@@ -3280,6 +3308,7 @@ static PyObject *__pyx_pf_2gb_6stamps_10Timestamps_8__reduce_cython__(struct __p
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_6);
   __Pyx_AddTraceback("gb.stamps.Timestamps.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
@@ -3677,11 +3706,11 @@ static PyObject *__pyx_f_2gb_6stamps___pyx_unpickle_Timestamps__set_state(struct
   __Pyx_memviewslice __pyx_t_1 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_t_2 = { 0, 0, { 0 }, { 0 }, { 0 } };
   size_t __pyx_t_3;
-  PyObject *__pyx_t_4 = NULL;
-  int __pyx_t_5;
-  Py_ssize_t __pyx_t_6;
+  int __pyx_t_4;
+  Py_ssize_t __pyx_t_5;
+  int __pyx_t_6;
   int __pyx_t_7;
-  int __pyx_t_8;
+  PyObject *__pyx_t_8 = NULL;
   PyObject *__pyx_t_9 = NULL;
   PyObject *__pyx_t_10 = NULL;
   PyObject *__pyx_t_11 = NULL;
@@ -3730,14 +3759,12 @@ static PyObject *__pyx_f_2gb_6stamps___pyx_unpickle_Timestamps__set_state(struct
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(1, 10, __pyx_L1_error)
   }
-  if (!(likely(((PyTuple_GET_ITEM(__pyx_v___pyx_state, 4)) == Py_None) || likely(__Pyx_TypeTest(PyTuple_GET_ITEM(__pyx_v___pyx_state, 4), __pyx_ptype_2gb_11collections_5table_RobinHoodHash))))) __PYX_ERR(1, 10, __pyx_L1_error)
-  __pyx_t_4 = PyTuple_GET_ITEM(__pyx_v___pyx_state, 4);
-  __Pyx_INCREF(__pyx_t_4);
-  __Pyx_GIVEREF(__pyx_t_4);
-  __Pyx_GOTREF(__pyx_v___pyx_result->start_positions);
-  __Pyx_DECREF(((PyObject *)__pyx_v___pyx_result->start_positions));
-  __pyx_v___pyx_result->start_positions = ((struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *)__pyx_t_4);
-  __pyx_t_4 = 0;
+  __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_dc_size_t(PyTuple_GET_ITEM(__pyx_v___pyx_state, 4));
+  if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(1, 10, __pyx_L1_error)
+  __PYX_XDEC_MEMVIEW(&__pyx_v___pyx_result->start_positions, 0);
+  __pyx_v___pyx_result->start_positions = __pyx_t_2;
+  __pyx_t_2.memview = NULL;
+  __pyx_t_2.data = NULL;
 
   /* "(tree fragment)":11
  * cdef __pyx_unpickle_Timestamps__set_state(Timestamps __pyx_result, tuple __pyx_state):
@@ -3749,18 +3776,18 @@ static PyObject *__pyx_f_2gb_6stamps___pyx_unpickle_Timestamps__set_state(struct
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
     __PYX_ERR(1, 11, __pyx_L1_error)
   }
-  __pyx_t_6 = PyTuple_GET_SIZE(__pyx_v___pyx_state); if (unlikely(__pyx_t_6 == -1)) __PYX_ERR(1, 11, __pyx_L1_error)
-  __pyx_t_7 = ((__pyx_t_6 > 5) != 0);
-  if (__pyx_t_7) {
+  __pyx_t_5 = PyTuple_GET_SIZE(__pyx_v___pyx_state); if (unlikely(__pyx_t_5 == -1)) __PYX_ERR(1, 11, __pyx_L1_error)
+  __pyx_t_6 = ((__pyx_t_5 > 5) != 0);
+  if (__pyx_t_6) {
   } else {
-    __pyx_t_5 = __pyx_t_7;
+    __pyx_t_4 = __pyx_t_6;
     goto __pyx_L4_bool_binop_done;
   }
-  __pyx_t_7 = __Pyx_HasAttr(((PyObject *)__pyx_v___pyx_result), __pyx_n_s_dict); if (unlikely(__pyx_t_7 == -1)) __PYX_ERR(1, 11, __pyx_L1_error)
-  __pyx_t_8 = (__pyx_t_7 != 0);
-  __pyx_t_5 = __pyx_t_8;
+  __pyx_t_6 = __Pyx_HasAttr(((PyObject *)__pyx_v___pyx_result), __pyx_n_s_dict); if (unlikely(__pyx_t_6 == -1)) __PYX_ERR(1, 11, __pyx_L1_error)
+  __pyx_t_7 = (__pyx_t_6 != 0);
+  __pyx_t_4 = __pyx_t_7;
   __pyx_L4_bool_binop_done:;
-  if (__pyx_t_5) {
+  if (__pyx_t_4) {
 
     /* "(tree fragment)":12
  *     __pyx_result.all_stamps = __pyx_state[0]; __pyx_result.causes = __pyx_state[1]; __pyx_result.n_proc = __pyx_state[2]; __pyx_result.n_stamps = __pyx_state[3]; __pyx_result.start_positions = __pyx_state[4]
@@ -3787,23 +3814,23 @@ static PyObject *__pyx_f_2gb_6stamps___pyx_unpickle_Timestamps__set_state(struct
       }
     }
     if (!__pyx_t_9) {
-      __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_t_10, PyTuple_GET_ITEM(__pyx_v___pyx_state, 5)); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 12, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_4);
+      __pyx_t_8 = __Pyx_PyObject_CallOneArg(__pyx_t_10, PyTuple_GET_ITEM(__pyx_v___pyx_state, 5)); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 12, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_8);
     } else {
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_10)) {
         PyObject *__pyx_temp[2] = {__pyx_t_9, PyTuple_GET_ITEM(__pyx_v___pyx_state, 5)};
-        __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_10, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 12, __pyx_L1_error)
+        __pyx_t_8 = __Pyx_PyFunction_FastCall(__pyx_t_10, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 12, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
-        __Pyx_GOTREF(__pyx_t_4);
+        __Pyx_GOTREF(__pyx_t_8);
       } else
       #endif
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_10)) {
         PyObject *__pyx_temp[2] = {__pyx_t_9, PyTuple_GET_ITEM(__pyx_v___pyx_state, 5)};
-        __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_10, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 12, __pyx_L1_error)
+        __pyx_t_8 = __Pyx_PyCFunction_FastCall(__pyx_t_10, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 12, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
-        __Pyx_GOTREF(__pyx_t_4);
+        __Pyx_GOTREF(__pyx_t_8);
       } else
       #endif
       {
@@ -3813,13 +3840,13 @@ static PyObject *__pyx_f_2gb_6stamps___pyx_unpickle_Timestamps__set_state(struct
         __Pyx_INCREF(PyTuple_GET_ITEM(__pyx_v___pyx_state, 5));
         __Pyx_GIVEREF(PyTuple_GET_ITEM(__pyx_v___pyx_state, 5));
         PyTuple_SET_ITEM(__pyx_t_11, 0+1, PyTuple_GET_ITEM(__pyx_v___pyx_state, 5));
-        __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_10, __pyx_t_11, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 12, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_4);
+        __pyx_t_8 = __Pyx_PyObject_Call(__pyx_t_10, __pyx_t_11, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 12, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_8);
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
       }
     }
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
 
     /* "(tree fragment)":11
  * cdef __pyx_unpickle_Timestamps__set_state(Timestamps __pyx_result, tuple __pyx_state):
@@ -3843,7 +3870,7 @@ static PyObject *__pyx_f_2gb_6stamps___pyx_unpickle_Timestamps__set_state(struct
   __pyx_L1_error:;
   __PYX_XDEC_MEMVIEW(&__pyx_t_1, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_t_2, 1);
-  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_8);
   __Pyx_XDECREF(__pyx_t_9);
   __Pyx_XDECREF(__pyx_t_10);
   __Pyx_XDECREF(__pyx_t_11);
@@ -16677,44 +16704,26 @@ static PyObject *__pyx_tp_new_2gb_6stamps_Timestamps(PyTypeObject *t, CYTHON_UNU
   if (unlikely(!o)) return 0;
   p = ((struct __pyx_obj_2gb_6stamps_Timestamps *)o);
   p->__pyx_vtab = __pyx_vtabptr_2gb_6stamps_Timestamps;
-  p->start_positions = ((struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *)Py_None); Py_INCREF(Py_None);
   p->all_stamps.data = NULL;
   p->all_stamps.memview = NULL;
   p->causes.data = NULL;
   p->causes.memview = NULL;
+  p->start_positions.data = NULL;
+  p->start_positions.memview = NULL;
   return o;
 }
 
 static void __pyx_tp_dealloc_2gb_6stamps_Timestamps(PyObject *o) {
   struct __pyx_obj_2gb_6stamps_Timestamps *p = (struct __pyx_obj_2gb_6stamps_Timestamps *)o;
   #if PY_VERSION_HEX >= 0x030400a1
-  if (unlikely(PyType_HasFeature(Py_TYPE(o), Py_TPFLAGS_HAVE_FINALIZE) && Py_TYPE(o)->tp_finalize) && !_PyGC_FINALIZED(o)) {
+  if (unlikely(PyType_HasFeature(Py_TYPE(o), Py_TPFLAGS_HAVE_FINALIZE) && Py_TYPE(o)->tp_finalize) && (!PyType_IS_GC(Py_TYPE(o)) || !_PyGC_FINALIZED(o))) {
     if (PyObject_CallFinalizerFromDealloc(o)) return;
   }
   #endif
-  PyObject_GC_UnTrack(o);
-  Py_CLEAR(p->start_positions);
   __PYX_XDEC_MEMVIEW(&p->all_stamps, 1);
   __PYX_XDEC_MEMVIEW(&p->causes, 1);
+  __PYX_XDEC_MEMVIEW(&p->start_positions, 1);
   (*Py_TYPE(o)->tp_free)(o);
-}
-
-static int __pyx_tp_traverse_2gb_6stamps_Timestamps(PyObject *o, visitproc v, void *a) {
-  int e;
-  struct __pyx_obj_2gb_6stamps_Timestamps *p = (struct __pyx_obj_2gb_6stamps_Timestamps *)o;
-  if (p->start_positions) {
-    e = (*v)(((PyObject *)p->start_positions), a); if (e) return e;
-  }
-  return 0;
-}
-
-static int __pyx_tp_clear_2gb_6stamps_Timestamps(PyObject *o) {
-  PyObject* tmp;
-  struct __pyx_obj_2gb_6stamps_Timestamps *p = (struct __pyx_obj_2gb_6stamps_Timestamps *)o;
-  tmp = ((PyObject*)p->start_positions);
-  p->start_positions = ((struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *)Py_None); Py_INCREF(Py_None);
-  Py_XDECREF(tmp);
-  return 0;
 }
 
 static PyMethodDef __pyx_methods_2gb_6stamps_Timestamps[] = {
@@ -16751,10 +16760,10 @@ static PyTypeObject __pyx_type_2gb_6stamps_Timestamps = {
   0, /*tp_getattro*/
   0, /*tp_setattro*/
   0, /*tp_as_buffer*/
-  Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
+  Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_2gb_6stamps_Timestamps, /*tp_traverse*/
-  __pyx_tp_clear_2gb_6stamps_Timestamps, /*tp_clear*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
@@ -19730,19 +19739,6 @@ bad:
 }
 #endif
 
-/* ExtTypeTest */
-      static CYTHON_INLINE int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type) {
-    if (unlikely(!type)) {
-        PyErr_SetString(PyExc_SystemError, "Missing type object");
-        return 0;
-    }
-    if (likely(PyObject_TypeCheck(obj, type)))
-        return 1;
-    PyErr_Format(PyExc_TypeError, "Cannot convert %.200s to %.200s",
-                 Py_TYPE(obj)->tp_name, type->tp_name);
-    return 0;
-}
-
 /* HasAttr */
       static CYTHON_INLINE int __Pyx_HasAttr(PyObject *o, PyObject *n) {
     PyObject *r;
@@ -19956,6 +19952,19 @@ return_ne:
 /* RaiseNoneIterError */
       static CYTHON_INLINE void __Pyx_RaiseNoneNotIterableError(void) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
+}
+
+/* ExtTypeTest */
+      static CYTHON_INLINE int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type) {
+    if (unlikely(!type)) {
+        PyErr_SetString(PyExc_SystemError, "Missing type object");
+        return 0;
+    }
+    if (likely(PyObject_TypeCheck(obj, type)))
+        return 1;
+    PyErr_Format(PyExc_TypeError, "Cannot convert %.200s to %.200s",
+                 Py_TYPE(obj)->tp_name, type->tp_name);
+    return 0;
 }
 
 /* SaveResetException */
