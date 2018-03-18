@@ -32,16 +32,20 @@ def greedy_schedule(timestamps, n_workers):
     A dict with the assignment for each worker
     '''
     schedule = {}
+    worker_load = {}
     heap = []
     for worker in range(n_workers):
         schedule[worker] = []
+        worker_load[worker] = 0
         heapq.heappush(heap, (0, worker))
 
     for n, proc in sorted(((len(timestamps[k]), k) for k in timestamps),
                           reverse=True):
         load, worker = heapq.heappop(heap)
+        worker_load[worker] += n
         schedule[worker].append(proc)
         heapq.heappush(heap, (load + n, worker))
 
+    print(worker_load)
     rv = dict((k, np.array(v, dtype='uint64')) for k, v in schedule.items())
     return rv, define_worker_for_each_process(rv)

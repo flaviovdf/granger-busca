@@ -1,8 +1,14 @@
 # -*- coding: utf8
 
+
 from gb import GrangerBusca
 
-import tick.simulation as hk
+try:
+    import tick.simulation as hk
+    hk.HawkesKernelExp
+except (ImportError, AttributeError):
+    import tick.hawkes as hk
+
 import numpy as np
 
 

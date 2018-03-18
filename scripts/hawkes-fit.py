@@ -2,7 +2,13 @@
 
 from gb import GrangerBusca
 
-import tick.simulation as hk
+try:
+    import tick.simulation as hk
+    hk.HawkesKernelExp
+except (ImportError, AttributeError):
+    import tick.hawkes as hk
+
+import tick.hawkes as hk
 import numpy as np
 
 # Simulation of a 10-dimensional Hawkes process
