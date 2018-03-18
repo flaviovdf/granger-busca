@@ -66,7 +66,7 @@ cdef void do_work(Timestamps all_stamps, SloppyCounter sloppy,
                   size_t n_iter, size_t worker_id, size_t[::1] workload) nogil:
 
     cdef size_t iteration
-    cdef size_t proc_a
+    cdef size_t proc_a, i
     for iteration in range(n_iter):
         for i in range(<size_t>workload.shape[0]):
             proc_a = workload[i]
