@@ -20,7 +20,7 @@ def save_model(filename, granger_model):
                         alpha_prior=granger_model.alpha_prior,
                         Beta_data=granger_model.Beta_.data,
                         Beta_indices=granger_model.Beta_.indices,
-                        Beta_indptr=granger_model.Beta_.shape,
+                        Beta_indptr=granger_model.Beta_.indptr,
                         Beta_shape=granger_model.Beta_.shape,
                         mu_=granger_model.mu_,
                         num_iter=granger_model.num_iter,
