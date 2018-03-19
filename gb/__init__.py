@@ -105,8 +105,7 @@ class GrangerBusca(object):
         with futures.ThreadPoolExecutor(max_workers=self.num_jobs) as executor:
             jobs = [executor.submit(parallel_fit, worker_id)
                     for worker_id in range(self.num_jobs)]
-            futures.wait(jobs)
-            for job in jobs:
+            for job in futures.as_completed(jobs):
                 Alpha_, mu_, Beta_, back_, curr_state_ = job.result()
                 self.Alpha_.update(Alpha_)
                 self.mu_ += mu_
