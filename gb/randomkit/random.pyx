@@ -33,7 +33,7 @@ cdef class RNG(object):
         cdef unsigned long *seedptr
         cdef object seed = os.urandom(sizeof(unsigned long))
         seedptr = <unsigned long *>(<void *>(<char *> seed))
-        rk_seed(seed, self.rng_state)
+        rk_seed(seedptr[0], self.rng_state)
 
     def __dealloc__(self):
         if self.rng_state != NULL:

@@ -185,8 +185,8 @@ cdef class CollapsedGibbsSampler(AbstractSampler):
             self.buffer[b] = kernel.cross_rate(i, b, alpha_ba)
             if b > 0:
                 self.buffer[b] += self.buffer[b-1]
-        return searchsorted(self.buffer, self.base.rng.rand() * \
-                            self.buffer[n_proc-1], 0)
+        return searchsorted(&self.buffer[0], self.buffer.shape[0],
+                            self.base.rng.rand() * self.buffer[n_proc-1], 0)
 
     cdef uint64_t is_background(self, AbstractKernel kernel, double dt) nogil:
         return self.base.is_background(kernel, dt)

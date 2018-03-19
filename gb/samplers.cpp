@@ -2098,7 +2098,7 @@ static PyTypeObject *__pyx_ptype_2gb_9randomkit_6random_RNG = 0;
 static PyTypeObject *__pyx_ptype_2gb_6sloppy_SloppyCounter = 0;
 
 /* Module declarations from 'gb.sorting.binsearch' */
-static size_t (*__pyx_f_2gb_7sorting_9binsearch_searchsorted)(__Pyx_memviewslice, double, size_t); /*proto*/
+static size_t (*__pyx_f_2gb_7sorting_9binsearch_searchsorted)(double *, size_t, double, size_t); /*proto*/
 
 /* Module declarations from 'libc.string' */
 
@@ -5438,6 +5438,7 @@ static size_t __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_sample_for_idx(struc
   int __pyx_t_4;
   size_t __pyx_t_5;
   size_t __pyx_t_6;
+  Py_ssize_t __pyx_t_7;
 
   /* "gb/samplers.pyx":180
  * 
@@ -5483,7 +5484,7 @@ static size_t __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_sample_for_idx(struc
  *             self.buffer[b] = kernel.cross_rate(i, b, alpha_ba)
  *             if b > 0:             # <<<<<<<<<<<<<<
  *                 self.buffer[b] += self.buffer[b-1]
- *         return searchsorted(self.buffer, self.base.rng.rand() * \
+ *         return searchsorted(&self.buffer[0], self.buffer.shape[0],
  */
     __pyx_t_4 = ((__pyx_v_b > 0) != 0);
     if (__pyx_t_4) {
@@ -5492,8 +5493,8 @@ static size_t __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_sample_for_idx(struc
  *             self.buffer[b] = kernel.cross_rate(i, b, alpha_ba)
  *             if b > 0:
  *                 self.buffer[b] += self.buffer[b-1]             # <<<<<<<<<<<<<<
- *         return searchsorted(self.buffer, self.base.rng.rand() * \
- *                             self.buffer[n_proc-1], 0)
+ *         return searchsorted(&self.buffer[0], self.buffer.shape[0],
+ *                             self.base.rng.rand() * self.buffer[n_proc-1], 0)
  */
       __pyx_t_5 = (__pyx_v_b - 1);
       __pyx_t_6 = __pyx_v_b;
@@ -5504,15 +5505,24 @@ static size_t __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_sample_for_idx(struc
  *             self.buffer[b] = kernel.cross_rate(i, b, alpha_ba)
  *             if b > 0:             # <<<<<<<<<<<<<<
  *                 self.buffer[b] += self.buffer[b-1]
- *         return searchsorted(self.buffer, self.base.rng.rand() * \
+ *         return searchsorted(&self.buffer[0], self.buffer.shape[0],
  */
     }
   }
 
+  /* "gb/samplers.pyx":188
+ *             if b > 0:
+ *                 self.buffer[b] += self.buffer[b-1]
+ *         return searchsorted(&self.buffer[0], self.buffer.shape[0],             # <<<<<<<<<<<<<<
+ *                             self.base.rng.rand() * self.buffer[n_proc-1], 0)
+ * 
+ */
+  __pyx_t_7 = 0;
+
   /* "gb/samplers.pyx":189
  *                 self.buffer[b] += self.buffer[b-1]
- *         return searchsorted(self.buffer, self.base.rng.rand() * \
- *                             self.buffer[n_proc-1], 0)             # <<<<<<<<<<<<<<
+ *         return searchsorted(&self.buffer[0], self.buffer.shape[0],
+ *                             self.base.rng.rand() * self.buffer[n_proc-1], 0)             # <<<<<<<<<<<<<<
  * 
  *     cdef uint64_t is_background(self, AbstractKernel kernel, double dt) nogil:
  */
@@ -5521,11 +5531,11 @@ static size_t __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_sample_for_idx(struc
   /* "gb/samplers.pyx":188
  *             if b > 0:
  *                 self.buffer[b] += self.buffer[b-1]
- *         return searchsorted(self.buffer, self.base.rng.rand() * \             # <<<<<<<<<<<<<<
- *                             self.buffer[n_proc-1], 0)
+ *         return searchsorted(&self.buffer[0], self.buffer.shape[0],             # <<<<<<<<<<<<<<
+ *                             self.base.rng.rand() * self.buffer[n_proc-1], 0)
  * 
  */
-  __pyx_r = __pyx_f_2gb_7sorting_9binsearch_searchsorted(__pyx_v_self->buffer, (((struct __pyx_vtabstruct_2gb_9randomkit_6random_RNG *)__pyx_v_self->base->rng->__pyx_vtab)->rand(__pyx_v_self->base->rng) * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_self->buffer.data) + __pyx_t_1)) )))), 0);
+  __pyx_r = __pyx_f_2gb_7sorting_9binsearch_searchsorted((&(*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_self->buffer.data) + __pyx_t_7)) )))), (__pyx_v_self->buffer.shape[0]), (((struct __pyx_vtabstruct_2gb_9randomkit_6random_RNG *)__pyx_v_self->base->rng->__pyx_vtab)->rand(__pyx_v_self->base->rng) * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_self->buffer.data) + __pyx_t_1)) )))), 0);
   goto __pyx_L0;
 
   /* "gb/samplers.pyx":179
@@ -5542,7 +5552,7 @@ static size_t __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_sample_for_idx(struc
 }
 
 /* "gb/samplers.pyx":191
- *                             self.buffer[n_proc-1], 0)
+ *                             self.base.rng.rand() * self.buffer[n_proc-1], 0)
  * 
  *     cdef uint64_t is_background(self, AbstractKernel kernel, double dt) nogil:             # <<<<<<<<<<<<<<
  *         return self.base.is_background(kernel, dt)
@@ -5560,7 +5570,7 @@ static uint64_t __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_is_background(stru
   goto __pyx_L0;
 
   /* "gb/samplers.pyx":191
- *                             self.buffer[n_proc-1], 0)
+ *                             self.base.rng.rand() * self.buffer[n_proc-1], 0)
  * 
  *     cdef uint64_t is_background(self, AbstractKernel kernel, double dt) nogil:             # <<<<<<<<<<<<<<
  *         return self.base.is_background(kernel, dt)
@@ -21979,7 +21989,7 @@ static int __pyx_pymod_exec_samplers(PyObject *__pyx_pyinit_module)
   /*--- Variable import code ---*/
   /*--- Function import code ---*/
   __pyx_t_1 = __Pyx_ImportModule("gb.sorting.binsearch"); if (!__pyx_t_1) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ImportFunction(__pyx_t_1, "searchsorted", (void (**)(void))&__pyx_f_2gb_7sorting_9binsearch_searchsorted, "size_t (__Pyx_memviewslice, double, size_t)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ImportFunction(__pyx_t_1, "searchsorted", (void (**)(void))&__pyx_f_2gb_7sorting_9binsearch_searchsorted, "size_t (double *, size_t, double, size_t)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   Py_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   /*--- Execution code ---*/
   #if defined(__Pyx_Generator_USED) || defined(__Pyx_Coroutine_USED)
