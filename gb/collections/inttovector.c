@@ -471,33 +471,19 @@
   #endif
 #endif
 
-#ifndef __cplusplus
-  #error "Cython files generated with the C++ option must be compiled with a C++ compiler."
-#endif
 #ifndef CYTHON_INLINE
   #if defined(__clang__)
     #define CYTHON_INLINE __inline__ __attribute__ ((__unused__))
-  #else
+  #elif defined(__GNUC__)
+    #define CYTHON_INLINE __inline__
+  #elif defined(_MSC_VER)
+    #define CYTHON_INLINE __inline
+  #elif defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
     #define CYTHON_INLINE inline
+  #else
+    #define CYTHON_INLINE
   #endif
 #endif
-template<typename T>
-void __Pyx_call_destructor(T& x) {
-    x.~T();
-}
-template<typename T>
-class __Pyx_FakeReference {
-  public:
-    __Pyx_FakeReference() : ptr(NULL) { }
-    __Pyx_FakeReference(const T& ref) : ptr(const_cast<T*>(&ref)) { }
-    T *operator->() { return ptr; }
-    T *operator&() { return ptr; }
-    operator T&() { return *ptr; }
-    template<typename U> bool operator ==(U other) { return *ptr == other; }
-    template<typename U> bool operator !=(U other) { return *ptr != other; }
-  private:
-    T *ptr;
-};
 
 #if defined(WIN32) || defined(MS_WINDOWS)
   #define _USE_MATH_DEFINES
@@ -532,12 +518,10 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE__gb__collections__table
-#define __PYX_HAVE_API__gb__collections__table
-#include <stdint.h>
+#define __PYX_HAVE__gb__collections__inttovector
+#define __PYX_HAVE_API__gb__collections__inttovector
 #include <string.h>
 #include <stdlib.h>
-#include <stdio.h>
 #ifdef _OPENMP
 #include <omp.h>
 #endif /* _OPENMP */
@@ -741,105 +725,59 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "gb/collections/table.pyx",
+  "gb/collections/inttovector.pyx",
   "stringsource",
 };
 
 /*--- Type declarations ---*/
-struct __pyx_obj_2gb_11collections_5table_Table;
-struct __pyx_obj_2gb_11collections_5table_RobinHoodHash;
-struct __pyx_t_2gb_11collections_5table_entry_t;
-typedef struct __pyx_t_2gb_11collections_5table_entry_t __pyx_t_2gb_11collections_5table_entry_t;
-struct __pyx_t_2gb_11collections_5table_rh_hash_t;
-typedef struct __pyx_t_2gb_11collections_5table_rh_hash_t __pyx_t_2gb_11collections_5table_rh_hash_t;
+struct __pyx_obj_2gb_11collections_11inttovector_IntToVector;
+struct __pyx_t_2gb_11collections_11inttovector_vector;
+typedef struct __pyx_t_2gb_11collections_11inttovector_vector __pyx_t_2gb_11collections_11inttovector_vector;
 
-/* "gb/collections/table.pxd":12
+/* "gb/collections/inttovector.pxd":9
  * 
  * 
- * ctypedef struct entry_t:             # <<<<<<<<<<<<<<
- *     size_t key
- *     uint64_t value
+ * ctypedef struct vector:             # <<<<<<<<<<<<<<
+ *     double *data
+ *     size_t size
  */
-struct __pyx_t_2gb_11collections_5table_entry_t {
-  size_t key;
-  uint64_t value;
-  size_t dib;
-};
-
-/* "gb/collections/table.pxd":18
- * 
- * 
- * ctypedef struct rh_hash_t:             # <<<<<<<<<<<<<<
- *     size_t inserted
- *     size_t n_to_prime
- */
-struct __pyx_t_2gb_11collections_5table_rh_hash_t {
-  size_t inserted;
-  size_t n_to_prime;
+struct __pyx_t_2gb_11collections_11inttovector_vector {
+  double *data;
+  size_t size;
   size_t capacity;
-  double load_factor;
-  __pyx_t_2gb_11collections_5table_entry_t *data;
 };
 
-/* "gb/collections/table.pxd":26
+/* "gb/collections/inttovector.pxd":14
+ *     size_t capacity
  * 
- * 
- * cdef class Table(object):             # <<<<<<<<<<<<<<
- *     cdef rh_hash_t *rows
- *     cdef size_t n_rows
+ * cdef class IntToVector(object):             # <<<<<<<<<<<<<<
+ *     cdef size_t n_proc
+ *     cdef vector *vectors
  */
-struct __pyx_obj_2gb_11collections_5table_Table {
+struct __pyx_obj_2gb_11collections_11inttovector_IntToVector {
   PyObject_HEAD
-  struct __pyx_vtabstruct_2gb_11collections_5table_Table *__pyx_vtab;
-  __pyx_t_2gb_11collections_5table_rh_hash_t *rows;
-  size_t n_rows;
-};
-
-
-/* "gb/collections/table.pxd":34
- * 
- * 
- * cdef class RobinHoodHash(object):             # <<<<<<<<<<<<<<
- *     cdef rh_hash_t *table
- * 
- */
-struct __pyx_obj_2gb_11collections_5table_RobinHoodHash {
-  PyObject_HEAD
-  struct __pyx_vtabstruct_2gb_11collections_5table_RobinHoodHash *__pyx_vtab;
-  __pyx_t_2gb_11collections_5table_rh_hash_t *table;
+  struct __pyx_vtabstruct_2gb_11collections_11inttovector_IntToVector *__pyx_vtab;
+  size_t n_proc;
+  __pyx_t_2gb_11collections_11inttovector_vector *vectors;
 };
 
 
 
-/* "gb/collections/table.pyx":129
+/* "gb/collections/inttovector.pyx":15
  * 
  * 
- * cdef class Table(object):             # <<<<<<<<<<<<<<
+ * cdef class IntToVector(object):             # <<<<<<<<<<<<<<
  * 
- *     def __cinit__(self, size_t n_rows, double load_factor=0.95):
+ *     def __cinit__(self, size_t n_proc, size_t init_capacity):
  */
 
-struct __pyx_vtabstruct_2gb_11collections_5table_Table {
-  void (*set_cell)(struct __pyx_obj_2gb_11collections_5table_Table *, size_t, size_t, uint64_t);
-  uint64_t (*get_cell)(struct __pyx_obj_2gb_11collections_5table_Table *, size_t, size_t);
+struct __pyx_vtabstruct_2gb_11collections_11inttovector_IntToVector {
+  void (*push_back)(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *, size_t, double);
+  void (*reset)(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *);
+  size_t (*get_size)(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *, size_t);
+  double *(*get_values)(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *, size_t);
 };
-static struct __pyx_vtabstruct_2gb_11collections_5table_Table *__pyx_vtabptr_2gb_11collections_5table_Table;
-
-
-/* "gb/collections/table.pyx":161
- * 
- * 
- * cdef class RobinHoodHash(object):             # <<<<<<<<<<<<<<
- * 
- *     def __cinit__(self, double load_factor=0.95):
- */
-
-struct __pyx_vtabstruct_2gb_11collections_5table_RobinHoodHash {
-  void (*set)(struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *, size_t, uint64_t);
-  uint64_t (*get)(struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *, size_t);
-  size_t (*size)(struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *);
-};
-static struct __pyx_vtabstruct_2gb_11collections_5table_RobinHoodHash *__pyx_vtabptr_2gb_11collections_5table_RobinHoodHash;
+static struct __pyx_vtabstruct_2gb_11collections_11inttovector_IntToVector *__pyx_vtabptr_2gb_11collections_11inttovector_IntToVector;
 
 /* --- Runtime support code (head) --- */
 /* Refnanny.proto */
@@ -924,6 +862,10 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject
 /* GetBuiltinName.proto */
 static PyObject *__Pyx_GetBuiltinName(PyObject *name);
 
+/* RaiseArgTupleInvalid.proto */
+static void __Pyx_RaiseArgtupleInvalid(const char* func_name, int exact,
+    Py_ssize_t num_min, Py_ssize_t num_max, Py_ssize_t num_found);
+
 /* RaiseDoubleKeywords.proto */
 static void __Pyx_RaiseDoubleKeywordsError(const char* func_name, PyObject* kw_name);
 
@@ -931,10 +873,6 @@ static void __Pyx_RaiseDoubleKeywordsError(const char* func_name, PyObject* kw_n
 static int __Pyx_ParseOptionalKeywords(PyObject *kwds, PyObject **argnames[],\
     PyObject *kwds2, PyObject *values[], Py_ssize_t num_pos_args,\
     const char* function_name);
-
-/* RaiseArgTupleInvalid.proto */
-static void __Pyx_RaiseArgtupleInvalid(const char* func_name, int exact,
-    Py_ssize_t num_min, Py_ssize_t num_max, Py_ssize_t num_found);
 
 /* PyObjectCall.proto */
 #if CYTHON_COMPILING_IN_CPYTHON
@@ -1014,14 +952,8 @@ static void __pyx_insert_code_object(int code_line, PyCodeObject* code_object);
 static void __Pyx_AddTraceback(const char *funcname, int c_line,
                                int py_line, const char *filename);
 
-/* CIntToPy.proto */
-static CYTHON_INLINE PyObject* __Pyx_PyInt_From_uint64_t(uint64_t value);
-
 /* CIntFromPy.proto */
 static CYTHON_INLINE size_t __Pyx_PyInt_As_size_t(PyObject *);
-
-/* CIntFromPy.proto */
-static CYTHON_INLINE uint64_t __Pyx_PyInt_As_uint64_t(PyObject *);
 
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
@@ -1050,47 +982,30 @@ static int __Pyx_check_binary_version(void);
 /* InitStrings.proto */
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
-static uint64_t __pyx_f_2gb_11collections_5table_5Table_get_cell(struct __pyx_obj_2gb_11collections_5table_Table *__pyx_v_self, size_t __pyx_v_row, size_t __pyx_v_col); /* proto*/
-static void __pyx_f_2gb_11collections_5table_5Table_set_cell(struct __pyx_obj_2gb_11collections_5table_Table *__pyx_v_self, size_t __pyx_v_row, size_t __pyx_v_col, uint64_t __pyx_v_value); /* proto*/
-static void __pyx_f_2gb_11collections_5table_13RobinHoodHash_set(struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *__pyx_v_self, size_t __pyx_v_key, uint64_t __pyx_v_value); /* proto*/
-static uint64_t __pyx_f_2gb_11collections_5table_13RobinHoodHash_get(struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *__pyx_v_self, size_t __pyx_v_key); /* proto*/
-static size_t __pyx_f_2gb_11collections_5table_13RobinHoodHash_size(struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *__pyx_v_self); /* proto*/
-
-/* Module declarations from 'libc.stdint' */
+static void __pyx_f_2gb_11collections_11inttovector_11IntToVector_reset(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *__pyx_v_self); /* proto*/
+static void __pyx_f_2gb_11collections_11inttovector_11IntToVector_push_back(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *__pyx_v_self, size_t __pyx_v_i, double __pyx_v_value); /* proto*/
+static size_t __pyx_f_2gb_11collections_11inttovector_11IntToVector_get_size(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *__pyx_v_self, size_t __pyx_v_i); /* proto*/
+static double *__pyx_f_2gb_11collections_11inttovector_11IntToVector_get_values(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *__pyx_v_self, size_t __pyx_v_i); /* proto*/
 
 /* Module declarations from 'libc.string' */
 
 /* Module declarations from 'libc.stdlib' */
 
-/* Module declarations from 'libc.stdio' */
+/* Module declarations from 'gb.collections.inttovector' */
+static PyTypeObject *__pyx_ptype_2gb_11collections_11inttovector_IntToVector = 0;
+#define __Pyx_MODULE_NAME "gb.collections.inttovector"
+extern int __pyx_module_is_main_gb__collections__inttovector;
+int __pyx_module_is_main_gb__collections__inttovector = 0;
 
-/* Module declarations from 'gb.collections.table' */
-static PyTypeObject *__pyx_ptype_2gb_11collections_5table_Table = 0;
-static PyTypeObject *__pyx_ptype_2gb_11collections_5table_RobinHoodHash = 0;
-static CYTHON_INLINE size_t __pyx_f_2gb_11collections_5table_so_hash(size_t); /*proto*/
-static CYTHON_INLINE size_t __pyx_f_2gb_11collections_5table_prime_by_n(size_t); /*proto*/
-static void __pyx_f_2gb_11collections_5table_rh_resize(__pyx_t_2gb_11collections_5table_rh_hash_t *, size_t); /*proto*/
-static void __pyx_f_2gb_11collections_5table_rh_init(__pyx_t_2gb_11collections_5table_rh_hash_t *, double); /*proto*/
-static void __pyx_f_2gb_11collections_5table_rh_set(__pyx_t_2gb_11collections_5table_rh_hash_t *, size_t, uint64_t); /*proto*/
-static uint64_t __pyx_f_2gb_11collections_5table_rh_get(__pyx_t_2gb_11collections_5table_rh_hash_t *, size_t); /*proto*/
-static size_t __pyx_f_2gb_11collections_5table_rh_size(__pyx_t_2gb_11collections_5table_rh_hash_t *); /*proto*/
-#define __Pyx_MODULE_NAME "gb.collections.table"
-extern int __pyx_module_is_main_gb__collections__table;
-int __pyx_module_is_main_gb__collections__table = 0;
-
-/* Implementation of 'gb.collections.table' */
-static PyObject *__pyx_builtin_range;
+/* Implementation of 'gb.collections.inttovector' */
 static PyObject *__pyx_builtin_MemoryError;
+static PyObject *__pyx_builtin_range;
 static PyObject *__pyx_builtin_TypeError;
-static const char __pyx_k_col[] = "col";
-static const char __pyx_k_key[] = "key";
-static const char __pyx_k_row[] = "row";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_name[] = "__name__";
 static const char __pyx_k_test[] = "__test__";
 static const char __pyx_k_range[] = "range";
-static const char __pyx_k_value[] = "value";
-static const char __pyx_k_n_rows[] = "n_rows";
+static const char __pyx_k_n_proc[] = "n_proc";
 static const char __pyx_k_reduce[] = "__reduce__";
 static const char __pyx_k_getstate[] = "__getstate__";
 static const char __pyx_k_setstate[] = "__setstate__";
@@ -1098,22 +1013,18 @@ static const char __pyx_k_TypeError[] = "TypeError";
 static const char __pyx_k_reduce_ex[] = "__reduce_ex__";
 static const char __pyx_k_pyx_vtable[] = "__pyx_vtable__";
 static const char __pyx_k_MemoryError[] = "MemoryError";
-static const char __pyx_k_load_factor[] = "load_factor";
+static const char __pyx_k_init_capacity[] = "init_capacity";
 static const char __pyx_k_reduce_cython[] = "__reduce_cython__";
 static const char __pyx_k_setstate_cython[] = "__setstate_cython__";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
-static const char __pyx_k_Robin_Hash_out_of_mem[] = "Robin Hash out of mem";
 static const char __pyx_k_no_default___reduce___due_to_non[] = "no default __reduce__ due to non-trivial __cinit__";
 static PyObject *__pyx_n_s_MemoryError;
-static PyObject *__pyx_kp_s_Robin_Hash_out_of_mem;
 static PyObject *__pyx_n_s_TypeError;
 static PyObject *__pyx_n_s_cline_in_traceback;
-static PyObject *__pyx_n_s_col;
 static PyObject *__pyx_n_s_getstate;
-static PyObject *__pyx_n_s_key;
-static PyObject *__pyx_n_s_load_factor;
+static PyObject *__pyx_n_s_init_capacity;
 static PyObject *__pyx_n_s_main;
-static PyObject *__pyx_n_s_n_rows;
+static PyObject *__pyx_n_s_n_proc;
 static PyObject *__pyx_n_s_name;
 static PyObject *__pyx_kp_s_no_default___reduce___due_to_non;
 static PyObject *__pyx_n_s_pyx_vtable;
@@ -1121,1022 +1032,35 @@ static PyObject *__pyx_n_s_range;
 static PyObject *__pyx_n_s_reduce;
 static PyObject *__pyx_n_s_reduce_cython;
 static PyObject *__pyx_n_s_reduce_ex;
-static PyObject *__pyx_n_s_row;
 static PyObject *__pyx_n_s_setstate;
 static PyObject *__pyx_n_s_setstate_cython;
 static PyObject *__pyx_n_s_test;
-static PyObject *__pyx_n_s_value;
-static int __pyx_pf_2gb_11collections_5table_5Table___cinit__(struct __pyx_obj_2gb_11collections_5table_Table *__pyx_v_self, size_t __pyx_v_n_rows, double __pyx_v_load_factor); /* proto */
-static void __pyx_pf_2gb_11collections_5table_5Table_2__dealloc__(struct __pyx_obj_2gb_11collections_5table_Table *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_2gb_11collections_5table_5Table_4_get_cell(struct __pyx_obj_2gb_11collections_5table_Table *__pyx_v_self, size_t __pyx_v_row, size_t __pyx_v_col); /* proto */
-static PyObject *__pyx_pf_2gb_11collections_5table_5Table_6_set_cell(struct __pyx_obj_2gb_11collections_5table_Table *__pyx_v_self, size_t __pyx_v_row, size_t __pyx_v_col, uint64_t __pyx_v_value); /* proto */
-static PyObject *__pyx_pf_2gb_11collections_5table_5Table_8__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_2gb_11collections_5table_Table *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_2gb_11collections_5table_5Table_10__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_2gb_11collections_5table_Table *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
-static int __pyx_pf_2gb_11collections_5table_13RobinHoodHash___cinit__(struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *__pyx_v_self, double __pyx_v_load_factor); /* proto */
-static void __pyx_pf_2gb_11collections_5table_13RobinHoodHash_2__dealloc__(struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_2gb_11collections_5table_13RobinHoodHash_4_get(struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *__pyx_v_self, size_t __pyx_v_key); /* proto */
-static PyObject *__pyx_pf_2gb_11collections_5table_13RobinHoodHash_6_set(struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *__pyx_v_self, size_t __pyx_v_key, size_t __pyx_v_value); /* proto */
-static PyObject *__pyx_pf_2gb_11collections_5table_13RobinHoodHash_8_size(struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_2gb_11collections_5table_13RobinHoodHash_10__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_2gb_11collections_5table_13RobinHoodHash_12__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
-static PyObject *__pyx_tp_new_2gb_11collections_5table_Table(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
-static PyObject *__pyx_tp_new_2gb_11collections_5table_RobinHoodHash(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static int __pyx_pf_2gb_11collections_11inttovector_11IntToVector___cinit__(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *__pyx_v_self, size_t __pyx_v_n_proc, size_t __pyx_v_init_capacity); /* proto */
+static void __pyx_pf_2gb_11collections_11inttovector_11IntToVector_2__dealloc__(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_2gb_11collections_11inttovector_11IntToVector_4__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_2gb_11collections_11inttovector_11IntToVector_6__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_tp_new_2gb_11collections_11inttovector_IntToVector(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tuple_;
 static PyObject *__pyx_tuple__2;
-static PyObject *__pyx_tuple__3;
-static PyObject *__pyx_tuple__4;
-static PyObject *__pyx_tuple__5;
 
-/* "gb/collections/table.pyx":22
- * # Decent enough hash function from Stack Overflow
- * # Author is Thomas Mueller
- * cdef inline size_t so_hash(size_t x) nogil:             # <<<<<<<<<<<<<<
- *     x = (x ^ (x >> 30)) * <size_t>(0xbf58476d1ce4e5b9)
- *     x = (x ^ (x >> 27)) * <size_t>(0x94d049bb133111eb)
- */
-
-static CYTHON_INLINE size_t __pyx_f_2gb_11collections_5table_so_hash(size_t __pyx_v_x) {
-  size_t __pyx_r;
-
-  /* "gb/collections/table.pyx":23
- * # Author is Thomas Mueller
- * cdef inline size_t so_hash(size_t x) nogil:
- *     x = (x ^ (x >> 30)) * <size_t>(0xbf58476d1ce4e5b9)             # <<<<<<<<<<<<<<
- *     x = (x ^ (x >> 27)) * <size_t>(0x94d049bb133111eb)
- *     x = x ^ (x >> 31)
- */
-  __pyx_v_x = ((__pyx_v_x ^ (__pyx_v_x >> 30)) * ((size_t)0xbf58476d1ce4e5b9));
-
-  /* "gb/collections/table.pyx":24
- * cdef inline size_t so_hash(size_t x) nogil:
- *     x = (x ^ (x >> 30)) * <size_t>(0xbf58476d1ce4e5b9)
- *     x = (x ^ (x >> 27)) * <size_t>(0x94d049bb133111eb)             # <<<<<<<<<<<<<<
- *     x = x ^ (x >> 31)
- *     return x
- */
-  __pyx_v_x = ((__pyx_v_x ^ (__pyx_v_x >> 27)) * ((size_t)0x94d049bb133111eb));
-
-  /* "gb/collections/table.pyx":25
- *     x = (x ^ (x >> 30)) * <size_t>(0xbf58476d1ce4e5b9)
- *     x = (x ^ (x >> 27)) * <size_t>(0x94d049bb133111eb)
- *     x = x ^ (x >> 31)             # <<<<<<<<<<<<<<
- *     return x
- * 
- */
-  __pyx_v_x = (__pyx_v_x ^ (__pyx_v_x >> 31));
-
-  /* "gb/collections/table.pyx":26
- *     x = (x ^ (x >> 27)) * <size_t>(0x94d049bb133111eb)
- *     x = x ^ (x >> 31)
- *     return x             # <<<<<<<<<<<<<<
- * 
- * 
- */
-  __pyx_r = __pyx_v_x;
-  goto __pyx_L0;
-
-  /* "gb/collections/table.pyx":22
- * # Decent enough hash function from Stack Overflow
- * # Author is Thomas Mueller
- * cdef inline size_t so_hash(size_t x) nogil:             # <<<<<<<<<<<<<<
- *     x = (x ^ (x >> 30)) * <size_t>(0xbf58476d1ce4e5b9)
- *     x = (x ^ (x >> 27)) * <size_t>(0x94d049bb133111eb)
- */
-
-  /* function exit code */
-  __pyx_L0:;
-  return __pyx_r;
-}
-
-/* "gb/collections/table.pyx":29
- * 
- * 
- * cdef inline size_t prime_by_n(size_t n) nogil:             # <<<<<<<<<<<<<<
- *     return 5 * (n * n + n) + 1
- * 
- */
-
-static CYTHON_INLINE size_t __pyx_f_2gb_11collections_5table_prime_by_n(size_t __pyx_v_n) {
-  size_t __pyx_r;
-
-  /* "gb/collections/table.pyx":30
- * 
- * cdef inline size_t prime_by_n(size_t n) nogil:
- *     return 5 * (n * n + n) + 1             # <<<<<<<<<<<<<<
- * 
- * 
- */
-  __pyx_r = ((5 * ((__pyx_v_n * __pyx_v_n) + __pyx_v_n)) + 1);
-  goto __pyx_L0;
-
-  /* "gb/collections/table.pyx":29
- * 
- * 
- * cdef inline size_t prime_by_n(size_t n) nogil:             # <<<<<<<<<<<<<<
- *     return 5 * (n * n + n) + 1
- * 
- */
-
-  /* function exit code */
-  __pyx_L0:;
-  return __pyx_r;
-}
-
-/* "gb/collections/table.pyx":33
- * 
- * 
- * cdef void rh_resize(rh_hash_t *table, size_t new_size) nogil:             # <<<<<<<<<<<<<<
- *     cdef entry_t *copy = NULL
- *     if table.data == NULL:
- */
-
-static void __pyx_f_2gb_11collections_5table_rh_resize(__pyx_t_2gb_11collections_5table_rh_hash_t *__pyx_v_table, size_t __pyx_v_new_size) {
-  __pyx_t_2gb_11collections_5table_entry_t *__pyx_v_copy;
-  __pyx_t_2gb_11collections_5table_entry_t __pyx_v_entry;
-  size_t __pyx_v_i;
-  size_t __pyx_v_old_size;
-  int __pyx_t_1;
-  size_t __pyx_t_2;
-  size_t __pyx_t_3;
-
-  /* "gb/collections/table.pyx":34
- * 
- * cdef void rh_resize(rh_hash_t *table, size_t new_size) nogil:
- *     cdef entry_t *copy = NULL             # <<<<<<<<<<<<<<
- *     if table.data == NULL:
- *         table.data = <entry_t *> malloc(new_size*sizeof(entry_t))
- */
-  __pyx_v_copy = NULL;
-
-  /* "gb/collections/table.pyx":35
- * cdef void rh_resize(rh_hash_t *table, size_t new_size) nogil:
- *     cdef entry_t *copy = NULL
- *     if table.data == NULL:             # <<<<<<<<<<<<<<
- *         table.data = <entry_t *> malloc(new_size*sizeof(entry_t))
- *     else:
- */
-  __pyx_t_1 = ((__pyx_v_table->data == NULL) != 0);
-  if (__pyx_t_1) {
-
-    /* "gb/collections/table.pyx":36
- *     cdef entry_t *copy = NULL
- *     if table.data == NULL:
- *         table.data = <entry_t *> malloc(new_size*sizeof(entry_t))             # <<<<<<<<<<<<<<
- *     else:
- *         copy = <entry_t *> malloc(table.capacity * sizeof(entry_t))
- */
-    __pyx_v_table->data = ((__pyx_t_2gb_11collections_5table_entry_t *)malloc((__pyx_v_new_size * (sizeof(__pyx_t_2gb_11collections_5table_entry_t)))));
-
-    /* "gb/collections/table.pyx":35
- * cdef void rh_resize(rh_hash_t *table, size_t new_size) nogil:
- *     cdef entry_t *copy = NULL
- *     if table.data == NULL:             # <<<<<<<<<<<<<<
- *         table.data = <entry_t *> malloc(new_size*sizeof(entry_t))
- *     else:
- */
-    goto __pyx_L3;
-  }
-
-  /* "gb/collections/table.pyx":38
- *         table.data = <entry_t *> malloc(new_size*sizeof(entry_t))
- *     else:
- *         copy = <entry_t *> malloc(table.capacity * sizeof(entry_t))             # <<<<<<<<<<<<<<
- *         if copy == NULL:
- *             printf("[gb] memory error!\n")
- */
-  /*else*/ {
-    __pyx_v_copy = ((__pyx_t_2gb_11collections_5table_entry_t *)malloc((__pyx_v_table->capacity * (sizeof(__pyx_t_2gb_11collections_5table_entry_t)))));
-
-    /* "gb/collections/table.pyx":39
- *     else:
- *         copy = <entry_t *> malloc(table.capacity * sizeof(entry_t))
- *         if copy == NULL:             # <<<<<<<<<<<<<<
- *             printf("[gb] memory error!\n")
- *             abort()
- */
-    __pyx_t_1 = ((__pyx_v_copy == NULL) != 0);
-    if (__pyx_t_1) {
-
-      /* "gb/collections/table.pyx":40
- *         copy = <entry_t *> malloc(table.capacity * sizeof(entry_t))
- *         if copy == NULL:
- *             printf("[gb] memory error!\n")             # <<<<<<<<<<<<<<
- *             abort()
- *         memcpy(copy, table.data, table.capacity * sizeof(entry_t))
- */
-      printf(((char const *)"[gb] memory error!\n"));
-
-      /* "gb/collections/table.pyx":41
- *         if copy == NULL:
- *             printf("[gb] memory error!\n")
- *             abort()             # <<<<<<<<<<<<<<
- *         memcpy(copy, table.data, table.capacity * sizeof(entry_t))
- *         table.data = <entry_t *> realloc(table.data, new_size*sizeof(entry_t))
- */
-      abort();
-
-      /* "gb/collections/table.pyx":39
- *     else:
- *         copy = <entry_t *> malloc(table.capacity * sizeof(entry_t))
- *         if copy == NULL:             # <<<<<<<<<<<<<<
- *             printf("[gb] memory error!\n")
- *             abort()
- */
-    }
-
-    /* "gb/collections/table.pyx":42
- *             printf("[gb] memory error!\n")
- *             abort()
- *         memcpy(copy, table.data, table.capacity * sizeof(entry_t))             # <<<<<<<<<<<<<<
- *         table.data = <entry_t *> realloc(table.data, new_size*sizeof(entry_t))
- * 
- */
-    memcpy(__pyx_v_copy, __pyx_v_table->data, (__pyx_v_table->capacity * (sizeof(__pyx_t_2gb_11collections_5table_entry_t))));
-
-    /* "gb/collections/table.pyx":43
- *             abort()
- *         memcpy(copy, table.data, table.capacity * sizeof(entry_t))
- *         table.data = <entry_t *> realloc(table.data, new_size*sizeof(entry_t))             # <<<<<<<<<<<<<<
- * 
- *     if table.data == NULL:
- */
-    __pyx_v_table->data = ((__pyx_t_2gb_11collections_5table_entry_t *)realloc(__pyx_v_table->data, (__pyx_v_new_size * (sizeof(__pyx_t_2gb_11collections_5table_entry_t)))));
-  }
-  __pyx_L3:;
-
-  /* "gb/collections/table.pyx":45
- *         table.data = <entry_t *> realloc(table.data, new_size*sizeof(entry_t))
- * 
- *     if table.data == NULL:             # <<<<<<<<<<<<<<
- *         printf("[gb] memory error!\n")
- *         abort()
- */
-  __pyx_t_1 = ((__pyx_v_table->data == NULL) != 0);
-  if (__pyx_t_1) {
-
-    /* "gb/collections/table.pyx":46
- * 
- *     if table.data == NULL:
- *         printf("[gb] memory error!\n")             # <<<<<<<<<<<<<<
- *         abort()
- * 
- */
-    printf(((char const *)"[gb] memory error!\n"));
-
-    /* "gb/collections/table.pyx":47
- *     if table.data == NULL:
- *         printf("[gb] memory error!\n")
- *         abort()             # <<<<<<<<<<<<<<
- * 
- *     memset(table.data, 0, new_size * sizeof(entry_t))
- */
-    abort();
-
-    /* "gb/collections/table.pyx":45
- *         table.data = <entry_t *> realloc(table.data, new_size*sizeof(entry_t))
- * 
- *     if table.data == NULL:             # <<<<<<<<<<<<<<
- *         printf("[gb] memory error!\n")
- *         abort()
- */
-  }
-
-  /* "gb/collections/table.pyx":49
- *         abort()
- * 
- *     memset(table.data, 0, new_size * sizeof(entry_t))             # <<<<<<<<<<<<<<
- * 
- *     cdef entry_t entry
- */
-  memset(__pyx_v_table->data, 0, (__pyx_v_new_size * (sizeof(__pyx_t_2gb_11collections_5table_entry_t))));
-
-  /* "gb/collections/table.pyx":53
- *     cdef entry_t entry
- *     cdef size_t i
- *     cdef size_t old_size = table.capacity             # <<<<<<<<<<<<<<
- *     table.inserted = 0
- *     table.capacity = new_size
- */
-  __pyx_t_2 = __pyx_v_table->capacity;
-  __pyx_v_old_size = __pyx_t_2;
-
-  /* "gb/collections/table.pyx":54
- *     cdef size_t i
- *     cdef size_t old_size = table.capacity
- *     table.inserted = 0             # <<<<<<<<<<<<<<
- *     table.capacity = new_size
- *     if copy != NULL:
- */
-  __pyx_v_table->inserted = 0;
-
-  /* "gb/collections/table.pyx":55
- *     cdef size_t old_size = table.capacity
- *     table.inserted = 0
- *     table.capacity = new_size             # <<<<<<<<<<<<<<
- *     if copy != NULL:
- *         for i in range(old_size):
- */
-  __pyx_v_table->capacity = __pyx_v_new_size;
-
-  /* "gb/collections/table.pyx":56
- *     table.inserted = 0
- *     table.capacity = new_size
- *     if copy != NULL:             # <<<<<<<<<<<<<<
- *         for i in range(old_size):
- *             entry = copy[i]
- */
-  __pyx_t_1 = ((__pyx_v_copy != NULL) != 0);
-  if (__pyx_t_1) {
-
-    /* "gb/collections/table.pyx":57
- *     table.capacity = new_size
- *     if copy != NULL:
- *         for i in range(old_size):             # <<<<<<<<<<<<<<
- *             entry = copy[i]
- *             if entry.key == 0:
- */
-    __pyx_t_2 = __pyx_v_old_size;
-    for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
-      __pyx_v_i = __pyx_t_3;
-
-      /* "gb/collections/table.pyx":58
- *     if copy != NULL:
- *         for i in range(old_size):
- *             entry = copy[i]             # <<<<<<<<<<<<<<
- *             if entry.key == 0:
- *                 continue
- */
-      __pyx_v_entry = (__pyx_v_copy[__pyx_v_i]);
-
-      /* "gb/collections/table.pyx":59
- *         for i in range(old_size):
- *             entry = copy[i]
- *             if entry.key == 0:             # <<<<<<<<<<<<<<
- *                 continue
- *             rh_set(table, entry.key - 1, entry.value)
- */
-      __pyx_t_1 = ((__pyx_v_entry.key == 0) != 0);
-      if (__pyx_t_1) {
-
-        /* "gb/collections/table.pyx":60
- *             entry = copy[i]
- *             if entry.key == 0:
- *                 continue             # <<<<<<<<<<<<<<
- *             rh_set(table, entry.key - 1, entry.value)
- *         free(copy)
- */
-        goto __pyx_L7_continue;
-
-        /* "gb/collections/table.pyx":59
- *         for i in range(old_size):
- *             entry = copy[i]
- *             if entry.key == 0:             # <<<<<<<<<<<<<<
- *                 continue
- *             rh_set(table, entry.key - 1, entry.value)
- */
-      }
-
-      /* "gb/collections/table.pyx":61
- *             if entry.key == 0:
- *                 continue
- *             rh_set(table, entry.key - 1, entry.value)             # <<<<<<<<<<<<<<
- *         free(copy)
- * 
- */
-      __pyx_f_2gb_11collections_5table_rh_set(__pyx_v_table, (__pyx_v_entry.key - 1), __pyx_v_entry.value);
-      __pyx_L7_continue:;
-    }
-
-    /* "gb/collections/table.pyx":62
- *                 continue
- *             rh_set(table, entry.key - 1, entry.value)
- *         free(copy)             # <<<<<<<<<<<<<<
- * 
- * 
- */
-    free(__pyx_v_copy);
-
-    /* "gb/collections/table.pyx":56
- *     table.inserted = 0
- *     table.capacity = new_size
- *     if copy != NULL:             # <<<<<<<<<<<<<<
- *         for i in range(old_size):
- *             entry = copy[i]
- */
-  }
-
-  /* "gb/collections/table.pyx":33
- * 
- * 
- * cdef void rh_resize(rh_hash_t *table, size_t new_size) nogil:             # <<<<<<<<<<<<<<
- *     cdef entry_t *copy = NULL
- *     if table.data == NULL:
- */
-
-  /* function exit code */
-}
-
-/* "gb/collections/table.pyx":65
- * 
- * 
- * cdef void rh_init(rh_hash_t *table, double load_factor) nogil:             # <<<<<<<<<<<<<<
- *     table.inserted = 0
- *     table.n_to_prime = 1
- */
-
-static void __pyx_f_2gb_11collections_5table_rh_init(__pyx_t_2gb_11collections_5table_rh_hash_t *__pyx_v_table, double __pyx_v_load_factor) {
-
-  /* "gb/collections/table.pyx":66
- * 
- * cdef void rh_init(rh_hash_t *table, double load_factor) nogil:
- *     table.inserted = 0             # <<<<<<<<<<<<<<
- *     table.n_to_prime = 1
- *     table.load_factor = load_factor
- */
-  __pyx_v_table->inserted = 0;
-
-  /* "gb/collections/table.pyx":67
- * cdef void rh_init(rh_hash_t *table, double load_factor) nogil:
- *     table.inserted = 0
- *     table.n_to_prime = 1             # <<<<<<<<<<<<<<
- *     table.load_factor = load_factor
- *     table.data = NULL
- */
-  __pyx_v_table->n_to_prime = 1;
-
-  /* "gb/collections/table.pyx":68
- *     table.inserted = 0
- *     table.n_to_prime = 1
- *     table.load_factor = load_factor             # <<<<<<<<<<<<<<
- *     table.data = NULL
- *     rh_resize(table, prime_by_n(table.n_to_prime))
- */
-  __pyx_v_table->load_factor = __pyx_v_load_factor;
-
-  /* "gb/collections/table.pyx":69
- *     table.n_to_prime = 1
- *     table.load_factor = load_factor
- *     table.data = NULL             # <<<<<<<<<<<<<<
- *     rh_resize(table, prime_by_n(table.n_to_prime))
- * 
- */
-  __pyx_v_table->data = NULL;
-
-  /* "gb/collections/table.pyx":70
- *     table.load_factor = load_factor
- *     table.data = NULL
- *     rh_resize(table, prime_by_n(table.n_to_prime))             # <<<<<<<<<<<<<<
- * 
- * 
- */
-  __pyx_f_2gb_11collections_5table_rh_resize(__pyx_v_table, __pyx_f_2gb_11collections_5table_prime_by_n(__pyx_v_table->n_to_prime));
-
-  /* "gb/collections/table.pyx":65
- * 
- * 
- * cdef void rh_init(rh_hash_t *table, double load_factor) nogil:             # <<<<<<<<<<<<<<
- *     table.inserted = 0
- *     table.n_to_prime = 1
- */
-
-  /* function exit code */
-}
-
-/* "gb/collections/table.pyx":73
- * 
- * 
- * cdef void rh_set(rh_hash_t *table, size_t key, uint64_t value) nogil:             # <<<<<<<<<<<<<<
- *     cdef size_t kp1 = key + 1
- *     cdef size_t h = so_hash(kp1)
- */
-
-static void __pyx_f_2gb_11collections_5table_rh_set(__pyx_t_2gb_11collections_5table_rh_hash_t *__pyx_v_table, size_t __pyx_v_key, uint64_t __pyx_v_value) {
-  size_t __pyx_v_kp1;
-  size_t __pyx_v_h;
-  __pyx_t_2gb_11collections_5table_entry_t __pyx_v_entry;
-  __pyx_t_2gb_11collections_5table_entry_t __pyx_v_tmp;
-  size_t __pyx_v_loc;
-  size_t __pyx_v_i;
-  double __pyx_v_load;
-  size_t __pyx_v_new_n;
-  int __pyx_t_1;
-
-  /* "gb/collections/table.pyx":74
- * 
- * cdef void rh_set(rh_hash_t *table, size_t key, uint64_t value) nogil:
- *     cdef size_t kp1 = key + 1             # <<<<<<<<<<<<<<
- *     cdef size_t h = so_hash(kp1)
- * 
- */
-  __pyx_v_kp1 = (__pyx_v_key + 1);
-
-  /* "gb/collections/table.pyx":75
- * cdef void rh_set(rh_hash_t *table, size_t key, uint64_t value) nogil:
- *     cdef size_t kp1 = key + 1
- *     cdef size_t h = so_hash(kp1)             # <<<<<<<<<<<<<<
- * 
- *     cdef entry_t entry, tmp
- */
-  __pyx_v_h = __pyx_f_2gb_11collections_5table_so_hash(__pyx_v_kp1);
-
-  /* "gb/collections/table.pyx":78
- * 
- *     cdef entry_t entry, tmp
- *     entry.key = kp1             # <<<<<<<<<<<<<<
- *     entry.value = value
- *     entry.dib = 0
- */
-  __pyx_v_entry.key = __pyx_v_kp1;
-
-  /* "gb/collections/table.pyx":79
- *     cdef entry_t entry, tmp
- *     entry.key = kp1
- *     entry.value = value             # <<<<<<<<<<<<<<
- *     entry.dib = 0
- * 
- */
-  __pyx_v_entry.value = __pyx_v_value;
-
-  /* "gb/collections/table.pyx":80
- *     entry.key = kp1
- *     entry.value = value
- *     entry.dib = 0             # <<<<<<<<<<<<<<
- * 
- *     cdef size_t loc
- */
-  __pyx_v_entry.dib = 0;
-
-  /* "gb/collections/table.pyx":83
- * 
- *     cdef size_t loc
- *     cdef size_t i = 0             # <<<<<<<<<<<<<<
- *     table.inserted += 1
- *     while True:
- */
-  __pyx_v_i = 0;
-
-  /* "gb/collections/table.pyx":84
- *     cdef size_t loc
- *     cdef size_t i = 0
- *     table.inserted += 1             # <<<<<<<<<<<<<<
- *     while True:
- *         loc = (h + i) % table.capacity
- */
-  __pyx_v_table->inserted = (__pyx_v_table->inserted + 1);
-
-  /* "gb/collections/table.pyx":85
- *     cdef size_t i = 0
- *     table.inserted += 1
- *     while True:             # <<<<<<<<<<<<<<
- *         loc = (h + i) % table.capacity
- *         if table.data[loc].key == 0:
- */
-  while (1) {
-
-    /* "gb/collections/table.pyx":86
- *     table.inserted += 1
- *     while True:
- *         loc = (h + i) % table.capacity             # <<<<<<<<<<<<<<
- *         if table.data[loc].key == 0:
- *             table.data[loc] = entry
- */
-    __pyx_v_loc = ((__pyx_v_h + __pyx_v_i) % __pyx_v_table->capacity);
-
-    /* "gb/collections/table.pyx":87
- *     while True:
- *         loc = (h + i) % table.capacity
- *         if table.data[loc].key == 0:             # <<<<<<<<<<<<<<
- *             table.data[loc] = entry
- *             break
- */
-    __pyx_t_1 = (((__pyx_v_table->data[__pyx_v_loc]).key == 0) != 0);
-    if (__pyx_t_1) {
-
-      /* "gb/collections/table.pyx":88
- *         loc = (h + i) % table.capacity
- *         if table.data[loc].key == 0:
- *             table.data[loc] = entry             # <<<<<<<<<<<<<<
- *             break
- *         elif table.data[loc].key == kp1:
- */
-      (__pyx_v_table->data[__pyx_v_loc]) = __pyx_v_entry;
-
-      /* "gb/collections/table.pyx":89
- *         if table.data[loc].key == 0:
- *             table.data[loc] = entry
- *             break             # <<<<<<<<<<<<<<
- *         elif table.data[loc].key == kp1:
- *             table.data[loc].value = value
- */
-      goto __pyx_L4_break;
-
-      /* "gb/collections/table.pyx":87
- *     while True:
- *         loc = (h + i) % table.capacity
- *         if table.data[loc].key == 0:             # <<<<<<<<<<<<<<
- *             table.data[loc] = entry
- *             break
- */
-    }
-
-    /* "gb/collections/table.pyx":90
- *             table.data[loc] = entry
- *             break
- *         elif table.data[loc].key == kp1:             # <<<<<<<<<<<<<<
- *             table.data[loc].value = value
- *             table.inserted -= 1
- */
-    __pyx_t_1 = (((__pyx_v_table->data[__pyx_v_loc]).key == __pyx_v_kp1) != 0);
-    if (__pyx_t_1) {
-
-      /* "gb/collections/table.pyx":91
- *             break
- *         elif table.data[loc].key == kp1:
- *             table.data[loc].value = value             # <<<<<<<<<<<<<<
- *             table.inserted -= 1
- *             break
- */
-      (__pyx_v_table->data[__pyx_v_loc]).value = __pyx_v_value;
-
-      /* "gb/collections/table.pyx":92
- *         elif table.data[loc].key == kp1:
- *             table.data[loc].value = value
- *             table.inserted -= 1             # <<<<<<<<<<<<<<
- *             break
- *         elif table.data[loc].dib < entry.dib:
- */
-      __pyx_v_table->inserted = (__pyx_v_table->inserted - 1);
-
-      /* "gb/collections/table.pyx":93
- *             table.data[loc].value = value
- *             table.inserted -= 1
- *             break             # <<<<<<<<<<<<<<
- *         elif table.data[loc].dib < entry.dib:
- *             tmp = table.data[loc]
- */
-      goto __pyx_L4_break;
-
-      /* "gb/collections/table.pyx":90
- *             table.data[loc] = entry
- *             break
- *         elif table.data[loc].key == kp1:             # <<<<<<<<<<<<<<
- *             table.data[loc].value = value
- *             table.inserted -= 1
- */
-    }
-
-    /* "gb/collections/table.pyx":94
- *             table.inserted -= 1
- *             break
- *         elif table.data[loc].dib < entry.dib:             # <<<<<<<<<<<<<<
- *             tmp = table.data[loc]
- *             table.data[loc] = entry
- */
-    __pyx_t_1 = (((__pyx_v_table->data[__pyx_v_loc]).dib < __pyx_v_entry.dib) != 0);
-    if (__pyx_t_1) {
-
-      /* "gb/collections/table.pyx":95
- *             break
- *         elif table.data[loc].dib < entry.dib:
- *             tmp = table.data[loc]             # <<<<<<<<<<<<<<
- *             table.data[loc] = entry
- *             entry = tmp
- */
-      __pyx_v_tmp = (__pyx_v_table->data[__pyx_v_loc]);
-
-      /* "gb/collections/table.pyx":96
- *         elif table.data[loc].dib < entry.dib:
- *             tmp = table.data[loc]
- *             table.data[loc] = entry             # <<<<<<<<<<<<<<
- *             entry = tmp
- *         entry.dib += 1
- */
-      (__pyx_v_table->data[__pyx_v_loc]) = __pyx_v_entry;
-
-      /* "gb/collections/table.pyx":97
- *             tmp = table.data[loc]
- *             table.data[loc] = entry
- *             entry = tmp             # <<<<<<<<<<<<<<
- *         entry.dib += 1
- *         i += 1
- */
-      __pyx_v_entry = __pyx_v_tmp;
-
-      /* "gb/collections/table.pyx":94
- *             table.inserted -= 1
- *             break
- *         elif table.data[loc].dib < entry.dib:             # <<<<<<<<<<<<<<
- *             tmp = table.data[loc]
- *             table.data[loc] = entry
- */
-    }
-
-    /* "gb/collections/table.pyx":98
- *             table.data[loc] = entry
- *             entry = tmp
- *         entry.dib += 1             # <<<<<<<<<<<<<<
- *         i += 1
- * 
- */
-    __pyx_v_entry.dib = (__pyx_v_entry.dib + 1);
-
-    /* "gb/collections/table.pyx":99
- *             entry = tmp
- *         entry.dib += 1
- *         i += 1             # <<<<<<<<<<<<<<
- * 
- *     cdef double load = (<double>table.inserted) / table.capacity
- */
-    __pyx_v_i = (__pyx_v_i + 1);
-  }
-  __pyx_L4_break:;
-
-  /* "gb/collections/table.pyx":101
- *         i += 1
- * 
- *     cdef double load = (<double>table.inserted) / table.capacity             # <<<<<<<<<<<<<<
- *     cdef size_t new_n
- *     if load > table.load_factor:
- */
-  __pyx_v_load = (((double)__pyx_v_table->inserted) / __pyx_v_table->capacity);
-
-  /* "gb/collections/table.pyx":103
- *     cdef double load = (<double>table.inserted) / table.capacity
- *     cdef size_t new_n
- *     if load > table.load_factor:             # <<<<<<<<<<<<<<
- *         new_n = table.n_to_prime + 1
- *         while prime_by_n(new_n) < 2 * table.capacity:
- */
-  __pyx_t_1 = ((__pyx_v_load > __pyx_v_table->load_factor) != 0);
-  if (__pyx_t_1) {
-
-    /* "gb/collections/table.pyx":104
- *     cdef size_t new_n
- *     if load > table.load_factor:
- *         new_n = table.n_to_prime + 1             # <<<<<<<<<<<<<<
- *         while prime_by_n(new_n) < 2 * table.capacity:
- *             new_n += 1
- */
-    __pyx_v_new_n = (__pyx_v_table->n_to_prime + 1);
-
-    /* "gb/collections/table.pyx":105
- *     if load > table.load_factor:
- *         new_n = table.n_to_prime + 1
- *         while prime_by_n(new_n) < 2 * table.capacity:             # <<<<<<<<<<<<<<
- *             new_n += 1
- *         table.n_to_prime = new_n
- */
-    while (1) {
-      __pyx_t_1 = ((__pyx_f_2gb_11collections_5table_prime_by_n(__pyx_v_new_n) < (2 * __pyx_v_table->capacity)) != 0);
-      if (!__pyx_t_1) break;
-
-      /* "gb/collections/table.pyx":106
- *         new_n = table.n_to_prime + 1
- *         while prime_by_n(new_n) < 2 * table.capacity:
- *             new_n += 1             # <<<<<<<<<<<<<<
- *         table.n_to_prime = new_n
- *         rh_resize(table, prime_by_n(new_n))
- */
-      __pyx_v_new_n = (__pyx_v_new_n + 1);
-    }
-
-    /* "gb/collections/table.pyx":107
- *         while prime_by_n(new_n) < 2 * table.capacity:
- *             new_n += 1
- *         table.n_to_prime = new_n             # <<<<<<<<<<<<<<
- *         rh_resize(table, prime_by_n(new_n))
- * 
- */
-    __pyx_v_table->n_to_prime = __pyx_v_new_n;
-
-    /* "gb/collections/table.pyx":108
- *             new_n += 1
- *         table.n_to_prime = new_n
- *         rh_resize(table, prime_by_n(new_n))             # <<<<<<<<<<<<<<
- * 
- * 
- */
-    __pyx_f_2gb_11collections_5table_rh_resize(__pyx_v_table, __pyx_f_2gb_11collections_5table_prime_by_n(__pyx_v_new_n));
-
-    /* "gb/collections/table.pyx":103
- *     cdef double load = (<double>table.inserted) / table.capacity
- *     cdef size_t new_n
- *     if load > table.load_factor:             # <<<<<<<<<<<<<<
- *         new_n = table.n_to_prime + 1
- *         while prime_by_n(new_n) < 2 * table.capacity:
- */
-  }
-
-  /* "gb/collections/table.pyx":73
- * 
- * 
- * cdef void rh_set(rh_hash_t *table, size_t key, uint64_t value) nogil:             # <<<<<<<<<<<<<<
- *     cdef size_t kp1 = key + 1
- *     cdef size_t h = so_hash(kp1)
- */
-
-  /* function exit code */
-}
-
-/* "gb/collections/table.pyx":111
- * 
- * 
- * cdef uint64_t rh_get(rh_hash_t *table, size_t key) nogil:             # <<<<<<<<<<<<<<
- *     cdef size_t kp1 = key + 1
- *     cdef size_t h = so_hash(kp1)
- */
-
-static uint64_t __pyx_f_2gb_11collections_5table_rh_get(__pyx_t_2gb_11collections_5table_rh_hash_t *__pyx_v_table, size_t __pyx_v_key) {
-  size_t __pyx_v_kp1;
-  size_t __pyx_v_h;
-  size_t __pyx_v_i;
-  size_t __pyx_v_loc;
-  uint64_t __pyx_r;
-  size_t __pyx_t_1;
-  size_t __pyx_t_2;
-  int __pyx_t_3;
-
-  /* "gb/collections/table.pyx":112
- * 
- * cdef uint64_t rh_get(rh_hash_t *table, size_t key) nogil:
- *     cdef size_t kp1 = key + 1             # <<<<<<<<<<<<<<
- *     cdef size_t h = so_hash(kp1)
- *     cdef size_t i = 0
- */
-  __pyx_v_kp1 = (__pyx_v_key + 1);
-
-  /* "gb/collections/table.pyx":113
- * cdef uint64_t rh_get(rh_hash_t *table, size_t key) nogil:
- *     cdef size_t kp1 = key + 1
- *     cdef size_t h = so_hash(kp1)             # <<<<<<<<<<<<<<
- *     cdef size_t i = 0
- *     cdef size_t loc
- */
-  __pyx_v_h = __pyx_f_2gb_11collections_5table_so_hash(__pyx_v_kp1);
-
-  /* "gb/collections/table.pyx":114
- *     cdef size_t kp1 = key + 1
- *     cdef size_t h = so_hash(kp1)
- *     cdef size_t i = 0             # <<<<<<<<<<<<<<
- *     cdef size_t loc
- *     for i in range(table.inserted):
- */
-  __pyx_v_i = 0;
-
-  /* "gb/collections/table.pyx":116
- *     cdef size_t i = 0
- *     cdef size_t loc
- *     for i in range(table.inserted):             # <<<<<<<<<<<<<<
- *         loc = (h + i) % table.capacity
- *         if table.data[loc].key == 0:
- */
-  __pyx_t_1 = __pyx_v_table->inserted;
-  for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
-    __pyx_v_i = __pyx_t_2;
-
-    /* "gb/collections/table.pyx":117
- *     cdef size_t loc
- *     for i in range(table.inserted):
- *         loc = (h + i) % table.capacity             # <<<<<<<<<<<<<<
- *         if table.data[loc].key == 0:
- *             return 0
- */
-    __pyx_v_loc = ((__pyx_v_h + __pyx_v_i) % __pyx_v_table->capacity);
-
-    /* "gb/collections/table.pyx":118
- *     for i in range(table.inserted):
- *         loc = (h + i) % table.capacity
- *         if table.data[loc].key == 0:             # <<<<<<<<<<<<<<
- *             return 0
- *         elif table.data[loc].key == kp1:
- */
-    __pyx_t_3 = (((__pyx_v_table->data[__pyx_v_loc]).key == 0) != 0);
-    if (__pyx_t_3) {
-
-      /* "gb/collections/table.pyx":119
- *         loc = (h + i) % table.capacity
- *         if table.data[loc].key == 0:
- *             return 0             # <<<<<<<<<<<<<<
- *         elif table.data[loc].key == kp1:
- *             return table.data[loc].value
- */
-      __pyx_r = 0;
-      goto __pyx_L0;
-
-      /* "gb/collections/table.pyx":118
- *     for i in range(table.inserted):
- *         loc = (h + i) % table.capacity
- *         if table.data[loc].key == 0:             # <<<<<<<<<<<<<<
- *             return 0
- *         elif table.data[loc].key == kp1:
- */
-    }
-
-    /* "gb/collections/table.pyx":120
- *         if table.data[loc].key == 0:
- *             return 0
- *         elif table.data[loc].key == kp1:             # <<<<<<<<<<<<<<
- *             return table.data[loc].value
- *     return 0
- */
-    __pyx_t_3 = (((__pyx_v_table->data[__pyx_v_loc]).key == __pyx_v_kp1) != 0);
-    if (__pyx_t_3) {
-
-      /* "gb/collections/table.pyx":121
- *             return 0
- *         elif table.data[loc].key == kp1:
- *             return table.data[loc].value             # <<<<<<<<<<<<<<
- *     return 0
- * 
- */
-      __pyx_r = (__pyx_v_table->data[__pyx_v_loc]).value;
-      goto __pyx_L0;
-
-      /* "gb/collections/table.pyx":120
- *         if table.data[loc].key == 0:
- *             return 0
- *         elif table.data[loc].key == kp1:             # <<<<<<<<<<<<<<
- *             return table.data[loc].value
- *     return 0
- */
-    }
-  }
-
-  /* "gb/collections/table.pyx":122
- *         elif table.data[loc].key == kp1:
- *             return table.data[loc].value
- *     return 0             # <<<<<<<<<<<<<<
- * 
- * 
- */
-  __pyx_r = 0;
-  goto __pyx_L0;
-
-  /* "gb/collections/table.pyx":111
- * 
- * 
- * cdef uint64_t rh_get(rh_hash_t *table, size_t key) nogil:             # <<<<<<<<<<<<<<
- *     cdef size_t kp1 = key + 1
- *     cdef size_t h = so_hash(kp1)
- */
-
-  /* function exit code */
-  __pyx_L0:;
-  return __pyx_r;
-}
-
-/* "gb/collections/table.pyx":125
- * 
- * 
- * cdef size_t rh_size(rh_hash_t *table) nogil:             # <<<<<<<<<<<<<<
- *     return table.inserted
- * 
- */
-
-static size_t __pyx_f_2gb_11collections_5table_rh_size(__pyx_t_2gb_11collections_5table_rh_hash_t *__pyx_v_table) {
-  size_t __pyx_r;
-
-  /* "gb/collections/table.pyx":126
- * 
- * cdef size_t rh_size(rh_hash_t *table) nogil:
- *     return table.inserted             # <<<<<<<<<<<<<<
- * 
- * 
- */
-  __pyx_r = __pyx_v_table->inserted;
-  goto __pyx_L0;
-
-  /* "gb/collections/table.pyx":125
- * 
- * 
- * cdef size_t rh_size(rh_hash_t *table) nogil:             # <<<<<<<<<<<<<<
- *     return table.inserted
- * 
- */
-
-  /* function exit code */
-  __pyx_L0:;
-  return __pyx_r;
-}
-
-/* "gb/collections/table.pyx":131
- * cdef class Table(object):
+/* "gb/collections/inttovector.pyx":17
+ * cdef class IntToVector(object):
  * 
- *     def __cinit__(self, size_t n_rows, double load_factor=0.95):             # <<<<<<<<<<<<<<
- *         self.n_rows = n_rows
- *         self.rows = <rh_hash_t *> malloc(n_rows * sizeof(rh_hash_t))
+ *     def __cinit__(self, size_t n_proc, size_t init_capacity):             # <<<<<<<<<<<<<<
+ *         self.vectors = <vector *> malloc(n_proc * sizeof(vector))
+ *         if self.vectors == NULL:
  */
 
 /* Python wrapper */
-static int __pyx_pw_2gb_11collections_5table_5Table_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static int __pyx_pw_2gb_11collections_5table_5Table_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  size_t __pyx_v_n_rows;
-  double __pyx_v_load_factor;
+static int __pyx_pw_2gb_11collections_11inttovector_11IntToVector_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static int __pyx_pw_2gb_11collections_11inttovector_11IntToVector_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  size_t __pyx_v_n_proc;
+  size_t __pyx_v_init_capacity;
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__cinit__ (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_n_rows,&__pyx_n_s_load_factor,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_n_proc,&__pyx_n_s_init_capacity,0};
     PyObject* values[2] = {0,0};
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
@@ -2152,50 +1076,43 @@ static int __pyx_pw_2gb_11collections_5table_5Table_1__cinit__(PyObject *__pyx_v
       kw_args = PyDict_Size(__pyx_kwds);
       switch (pos_args) {
         case  0:
-        if (likely((values[0] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_n_rows)) != 0)) kw_args--;
+        if (likely((values[0] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_n_proc)) != 0)) kw_args--;
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
-        if (kw_args > 0) {
-          PyObject* value = PyDict_GetItem(__pyx_kwds, __pyx_n_s_load_factor);
-          if (value) { values[1] = value; kw_args--; }
+        if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_init_capacity)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 2, 2, 1); __PYX_ERR(0, 17, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(0, 131, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(0, 17, __pyx_L3_error)
       }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
+      goto __pyx_L5_argtuple_error;
     } else {
-      switch (PyTuple_GET_SIZE(__pyx_args)) {
-        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-        CYTHON_FALLTHROUGH;
-        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-        break;
-        default: goto __pyx_L5_argtuple_error;
-      }
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
-    __pyx_v_n_rows = __Pyx_PyInt_As_size_t(values[0]); if (unlikely((__pyx_v_n_rows == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 131, __pyx_L3_error)
-    if (values[1]) {
-      __pyx_v_load_factor = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_load_factor == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 131, __pyx_L3_error)
-    } else {
-      __pyx_v_load_factor = ((double)0.95);
-    }
+    __pyx_v_n_proc = __Pyx_PyInt_As_size_t(values[0]); if (unlikely((__pyx_v_n_proc == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 17, __pyx_L3_error)
+    __pyx_v_init_capacity = __Pyx_PyInt_As_size_t(values[1]); if (unlikely((__pyx_v_init_capacity == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 17, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 131, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 17, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("gb.collections.table.Table.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("gb.collections.inttovector.IntToVector.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_2gb_11collections_5table_5Table___cinit__(((struct __pyx_obj_2gb_11collections_5table_Table *)__pyx_v_self), __pyx_v_n_rows, __pyx_v_load_factor);
+  __pyx_r = __pyx_pf_2gb_11collections_11inttovector_11IntToVector___cinit__(((struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *)__pyx_v_self), __pyx_v_n_proc, __pyx_v_init_capacity);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static int __pyx_pf_2gb_11collections_5table_5Table___cinit__(struct __pyx_obj_2gb_11collections_5table_Table *__pyx_v_self, size_t __pyx_v_n_rows, double __pyx_v_load_factor) {
+static int __pyx_pf_2gb_11collections_11inttovector_11IntToVector___cinit__(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *__pyx_v_self, size_t __pyx_v_n_proc, size_t __pyx_v_init_capacity) {
   size_t __pyx_v_i;
   int __pyx_r;
   __Pyx_RefNannyDeclarations
@@ -2204,112 +1121,158 @@ static int __pyx_pf_2gb_11collections_5table_5Table___cinit__(struct __pyx_obj_2
   size_t __pyx_t_3;
   __Pyx_RefNannySetupContext("__cinit__", 0);
 
-  /* "gb/collections/table.pyx":132
+  /* "gb/collections/inttovector.pyx":18
  * 
- *     def __cinit__(self, size_t n_rows, double load_factor=0.95):
- *         self.n_rows = n_rows             # <<<<<<<<<<<<<<
- *         self.rows = <rh_hash_t *> malloc(n_rows * sizeof(rh_hash_t))
- *         if self.rows == NULL:
- */
-  __pyx_v_self->n_rows = __pyx_v_n_rows;
-
-  /* "gb/collections/table.pyx":133
- *     def __cinit__(self, size_t n_rows, double load_factor=0.95):
- *         self.n_rows = n_rows
- *         self.rows = <rh_hash_t *> malloc(n_rows * sizeof(rh_hash_t))             # <<<<<<<<<<<<<<
- *         if self.rows == NULL:
+ *     def __cinit__(self, size_t n_proc, size_t init_capacity):
+ *         self.vectors = <vector *> malloc(n_proc * sizeof(vector))             # <<<<<<<<<<<<<<
+ *         if self.vectors == NULL:
  *             raise MemoryError()
  */
-  __pyx_v_self->rows = ((__pyx_t_2gb_11collections_5table_rh_hash_t *)malloc((__pyx_v_n_rows * (sizeof(__pyx_t_2gb_11collections_5table_rh_hash_t)))));
+  __pyx_v_self->vectors = ((__pyx_t_2gb_11collections_11inttovector_vector *)malloc((__pyx_v_n_proc * (sizeof(__pyx_t_2gb_11collections_11inttovector_vector)))));
 
-  /* "gb/collections/table.pyx":134
- *         self.n_rows = n_rows
- *         self.rows = <rh_hash_t *> malloc(n_rows * sizeof(rh_hash_t))
- *         if self.rows == NULL:             # <<<<<<<<<<<<<<
+  /* "gb/collections/inttovector.pyx":19
+ *     def __cinit__(self, size_t n_proc, size_t init_capacity):
+ *         self.vectors = <vector *> malloc(n_proc * sizeof(vector))
+ *         if self.vectors == NULL:             # <<<<<<<<<<<<<<
  *             raise MemoryError()
- *         cdef size_t i
+ * 
  */
-  __pyx_t_1 = ((__pyx_v_self->rows == NULL) != 0);
+  __pyx_t_1 = ((__pyx_v_self->vectors == NULL) != 0);
   if (__pyx_t_1) {
 
-    /* "gb/collections/table.pyx":135
- *         self.rows = <rh_hash_t *> malloc(n_rows * sizeof(rh_hash_t))
- *         if self.rows == NULL:
+    /* "gb/collections/inttovector.pyx":20
+ *         self.vectors = <vector *> malloc(n_proc * sizeof(vector))
+ *         if self.vectors == NULL:
  *             raise MemoryError()             # <<<<<<<<<<<<<<
+ * 
  *         cdef size_t i
- *         for i in range(n_rows):
  */
-    PyErr_NoMemory(); __PYX_ERR(0, 135, __pyx_L1_error)
+    PyErr_NoMemory(); __PYX_ERR(0, 20, __pyx_L1_error)
 
-    /* "gb/collections/table.pyx":134
- *         self.n_rows = n_rows
- *         self.rows = <rh_hash_t *> malloc(n_rows * sizeof(rh_hash_t))
- *         if self.rows == NULL:             # <<<<<<<<<<<<<<
+    /* "gb/collections/inttovector.pyx":19
+ *     def __cinit__(self, size_t n_proc, size_t init_capacity):
+ *         self.vectors = <vector *> malloc(n_proc * sizeof(vector))
+ *         if self.vectors == NULL:             # <<<<<<<<<<<<<<
  *             raise MemoryError()
- *         cdef size_t i
+ * 
  */
   }
 
-  /* "gb/collections/table.pyx":137
- *             raise MemoryError()
- *         cdef size_t i
- *         for i in range(n_rows):             # <<<<<<<<<<<<<<
- *             rh_init(&self.rows[i], load_factor)
+  /* "gb/collections/inttovector.pyx":23
  * 
+ *         cdef size_t i
+ *         for i in range(n_proc):             # <<<<<<<<<<<<<<
+ *             self.vectors[i].data = \
+ *                 <double *> malloc(init_capacity * sizeof(double))
  */
-  __pyx_t_2 = __pyx_v_n_rows;
+  __pyx_t_2 = __pyx_v_n_proc;
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "gb/collections/table.pyx":138
+    /* "gb/collections/inttovector.pyx":24
  *         cdef size_t i
- *         for i in range(n_rows):
- *             rh_init(&self.rows[i], load_factor)             # <<<<<<<<<<<<<<
+ *         for i in range(n_proc):
+ *             self.vectors[i].data = \             # <<<<<<<<<<<<<<
+ *                 <double *> malloc(init_capacity * sizeof(double))
+ *             if self.vectors[i].data == NULL:
+ */
+    (__pyx_v_self->vectors[__pyx_v_i]).data = ((double *)malloc((__pyx_v_init_capacity * (sizeof(double)))));
+
+    /* "gb/collections/inttovector.pyx":26
+ *             self.vectors[i].data = \
+ *                 <double *> malloc(init_capacity * sizeof(double))
+ *             if self.vectors[i].data == NULL:             # <<<<<<<<<<<<<<
+ *                 raise MemoryError()
+ *             self.vectors[i].capacity = init_capacity
+ */
+    __pyx_t_1 = (((__pyx_v_self->vectors[__pyx_v_i]).data == NULL) != 0);
+    if (__pyx_t_1) {
+
+      /* "gb/collections/inttovector.pyx":27
+ *                 <double *> malloc(init_capacity * sizeof(double))
+ *             if self.vectors[i].data == NULL:
+ *                 raise MemoryError()             # <<<<<<<<<<<<<<
+ *             self.vectors[i].capacity = init_capacity
+ *             self.vectors[i].size = 0
+ */
+      PyErr_NoMemory(); __PYX_ERR(0, 27, __pyx_L1_error)
+
+      /* "gb/collections/inttovector.pyx":26
+ *             self.vectors[i].data = \
+ *                 <double *> malloc(init_capacity * sizeof(double))
+ *             if self.vectors[i].data == NULL:             # <<<<<<<<<<<<<<
+ *                 raise MemoryError()
+ *             self.vectors[i].capacity = init_capacity
+ */
+    }
+
+    /* "gb/collections/inttovector.pyx":28
+ *             if self.vectors[i].data == NULL:
+ *                 raise MemoryError()
+ *             self.vectors[i].capacity = init_capacity             # <<<<<<<<<<<<<<
+ *             self.vectors[i].size = 0
+ *         self.n_proc = n_proc
+ */
+    (__pyx_v_self->vectors[__pyx_v_i]).capacity = __pyx_v_init_capacity;
+
+    /* "gb/collections/inttovector.pyx":29
+ *                 raise MemoryError()
+ *             self.vectors[i].capacity = init_capacity
+ *             self.vectors[i].size = 0             # <<<<<<<<<<<<<<
+ *         self.n_proc = n_proc
+ * 
+ */
+    (__pyx_v_self->vectors[__pyx_v_i]).size = 0;
+  }
+
+  /* "gb/collections/inttovector.pyx":30
+ *             self.vectors[i].capacity = init_capacity
+ *             self.vectors[i].size = 0
+ *         self.n_proc = n_proc             # <<<<<<<<<<<<<<
  * 
  *     def __dealloc__(self):
  */
-    __pyx_f_2gb_11collections_5table_rh_init((&(__pyx_v_self->rows[__pyx_v_i])), __pyx_v_load_factor);
-  }
+  __pyx_v_self->n_proc = __pyx_v_n_proc;
 
-  /* "gb/collections/table.pyx":131
- * cdef class Table(object):
+  /* "gb/collections/inttovector.pyx":17
+ * cdef class IntToVector(object):
  * 
- *     def __cinit__(self, size_t n_rows, double load_factor=0.95):             # <<<<<<<<<<<<<<
- *         self.n_rows = n_rows
- *         self.rows = <rh_hash_t *> malloc(n_rows * sizeof(rh_hash_t))
+ *     def __cinit__(self, size_t n_proc, size_t init_capacity):             # <<<<<<<<<<<<<<
+ *         self.vectors = <vector *> malloc(n_proc * sizeof(vector))
+ *         if self.vectors == NULL:
  */
 
   /* function exit code */
   __pyx_r = 0;
   goto __pyx_L0;
   __pyx_L1_error:;
-  __Pyx_AddTraceback("gb.collections.table.Table.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("gb.collections.inttovector.IntToVector.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "gb/collections/table.pyx":140
- *             rh_init(&self.rows[i], load_factor)
+/* "gb/collections/inttovector.pyx":32
+ *         self.n_proc = n_proc
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
  *         cdef size_t i
- *         if self.rows != NULL:
+ *         if self.vectors != NULL:
  */
 
 /* Python wrapper */
-static void __pyx_pw_2gb_11collections_5table_5Table_3__dealloc__(PyObject *__pyx_v_self); /*proto*/
-static void __pyx_pw_2gb_11collections_5table_5Table_3__dealloc__(PyObject *__pyx_v_self) {
+static void __pyx_pw_2gb_11collections_11inttovector_11IntToVector_3__dealloc__(PyObject *__pyx_v_self); /*proto*/
+static void __pyx_pw_2gb_11collections_11inttovector_11IntToVector_3__dealloc__(PyObject *__pyx_v_self) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__dealloc__ (wrapper)", 0);
-  __pyx_pf_2gb_11collections_5table_5Table_2__dealloc__(((struct __pyx_obj_2gb_11collections_5table_Table *)__pyx_v_self));
+  __pyx_pf_2gb_11collections_11inttovector_11IntToVector_2__dealloc__(((struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
 }
 
-static void __pyx_pf_2gb_11collections_5table_5Table_2__dealloc__(struct __pyx_obj_2gb_11collections_5table_Table *__pyx_v_self) {
+static void __pyx_pf_2gb_11collections_11inttovector_11IntToVector_2__dealloc__(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *__pyx_v_self) {
   size_t __pyx_v_i;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
@@ -2317,374 +1280,300 @@ static void __pyx_pf_2gb_11collections_5table_5Table_2__dealloc__(struct __pyx_o
   size_t __pyx_t_3;
   __Pyx_RefNannySetupContext("__dealloc__", 0);
 
-  /* "gb/collections/table.pyx":142
+  /* "gb/collections/inttovector.pyx":34
  *     def __dealloc__(self):
  *         cdef size_t i
- *         if self.rows != NULL:             # <<<<<<<<<<<<<<
- *             for i in range(self.n_rows):
- *                 if self.rows[i].data != NULL:
+ *         if self.vectors != NULL:             # <<<<<<<<<<<<<<
+ *             for i in range(self.n_proc):
+ *                 if self.vectors[i].data != NULL:
  */
-  __pyx_t_1 = ((__pyx_v_self->rows != NULL) != 0);
+  __pyx_t_1 = ((__pyx_v_self->vectors != NULL) != 0);
   if (__pyx_t_1) {
 
-    /* "gb/collections/table.pyx":143
+    /* "gb/collections/inttovector.pyx":35
  *         cdef size_t i
- *         if self.rows != NULL:
- *             for i in range(self.n_rows):             # <<<<<<<<<<<<<<
- *                 if self.rows[i].data != NULL:
- *                     free(self.rows[i].data)
+ *         if self.vectors != NULL:
+ *             for i in range(self.n_proc):             # <<<<<<<<<<<<<<
+ *                 if self.vectors[i].data != NULL:
+ *                     free(self.vectors[i].data)
  */
-    __pyx_t_2 = __pyx_v_self->n_rows;
+    __pyx_t_2 = __pyx_v_self->n_proc;
     for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
       __pyx_v_i = __pyx_t_3;
 
-      /* "gb/collections/table.pyx":144
- *         if self.rows != NULL:
- *             for i in range(self.n_rows):
- *                 if self.rows[i].data != NULL:             # <<<<<<<<<<<<<<
- *                     free(self.rows[i].data)
- *             free(self.rows)
+      /* "gb/collections/inttovector.pyx":36
+ *         if self.vectors != NULL:
+ *             for i in range(self.n_proc):
+ *                 if self.vectors[i].data != NULL:             # <<<<<<<<<<<<<<
+ *                     free(self.vectors[i].data)
+ *             free(self.vectors)
  */
-      __pyx_t_1 = (((__pyx_v_self->rows[__pyx_v_i]).data != NULL) != 0);
+      __pyx_t_1 = (((__pyx_v_self->vectors[__pyx_v_i]).data != NULL) != 0);
       if (__pyx_t_1) {
 
-        /* "gb/collections/table.pyx":145
- *             for i in range(self.n_rows):
- *                 if self.rows[i].data != NULL:
- *                     free(self.rows[i].data)             # <<<<<<<<<<<<<<
- *             free(self.rows)
+        /* "gb/collections/inttovector.pyx":37
+ *             for i in range(self.n_proc):
+ *                 if self.vectors[i].data != NULL:
+ *                     free(self.vectors[i].data)             # <<<<<<<<<<<<<<
+ *             free(self.vectors)
  * 
  */
-        free((__pyx_v_self->rows[__pyx_v_i]).data);
+        free((__pyx_v_self->vectors[__pyx_v_i]).data);
 
-        /* "gb/collections/table.pyx":144
- *         if self.rows != NULL:
- *             for i in range(self.n_rows):
- *                 if self.rows[i].data != NULL:             # <<<<<<<<<<<<<<
- *                     free(self.rows[i].data)
- *             free(self.rows)
+        /* "gb/collections/inttovector.pyx":36
+ *         if self.vectors != NULL:
+ *             for i in range(self.n_proc):
+ *                 if self.vectors[i].data != NULL:             # <<<<<<<<<<<<<<
+ *                     free(self.vectors[i].data)
+ *             free(self.vectors)
  */
       }
     }
 
-    /* "gb/collections/table.pyx":146
- *                 if self.rows[i].data != NULL:
- *                     free(self.rows[i].data)
- *             free(self.rows)             # <<<<<<<<<<<<<<
+    /* "gb/collections/inttovector.pyx":38
+ *                 if self.vectors[i].data != NULL:
+ *                     free(self.vectors[i].data)
+ *             free(self.vectors)             # <<<<<<<<<<<<<<
  * 
- *     cdef uint64_t get_cell(self, size_t row, size_t col) nogil:
+ *     cdef void reset(self) nogil:
  */
-    free(__pyx_v_self->rows);
+    free(__pyx_v_self->vectors);
 
-    /* "gb/collections/table.pyx":142
+    /* "gb/collections/inttovector.pyx":34
  *     def __dealloc__(self):
  *         cdef size_t i
- *         if self.rows != NULL:             # <<<<<<<<<<<<<<
- *             for i in range(self.n_rows):
- *                 if self.rows[i].data != NULL:
+ *         if self.vectors != NULL:             # <<<<<<<<<<<<<<
+ *             for i in range(self.n_proc):
+ *                 if self.vectors[i].data != NULL:
  */
   }
 
-  /* "gb/collections/table.pyx":140
- *             rh_init(&self.rows[i], load_factor)
+  /* "gb/collections/inttovector.pyx":32
+ *         self.n_proc = n_proc
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
  *         cdef size_t i
- *         if self.rows != NULL:
+ *         if self.vectors != NULL:
  */
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
 }
 
-/* "gb/collections/table.pyx":148
- *             free(self.rows)
+/* "gb/collections/inttovector.pyx":40
+ *             free(self.vectors)
  * 
- *     cdef uint64_t get_cell(self, size_t row, size_t col) nogil:             # <<<<<<<<<<<<<<
- *         return rh_get(&self.rows[row], col)
- * 
+ *     cdef void reset(self) nogil:             # <<<<<<<<<<<<<<
+ *         cdef size_t i
+ *         for i in range(self.n_proc):
  */
 
-static uint64_t __pyx_f_2gb_11collections_5table_5Table_get_cell(struct __pyx_obj_2gb_11collections_5table_Table *__pyx_v_self, size_t __pyx_v_row, size_t __pyx_v_col) {
-  uint64_t __pyx_r;
+static void __pyx_f_2gb_11collections_11inttovector_11IntToVector_reset(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *__pyx_v_self) {
+  size_t __pyx_v_i;
+  size_t __pyx_t_1;
+  size_t __pyx_t_2;
 
-  /* "gb/collections/table.pyx":149
- * 
- *     cdef uint64_t get_cell(self, size_t row, size_t col) nogil:
- *         return rh_get(&self.rows[row], col)             # <<<<<<<<<<<<<<
- * 
- *     def _get_cell(self, size_t row, size_t col):
- */
-  __pyx_r = __pyx_f_2gb_11collections_5table_rh_get((&(__pyx_v_self->rows[__pyx_v_row])), __pyx_v_col);
-  goto __pyx_L0;
-
-  /* "gb/collections/table.pyx":148
- *             free(self.rows)
- * 
- *     cdef uint64_t get_cell(self, size_t row, size_t col) nogil:             # <<<<<<<<<<<<<<
- *         return rh_get(&self.rows[row], col)
+  /* "gb/collections/inttovector.pyx":42
+ *     cdef void reset(self) nogil:
+ *         cdef size_t i
+ *         for i in range(self.n_proc):             # <<<<<<<<<<<<<<
+ *             self.vectors[i].size = 0
  * 
  */
+  __pyx_t_1 = __pyx_v_self->n_proc;
+  for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
+    __pyx_v_i = __pyx_t_2;
 
-  /* function exit code */
-  __pyx_L0:;
-  return __pyx_r;
-}
-
-/* "gb/collections/table.pyx":151
- *         return rh_get(&self.rows[row], col)
+    /* "gb/collections/inttovector.pyx":43
+ *         cdef size_t i
+ *         for i in range(self.n_proc):
+ *             self.vectors[i].size = 0             # <<<<<<<<<<<<<<
  * 
- *     def _get_cell(self, size_t row, size_t col):             # <<<<<<<<<<<<<<
- *         return self.get_cell(row, col)
- * 
+ *     cdef void push_back(self, size_t i, double value) nogil:
  */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_2gb_11collections_5table_5Table_5_get_cell(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_2gb_11collections_5table_5Table_5_get_cell(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  size_t __pyx_v_row;
-  size_t __pyx_v_col;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("_get_cell (wrapper)", 0);
-  {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_row,&__pyx_n_s_col,0};
-    PyObject* values[2] = {0,0};
-    if (unlikely(__pyx_kwds)) {
-      Py_ssize_t kw_args;
-      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
-      switch (pos_args) {
-        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-        CYTHON_FALLTHROUGH;
-        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-        CYTHON_FALLTHROUGH;
-        case  0: break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-      kw_args = PyDict_Size(__pyx_kwds);
-      switch (pos_args) {
-        case  0:
-        if (likely((values[0] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_row)) != 0)) kw_args--;
-        else goto __pyx_L5_argtuple_error;
-        CYTHON_FALLTHROUGH;
-        case  1:
-        if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_col)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("_get_cell", 1, 2, 2, 1); __PYX_ERR(0, 151, __pyx_L3_error)
-        }
-      }
-      if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_get_cell") < 0)) __PYX_ERR(0, 151, __pyx_L3_error)
-      }
-    } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
-      goto __pyx_L5_argtuple_error;
-    } else {
-      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-    }
-    __pyx_v_row = __Pyx_PyInt_As_size_t(values[0]); if (unlikely((__pyx_v_row == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 151, __pyx_L3_error)
-    __pyx_v_col = __Pyx_PyInt_As_size_t(values[1]); if (unlikely((__pyx_v_col == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 151, __pyx_L3_error)
+    (__pyx_v_self->vectors[__pyx_v_i]).size = 0;
   }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("_get_cell", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 151, __pyx_L3_error)
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("gb.collections.table.Table._get_cell", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_2gb_11collections_5table_5Table_4_get_cell(((struct __pyx_obj_2gb_11collections_5table_Table *)__pyx_v_self), __pyx_v_row, __pyx_v_col);
 
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_2gb_11collections_5table_5Table_4_get_cell(struct __pyx_obj_2gb_11collections_5table_Table *__pyx_v_self, size_t __pyx_v_row, size_t __pyx_v_col) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  __Pyx_RefNannySetupContext("_get_cell", 0);
-
-  /* "gb/collections/table.pyx":152
+  /* "gb/collections/inttovector.pyx":40
+ *             free(self.vectors)
  * 
- *     def _get_cell(self, size_t row, size_t col):
- *         return self.get_cell(row, col)             # <<<<<<<<<<<<<<
- * 
- *     cdef void set_cell(self, size_t row, size_t col, uint64_t value) nogil:
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_uint64_t(((struct __pyx_vtabstruct_2gb_11collections_5table_Table *)__pyx_v_self->__pyx_vtab)->get_cell(__pyx_v_self, __pyx_v_row, __pyx_v_col)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 152, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* "gb/collections/table.pyx":151
- *         return rh_get(&self.rows[row], col)
- * 
- *     def _get_cell(self, size_t row, size_t col):             # <<<<<<<<<<<<<<
- *         return self.get_cell(row, col)
- * 
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("gb.collections.table.Table._get_cell", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "gb/collections/table.pyx":154
- *         return self.get_cell(row, col)
- * 
- *     cdef void set_cell(self, size_t row, size_t col, uint64_t value) nogil:             # <<<<<<<<<<<<<<
- *         rh_set(&self.rows[row], col, value)
- * 
- */
-
-static void __pyx_f_2gb_11collections_5table_5Table_set_cell(struct __pyx_obj_2gb_11collections_5table_Table *__pyx_v_self, size_t __pyx_v_row, size_t __pyx_v_col, uint64_t __pyx_v_value) {
-
-  /* "gb/collections/table.pyx":155
- * 
- *     cdef void set_cell(self, size_t row, size_t col, uint64_t value) nogil:
- *         rh_set(&self.rows[row], col, value)             # <<<<<<<<<<<<<<
- * 
- *     def _set_cell(self, size_t row, size_t col, uint64_t value):
- */
-  __pyx_f_2gb_11collections_5table_rh_set((&(__pyx_v_self->rows[__pyx_v_row])), __pyx_v_col, __pyx_v_value);
-
-  /* "gb/collections/table.pyx":154
- *         return self.get_cell(row, col)
- * 
- *     cdef void set_cell(self, size_t row, size_t col, uint64_t value) nogil:             # <<<<<<<<<<<<<<
- *         rh_set(&self.rows[row], col, value)
- * 
+ *     cdef void reset(self) nogil:             # <<<<<<<<<<<<<<
+ *         cdef size_t i
+ *         for i in range(self.n_proc):
  */
 
   /* function exit code */
 }
 
-/* "gb/collections/table.pyx":157
- *         rh_set(&self.rows[row], col, value)
+/* "gb/collections/inttovector.pyx":45
+ *             self.vectors[i].size = 0
  * 
- *     def _set_cell(self, size_t row, size_t col, uint64_t value):             # <<<<<<<<<<<<<<
- *         return self.set_cell(row, col, value)
- * 
+ *     cdef void push_back(self, size_t i, double value) nogil:             # <<<<<<<<<<<<<<
+ *         if self.vectors[i].size == self.vectors[i].capacity:
+ *             self.vectors[i].capacity *= 2
  */
 
-/* Python wrapper */
-static PyObject *__pyx_pw_2gb_11collections_5table_5Table_7_set_cell(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_2gb_11collections_5table_5Table_7_set_cell(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  size_t __pyx_v_row;
-  size_t __pyx_v_col;
-  uint64_t __pyx_v_value;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("_set_cell (wrapper)", 0);
-  {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_row,&__pyx_n_s_col,&__pyx_n_s_value,0};
-    PyObject* values[3] = {0,0,0};
-    if (unlikely(__pyx_kwds)) {
-      Py_ssize_t kw_args;
-      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
-      switch (pos_args) {
-        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-        CYTHON_FALLTHROUGH;
-        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-        CYTHON_FALLTHROUGH;
-        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-        CYTHON_FALLTHROUGH;
-        case  0: break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-      kw_args = PyDict_Size(__pyx_kwds);
-      switch (pos_args) {
-        case  0:
-        if (likely((values[0] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_row)) != 0)) kw_args--;
-        else goto __pyx_L5_argtuple_error;
-        CYTHON_FALLTHROUGH;
-        case  1:
-        if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_col)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("_set_cell", 1, 3, 3, 1); __PYX_ERR(0, 157, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  2:
-        if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_value)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("_set_cell", 1, 3, 3, 2); __PYX_ERR(0, 157, __pyx_L3_error)
-        }
-      }
-      if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_set_cell") < 0)) __PYX_ERR(0, 157, __pyx_L3_error)
-      }
-    } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
-      goto __pyx_L5_argtuple_error;
-    } else {
-      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-      values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+static void __pyx_f_2gb_11collections_11inttovector_11IntToVector_push_back(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *__pyx_v_self, size_t __pyx_v_i, double __pyx_v_value) {
+  int __pyx_t_1;
+  size_t __pyx_t_2;
+
+  /* "gb/collections/inttovector.pyx":46
+ * 
+ *     cdef void push_back(self, size_t i, double value) nogil:
+ *         if self.vectors[i].size == self.vectors[i].capacity:             # <<<<<<<<<<<<<<
+ *             self.vectors[i].capacity *= 2
+ *             self.vectors[i].data = \
+ */
+  __pyx_t_1 = (((__pyx_v_self->vectors[__pyx_v_i]).size == (__pyx_v_self->vectors[__pyx_v_i]).capacity) != 0);
+  if (__pyx_t_1) {
+
+    /* "gb/collections/inttovector.pyx":47
+ *     cdef void push_back(self, size_t i, double value) nogil:
+ *         if self.vectors[i].size == self.vectors[i].capacity:
+ *             self.vectors[i].capacity *= 2             # <<<<<<<<<<<<<<
+ *             self.vectors[i].data = \
+ *                 <double *> realloc(self.vectors[i].data,
+ */
+    __pyx_t_2 = __pyx_v_i;
+    (__pyx_v_self->vectors[__pyx_t_2]).capacity = ((__pyx_v_self->vectors[__pyx_t_2]).capacity * 2);
+
+    /* "gb/collections/inttovector.pyx":48
+ *         if self.vectors[i].size == self.vectors[i].capacity:
+ *             self.vectors[i].capacity *= 2
+ *             self.vectors[i].data = \             # <<<<<<<<<<<<<<
+ *                 <double *> realloc(self.vectors[i].data,
+ *                                    self.vectors[i].capacity * sizeof(double))
+ */
+    (__pyx_v_self->vectors[__pyx_v_i]).data = ((double *)realloc((__pyx_v_self->vectors[__pyx_v_i]).data, ((__pyx_v_self->vectors[__pyx_v_i]).capacity * (sizeof(double)))));
+
+    /* "gb/collections/inttovector.pyx":51
+ *                 <double *> realloc(self.vectors[i].data,
+ *                                    self.vectors[i].capacity * sizeof(double))
+ *             if self.vectors[i].data == NULL:             # <<<<<<<<<<<<<<
+ *                 abort()
+ *         self.vectors[i].data[self.vectors[i].size] = value
+ */
+    __pyx_t_1 = (((__pyx_v_self->vectors[__pyx_v_i]).data == NULL) != 0);
+    if (__pyx_t_1) {
+
+      /* "gb/collections/inttovector.pyx":52
+ *                                    self.vectors[i].capacity * sizeof(double))
+ *             if self.vectors[i].data == NULL:
+ *                 abort()             # <<<<<<<<<<<<<<
+ *         self.vectors[i].data[self.vectors[i].size] = value
+ *         self.vectors[i].size += 1
+ */
+      abort();
+
+      /* "gb/collections/inttovector.pyx":51
+ *                 <double *> realloc(self.vectors[i].data,
+ *                                    self.vectors[i].capacity * sizeof(double))
+ *             if self.vectors[i].data == NULL:             # <<<<<<<<<<<<<<
+ *                 abort()
+ *         self.vectors[i].data[self.vectors[i].size] = value
+ */
     }
-    __pyx_v_row = __Pyx_PyInt_As_size_t(values[0]); if (unlikely((__pyx_v_row == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 157, __pyx_L3_error)
-    __pyx_v_col = __Pyx_PyInt_As_size_t(values[1]); if (unlikely((__pyx_v_col == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 157, __pyx_L3_error)
-    __pyx_v_value = __Pyx_PyInt_As_uint64_t(values[2]); if (unlikely((__pyx_v_value == ((uint64_t)-1)) && PyErr_Occurred())) __PYX_ERR(0, 157, __pyx_L3_error)
+
+    /* "gb/collections/inttovector.pyx":46
+ * 
+ *     cdef void push_back(self, size_t i, double value) nogil:
+ *         if self.vectors[i].size == self.vectors[i].capacity:             # <<<<<<<<<<<<<<
+ *             self.vectors[i].capacity *= 2
+ *             self.vectors[i].data = \
+ */
   }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("_set_cell", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 157, __pyx_L3_error)
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("gb.collections.table.Table._set_cell", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_2gb_11collections_5table_5Table_6_set_cell(((struct __pyx_obj_2gb_11collections_5table_Table *)__pyx_v_self), __pyx_v_row, __pyx_v_col, __pyx_v_value);
+
+  /* "gb/collections/inttovector.pyx":53
+ *             if self.vectors[i].data == NULL:
+ *                 abort()
+ *         self.vectors[i].data[self.vectors[i].size] = value             # <<<<<<<<<<<<<<
+ *         self.vectors[i].size += 1
+ * 
+ */
+  ((__pyx_v_self->vectors[__pyx_v_i]).data[(__pyx_v_self->vectors[__pyx_v_i]).size]) = __pyx_v_value;
+
+  /* "gb/collections/inttovector.pyx":54
+ *                 abort()
+ *         self.vectors[i].data[self.vectors[i].size] = value
+ *         self.vectors[i].size += 1             # <<<<<<<<<<<<<<
+ * 
+ *     cdef size_t get_size(self, size_t i) nogil:
+ */
+  __pyx_t_2 = __pyx_v_i;
+  (__pyx_v_self->vectors[__pyx_t_2]).size = ((__pyx_v_self->vectors[__pyx_t_2]).size + 1);
+
+  /* "gb/collections/inttovector.pyx":45
+ *             self.vectors[i].size = 0
+ * 
+ *     cdef void push_back(self, size_t i, double value) nogil:             # <<<<<<<<<<<<<<
+ *         if self.vectors[i].size == self.vectors[i].capacity:
+ *             self.vectors[i].capacity *= 2
+ */
 
   /* function exit code */
-  __Pyx_RefNannyFinishContext();
+}
+
+/* "gb/collections/inttovector.pyx":56
+ *         self.vectors[i].size += 1
+ * 
+ *     cdef size_t get_size(self, size_t i) nogil:             # <<<<<<<<<<<<<<
+ *         return self.vectors[i].size
+ * 
+ */
+
+static size_t __pyx_f_2gb_11collections_11inttovector_11IntToVector_get_size(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *__pyx_v_self, size_t __pyx_v_i) {
+  size_t __pyx_r;
+
+  /* "gb/collections/inttovector.pyx":57
+ * 
+ *     cdef size_t get_size(self, size_t i) nogil:
+ *         return self.vectors[i].size             # <<<<<<<<<<<<<<
+ * 
+ *     cdef double *get_values(self, size_t i) nogil:
+ */
+  __pyx_r = (__pyx_v_self->vectors[__pyx_v_i]).size;
+  goto __pyx_L0;
+
+  /* "gb/collections/inttovector.pyx":56
+ *         self.vectors[i].size += 1
+ * 
+ *     cdef size_t get_size(self, size_t i) nogil:             # <<<<<<<<<<<<<<
+ *         return self.vectors[i].size
+ * 
+ */
+
+  /* function exit code */
+  __pyx_L0:;
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_2gb_11collections_5table_5Table_6_set_cell(struct __pyx_obj_2gb_11collections_5table_Table *__pyx_v_self, size_t __pyx_v_row, size_t __pyx_v_col, uint64_t __pyx_v_value) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  __Pyx_RefNannySetupContext("_set_cell", 0);
-
-  /* "gb/collections/table.pyx":158
+/* "gb/collections/inttovector.pyx":59
+ *         return self.vectors[i].size
  * 
- *     def _set_cell(self, size_t row, size_t col, uint64_t value):
- *         return self.set_cell(row, col, value)             # <<<<<<<<<<<<<<
- * 
- * 
+ *     cdef double *get_values(self, size_t i) nogil:             # <<<<<<<<<<<<<<
+ *         return self.vectors[i].data
  */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_void_to_None(((struct __pyx_vtabstruct_2gb_11collections_5table_Table *)__pyx_v_self->__pyx_vtab)->set_cell(__pyx_v_self, __pyx_v_row, __pyx_v_col, __pyx_v_value)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 158, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
+
+static double *__pyx_f_2gb_11collections_11inttovector_11IntToVector_get_values(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *__pyx_v_self, size_t __pyx_v_i) {
+  double *__pyx_r;
+
+  /* "gb/collections/inttovector.pyx":60
+ * 
+ *     cdef double *get_values(self, size_t i) nogil:
+ *         return self.vectors[i].data             # <<<<<<<<<<<<<<
+ */
+  __pyx_r = (__pyx_v_self->vectors[__pyx_v_i]).data;
   goto __pyx_L0;
 
-  /* "gb/collections/table.pyx":157
- *         rh_set(&self.rows[row], col, value)
+  /* "gb/collections/inttovector.pyx":59
+ *         return self.vectors[i].size
  * 
- *     def _set_cell(self, size_t row, size_t col, uint64_t value):             # <<<<<<<<<<<<<<
- *         return self.set_cell(row, col, value)
- * 
+ *     cdef double *get_values(self, size_t i) nogil:             # <<<<<<<<<<<<<<
+ *         return self.vectors[i].data
  */
 
   /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("gb.collections.table.Table._set_cell", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
   __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
@@ -2695,19 +1584,19 @@ static PyObject *__pyx_pf_2gb_11collections_5table_5Table_6_set_cell(struct __py
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_2gb_11collections_5table_5Table_9__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_2gb_11collections_5table_5Table_9__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_2gb_11collections_11inttovector_11IntToVector_5__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_2gb_11collections_11inttovector_11IntToVector_5__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__reduce_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_2gb_11collections_5table_5Table_8__reduce_cython__(((struct __pyx_obj_2gb_11collections_5table_Table *)__pyx_v_self));
+  __pyx_r = __pyx_pf_2gb_11collections_11inttovector_11IntToVector_4__reduce_cython__(((struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_2gb_11collections_5table_5Table_8__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_2gb_11collections_5table_Table *__pyx_v_self) {
+static PyObject *__pyx_pf_2gb_11collections_11inttovector_11IntToVector_4__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -2734,7 +1623,7 @@ static PyObject *__pyx_pf_2gb_11collections_5table_5Table_8__reduce_cython__(CYT
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("gb.collections.table.Table.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("gb.collections.inttovector.IntToVector.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
@@ -2749,19 +1638,19 @@ static PyObject *__pyx_pf_2gb_11collections_5table_5Table_8__reduce_cython__(CYT
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_2gb_11collections_5table_5Table_11__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
-static PyObject *__pyx_pw_2gb_11collections_5table_5Table_11__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pw_2gb_11collections_11inttovector_11IntToVector_7__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
+static PyObject *__pyx_pw_2gb_11collections_11inttovector_11IntToVector_7__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__setstate_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_2gb_11collections_5table_5Table_10__setstate_cython__(((struct __pyx_obj_2gb_11collections_5table_Table *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
+  __pyx_r = __pyx_pf_2gb_11collections_11inttovector_11IntToVector_6__setstate_cython__(((struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_2gb_11collections_5table_5Table_10__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_2gb_11collections_5table_Table *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_2gb_11collections_11inttovector_11IntToVector_6__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -2788,681 +1677,16 @@ static PyObject *__pyx_pf_2gb_11collections_5table_5Table_10__setstate_cython__(
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("gb.collections.table.Table.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("gb.collections.inttovector.IntToVector.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
+static struct __pyx_vtabstruct_2gb_11collections_11inttovector_IntToVector __pyx_vtable_2gb_11collections_11inttovector_IntToVector;
 
-/* "gb/collections/table.pyx":163
- * cdef class RobinHoodHash(object):
- * 
- *     def __cinit__(self, double load_factor=0.95):             # <<<<<<<<<<<<<<
- *         self.table = <rh_hash_t *> malloc(sizeof(rh_hash_t))
- *         if self.table == NULL:
- */
-
-/* Python wrapper */
-static int __pyx_pw_2gb_11collections_5table_13RobinHoodHash_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static int __pyx_pw_2gb_11collections_5table_13RobinHoodHash_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  double __pyx_v_load_factor;
-  int __pyx_r;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__cinit__ (wrapper)", 0);
-  {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_load_factor,0};
-    PyObject* values[1] = {0};
-    if (unlikely(__pyx_kwds)) {
-      Py_ssize_t kw_args;
-      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
-      switch (pos_args) {
-        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-        CYTHON_FALLTHROUGH;
-        case  0: break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-      kw_args = PyDict_Size(__pyx_kwds);
-      switch (pos_args) {
-        case  0:
-        if (kw_args > 0) {
-          PyObject* value = PyDict_GetItem(__pyx_kwds, __pyx_n_s_load_factor);
-          if (value) { values[0] = value; kw_args--; }
-        }
-      }
-      if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(0, 163, __pyx_L3_error)
-      }
-    } else {
-      switch (PyTuple_GET_SIZE(__pyx_args)) {
-        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-        CYTHON_FALLTHROUGH;
-        case  0: break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-    }
-    if (values[0]) {
-      __pyx_v_load_factor = __pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_load_factor == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 163, __pyx_L3_error)
-    } else {
-      __pyx_v_load_factor = ((double)0.95);
-    }
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 163, __pyx_L3_error)
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("gb.collections.table.RobinHoodHash.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return -1;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_2gb_11collections_5table_13RobinHoodHash___cinit__(((struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *)__pyx_v_self), __pyx_v_load_factor);
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static int __pyx_pf_2gb_11collections_5table_13RobinHoodHash___cinit__(struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *__pyx_v_self, double __pyx_v_load_factor) {
-  int __pyx_r;
-  __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
-  PyObject *__pyx_t_2 = NULL;
-  __Pyx_RefNannySetupContext("__cinit__", 0);
-
-  /* "gb/collections/table.pyx":164
- * 
- *     def __cinit__(self, double load_factor=0.95):
- *         self.table = <rh_hash_t *> malloc(sizeof(rh_hash_t))             # <<<<<<<<<<<<<<
- *         if self.table == NULL:
- *             raise MemoryError('Robin Hash out of mem')
- */
-  __pyx_v_self->table = ((__pyx_t_2gb_11collections_5table_rh_hash_t *)malloc((sizeof(__pyx_t_2gb_11collections_5table_rh_hash_t))));
-
-  /* "gb/collections/table.pyx":165
- *     def __cinit__(self, double load_factor=0.95):
- *         self.table = <rh_hash_t *> malloc(sizeof(rh_hash_t))
- *         if self.table == NULL:             # <<<<<<<<<<<<<<
- *             raise MemoryError('Robin Hash out of mem')
- * 
- */
-  __pyx_t_1 = ((__pyx_v_self->table == NULL) != 0);
-  if (__pyx_t_1) {
-
-    /* "gb/collections/table.pyx":166
- *         self.table = <rh_hash_t *> malloc(sizeof(rh_hash_t))
- *         if self.table == NULL:
- *             raise MemoryError('Robin Hash out of mem')             # <<<<<<<<<<<<<<
- * 
- *         rh_init(self.table, load_factor)
- */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__3, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 166, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_Raise(__pyx_t_2, 0, 0, 0);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 166, __pyx_L1_error)
-
-    /* "gb/collections/table.pyx":165
- *     def __cinit__(self, double load_factor=0.95):
- *         self.table = <rh_hash_t *> malloc(sizeof(rh_hash_t))
- *         if self.table == NULL:             # <<<<<<<<<<<<<<
- *             raise MemoryError('Robin Hash out of mem')
- * 
- */
-  }
-
-  /* "gb/collections/table.pyx":168
- *             raise MemoryError('Robin Hash out of mem')
- * 
- *         rh_init(self.table, load_factor)             # <<<<<<<<<<<<<<
- * 
- *     def __dealloc__(self):
- */
-  __pyx_f_2gb_11collections_5table_rh_init(__pyx_v_self->table, __pyx_v_load_factor);
-
-  /* "gb/collections/table.pyx":163
- * cdef class RobinHoodHash(object):
- * 
- *     def __cinit__(self, double load_factor=0.95):             # <<<<<<<<<<<<<<
- *         self.table = <rh_hash_t *> malloc(sizeof(rh_hash_t))
- *         if self.table == NULL:
- */
-
-  /* function exit code */
-  __pyx_r = 0;
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("gb.collections.table.RobinHoodHash.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = -1;
-  __pyx_L0:;
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "gb/collections/table.pyx":170
- *         rh_init(self.table, load_factor)
- * 
- *     def __dealloc__(self):             # <<<<<<<<<<<<<<
- *         if self.table != NULL:
- *             if self.table.data != NULL:
- */
-
-/* Python wrapper */
-static void __pyx_pw_2gb_11collections_5table_13RobinHoodHash_3__dealloc__(PyObject *__pyx_v_self); /*proto*/
-static void __pyx_pw_2gb_11collections_5table_13RobinHoodHash_3__dealloc__(PyObject *__pyx_v_self) {
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__dealloc__ (wrapper)", 0);
-  __pyx_pf_2gb_11collections_5table_13RobinHoodHash_2__dealloc__(((struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-}
-
-static void __pyx_pf_2gb_11collections_5table_13RobinHoodHash_2__dealloc__(struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *__pyx_v_self) {
-  __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
-  __Pyx_RefNannySetupContext("__dealloc__", 0);
-
-  /* "gb/collections/table.pyx":171
- * 
- *     def __dealloc__(self):
- *         if self.table != NULL:             # <<<<<<<<<<<<<<
- *             if self.table.data != NULL:
- *                 free(self.table.data)
- */
-  __pyx_t_1 = ((__pyx_v_self->table != NULL) != 0);
-  if (__pyx_t_1) {
-
-    /* "gb/collections/table.pyx":172
- *     def __dealloc__(self):
- *         if self.table != NULL:
- *             if self.table.data != NULL:             # <<<<<<<<<<<<<<
- *                 free(self.table.data)
- *             free(self.table)
- */
-    __pyx_t_1 = ((__pyx_v_self->table->data != NULL) != 0);
-    if (__pyx_t_1) {
-
-      /* "gb/collections/table.pyx":173
- *         if self.table != NULL:
- *             if self.table.data != NULL:
- *                 free(self.table.data)             # <<<<<<<<<<<<<<
- *             free(self.table)
- * 
- */
-      free(__pyx_v_self->table->data);
-
-      /* "gb/collections/table.pyx":172
- *     def __dealloc__(self):
- *         if self.table != NULL:
- *             if self.table.data != NULL:             # <<<<<<<<<<<<<<
- *                 free(self.table.data)
- *             free(self.table)
- */
-    }
-
-    /* "gb/collections/table.pyx":174
- *             if self.table.data != NULL:
- *                 free(self.table.data)
- *             free(self.table)             # <<<<<<<<<<<<<<
- * 
- *     cdef void set(self, size_t key, uint64_t value) nogil:
- */
-    free(__pyx_v_self->table);
-
-    /* "gb/collections/table.pyx":171
- * 
- *     def __dealloc__(self):
- *         if self.table != NULL:             # <<<<<<<<<<<<<<
- *             if self.table.data != NULL:
- *                 free(self.table.data)
- */
-  }
-
-  /* "gb/collections/table.pyx":170
- *         rh_init(self.table, load_factor)
- * 
- *     def __dealloc__(self):             # <<<<<<<<<<<<<<
- *         if self.table != NULL:
- *             if self.table.data != NULL:
- */
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-}
-
-/* "gb/collections/table.pyx":176
- *             free(self.table)
- * 
- *     cdef void set(self, size_t key, uint64_t value) nogil:             # <<<<<<<<<<<<<<
- *         rh_set(self.table, key, value)
- * 
- */
-
-static void __pyx_f_2gb_11collections_5table_13RobinHoodHash_set(struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *__pyx_v_self, size_t __pyx_v_key, uint64_t __pyx_v_value) {
-
-  /* "gb/collections/table.pyx":177
- * 
- *     cdef void set(self, size_t key, uint64_t value) nogil:
- *         rh_set(self.table, key, value)             # <<<<<<<<<<<<<<
- * 
- *     cdef uint64_t get(self, size_t key) nogil:
- */
-  __pyx_f_2gb_11collections_5table_rh_set(__pyx_v_self->table, __pyx_v_key, __pyx_v_value);
-
-  /* "gb/collections/table.pyx":176
- *             free(self.table)
- * 
- *     cdef void set(self, size_t key, uint64_t value) nogil:             # <<<<<<<<<<<<<<
- *         rh_set(self.table, key, value)
- * 
- */
-
-  /* function exit code */
-}
-
-/* "gb/collections/table.pyx":179
- *         rh_set(self.table, key, value)
- * 
- *     cdef uint64_t get(self, size_t key) nogil:             # <<<<<<<<<<<<<<
- *         return rh_get(self.table, key)
- * 
- */
-
-static uint64_t __pyx_f_2gb_11collections_5table_13RobinHoodHash_get(struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *__pyx_v_self, size_t __pyx_v_key) {
-  uint64_t __pyx_r;
-
-  /* "gb/collections/table.pyx":180
- * 
- *     cdef uint64_t get(self, size_t key) nogil:
- *         return rh_get(self.table, key)             # <<<<<<<<<<<<<<
- * 
- *     def _get(self, size_t key):
- */
-  __pyx_r = __pyx_f_2gb_11collections_5table_rh_get(__pyx_v_self->table, __pyx_v_key);
-  goto __pyx_L0;
-
-  /* "gb/collections/table.pyx":179
- *         rh_set(self.table, key, value)
- * 
- *     cdef uint64_t get(self, size_t key) nogil:             # <<<<<<<<<<<<<<
- *         return rh_get(self.table, key)
- * 
- */
-
-  /* function exit code */
-  __pyx_L0:;
-  return __pyx_r;
-}
-
-/* "gb/collections/table.pyx":182
- *         return rh_get(self.table, key)
- * 
- *     def _get(self, size_t key):             # <<<<<<<<<<<<<<
- *         return self.get(key)
- * 
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_2gb_11collections_5table_13RobinHoodHash_5_get(PyObject *__pyx_v_self, PyObject *__pyx_arg_key); /*proto*/
-static PyObject *__pyx_pw_2gb_11collections_5table_13RobinHoodHash_5_get(PyObject *__pyx_v_self, PyObject *__pyx_arg_key) {
-  size_t __pyx_v_key;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("_get (wrapper)", 0);
-  assert(__pyx_arg_key); {
-    __pyx_v_key = __Pyx_PyInt_As_size_t(__pyx_arg_key); if (unlikely((__pyx_v_key == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 182, __pyx_L3_error)
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("gb.collections.table.RobinHoodHash._get", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_2gb_11collections_5table_13RobinHoodHash_4_get(((struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *)__pyx_v_self), ((size_t)__pyx_v_key));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_2gb_11collections_5table_13RobinHoodHash_4_get(struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *__pyx_v_self, size_t __pyx_v_key) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  __Pyx_RefNannySetupContext("_get", 0);
-
-  /* "gb/collections/table.pyx":183
- * 
- *     def _get(self, size_t key):
- *         return self.get(key)             # <<<<<<<<<<<<<<
- * 
- *     def _set(self, size_t key, size_t value):
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_uint64_t(((struct __pyx_vtabstruct_2gb_11collections_5table_RobinHoodHash *)__pyx_v_self->__pyx_vtab)->get(__pyx_v_self, __pyx_v_key)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 183, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* "gb/collections/table.pyx":182
- *         return rh_get(self.table, key)
- * 
- *     def _get(self, size_t key):             # <<<<<<<<<<<<<<
- *         return self.get(key)
- * 
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("gb.collections.table.RobinHoodHash._get", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "gb/collections/table.pyx":185
- *         return self.get(key)
- * 
- *     def _set(self, size_t key, size_t value):             # <<<<<<<<<<<<<<
- *         self.set(key, value)
- * 
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_2gb_11collections_5table_13RobinHoodHash_7_set(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_2gb_11collections_5table_13RobinHoodHash_7_set(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  size_t __pyx_v_key;
-  size_t __pyx_v_value;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("_set (wrapper)", 0);
-  {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_key,&__pyx_n_s_value,0};
-    PyObject* values[2] = {0,0};
-    if (unlikely(__pyx_kwds)) {
-      Py_ssize_t kw_args;
-      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
-      switch (pos_args) {
-        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-        CYTHON_FALLTHROUGH;
-        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-        CYTHON_FALLTHROUGH;
-        case  0: break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-      kw_args = PyDict_Size(__pyx_kwds);
-      switch (pos_args) {
-        case  0:
-        if (likely((values[0] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_key)) != 0)) kw_args--;
-        else goto __pyx_L5_argtuple_error;
-        CYTHON_FALLTHROUGH;
-        case  1:
-        if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_value)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("_set", 1, 2, 2, 1); __PYX_ERR(0, 185, __pyx_L3_error)
-        }
-      }
-      if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_set") < 0)) __PYX_ERR(0, 185, __pyx_L3_error)
-      }
-    } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
-      goto __pyx_L5_argtuple_error;
-    } else {
-      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-    }
-    __pyx_v_key = __Pyx_PyInt_As_size_t(values[0]); if (unlikely((__pyx_v_key == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 185, __pyx_L3_error)
-    __pyx_v_value = __Pyx_PyInt_As_size_t(values[1]); if (unlikely((__pyx_v_value == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 185, __pyx_L3_error)
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("_set", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 185, __pyx_L3_error)
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("gb.collections.table.RobinHoodHash._set", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_2gb_11collections_5table_13RobinHoodHash_6_set(((struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *)__pyx_v_self), __pyx_v_key, __pyx_v_value);
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_2gb_11collections_5table_13RobinHoodHash_6_set(struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *__pyx_v_self, size_t __pyx_v_key, size_t __pyx_v_value) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("_set", 0);
-
-  /* "gb/collections/table.pyx":186
- * 
- *     def _set(self, size_t key, size_t value):
- *         self.set(key, value)             # <<<<<<<<<<<<<<
- * 
- *     cdef size_t size(self) nogil:
- */
-  ((struct __pyx_vtabstruct_2gb_11collections_5table_RobinHoodHash *)__pyx_v_self->__pyx_vtab)->set(__pyx_v_self, __pyx_v_key, __pyx_v_value);
-
-  /* "gb/collections/table.pyx":185
- *         return self.get(key)
- * 
- *     def _set(self, size_t key, size_t value):             # <<<<<<<<<<<<<<
- *         self.set(key, value)
- * 
- */
-
-  /* function exit code */
-  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "gb/collections/table.pyx":188
- *         self.set(key, value)
- * 
- *     cdef size_t size(self) nogil:             # <<<<<<<<<<<<<<
- *         return rh_size(self.table)
- * 
- */
-
-static size_t __pyx_f_2gb_11collections_5table_13RobinHoodHash_size(struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *__pyx_v_self) {
-  size_t __pyx_r;
-
-  /* "gb/collections/table.pyx":189
- * 
- *     cdef size_t size(self) nogil:
- *         return rh_size(self.table)             # <<<<<<<<<<<<<<
- * 
- *     def _size(self):
- */
-  __pyx_r = __pyx_f_2gb_11collections_5table_rh_size(__pyx_v_self->table);
-  goto __pyx_L0;
-
-  /* "gb/collections/table.pyx":188
- *         self.set(key, value)
- * 
- *     cdef size_t size(self) nogil:             # <<<<<<<<<<<<<<
- *         return rh_size(self.table)
- * 
- */
-
-  /* function exit code */
-  __pyx_L0:;
-  return __pyx_r;
-}
-
-/* "gb/collections/table.pyx":191
- *         return rh_size(self.table)
- * 
- *     def _size(self):             # <<<<<<<<<<<<<<
- *         return self.size()
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_2gb_11collections_5table_13RobinHoodHash_9_size(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_2gb_11collections_5table_13RobinHoodHash_9_size(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("_size (wrapper)", 0);
-  __pyx_r = __pyx_pf_2gb_11collections_5table_13RobinHoodHash_8_size(((struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_2gb_11collections_5table_13RobinHoodHash_8_size(struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *__pyx_v_self) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  __Pyx_RefNannySetupContext("_size", 0);
-
-  /* "gb/collections/table.pyx":192
- * 
- *     def _size(self):
- *         return self.size()             # <<<<<<<<<<<<<<
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_FromSize_t(((struct __pyx_vtabstruct_2gb_11collections_5table_RobinHoodHash *)__pyx_v_self->__pyx_vtab)->size(__pyx_v_self)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 192, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* "gb/collections/table.pyx":191
- *         return rh_size(self.table)
- * 
- *     def _size(self):             # <<<<<<<<<<<<<<
- *         return self.size()
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("gb.collections.table.RobinHoodHash._size", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "(tree fragment)":1
- * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
- * def __setstate_cython__(self, __pyx_state):
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_2gb_11collections_5table_13RobinHoodHash_11__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_2gb_11collections_5table_13RobinHoodHash_11__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__reduce_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_2gb_11collections_5table_13RobinHoodHash_10__reduce_cython__(((struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_2gb_11collections_5table_13RobinHoodHash_10__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *__pyx_v_self) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  __Pyx_RefNannySetupContext("__reduce_cython__", 0);
-
-  /* "(tree fragment)":2
- * def __reduce_cython__(self):
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
- * def __setstate_cython__(self, __pyx_state):
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
- */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 2, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_Raise(__pyx_t_1, 0, 0, 0);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __PYX_ERR(1, 2, __pyx_L1_error)
-
-  /* "(tree fragment)":1
- * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
- * def __setstate_cython__(self, __pyx_state):
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("gb.collections.table.RobinHoodHash.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "(tree fragment)":3
- * def __reduce_cython__(self):
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
- * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_2gb_11collections_5table_13RobinHoodHash_13__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
-static PyObject *__pyx_pw_2gb_11collections_5table_13RobinHoodHash_13__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__setstate_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_2gb_11collections_5table_13RobinHoodHash_12__setstate_cython__(((struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_2gb_11collections_5table_13RobinHoodHash_12__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  __Pyx_RefNannySetupContext("__setstate_cython__", 0);
-
-  /* "(tree fragment)":4
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
- * def __setstate_cython__(self, __pyx_state):
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
- */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 4, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_Raise(__pyx_t_1, 0, 0, 0);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __PYX_ERR(1, 4, __pyx_L1_error)
-
-  /* "(tree fragment)":3
- * def __reduce_cython__(self):
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
- * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("gb.collections.table.RobinHoodHash.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-static struct __pyx_vtabstruct_2gb_11collections_5table_Table __pyx_vtable_2gb_11collections_5table_Table;
-
-static PyObject *__pyx_tp_new_2gb_11collections_5table_Table(PyTypeObject *t, PyObject *a, PyObject *k) {
-  struct __pyx_obj_2gb_11collections_5table_Table *p;
+static PyObject *__pyx_tp_new_2gb_11collections_11inttovector_IntToVector(PyTypeObject *t, PyObject *a, PyObject *k) {
+  struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *p;
   PyObject *o;
   if (likely((t->tp_flags & Py_TPFLAGS_IS_ABSTRACT) == 0)) {
     o = (*t->tp_alloc)(t, 0);
@@ -3470,16 +1694,16 @@ static PyObject *__pyx_tp_new_2gb_11collections_5table_Table(PyTypeObject *t, Py
     o = (PyObject *) PyBaseObject_Type.tp_new(t, __pyx_empty_tuple, 0);
   }
   if (unlikely(!o)) return 0;
-  p = ((struct __pyx_obj_2gb_11collections_5table_Table *)o);
-  p->__pyx_vtab = __pyx_vtabptr_2gb_11collections_5table_Table;
-  if (unlikely(__pyx_pw_2gb_11collections_5table_5Table_1__cinit__(o, a, k) < 0)) goto bad;
+  p = ((struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *)o);
+  p->__pyx_vtab = __pyx_vtabptr_2gb_11collections_11inttovector_IntToVector;
+  if (unlikely(__pyx_pw_2gb_11collections_11inttovector_11IntToVector_1__cinit__(o, a, k) < 0)) goto bad;
   return o;
   bad:
   Py_DECREF(o); o = 0;
   return NULL;
 }
 
-static void __pyx_tp_dealloc_2gb_11collections_5table_Table(PyObject *o) {
+static void __pyx_tp_dealloc_2gb_11collections_11inttovector_IntToVector(PyObject *o) {
   #if CYTHON_USE_TP_FINALIZE
   if (unlikely(PyType_HasFeature(Py_TYPE(o), Py_TPFLAGS_HAVE_FINALIZE) && Py_TYPE(o)->tp_finalize) && (!PyType_IS_GC(Py_TYPE(o)) || !_PyGC_FINALIZED(o))) {
     if (PyObject_CallFinalizerFromDealloc(o)) return;
@@ -3489,27 +1713,25 @@ static void __pyx_tp_dealloc_2gb_11collections_5table_Table(PyObject *o) {
     PyObject *etype, *eval, *etb;
     PyErr_Fetch(&etype, &eval, &etb);
     ++Py_REFCNT(o);
-    __pyx_pw_2gb_11collections_5table_5Table_3__dealloc__(o);
+    __pyx_pw_2gb_11collections_11inttovector_11IntToVector_3__dealloc__(o);
     --Py_REFCNT(o);
     PyErr_Restore(etype, eval, etb);
   }
   (*Py_TYPE(o)->tp_free)(o);
 }
 
-static PyMethodDef __pyx_methods_2gb_11collections_5table_Table[] = {
-  {"_get_cell", (PyCFunction)__pyx_pw_2gb_11collections_5table_5Table_5_get_cell, METH_VARARGS|METH_KEYWORDS, 0},
-  {"_set_cell", (PyCFunction)__pyx_pw_2gb_11collections_5table_5Table_7_set_cell, METH_VARARGS|METH_KEYWORDS, 0},
-  {"__reduce_cython__", (PyCFunction)__pyx_pw_2gb_11collections_5table_5Table_9__reduce_cython__, METH_NOARGS, 0},
-  {"__setstate_cython__", (PyCFunction)__pyx_pw_2gb_11collections_5table_5Table_11__setstate_cython__, METH_O, 0},
+static PyMethodDef __pyx_methods_2gb_11collections_11inttovector_IntToVector[] = {
+  {"__reduce_cython__", (PyCFunction)__pyx_pw_2gb_11collections_11inttovector_11IntToVector_5__reduce_cython__, METH_NOARGS, 0},
+  {"__setstate_cython__", (PyCFunction)__pyx_pw_2gb_11collections_11inttovector_11IntToVector_7__setstate_cython__, METH_O, 0},
   {0, 0, 0, 0}
 };
 
-static PyTypeObject __pyx_type_2gb_11collections_5table_Table = {
+static PyTypeObject __pyx_type_2gb_11collections_11inttovector_IntToVector = {
   PyVarObject_HEAD_INIT(0, 0)
-  "gb.collections.table.Table", /*tp_name*/
-  sizeof(struct __pyx_obj_2gb_11collections_5table_Table), /*tp_basicsize*/
+  "gb.collections.inttovector.IntToVector", /*tp_name*/
+  sizeof(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector), /*tp_basicsize*/
   0, /*tp_itemsize*/
-  __pyx_tp_dealloc_2gb_11collections_5table_Table, /*tp_dealloc*/
+  __pyx_tp_dealloc_2gb_11collections_11inttovector_IntToVector, /*tp_dealloc*/
   0, /*tp_print*/
   0, /*tp_getattr*/
   0, /*tp_setattr*/
@@ -3537,7 +1759,7 @@ static PyTypeObject __pyx_type_2gb_11collections_5table_Table = {
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
   0, /*tp_iternext*/
-  __pyx_methods_2gb_11collections_5table_Table, /*tp_methods*/
+  __pyx_methods_2gb_11collections_11inttovector_IntToVector, /*tp_methods*/
   0, /*tp_members*/
   0, /*tp_getset*/
   0, /*tp_base*/
@@ -3547,110 +1769,7 @@ static PyTypeObject __pyx_type_2gb_11collections_5table_Table = {
   0, /*tp_dictoffset*/
   0, /*tp_init*/
   0, /*tp_alloc*/
-  __pyx_tp_new_2gb_11collections_5table_Table, /*tp_new*/
-  0, /*tp_free*/
-  0, /*tp_is_gc*/
-  0, /*tp_bases*/
-  0, /*tp_mro*/
-  0, /*tp_cache*/
-  0, /*tp_subclasses*/
-  0, /*tp_weaklist*/
-  0, /*tp_del*/
-  0, /*tp_version_tag*/
-  #if PY_VERSION_HEX >= 0x030400a1
-  0, /*tp_finalize*/
-  #endif
-};
-static struct __pyx_vtabstruct_2gb_11collections_5table_RobinHoodHash __pyx_vtable_2gb_11collections_5table_RobinHoodHash;
-
-static PyObject *__pyx_tp_new_2gb_11collections_5table_RobinHoodHash(PyTypeObject *t, PyObject *a, PyObject *k) {
-  struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *p;
-  PyObject *o;
-  if (likely((t->tp_flags & Py_TPFLAGS_IS_ABSTRACT) == 0)) {
-    o = (*t->tp_alloc)(t, 0);
-  } else {
-    o = (PyObject *) PyBaseObject_Type.tp_new(t, __pyx_empty_tuple, 0);
-  }
-  if (unlikely(!o)) return 0;
-  p = ((struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *)o);
-  p->__pyx_vtab = __pyx_vtabptr_2gb_11collections_5table_RobinHoodHash;
-  if (unlikely(__pyx_pw_2gb_11collections_5table_13RobinHoodHash_1__cinit__(o, a, k) < 0)) goto bad;
-  return o;
-  bad:
-  Py_DECREF(o); o = 0;
-  return NULL;
-}
-
-static void __pyx_tp_dealloc_2gb_11collections_5table_RobinHoodHash(PyObject *o) {
-  #if CYTHON_USE_TP_FINALIZE
-  if (unlikely(PyType_HasFeature(Py_TYPE(o), Py_TPFLAGS_HAVE_FINALIZE) && Py_TYPE(o)->tp_finalize) && (!PyType_IS_GC(Py_TYPE(o)) || !_PyGC_FINALIZED(o))) {
-    if (PyObject_CallFinalizerFromDealloc(o)) return;
-  }
-  #endif
-  {
-    PyObject *etype, *eval, *etb;
-    PyErr_Fetch(&etype, &eval, &etb);
-    ++Py_REFCNT(o);
-    __pyx_pw_2gb_11collections_5table_13RobinHoodHash_3__dealloc__(o);
-    --Py_REFCNT(o);
-    PyErr_Restore(etype, eval, etb);
-  }
-  (*Py_TYPE(o)->tp_free)(o);
-}
-
-static PyMethodDef __pyx_methods_2gb_11collections_5table_RobinHoodHash[] = {
-  {"_get", (PyCFunction)__pyx_pw_2gb_11collections_5table_13RobinHoodHash_5_get, METH_O, 0},
-  {"_set", (PyCFunction)__pyx_pw_2gb_11collections_5table_13RobinHoodHash_7_set, METH_VARARGS|METH_KEYWORDS, 0},
-  {"_size", (PyCFunction)__pyx_pw_2gb_11collections_5table_13RobinHoodHash_9_size, METH_NOARGS, 0},
-  {"__reduce_cython__", (PyCFunction)__pyx_pw_2gb_11collections_5table_13RobinHoodHash_11__reduce_cython__, METH_NOARGS, 0},
-  {"__setstate_cython__", (PyCFunction)__pyx_pw_2gb_11collections_5table_13RobinHoodHash_13__setstate_cython__, METH_O, 0},
-  {0, 0, 0, 0}
-};
-
-static PyTypeObject __pyx_type_2gb_11collections_5table_RobinHoodHash = {
-  PyVarObject_HEAD_INIT(0, 0)
-  "gb.collections.table.RobinHoodHash", /*tp_name*/
-  sizeof(struct __pyx_obj_2gb_11collections_5table_RobinHoodHash), /*tp_basicsize*/
-  0, /*tp_itemsize*/
-  __pyx_tp_dealloc_2gb_11collections_5table_RobinHoodHash, /*tp_dealloc*/
-  0, /*tp_print*/
-  0, /*tp_getattr*/
-  0, /*tp_setattr*/
-  #if PY_MAJOR_VERSION < 3
-  0, /*tp_compare*/
-  #endif
-  #if PY_MAJOR_VERSION >= 3
-  0, /*tp_as_async*/
-  #endif
-  0, /*tp_repr*/
-  0, /*tp_as_number*/
-  0, /*tp_as_sequence*/
-  0, /*tp_as_mapping*/
-  0, /*tp_hash*/
-  0, /*tp_call*/
-  0, /*tp_str*/
-  0, /*tp_getattro*/
-  0, /*tp_setattro*/
-  0, /*tp_as_buffer*/
-  Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE, /*tp_flags*/
-  0, /*tp_doc*/
-  0, /*tp_traverse*/
-  0, /*tp_clear*/
-  0, /*tp_richcompare*/
-  0, /*tp_weaklistoffset*/
-  0, /*tp_iter*/
-  0, /*tp_iternext*/
-  __pyx_methods_2gb_11collections_5table_RobinHoodHash, /*tp_methods*/
-  0, /*tp_members*/
-  0, /*tp_getset*/
-  0, /*tp_base*/
-  0, /*tp_dict*/
-  0, /*tp_descr_get*/
-  0, /*tp_descr_set*/
-  0, /*tp_dictoffset*/
-  0, /*tp_init*/
-  0, /*tp_alloc*/
-  __pyx_tp_new_2gb_11collections_5table_RobinHoodHash, /*tp_new*/
+  __pyx_tp_new_2gb_11collections_11inttovector_IntToVector, /*tp_new*/
   0, /*tp_free*/
   0, /*tp_is_gc*/
   0, /*tp_bases*/
@@ -3672,17 +1791,17 @@ static PyMethodDef __pyx_methods[] = {
 #if PY_MAJOR_VERSION >= 3
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 static PyObject* __pyx_pymod_create(PyObject *spec, PyModuleDef *def); /*proto*/
-static int __pyx_pymod_exec_table(PyObject* module); /*proto*/
+static int __pyx_pymod_exec_inttovector(PyObject* module); /*proto*/
 static PyModuleDef_Slot __pyx_moduledef_slots[] = {
   {Py_mod_create, (void*)__pyx_pymod_create},
-  {Py_mod_exec, (void*)__pyx_pymod_exec_table},
+  {Py_mod_exec, (void*)__pyx_pymod_exec_inttovector},
   {0, NULL}
 };
 #endif
 
 static struct PyModuleDef __pyx_moduledef = {
     PyModuleDef_HEAD_INIT,
-    "table",
+    "inttovector",
     0, /* m_doc */
   #if CYTHON_PEP489_MULTI_PHASE_INIT
     0, /* m_size */
@@ -3703,15 +1822,12 @@ static struct PyModuleDef __pyx_moduledef = {
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_MemoryError, __pyx_k_MemoryError, sizeof(__pyx_k_MemoryError), 0, 0, 1, 1},
-  {&__pyx_kp_s_Robin_Hash_out_of_mem, __pyx_k_Robin_Hash_out_of_mem, sizeof(__pyx_k_Robin_Hash_out_of_mem), 0, 0, 1, 0},
   {&__pyx_n_s_TypeError, __pyx_k_TypeError, sizeof(__pyx_k_TypeError), 0, 0, 1, 1},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
-  {&__pyx_n_s_col, __pyx_k_col, sizeof(__pyx_k_col), 0, 0, 1, 1},
   {&__pyx_n_s_getstate, __pyx_k_getstate, sizeof(__pyx_k_getstate), 0, 0, 1, 1},
-  {&__pyx_n_s_key, __pyx_k_key, sizeof(__pyx_k_key), 0, 0, 1, 1},
-  {&__pyx_n_s_load_factor, __pyx_k_load_factor, sizeof(__pyx_k_load_factor), 0, 0, 1, 1},
+  {&__pyx_n_s_init_capacity, __pyx_k_init_capacity, sizeof(__pyx_k_init_capacity), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
-  {&__pyx_n_s_n_rows, __pyx_k_n_rows, sizeof(__pyx_k_n_rows), 0, 0, 1, 1},
+  {&__pyx_n_s_n_proc, __pyx_k_n_proc, sizeof(__pyx_k_n_proc), 0, 0, 1, 1},
   {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
   {&__pyx_kp_s_no_default___reduce___due_to_non, __pyx_k_no_default___reduce___due_to_non, sizeof(__pyx_k_no_default___reduce___due_to_non), 0, 0, 1, 0},
   {&__pyx_n_s_pyx_vtable, __pyx_k_pyx_vtable, sizeof(__pyx_k_pyx_vtable), 0, 0, 1, 1},
@@ -3719,16 +1835,14 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_reduce, __pyx_k_reduce, sizeof(__pyx_k_reduce), 0, 0, 1, 1},
   {&__pyx_n_s_reduce_cython, __pyx_k_reduce_cython, sizeof(__pyx_k_reduce_cython), 0, 0, 1, 1},
   {&__pyx_n_s_reduce_ex, __pyx_k_reduce_ex, sizeof(__pyx_k_reduce_ex), 0, 0, 1, 1},
-  {&__pyx_n_s_row, __pyx_k_row, sizeof(__pyx_k_row), 0, 0, 1, 1},
   {&__pyx_n_s_setstate, __pyx_k_setstate, sizeof(__pyx_k_setstate), 0, 0, 1, 1},
   {&__pyx_n_s_setstate_cython, __pyx_k_setstate_cython, sizeof(__pyx_k_setstate_cython), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
-  {&__pyx_n_s_value, __pyx_k_value, sizeof(__pyx_k_value), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 57, __pyx_L1_error)
-  __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(0, 135, __pyx_L1_error)
+  __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(0, 20, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 23, __pyx_L1_error)
   __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) __PYX_ERR(1, 2, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
@@ -3757,36 +1871,6 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__2 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(1, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__2);
   __Pyx_GIVEREF(__pyx_tuple__2);
-
-  /* "gb/collections/table.pyx":166
- *         self.table = <rh_hash_t *> malloc(sizeof(rh_hash_t))
- *         if self.table == NULL:
- *             raise MemoryError('Robin Hash out of mem')             # <<<<<<<<<<<<<<
- * 
- *         rh_init(self.table, load_factor)
- */
-  __pyx_tuple__3 = PyTuple_Pack(1, __pyx_kp_s_Robin_Hash_out_of_mem); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 166, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__3);
-  __Pyx_GIVEREF(__pyx_tuple__3);
-
-  /* "(tree fragment)":2
- * def __reduce_cython__(self):
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
- * def __setstate_cython__(self, __pyx_state):
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
- */
-  __pyx_tuple__4 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(1, 2, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__4);
-  __Pyx_GIVEREF(__pyx_tuple__4);
-
-  /* "(tree fragment)":4
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
- * def __setstate_cython__(self, __pyx_state):
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
- */
-  __pyx_tuple__5 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(1, 4, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__5);
-  __Pyx_GIVEREF(__pyx_tuple__5);
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -3802,11 +1886,11 @@ static int __Pyx_InitGlobals(void) {
 }
 
 #if PY_MAJOR_VERSION < 3
-PyMODINIT_FUNC inittable(void); /*proto*/
-PyMODINIT_FUNC inittable(void)
+PyMODINIT_FUNC initinttovector(void); /*proto*/
+PyMODINIT_FUNC initinttovector(void)
 #else
-PyMODINIT_FUNC PyInit_table(void); /*proto*/
-PyMODINIT_FUNC PyInit_table(void)
+PyMODINIT_FUNC PyInit_inttovector(void); /*proto*/
+PyMODINIT_FUNC PyInit_inttovector(void)
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 {
   return PyModuleDef_Init(&__pyx_moduledef);
@@ -3846,7 +1930,7 @@ bad:
 }
 
 
-static int __pyx_pymod_exec_table(PyObject *__pyx_pyinit_module)
+static int __pyx_pymod_exec_inttovector(PyObject *__pyx_pyinit_module)
 #endif
 #endif
 {
@@ -3864,7 +1948,7 @@ static int __pyx_pymod_exec_table(PyObject *__pyx_pyinit_module)
           Py_FatalError("failed to import 'refnanny' module");
   }
   #endif
-  __Pyx_RefNannySetupContext("PyMODINIT_FUNC PyInit_table(void)", 0);
+  __Pyx_RefNannySetupContext("PyMODINIT_FUNC PyInit_inttovector(void)", 0);
   if (__Pyx_check_binary_version() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_empty_tuple = PyTuple_New(0); if (unlikely(!__pyx_empty_tuple)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_empty_bytes = PyBytes_FromStringAndSize("", 0); if (unlikely(!__pyx_empty_bytes)) __PYX_ERR(0, 1, __pyx_L1_error)
@@ -3900,7 +1984,7 @@ static int __pyx_pymod_exec_table(PyObject *__pyx_pyinit_module)
   Py_INCREF(__pyx_m);
   #else
   #if PY_MAJOR_VERSION < 3
-  __pyx_m = Py_InitModule4("table", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
+  __pyx_m = Py_InitModule4("inttovector", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
   #else
   __pyx_m = PyModule_Create(&__pyx_moduledef);
   #endif
@@ -3919,14 +2003,14 @@ static int __pyx_pymod_exec_table(PyObject *__pyx_pyinit_module)
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main_gb__collections__table) {
+  if (__pyx_module_is_main_gb__collections__inttovector) {
     if (PyObject_SetAttrString(__pyx_m, "__name__", __pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "gb.collections.table")) {
-      if (unlikely(PyDict_SetItemString(modules, "gb.collections.table", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "gb.collections.inttovector")) {
+      if (unlikely(PyDict_SetItemString(modules, "gb.collections.inttovector", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -3938,25 +2022,17 @@ static int __pyx_pymod_exec_table(PyObject *__pyx_pyinit_module)
   /*--- Variable export code ---*/
   /*--- Function export code ---*/
   /*--- Type init code ---*/
-  __pyx_vtabptr_2gb_11collections_5table_Table = &__pyx_vtable_2gb_11collections_5table_Table;
-  __pyx_vtable_2gb_11collections_5table_Table.set_cell = (void (*)(struct __pyx_obj_2gb_11collections_5table_Table *, size_t, size_t, uint64_t))__pyx_f_2gb_11collections_5table_5Table_set_cell;
-  __pyx_vtable_2gb_11collections_5table_Table.get_cell = (uint64_t (*)(struct __pyx_obj_2gb_11collections_5table_Table *, size_t, size_t))__pyx_f_2gb_11collections_5table_5Table_get_cell;
-  if (PyType_Ready(&__pyx_type_2gb_11collections_5table_Table) < 0) __PYX_ERR(0, 129, __pyx_L1_error)
-  __pyx_type_2gb_11collections_5table_Table.tp_print = 0;
-  if (__Pyx_SetVtable(__pyx_type_2gb_11collections_5table_Table.tp_dict, __pyx_vtabptr_2gb_11collections_5table_Table) < 0) __PYX_ERR(0, 129, __pyx_L1_error)
-  if (PyObject_SetAttrString(__pyx_m, "Table", (PyObject *)&__pyx_type_2gb_11collections_5table_Table) < 0) __PYX_ERR(0, 129, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_2gb_11collections_5table_Table) < 0) __PYX_ERR(0, 129, __pyx_L1_error)
-  __pyx_ptype_2gb_11collections_5table_Table = &__pyx_type_2gb_11collections_5table_Table;
-  __pyx_vtabptr_2gb_11collections_5table_RobinHoodHash = &__pyx_vtable_2gb_11collections_5table_RobinHoodHash;
-  __pyx_vtable_2gb_11collections_5table_RobinHoodHash.set = (void (*)(struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *, size_t, uint64_t))__pyx_f_2gb_11collections_5table_13RobinHoodHash_set;
-  __pyx_vtable_2gb_11collections_5table_RobinHoodHash.get = (uint64_t (*)(struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *, size_t))__pyx_f_2gb_11collections_5table_13RobinHoodHash_get;
-  __pyx_vtable_2gb_11collections_5table_RobinHoodHash.size = (size_t (*)(struct __pyx_obj_2gb_11collections_5table_RobinHoodHash *))__pyx_f_2gb_11collections_5table_13RobinHoodHash_size;
-  if (PyType_Ready(&__pyx_type_2gb_11collections_5table_RobinHoodHash) < 0) __PYX_ERR(0, 161, __pyx_L1_error)
-  __pyx_type_2gb_11collections_5table_RobinHoodHash.tp_print = 0;
-  if (__Pyx_SetVtable(__pyx_type_2gb_11collections_5table_RobinHoodHash.tp_dict, __pyx_vtabptr_2gb_11collections_5table_RobinHoodHash) < 0) __PYX_ERR(0, 161, __pyx_L1_error)
-  if (PyObject_SetAttrString(__pyx_m, "RobinHoodHash", (PyObject *)&__pyx_type_2gb_11collections_5table_RobinHoodHash) < 0) __PYX_ERR(0, 161, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_2gb_11collections_5table_RobinHoodHash) < 0) __PYX_ERR(0, 161, __pyx_L1_error)
-  __pyx_ptype_2gb_11collections_5table_RobinHoodHash = &__pyx_type_2gb_11collections_5table_RobinHoodHash;
+  __pyx_vtabptr_2gb_11collections_11inttovector_IntToVector = &__pyx_vtable_2gb_11collections_11inttovector_IntToVector;
+  __pyx_vtable_2gb_11collections_11inttovector_IntToVector.push_back = (void (*)(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *, size_t, double))__pyx_f_2gb_11collections_11inttovector_11IntToVector_push_back;
+  __pyx_vtable_2gb_11collections_11inttovector_IntToVector.reset = (void (*)(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *))__pyx_f_2gb_11collections_11inttovector_11IntToVector_reset;
+  __pyx_vtable_2gb_11collections_11inttovector_IntToVector.get_size = (size_t (*)(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *, size_t))__pyx_f_2gb_11collections_11inttovector_11IntToVector_get_size;
+  __pyx_vtable_2gb_11collections_11inttovector_IntToVector.get_values = (double *(*)(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *, size_t))__pyx_f_2gb_11collections_11inttovector_11IntToVector_get_values;
+  if (PyType_Ready(&__pyx_type_2gb_11collections_11inttovector_IntToVector) < 0) __PYX_ERR(0, 15, __pyx_L1_error)
+  __pyx_type_2gb_11collections_11inttovector_IntToVector.tp_print = 0;
+  if (__Pyx_SetVtable(__pyx_type_2gb_11collections_11inttovector_IntToVector.tp_dict, __pyx_vtabptr_2gb_11collections_11inttovector_IntToVector) < 0) __PYX_ERR(0, 15, __pyx_L1_error)
+  if (PyObject_SetAttrString(__pyx_m, "IntToVector", (PyObject *)&__pyx_type_2gb_11collections_11inttovector_IntToVector) < 0) __PYX_ERR(0, 15, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_2gb_11collections_11inttovector_IntToVector) < 0) __PYX_ERR(0, 15, __pyx_L1_error)
+  __pyx_ptype_2gb_11collections_11inttovector_IntToVector = &__pyx_type_2gb_11collections_11inttovector_IntToVector;
   /*--- Type import code ---*/
   /*--- Variable import code ---*/
   /*--- Function import code ---*/
@@ -3965,7 +2041,7 @@ static int __pyx_pymod_exec_table(PyObject *__pyx_pyinit_module)
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "gb/collections/table.pyx":1
+  /* "gb/collections/inttovector.pyx":1
  * # -*- coding: utf8             # <<<<<<<<<<<<<<
  * # cython: boundscheck=False
  * # cython: cdivision=True
@@ -3982,11 +2058,11 @@ static int __pyx_pymod_exec_table(PyObject *__pyx_pyinit_module)
   __Pyx_XDECREF(__pyx_t_1);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init gb.collections.table", 0, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init gb.collections.inttovector", 0, __pyx_lineno, __pyx_filename);
     }
     Py_DECREF(__pyx_m); __pyx_m = 0;
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init gb.collections.table");
+    PyErr_SetString(PyExc_ImportError, "init gb.collections.inttovector");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
@@ -4029,6 +2105,32 @@ static PyObject *__Pyx_GetBuiltinName(PyObject *name) {
 #endif
     }
     return result;
+}
+
+/* RaiseArgTupleInvalid */
+static void __Pyx_RaiseArgtupleInvalid(
+    const char* func_name,
+    int exact,
+    Py_ssize_t num_min,
+    Py_ssize_t num_max,
+    Py_ssize_t num_found)
+{
+    Py_ssize_t num_expected;
+    const char *more_or_less;
+    if (num_found < num_min) {
+        num_expected = num_min;
+        more_or_less = "at least";
+    } else {
+        num_expected = num_max;
+        more_or_less = "at most";
+    }
+    if (exact) {
+        more_or_less = "exactly";
+    }
+    PyErr_Format(PyExc_TypeError,
+                 "%.200s() takes %.8s %" CYTHON_FORMAT_SSIZE_T "d positional argument%.1s (%" CYTHON_FORMAT_SSIZE_T "d given)",
+                 func_name, more_or_less, num_expected,
+                 (num_expected == 1) ? "" : "s", num_found);
 }
 
 /* RaiseDoubleKeywords */
@@ -4145,32 +2247,6 @@ invalid_keyword:
     #endif
 bad:
     return -1;
-}
-
-/* RaiseArgTupleInvalid */
-static void __Pyx_RaiseArgtupleInvalid(
-    const char* func_name,
-    int exact,
-    Py_ssize_t num_min,
-    Py_ssize_t num_max,
-    Py_ssize_t num_found)
-{
-    Py_ssize_t num_expected;
-    const char *more_or_less;
-    if (num_found < num_min) {
-        num_expected = num_min;
-        more_or_less = "at least";
-    } else {
-        num_expected = num_max;
-        more_or_less = "at most";
-    }
-    if (exact) {
-        more_or_less = "exactly";
-    }
-    PyErr_Format(PyExc_TypeError,
-                 "%.200s() takes %.8s %" CYTHON_FORMAT_SSIZE_T "d positional argument%.1s (%" CYTHON_FORMAT_SSIZE_T "d given)",
-                 func_name, more_or_less, num_expected,
-                 (num_expected == 1) ? "" : "s", num_found);
 }
 
 /* PyObjectCall */
@@ -4694,37 +2770,6 @@ bad:
         return (target_type) value;\
     }
 
-/* CIntToPy */
-static CYTHON_INLINE PyObject* __Pyx_PyInt_From_uint64_t(uint64_t value) {
-    const uint64_t neg_one = (uint64_t) -1, const_zero = (uint64_t) 0;
-    const int is_unsigned = neg_one > const_zero;
-    if (is_unsigned) {
-        if (sizeof(uint64_t) < sizeof(long)) {
-            return PyInt_FromLong((long) value);
-        } else if (sizeof(uint64_t) <= sizeof(unsigned long)) {
-            return PyLong_FromUnsignedLong((unsigned long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(uint64_t) <= sizeof(unsigned PY_LONG_LONG)) {
-            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
-#endif
-        }
-    } else {
-        if (sizeof(uint64_t) <= sizeof(long)) {
-            return PyInt_FromLong((long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(uint64_t) <= sizeof(PY_LONG_LONG)) {
-            return PyLong_FromLongLong((PY_LONG_LONG) value);
-#endif
-        }
-    }
-    {
-        int one = 1; int little = (int)*(unsigned char *)&one;
-        unsigned char *bytes = (unsigned char *)&value;
-        return _PyLong_FromByteArray(bytes, sizeof(uint64_t),
-                                     little, !is_unsigned);
-    }
-}
-
 /* CIntFromPy */
 static CYTHON_INLINE size_t __Pyx_PyInt_As_size_t(PyObject *x) {
     const size_t neg_one = (size_t) -1, const_zero = (size_t) 0;
@@ -4912,195 +2957,6 @@ raise_neg_overflow:
     PyErr_SetString(PyExc_OverflowError,
         "can't convert negative value to size_t");
     return (size_t) -1;
-}
-
-/* CIntFromPy */
-static CYTHON_INLINE uint64_t __Pyx_PyInt_As_uint64_t(PyObject *x) {
-    const uint64_t neg_one = (uint64_t) -1, const_zero = (uint64_t) 0;
-    const int is_unsigned = neg_one > const_zero;
-#if PY_MAJOR_VERSION < 3
-    if (likely(PyInt_Check(x))) {
-        if (sizeof(uint64_t) < sizeof(long)) {
-            __PYX_VERIFY_RETURN_INT(uint64_t, long, PyInt_AS_LONG(x))
-        } else {
-            long val = PyInt_AS_LONG(x);
-            if (is_unsigned && unlikely(val < 0)) {
-                goto raise_neg_overflow;
-            }
-            return (uint64_t) val;
-        }
-    } else
-#endif
-    if (likely(PyLong_Check(x))) {
-        if (is_unsigned) {
-#if CYTHON_USE_PYLONG_INTERNALS
-            const digit* digits = ((PyLongObject*)x)->ob_digit;
-            switch (Py_SIZE(x)) {
-                case  0: return (uint64_t) 0;
-                case  1: __PYX_VERIFY_RETURN_INT(uint64_t, digit, digits[0])
-                case 2:
-                    if (8 * sizeof(uint64_t) > 1 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(uint64_t, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(uint64_t) >= 2 * PyLong_SHIFT) {
-                            return (uint64_t) (((((uint64_t)digits[1]) << PyLong_SHIFT) | (uint64_t)digits[0]));
-                        }
-                    }
-                    break;
-                case 3:
-                    if (8 * sizeof(uint64_t) > 2 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(uint64_t, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(uint64_t) >= 3 * PyLong_SHIFT) {
-                            return (uint64_t) (((((((uint64_t)digits[2]) << PyLong_SHIFT) | (uint64_t)digits[1]) << PyLong_SHIFT) | (uint64_t)digits[0]));
-                        }
-                    }
-                    break;
-                case 4:
-                    if (8 * sizeof(uint64_t) > 3 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(uint64_t, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(uint64_t) >= 4 * PyLong_SHIFT) {
-                            return (uint64_t) (((((((((uint64_t)digits[3]) << PyLong_SHIFT) | (uint64_t)digits[2]) << PyLong_SHIFT) | (uint64_t)digits[1]) << PyLong_SHIFT) | (uint64_t)digits[0]));
-                        }
-                    }
-                    break;
-            }
-#endif
-#if CYTHON_COMPILING_IN_CPYTHON
-            if (unlikely(Py_SIZE(x) < 0)) {
-                goto raise_neg_overflow;
-            }
-#else
-            {
-                int result = PyObject_RichCompareBool(x, Py_False, Py_LT);
-                if (unlikely(result < 0))
-                    return (uint64_t) -1;
-                if (unlikely(result == 1))
-                    goto raise_neg_overflow;
-            }
-#endif
-            if (sizeof(uint64_t) <= sizeof(unsigned long)) {
-                __PYX_VERIFY_RETURN_INT_EXC(uint64_t, unsigned long, PyLong_AsUnsignedLong(x))
-#ifdef HAVE_LONG_LONG
-            } else if (sizeof(uint64_t) <= sizeof(unsigned PY_LONG_LONG)) {
-                __PYX_VERIFY_RETURN_INT_EXC(uint64_t, unsigned PY_LONG_LONG, PyLong_AsUnsignedLongLong(x))
-#endif
-            }
-        } else {
-#if CYTHON_USE_PYLONG_INTERNALS
-            const digit* digits = ((PyLongObject*)x)->ob_digit;
-            switch (Py_SIZE(x)) {
-                case  0: return (uint64_t) 0;
-                case -1: __PYX_VERIFY_RETURN_INT(uint64_t, sdigit, (sdigit) (-(sdigit)digits[0]))
-                case  1: __PYX_VERIFY_RETURN_INT(uint64_t,  digit, +digits[0])
-                case -2:
-                    if (8 * sizeof(uint64_t) - 1 > 1 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(uint64_t, long, -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(uint64_t) - 1 > 2 * PyLong_SHIFT) {
-                            return (uint64_t) (((uint64_t)-1)*(((((uint64_t)digits[1]) << PyLong_SHIFT) | (uint64_t)digits[0])));
-                        }
-                    }
-                    break;
-                case 2:
-                    if (8 * sizeof(uint64_t) > 1 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(uint64_t, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(uint64_t) - 1 > 2 * PyLong_SHIFT) {
-                            return (uint64_t) ((((((uint64_t)digits[1]) << PyLong_SHIFT) | (uint64_t)digits[0])));
-                        }
-                    }
-                    break;
-                case -3:
-                    if (8 * sizeof(uint64_t) - 1 > 2 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(uint64_t, long, -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(uint64_t) - 1 > 3 * PyLong_SHIFT) {
-                            return (uint64_t) (((uint64_t)-1)*(((((((uint64_t)digits[2]) << PyLong_SHIFT) | (uint64_t)digits[1]) << PyLong_SHIFT) | (uint64_t)digits[0])));
-                        }
-                    }
-                    break;
-                case 3:
-                    if (8 * sizeof(uint64_t) > 2 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(uint64_t, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(uint64_t) - 1 > 3 * PyLong_SHIFT) {
-                            return (uint64_t) ((((((((uint64_t)digits[2]) << PyLong_SHIFT) | (uint64_t)digits[1]) << PyLong_SHIFT) | (uint64_t)digits[0])));
-                        }
-                    }
-                    break;
-                case -4:
-                    if (8 * sizeof(uint64_t) - 1 > 3 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(uint64_t, long, -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(uint64_t) - 1 > 4 * PyLong_SHIFT) {
-                            return (uint64_t) (((uint64_t)-1)*(((((((((uint64_t)digits[3]) << PyLong_SHIFT) | (uint64_t)digits[2]) << PyLong_SHIFT) | (uint64_t)digits[1]) << PyLong_SHIFT) | (uint64_t)digits[0])));
-                        }
-                    }
-                    break;
-                case 4:
-                    if (8 * sizeof(uint64_t) > 3 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(uint64_t, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(uint64_t) - 1 > 4 * PyLong_SHIFT) {
-                            return (uint64_t) ((((((((((uint64_t)digits[3]) << PyLong_SHIFT) | (uint64_t)digits[2]) << PyLong_SHIFT) | (uint64_t)digits[1]) << PyLong_SHIFT) | (uint64_t)digits[0])));
-                        }
-                    }
-                    break;
-            }
-#endif
-            if (sizeof(uint64_t) <= sizeof(long)) {
-                __PYX_VERIFY_RETURN_INT_EXC(uint64_t, long, PyLong_AsLong(x))
-#ifdef HAVE_LONG_LONG
-            } else if (sizeof(uint64_t) <= sizeof(PY_LONG_LONG)) {
-                __PYX_VERIFY_RETURN_INT_EXC(uint64_t, PY_LONG_LONG, PyLong_AsLongLong(x))
-#endif
-            }
-        }
-        {
-#if CYTHON_COMPILING_IN_PYPY && !defined(_PyLong_AsByteArray)
-            PyErr_SetString(PyExc_RuntimeError,
-                            "_PyLong_AsByteArray() not available in PyPy, cannot convert large numbers");
-#else
-            uint64_t val;
-            PyObject *v = __Pyx_PyNumber_IntOrLong(x);
- #if PY_MAJOR_VERSION < 3
-            if (likely(v) && !PyLong_Check(v)) {
-                PyObject *tmp = v;
-                v = PyNumber_Long(tmp);
-                Py_DECREF(tmp);
-            }
- #endif
-            if (likely(v)) {
-                int one = 1; int is_little = (int)*(unsigned char *)&one;
-                unsigned char *bytes = (unsigned char *)&val;
-                int ret = _PyLong_AsByteArray((PyLongObject *)v,
-                                              bytes, sizeof(val),
-                                              is_little, !is_unsigned);
-                Py_DECREF(v);
-                if (likely(!ret))
-                    return val;
-            }
-#endif
-            return (uint64_t) -1;
-        }
-    } else {
-        uint64_t val;
-        PyObject *tmp = __Pyx_PyNumber_IntOrLong(x);
-        if (!tmp) return (uint64_t) -1;
-        val = __Pyx_PyInt_As_uint64_t(tmp);
-        Py_DECREF(tmp);
-        return val;
-    }
-raise_overflow:
-    PyErr_SetString(PyExc_OverflowError,
-        "value too large to convert to uint64_t");
-    return (uint64_t) -1;
-raise_neg_overflow:
-    PyErr_SetString(PyExc_OverflowError,
-        "can't convert negative value to uint64_t");
-    return (uint64_t) -1;
 }
 
 /* CIntToPy */

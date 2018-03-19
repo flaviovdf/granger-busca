@@ -471,33 +471,19 @@
   #endif
 #endif
 
-#ifndef __cplusplus
-  #error "Cython files generated with the C++ option must be compiled with a C++ compiler."
-#endif
 #ifndef CYTHON_INLINE
   #if defined(__clang__)
     #define CYTHON_INLINE __inline__ __attribute__ ((__unused__))
-  #else
+  #elif defined(__GNUC__)
+    #define CYTHON_INLINE __inline__
+  #elif defined(_MSC_VER)
+    #define CYTHON_INLINE __inline
+  #elif defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
     #define CYTHON_INLINE inline
+  #else
+    #define CYTHON_INLINE
   #endif
 #endif
-template<typename T>
-void __Pyx_call_destructor(T& x) {
-    x.~T();
-}
-template<typename T>
-class __Pyx_FakeReference {
-  public:
-    __Pyx_FakeReference() : ptr(NULL) { }
-    __Pyx_FakeReference(const T& ref) : ptr(const_cast<T*>(&ref)) { }
-    T *operator->() { return ptr; }
-    T *operator&() { return ptr; }
-    operator T&() { return *ptr; }
-    template<typename U> bool operator ==(U other) { return *ptr == other; }
-    template<typename U> bool operator !=(U other) { return *ptr != other; }
-  private:
-    T *ptr;
-};
 
 #if defined(WIN32) || defined(MS_WINDOWS)
   #define _USE_MATH_DEFINES
@@ -747,6 +733,7 @@ static const char *__pyx_f[] = {
   "gb/samplers.pyx",
   "stringsource",
   "gb/collections/fptree.pxd",
+  "gb/collections/inttovector.pxd",
   "gb/collections/table.pxd",
   "gb/stamps.pxd",
   "gb/kernels.pxd",
@@ -864,6 +851,7 @@ typedef struct {
 
 /*--- Type declarations ---*/
 struct __pyx_obj_2gb_11collections_6fptree_FPTree;
+struct __pyx_obj_2gb_11collections_11inttovector_IntToVector;
 struct __pyx_obj_2gb_11collections_5table_Table;
 struct __pyx_obj_2gb_11collections_5table_RobinHoodHash;
 struct __pyx_obj_2gb_6stamps_Timestamps;
@@ -881,6 +869,21 @@ struct __pyx_array_obj;
 struct __pyx_MemviewEnum_obj;
 struct __pyx_memoryview_obj;
 struct __pyx_memoryviewslice_obj;
+struct __pyx_t_2gb_11collections_11inttovector_vector;
+typedef struct __pyx_t_2gb_11collections_11inttovector_vector __pyx_t_2gb_11collections_11inttovector_vector;
+
+/* "gb/collections/inttovector.pxd":9
+ * 
+ * 
+ * ctypedef struct vector:             # <<<<<<<<<<<<<<
+ *     double *data
+ *     size_t size
+ */
+struct __pyx_t_2gb_11collections_11inttovector_vector {
+  double *data;
+  size_t size;
+  size_t capacity;
+};
 struct __pyx_t_2gb_11collections_5table_entry_t;
 typedef struct __pyx_t_2gb_11collections_5table_entry_t __pyx_t_2gb_11collections_5table_entry_t;
 struct __pyx_t_2gb_11collections_5table_rh_hash_t;
@@ -927,6 +930,21 @@ struct __pyx_obj_2gb_11collections_6fptree_FPTree {
   size_t size;
   size_t t_pos;
   __Pyx_memviewslice values;
+};
+
+
+/* "gb/collections/inttovector.pxd":14
+ *     size_t capacity
+ * 
+ * cdef class IntToVector(object):             # <<<<<<<<<<<<<<
+ *     cdef size_t n_proc
+ *     cdef vector *vectors
+ */
+struct __pyx_obj_2gb_11collections_11inttovector_IntToVector {
+  PyObject_HEAD
+  struct __pyx_vtabstruct_2gb_11collections_11inttovector_IntToVector *__pyx_vtab;
+  size_t n_proc;
+  __pyx_t_2gb_11collections_11inttovector_vector *vectors;
 };
 
 
@@ -977,7 +995,7 @@ struct __pyx_obj_2gb_6stamps_Timestamps {
 };
 
 
-/* "gb/kernels.pxd":14
+/* "gb/kernels.pxd":15
  * 
  * 
  * cdef class AbstractKernel(object):             # <<<<<<<<<<<<<<
@@ -990,7 +1008,7 @@ struct __pyx_obj_2gb_7kernels_AbstractKernel {
 };
 
 
-/* "gb/kernels.pxd":22
+/* "gb/kernels.pxd":23
  * 
  * 
  * cdef class PoissonKernel(AbstractKernel):             # <<<<<<<<<<<<<<
@@ -1005,7 +1023,7 @@ struct __pyx_obj_2gb_7kernels_PoissonKernel {
 };
 
 
-/* "gb/kernels.pxd":28
+/* "gb/kernels.pxd":29
  * 
  * 
  * cdef class BuscaKernel(AbstractKernel):             # <<<<<<<<<<<<<<
@@ -1016,11 +1034,12 @@ struct __pyx_obj_2gb_7kernels_BuscaKernel {
   struct __pyx_obj_2gb_7kernels_AbstractKernel __pyx_base;
   struct __pyx_obj_2gb_7kernels_PoissonKernel *poisson;
   __Pyx_memviewslice beta_rates;
+  struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *dts;
 };
 
 
-/* "gb/kernels.pxd":33
- * 
+/* "gb/kernels.pxd":34
+ *     cdef IntToVector dts
  * 
  * cdef class TruncatedHawkesKernel(BuscaKernel):             # <<<<<<<<<<<<<<
  *     pass
@@ -1225,6 +1244,23 @@ struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree {
 static struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *__pyx_vtabptr_2gb_11collections_6fptree_FPTree;
 
 
+/* "gb/collections/inttovector.pxd":14
+ *     size_t capacity
+ * 
+ * cdef class IntToVector(object):             # <<<<<<<<<<<<<<
+ *     cdef size_t n_proc
+ *     cdef vector *vectors
+ */
+
+struct __pyx_vtabstruct_2gb_11collections_11inttovector_IntToVector {
+  void (*push_back)(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *, size_t, double);
+  void (*reset)(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *);
+  size_t (*get_size)(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *, size_t);
+  double *(*get_values)(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *, size_t);
+};
+static struct __pyx_vtabstruct_2gb_11collections_11inttovector_IntToVector *__pyx_vtabptr_2gb_11collections_11inttovector_IntToVector;
+
+
 /* "gb/collections/table.pxd":26
  * 
  * 
@@ -1276,7 +1312,7 @@ struct __pyx_vtabstruct_2gb_6stamps_Timestamps {
 static struct __pyx_vtabstruct_2gb_6stamps_Timestamps *__pyx_vtabptr_2gb_6stamps_Timestamps;
 
 
-/* "gb/kernels.pxd":14
+/* "gb/kernels.pxd":15
  * 
  * 
  * cdef class AbstractKernel(object):             # <<<<<<<<<<<<<<
@@ -1294,7 +1330,7 @@ struct __pyx_vtabstruct_2gb_7kernels_AbstractKernel {
 static struct __pyx_vtabstruct_2gb_7kernels_AbstractKernel *__pyx_vtabptr_2gb_7kernels_AbstractKernel;
 
 
-/* "gb/kernels.pxd":22
+/* "gb/kernels.pxd":23
  * 
  * 
  * cdef class PoissonKernel(AbstractKernel):             # <<<<<<<<<<<<<<
@@ -1308,7 +1344,7 @@ struct __pyx_vtabstruct_2gb_7kernels_PoissonKernel {
 static struct __pyx_vtabstruct_2gb_7kernels_PoissonKernel *__pyx_vtabptr_2gb_7kernels_PoissonKernel;
 
 
-/* "gb/kernels.pxd":28
+/* "gb/kernels.pxd":29
  * 
  * 
  * cdef class BuscaKernel(AbstractKernel):             # <<<<<<<<<<<<<<
@@ -1322,8 +1358,8 @@ struct __pyx_vtabstruct_2gb_7kernels_BuscaKernel {
 static struct __pyx_vtabstruct_2gb_7kernels_BuscaKernel *__pyx_vtabptr_2gb_7kernels_BuscaKernel;
 
 
-/* "gb/kernels.pxd":33
- * 
+/* "gb/kernels.pxd":34
+ *     cdef IntToVector dts
  * 
  * cdef class TruncatedHawkesKernel(BuscaKernel):             # <<<<<<<<<<<<<<
  *     pass
@@ -2073,6 +2109,9 @@ static PyObject *__pyx_memoryviewslice_assign_item_from_object(struct __pyx_memo
 
 /* Module declarations from 'gb.collections.fptree' */
 static PyTypeObject *__pyx_ptype_2gb_11collections_6fptree_FPTree = 0;
+
+/* Module declarations from 'gb.collections.inttovector' */
+static PyTypeObject *__pyx_ptype_2gb_11collections_11inttovector_IntToVector = 0;
 
 /* Module declarations from 'libc.stdint' */
 
@@ -21968,24 +22007,26 @@ static int __pyx_pymod_exec_samplers(PyObject *__pyx_pyinit_module)
   /*--- Type import code ---*/
   __pyx_ptype_2gb_11collections_6fptree_FPTree = __Pyx_ImportType("gb.collections.fptree", "FPTree", sizeof(struct __pyx_obj_2gb_11collections_6fptree_FPTree), 1); if (unlikely(!__pyx_ptype_2gb_11collections_6fptree_FPTree)) __PYX_ERR(2, 9, __pyx_L1_error)
   __pyx_vtabptr_2gb_11collections_6fptree_FPTree = (struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree*)__Pyx_GetVtable(__pyx_ptype_2gb_11collections_6fptree_FPTree->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_11collections_6fptree_FPTree)) __PYX_ERR(2, 9, __pyx_L1_error)
-  __pyx_ptype_2gb_11collections_5table_Table = __Pyx_ImportType("gb.collections.table", "Table", sizeof(struct __pyx_obj_2gb_11collections_5table_Table), 1); if (unlikely(!__pyx_ptype_2gb_11collections_5table_Table)) __PYX_ERR(3, 26, __pyx_L1_error)
-  __pyx_vtabptr_2gb_11collections_5table_Table = (struct __pyx_vtabstruct_2gb_11collections_5table_Table*)__Pyx_GetVtable(__pyx_ptype_2gb_11collections_5table_Table->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_11collections_5table_Table)) __PYX_ERR(3, 26, __pyx_L1_error)
-  __pyx_ptype_2gb_11collections_5table_RobinHoodHash = __Pyx_ImportType("gb.collections.table", "RobinHoodHash", sizeof(struct __pyx_obj_2gb_11collections_5table_RobinHoodHash), 1); if (unlikely(!__pyx_ptype_2gb_11collections_5table_RobinHoodHash)) __PYX_ERR(3, 34, __pyx_L1_error)
-  __pyx_vtabptr_2gb_11collections_5table_RobinHoodHash = (struct __pyx_vtabstruct_2gb_11collections_5table_RobinHoodHash*)__Pyx_GetVtable(__pyx_ptype_2gb_11collections_5table_RobinHoodHash->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_11collections_5table_RobinHoodHash)) __PYX_ERR(3, 34, __pyx_L1_error)
-  __pyx_ptype_2gb_6stamps_Timestamps = __Pyx_ImportType("gb.stamps", "Timestamps", sizeof(struct __pyx_obj_2gb_6stamps_Timestamps), 1); if (unlikely(!__pyx_ptype_2gb_6stamps_Timestamps)) __PYX_ERR(4, 12, __pyx_L1_error)
-  __pyx_vtabptr_2gb_6stamps_Timestamps = (struct __pyx_vtabstruct_2gb_6stamps_Timestamps*)__Pyx_GetVtable(__pyx_ptype_2gb_6stamps_Timestamps->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_6stamps_Timestamps)) __PYX_ERR(4, 12, __pyx_L1_error)
-  __pyx_ptype_2gb_7kernels_AbstractKernel = __Pyx_ImportType("gb.kernels", "AbstractKernel", sizeof(struct __pyx_obj_2gb_7kernels_AbstractKernel), 1); if (unlikely(!__pyx_ptype_2gb_7kernels_AbstractKernel)) __PYX_ERR(5, 14, __pyx_L1_error)
-  __pyx_vtabptr_2gb_7kernels_AbstractKernel = (struct __pyx_vtabstruct_2gb_7kernels_AbstractKernel*)__Pyx_GetVtable(__pyx_ptype_2gb_7kernels_AbstractKernel->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_7kernels_AbstractKernel)) __PYX_ERR(5, 14, __pyx_L1_error)
-  __pyx_ptype_2gb_7kernels_PoissonKernel = __Pyx_ImportType("gb.kernels", "PoissonKernel", sizeof(struct __pyx_obj_2gb_7kernels_PoissonKernel), 1); if (unlikely(!__pyx_ptype_2gb_7kernels_PoissonKernel)) __PYX_ERR(5, 22, __pyx_L1_error)
-  __pyx_vtabptr_2gb_7kernels_PoissonKernel = (struct __pyx_vtabstruct_2gb_7kernels_PoissonKernel*)__Pyx_GetVtable(__pyx_ptype_2gb_7kernels_PoissonKernel->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_7kernels_PoissonKernel)) __PYX_ERR(5, 22, __pyx_L1_error)
-  __pyx_ptype_2gb_7kernels_BuscaKernel = __Pyx_ImportType("gb.kernels", "BuscaKernel", sizeof(struct __pyx_obj_2gb_7kernels_BuscaKernel), 1); if (unlikely(!__pyx_ptype_2gb_7kernels_BuscaKernel)) __PYX_ERR(5, 28, __pyx_L1_error)
-  __pyx_vtabptr_2gb_7kernels_BuscaKernel = (struct __pyx_vtabstruct_2gb_7kernels_BuscaKernel*)__Pyx_GetVtable(__pyx_ptype_2gb_7kernels_BuscaKernel->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_7kernels_BuscaKernel)) __PYX_ERR(5, 28, __pyx_L1_error)
-  __pyx_ptype_2gb_7kernels_TruncatedHawkesKernel = __Pyx_ImportType("gb.kernels", "TruncatedHawkesKernel", sizeof(struct __pyx_obj_2gb_7kernels_TruncatedHawkesKernel), 1); if (unlikely(!__pyx_ptype_2gb_7kernels_TruncatedHawkesKernel)) __PYX_ERR(5, 33, __pyx_L1_error)
-  __pyx_vtabptr_2gb_7kernels_TruncatedHawkesKernel = (struct __pyx_vtabstruct_2gb_7kernels_TruncatedHawkesKernel*)__Pyx_GetVtable(__pyx_ptype_2gb_7kernels_TruncatedHawkesKernel->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_7kernels_TruncatedHawkesKernel)) __PYX_ERR(5, 33, __pyx_L1_error)
-  __pyx_ptype_2gb_9randomkit_6random_RNG = __Pyx_ImportType("gb.randomkit.random", "RNG", sizeof(struct __pyx_obj_2gb_9randomkit_6random_RNG), 1); if (unlikely(!__pyx_ptype_2gb_9randomkit_6random_RNG)) __PYX_ERR(6, 17, __pyx_L1_error)
-  __pyx_vtabptr_2gb_9randomkit_6random_RNG = (struct __pyx_vtabstruct_2gb_9randomkit_6random_RNG*)__Pyx_GetVtable(__pyx_ptype_2gb_9randomkit_6random_RNG->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_9randomkit_6random_RNG)) __PYX_ERR(6, 17, __pyx_L1_error)
-  __pyx_ptype_2gb_6sloppy_SloppyCounter = __Pyx_ImportType("gb.sloppy", "SloppyCounter", sizeof(struct __pyx_obj_2gb_6sloppy_SloppyCounter), 1); if (unlikely(!__pyx_ptype_2gb_6sloppy_SloppyCounter)) __PYX_ERR(7, 14, __pyx_L1_error)
-  __pyx_vtabptr_2gb_6sloppy_SloppyCounter = (struct __pyx_vtabstruct_2gb_6sloppy_SloppyCounter*)__Pyx_GetVtable(__pyx_ptype_2gb_6sloppy_SloppyCounter->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_6sloppy_SloppyCounter)) __PYX_ERR(7, 14, __pyx_L1_error)
+  __pyx_ptype_2gb_11collections_11inttovector_IntToVector = __Pyx_ImportType("gb.collections.inttovector", "IntToVector", sizeof(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector), 1); if (unlikely(!__pyx_ptype_2gb_11collections_11inttovector_IntToVector)) __PYX_ERR(3, 14, __pyx_L1_error)
+  __pyx_vtabptr_2gb_11collections_11inttovector_IntToVector = (struct __pyx_vtabstruct_2gb_11collections_11inttovector_IntToVector*)__Pyx_GetVtable(__pyx_ptype_2gb_11collections_11inttovector_IntToVector->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_11collections_11inttovector_IntToVector)) __PYX_ERR(3, 14, __pyx_L1_error)
+  __pyx_ptype_2gb_11collections_5table_Table = __Pyx_ImportType("gb.collections.table", "Table", sizeof(struct __pyx_obj_2gb_11collections_5table_Table), 1); if (unlikely(!__pyx_ptype_2gb_11collections_5table_Table)) __PYX_ERR(4, 26, __pyx_L1_error)
+  __pyx_vtabptr_2gb_11collections_5table_Table = (struct __pyx_vtabstruct_2gb_11collections_5table_Table*)__Pyx_GetVtable(__pyx_ptype_2gb_11collections_5table_Table->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_11collections_5table_Table)) __PYX_ERR(4, 26, __pyx_L1_error)
+  __pyx_ptype_2gb_11collections_5table_RobinHoodHash = __Pyx_ImportType("gb.collections.table", "RobinHoodHash", sizeof(struct __pyx_obj_2gb_11collections_5table_RobinHoodHash), 1); if (unlikely(!__pyx_ptype_2gb_11collections_5table_RobinHoodHash)) __PYX_ERR(4, 34, __pyx_L1_error)
+  __pyx_vtabptr_2gb_11collections_5table_RobinHoodHash = (struct __pyx_vtabstruct_2gb_11collections_5table_RobinHoodHash*)__Pyx_GetVtable(__pyx_ptype_2gb_11collections_5table_RobinHoodHash->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_11collections_5table_RobinHoodHash)) __PYX_ERR(4, 34, __pyx_L1_error)
+  __pyx_ptype_2gb_6stamps_Timestamps = __Pyx_ImportType("gb.stamps", "Timestamps", sizeof(struct __pyx_obj_2gb_6stamps_Timestamps), 1); if (unlikely(!__pyx_ptype_2gb_6stamps_Timestamps)) __PYX_ERR(5, 12, __pyx_L1_error)
+  __pyx_vtabptr_2gb_6stamps_Timestamps = (struct __pyx_vtabstruct_2gb_6stamps_Timestamps*)__Pyx_GetVtable(__pyx_ptype_2gb_6stamps_Timestamps->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_6stamps_Timestamps)) __PYX_ERR(5, 12, __pyx_L1_error)
+  __pyx_ptype_2gb_7kernels_AbstractKernel = __Pyx_ImportType("gb.kernels", "AbstractKernel", sizeof(struct __pyx_obj_2gb_7kernels_AbstractKernel), 1); if (unlikely(!__pyx_ptype_2gb_7kernels_AbstractKernel)) __PYX_ERR(6, 15, __pyx_L1_error)
+  __pyx_vtabptr_2gb_7kernels_AbstractKernel = (struct __pyx_vtabstruct_2gb_7kernels_AbstractKernel*)__Pyx_GetVtable(__pyx_ptype_2gb_7kernels_AbstractKernel->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_7kernels_AbstractKernel)) __PYX_ERR(6, 15, __pyx_L1_error)
+  __pyx_ptype_2gb_7kernels_PoissonKernel = __Pyx_ImportType("gb.kernels", "PoissonKernel", sizeof(struct __pyx_obj_2gb_7kernels_PoissonKernel), 1); if (unlikely(!__pyx_ptype_2gb_7kernels_PoissonKernel)) __PYX_ERR(6, 23, __pyx_L1_error)
+  __pyx_vtabptr_2gb_7kernels_PoissonKernel = (struct __pyx_vtabstruct_2gb_7kernels_PoissonKernel*)__Pyx_GetVtable(__pyx_ptype_2gb_7kernels_PoissonKernel->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_7kernels_PoissonKernel)) __PYX_ERR(6, 23, __pyx_L1_error)
+  __pyx_ptype_2gb_7kernels_BuscaKernel = __Pyx_ImportType("gb.kernels", "BuscaKernel", sizeof(struct __pyx_obj_2gb_7kernels_BuscaKernel), 1); if (unlikely(!__pyx_ptype_2gb_7kernels_BuscaKernel)) __PYX_ERR(6, 29, __pyx_L1_error)
+  __pyx_vtabptr_2gb_7kernels_BuscaKernel = (struct __pyx_vtabstruct_2gb_7kernels_BuscaKernel*)__Pyx_GetVtable(__pyx_ptype_2gb_7kernels_BuscaKernel->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_7kernels_BuscaKernel)) __PYX_ERR(6, 29, __pyx_L1_error)
+  __pyx_ptype_2gb_7kernels_TruncatedHawkesKernel = __Pyx_ImportType("gb.kernels", "TruncatedHawkesKernel", sizeof(struct __pyx_obj_2gb_7kernels_TruncatedHawkesKernel), 1); if (unlikely(!__pyx_ptype_2gb_7kernels_TruncatedHawkesKernel)) __PYX_ERR(6, 34, __pyx_L1_error)
+  __pyx_vtabptr_2gb_7kernels_TruncatedHawkesKernel = (struct __pyx_vtabstruct_2gb_7kernels_TruncatedHawkesKernel*)__Pyx_GetVtable(__pyx_ptype_2gb_7kernels_TruncatedHawkesKernel->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_7kernels_TruncatedHawkesKernel)) __PYX_ERR(6, 34, __pyx_L1_error)
+  __pyx_ptype_2gb_9randomkit_6random_RNG = __Pyx_ImportType("gb.randomkit.random", "RNG", sizeof(struct __pyx_obj_2gb_9randomkit_6random_RNG), 1); if (unlikely(!__pyx_ptype_2gb_9randomkit_6random_RNG)) __PYX_ERR(7, 17, __pyx_L1_error)
+  __pyx_vtabptr_2gb_9randomkit_6random_RNG = (struct __pyx_vtabstruct_2gb_9randomkit_6random_RNG*)__Pyx_GetVtable(__pyx_ptype_2gb_9randomkit_6random_RNG->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_9randomkit_6random_RNG)) __PYX_ERR(7, 17, __pyx_L1_error)
+  __pyx_ptype_2gb_6sloppy_SloppyCounter = __Pyx_ImportType("gb.sloppy", "SloppyCounter", sizeof(struct __pyx_obj_2gb_6sloppy_SloppyCounter), 1); if (unlikely(!__pyx_ptype_2gb_6sloppy_SloppyCounter)) __PYX_ERR(8, 14, __pyx_L1_error)
+  __pyx_vtabptr_2gb_6sloppy_SloppyCounter = (struct __pyx_vtabstruct_2gb_6sloppy_SloppyCounter*)__Pyx_GetVtable(__pyx_ptype_2gb_6sloppy_SloppyCounter->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_6sloppy_SloppyCounter)) __PYX_ERR(8, 14, __pyx_L1_error)
   /*--- Variable import code ---*/
   /*--- Function import code ---*/
   __pyx_t_1 = __Pyx_ImportModule("gb.sorting.binsearch"); if (!__pyx_t_1) __PYX_ERR(0, 1, __pyx_L1_error)

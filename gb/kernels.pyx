@@ -6,14 +6,12 @@
 # cython: wraparound=False
 
 
+from gb.collections.inttovector cimport IntToVector
 from gb.sorting.largest cimport quick_median
 
 from libc.stdio cimport printf
 from libc.stdint cimport uint64_t
 from libc.stdlib cimport abort
-
-from libcpp.unordered_map cimport unordered_map
-from libcpp.vector cimport vector
 
 import numpy as np
 
@@ -23,10 +21,11 @@ cdef extern from 'math.h':
 
 
 cdef inline double update_beta_rate(size_t proc_a, Timestamps all_stamps,
-                                    double[::1] beta_rates) nogil:
+                                    double[::1] beta_rates,
+                                    IntToVector dts) nogil:
 
     cdef size_t n_proc = all_stamps.num_proc()
-    cdef unordered_map[size_t, vector[double]] dts
+    dts.reset()
 
     cdef double ti, tp
     cdef double max_ti = 0
@@ -43,12 +42,12 @@ cdef inline double update_beta_rate(size_t proc_a, Timestamps all_stamps,
             max_ti = ti
         if proc_b != n_proc:
             tp = all_stamps.find_previous(proc_b, ti)
-            dts[proc_b].push_back(ti - tp)
+            dts.push_back(proc_b, ti - tp)
 
     for proc_b in range(n_proc):
-        if dts[proc_b].size() >= 1:
-            beta_rates[proc_b] = quick_median(&dts[proc_b][0],
-                                              dts[proc_b].size())
+        if dts.get_size(proc_b) >= 1:
+            beta_rates[proc_b] = quick_median(dts.get_values(proc_b),
+                                              dts.get_size(proc_b))
         else:
             beta_rates[proc_b] = max_ti
 
@@ -115,10 +114,12 @@ cdef class BuscaKernel(AbstractKernel):
     def __init__(self, PoissonKernel poisson, size_t n_proc):
         self.poisson = poisson
         self.beta_rates = np.zeros(n_proc, dtype='d')
+        self.dts = IntToVector(n_proc, 100)
 
     cdef void set_current_process(self, size_t proc) nogil:
         self.poisson.set_current_process(proc)
-        update_beta_rate(proc, self.poisson.timestamps, self.beta_rates)
+        update_beta_rate(proc, self.poisson.timestamps, self.beta_rates,
+                         self.dts)
 
     cdef double background_probability(self, double dt) nogil:
         return self.poisson.background_probability(dt)

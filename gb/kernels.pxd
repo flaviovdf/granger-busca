@@ -6,6 +6,7 @@
 # cython: wraparound=False
 
 
+from gb.collections.inttovector cimport IntToVector
 from gb.stamps cimport Timestamps
 
 from libc.stdint cimport uint64_t
@@ -28,7 +29,7 @@ cdef class PoissonKernel(AbstractKernel):
 cdef class BuscaKernel(AbstractKernel):
     cdef PoissonKernel poisson
     cdef double[::1] beta_rates
-
+    cdef IntToVector dts
 
 cdef class TruncatedHawkesKernel(BuscaKernel):
     pass

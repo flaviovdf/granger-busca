@@ -471,33 +471,19 @@
   #endif
 #endif
 
-#ifndef __cplusplus
-  #error "Cython files generated with the C++ option must be compiled with a C++ compiler."
-#endif
 #ifndef CYTHON_INLINE
   #if defined(__clang__)
     #define CYTHON_INLINE __inline__ __attribute__ ((__unused__))
-  #else
+  #elif defined(__GNUC__)
+    #define CYTHON_INLINE __inline__
+  #elif defined(_MSC_VER)
+    #define CYTHON_INLINE __inline
+  #elif defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
     #define CYTHON_INLINE inline
+  #else
+    #define CYTHON_INLINE
   #endif
 #endif
-template<typename T>
-void __Pyx_call_destructor(T& x) {
-    x.~T();
-}
-template<typename T>
-class __Pyx_FakeReference {
-  public:
-    __Pyx_FakeReference() : ptr(NULL) { }
-    __Pyx_FakeReference(const T& ref) : ptr(const_cast<T*>(&ref)) { }
-    T *operator->() { return ptr; }
-    T *operator&() { return ptr; }
-    operator T&() { return *ptr; }
-    template<typename U> bool operator ==(U other) { return *ptr == other; }
-    template<typename U> bool operator !=(U other) { return *ptr != other; }
-  private:
-    T *ptr;
-};
 
 #if defined(WIN32) || defined(MS_WINDOWS)
   #define _USE_MATH_DEFINES
@@ -532,8 +518,8 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE__gb__sorting__largest
-#define __PYX_HAVE_API__gb__sorting__largest
+#define __PYX_HAVE__gb__sorting__binsearch
+#define __PYX_HAVE_API__gb__sorting__binsearch
 #include "pythread.h"
 #include <string.h>
 #include <stdlib.h>
@@ -742,7 +728,7 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "gb/sorting/largest.pyx",
+  "gb/sorting/binsearch.pyx",
   "stringsource",
 };
 /* MemviewSliceStruct.proto */
@@ -1049,24 +1035,17 @@ static struct __pyx_vtabstruct__memoryviewslice *__pyx_vtabptr__memoryviewslice;
 #define __Pyx_CLEAR(r)    do { PyObject* tmp = ((PyObject*)(r)); r = NULL; __Pyx_DECREF(tmp);} while(0)
 #define __Pyx_XCLEAR(r)   do { if((r) != NULL) {PyObject* tmp = ((PyObject*)(r)); r = NULL; __Pyx_DECREF(tmp);}} while(0)
 
-/* PyObjectGetAttrStr.proto */
-#if CYTHON_USE_TYPE_SLOTS
-static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject* attr_name) {
-    PyTypeObject* tp = Py_TYPE(obj);
-    if (likely(tp->tp_getattro))
-        return tp->tp_getattro(obj, attr_name);
-#if PY_MAJOR_VERSION < 3
-    if (likely(tp->tp_getattr))
-        return tp->tp_getattr(obj, PyString_AS_STRING(attr_name));
-#endif
-    return PyObject_GetAttr(obj, attr_name);
-}
-#else
-#define __Pyx_PyObject_GetAttrStr(o,n) PyObject_GetAttr(o,n)
-#endif
+/* RaiseArgTupleInvalid.proto */
+static void __Pyx_RaiseArgtupleInvalid(const char* func_name, int exact,
+    Py_ssize_t num_min, Py_ssize_t num_max, Py_ssize_t num_found);
 
-/* GetBuiltinName.proto */
-static PyObject *__Pyx_GetBuiltinName(PyObject *name);
+/* RaiseDoubleKeywords.proto */
+static void __Pyx_RaiseDoubleKeywordsError(const char* func_name, PyObject* kw_name);
+
+/* ParseKeywords.proto */
+static int __Pyx_ParseOptionalKeywords(PyObject *kwds, PyObject **argnames[],\
+    PyObject *kwds2, PyObject *values[], Py_ssize_t num_pos_args,\
+    const char* function_name);
 
 /* MemviewSliceInit.proto */
 #define __Pyx_BUF_MAX_NDIMS %(BUF_MAX_NDIMS)d
@@ -1094,23 +1073,30 @@ static CYTHON_INLINE int __pyx_sub_acquisition_count_locked(
 static CYTHON_INLINE void __Pyx_INC_MEMVIEW(__Pyx_memviewslice *, int, int);
 static CYTHON_INLINE void __Pyx_XDEC_MEMVIEW(__Pyx_memviewslice *, int, int);
 
-/* RaiseArgTupleInvalid.proto */
-static void __Pyx_RaiseArgtupleInvalid(const char* func_name, int exact,
-    Py_ssize_t num_min, Py_ssize_t num_max, Py_ssize_t num_found);
-
-/* RaiseDoubleKeywords.proto */
-static void __Pyx_RaiseDoubleKeywordsError(const char* func_name, PyObject* kw_name);
-
-/* ParseKeywords.proto */
-static int __Pyx_ParseOptionalKeywords(PyObject *kwds, PyObject **argnames[],\
-    PyObject *kwds2, PyObject *values[], Py_ssize_t num_pos_args,\
-    const char* function_name);
-
 /* ArgTypeTest.proto */
 #define __Pyx_ArgTypeTest(obj, type, none_allowed, name, exact)\
     ((likely((Py_TYPE(obj) == type) | (none_allowed && (obj == Py_None)))) ? 1 :\
         __Pyx__ArgTypeTest(obj, type, name, exact))
 static int __Pyx__ArgTypeTest(PyObject *obj, PyTypeObject *type, const char *name, int exact);
+
+/* PyObjectGetAttrStr.proto */
+#if CYTHON_USE_TYPE_SLOTS
+static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject* attr_name) {
+    PyTypeObject* tp = Py_TYPE(obj);
+    if (likely(tp->tp_getattro))
+        return tp->tp_getattro(obj, attr_name);
+#if PY_MAJOR_VERSION < 3
+    if (likely(tp->tp_getattr))
+        return tp->tp_getattr(obj, PyString_AS_STRING(attr_name));
+#endif
+    return PyObject_GetAttr(obj, attr_name);
+}
+#else
+#define __Pyx_PyObject_GetAttrStr(o,n) PyObject_GetAttr(o,n)
+#endif
+
+/* GetBuiltinName.proto */
+static PyObject *__Pyx_GetBuiltinName(PyObject *name);
 
 /* PyObjectCall.proto */
 #if CYTHON_COMPILING_IN_CPYTHON
@@ -1526,7 +1512,7 @@ static PyObject *__pyx_memoryview_assign_item_from_object(struct __pyx_memoryvie
 static PyObject *__pyx_memoryviewslice_convert_item_to_object(struct __pyx_memoryviewslice_obj *__pyx_v_self, char *__pyx_v_itemp); /* proto*/
 static PyObject *__pyx_memoryviewslice_assign_item_from_object(struct __pyx_memoryviewslice_obj *__pyx_v_self, char *__pyx_v_itemp, PyObject *__pyx_v_value); /* proto*/
 
-/* Module declarations from 'gb.sorting.largest' */
+/* Module declarations from 'gb.sorting.binsearch' */
 static PyTypeObject *__pyx_array_type = 0;
 static PyTypeObject *__pyx_MemviewEnum_type = 0;
 static PyTypeObject *__pyx_memoryview_type = 0;
@@ -1538,9 +1524,7 @@ static PyObject *contiguous = 0;
 static PyObject *indirect_contiguous = 0;
 static int __pyx_memoryview_thread_locks_used;
 static PyThread_type_lock __pyx_memoryview_thread_locks[8];
-static double __pyx_f_2gb_7sorting_7largest_quick_median(double *, size_t); /*proto*/
-static CYTHON_INLINE void __pyx_f_2gb_7sorting_7largest_swap(double *, double *); /*proto*/
-static CYTHON_INLINE double __pyx_f_2gb_7sorting_7largest_quickselect(double *, size_t, size_t); /*proto*/
+static size_t __pyx_f_2gb_7sorting_9binsearch_searchsorted(double *, size_t, double, size_t); /*proto*/
 static struct __pyx_array_obj *__pyx_array_new(PyObject *, Py_ssize_t, char *, char *, char *); /*proto*/
 static void *__pyx_align_pointer(void *, size_t); /*proto*/
 static PyObject *__pyx_memoryview_new(PyObject *, int, int, __Pyx_TypeInfo *); /*proto*/
@@ -1575,15 +1559,15 @@ static void __pyx_memoryview_slice_assign_scalar(__Pyx_memviewslice *, int, size
 static void __pyx_memoryview__slice_assign_scalar(char *, Py_ssize_t *, Py_ssize_t *, int, size_t, void *); /*proto*/
 static PyObject *__pyx_unpickle_Enum__set_state(struct __pyx_MemviewEnum_obj *, PyObject *); /*proto*/
 static __Pyx_TypeInfo __Pyx_TypeInfo_double = { "double", NULL, sizeof(double), { 0 }, 0, 'R', 0, 0 };
-#define __Pyx_MODULE_NAME "gb.sorting.largest"
-extern int __pyx_module_is_main_gb__sorting__largest;
-int __pyx_module_is_main_gb__sorting__largest = 0;
+#define __Pyx_MODULE_NAME "gb.sorting.binsearch"
+extern int __pyx_module_is_main_gb__sorting__binsearch;
+int __pyx_module_is_main_gb__sorting__binsearch = 0;
 
-/* Implementation of 'gb.sorting.largest' */
-static PyObject *__pyx_builtin_range;
+/* Implementation of 'gb.sorting.binsearch' */
 static PyObject *__pyx_builtin_ValueError;
 static PyObject *__pyx_builtin_MemoryError;
 static PyObject *__pyx_builtin_enumerate;
+static PyObject *__pyx_builtin_range;
 static PyObject *__pyx_builtin_TypeError;
 static PyObject *__pyx_builtin_Ellipsis;
 static PyObject *__pyx_builtin_id;
@@ -1609,13 +1593,14 @@ static const char __pyx_k_array[] = "array";
 static const char __pyx_k_class[] = "__class__";
 static const char __pyx_k_error[] = "error";
 static const char __pyx_k_flags[] = "flags";
+static const char __pyx_k_lower[] = "lower";
 static const char __pyx_k_range[] = "range";
 static const char __pyx_k_shape[] = "shape";
 static const char __pyx_k_start[] = "start";
+static const char __pyx_k_value[] = "value";
 static const char __pyx_k_encode[] = "encode";
 static const char __pyx_k_format[] = "format";
 static const char __pyx_k_import[] = "__import__";
-static const char __pyx_k_median[] = "_median";
 static const char __pyx_k_name_2[] = "__name__";
 static const char __pyx_k_pickle[] = "pickle";
 static const char __pyx_k_reduce[] = "__reduce__";
@@ -1640,6 +1625,7 @@ static const char __pyx_k_pyx_vtable[] = "__pyx_vtable__";
 static const char __pyx_k_MemoryError[] = "MemoryError";
 static const char __pyx_k_PickleError[] = "PickleError";
 static const char __pyx_k_pyx_checksum[] = "__pyx_checksum";
+static const char __pyx_k_searchsorted[] = "_searchsorted";
 static const char __pyx_k_stringsource[] = "stringsource";
 static const char __pyx_k_pyx_getbuffer[] = "__pyx_getbuffer";
 static const char __pyx_k_reduce_cython[] = "__reduce_cython__";
@@ -1650,15 +1636,15 @@ static const char __pyx_k_pyx_PickleError[] = "__pyx_PickleError";
 static const char __pyx_k_setstate_cython[] = "__setstate_cython__";
 static const char __pyx_k_pyx_unpickle_Enum[] = "__pyx_unpickle_Enum";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
-static const char __pyx_k_gb_sorting_largest[] = "gb.sorting.largest";
 static const char __pyx_k_strided_and_direct[] = "<strided and direct>";
+static const char __pyx_k_gb_sorting_binsearch[] = "gb.sorting.binsearch";
 static const char __pyx_k_strided_and_indirect[] = "<strided and indirect>";
 static const char __pyx_k_contiguous_and_direct[] = "<contiguous and direct>";
 static const char __pyx_k_MemoryView_of_r_object[] = "<MemoryView of %r object>";
-static const char __pyx_k_gb_sorting_largest_pyx[] = "gb/sorting/largest.pyx";
 static const char __pyx_k_MemoryView_of_r_at_0x_x[] = "<MemoryView of %r at 0x%x>";
 static const char __pyx_k_contiguous_and_indirect[] = "<contiguous and indirect>";
 static const char __pyx_k_Cannot_index_with_type_s[] = "Cannot index with type '%s'";
+static const char __pyx_k_gb_sorting_binsearch_pyx[] = "gb/sorting/binsearch.pyx";
 static const char __pyx_k_Invalid_shape_in_axis_d_d[] = "Invalid shape in axis %d: %d.";
 static const char __pyx_k_itemsize_0_for_cython_array[] = "itemsize <= 0 for cython.array";
 static const char __pyx_k_unable_to_allocate_array_data[] = "unable to allocate array data.";
@@ -1713,16 +1699,16 @@ static PyObject *__pyx_n_s_flags;
 static PyObject *__pyx_n_s_format;
 static PyObject *__pyx_n_s_fortran;
 static PyObject *__pyx_n_u_fortran;
-static PyObject *__pyx_n_s_gb_sorting_largest;
-static PyObject *__pyx_kp_s_gb_sorting_largest_pyx;
+static PyObject *__pyx_n_s_gb_sorting_binsearch;
+static PyObject *__pyx_kp_s_gb_sorting_binsearch_pyx;
 static PyObject *__pyx_n_s_getstate;
 static PyObject *__pyx_kp_s_got_differing_extents_in_dimensi;
 static PyObject *__pyx_n_s_id;
 static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_itemsize;
 static PyObject *__pyx_kp_s_itemsize_0_for_cython_array;
+static PyObject *__pyx_n_s_lower;
 static PyObject *__pyx_n_s_main;
-static PyObject *__pyx_n_s_median;
 static PyObject *__pyx_n_s_memview;
 static PyObject *__pyx_n_s_mode;
 static PyObject *__pyx_n_s_name;
@@ -1745,6 +1731,7 @@ static PyObject *__pyx_n_s_range;
 static PyObject *__pyx_n_s_reduce;
 static PyObject *__pyx_n_s_reduce_cython;
 static PyObject *__pyx_n_s_reduce_ex;
+static PyObject *__pyx_n_s_searchsorted;
 static PyObject *__pyx_n_s_setstate;
 static PyObject *__pyx_n_s_setstate_cython;
 static PyObject *__pyx_n_s_shape;
@@ -1762,7 +1749,8 @@ static PyObject *__pyx_kp_s_unable_to_allocate_array_data;
 static PyObject *__pyx_kp_s_unable_to_allocate_shape_and_str;
 static PyObject *__pyx_n_s_unpack;
 static PyObject *__pyx_n_s_update;
-static PyObject *__pyx_pf_2gb_7sorting_7largest__median(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_array); /* proto */
+static PyObject *__pyx_n_s_value;
+static PyObject *__pyx_pf_2gb_7sorting_9binsearch__searchsorted(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_array, double __pyx_v_value, size_t __pyx_v_lower); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __pyx_array_obj *__pyx_v_self, PyObject *__pyx_v_shape, Py_ssize_t __pyx_v_itemsize, PyObject *__pyx_v_format, PyObject *__pyx_v_mode, int __pyx_v_allocate_buffer); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array_2__getbuffer__(struct __pyx_array_obj *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /* proto */
 static void __pyx_array___pyx_pf_15View_dot_MemoryView_5array_4__dealloc__(struct __pyx_array_obj *__pyx_v_self); /* proto */
@@ -1842,625 +1830,234 @@ static PyObject *__pyx_tuple__27;
 static PyObject *__pyx_codeobj__21;
 static PyObject *__pyx_codeobj__28;
 
-/* "gb/sorting/largest.pyx":9
+/* "gb/sorting/binsearch.pyx":9
  * 
  * 
- * cdef inline void swap(double *a, double *b) nogil:             # <<<<<<<<<<<<<<
- *     cdef double aux = a[0]
- *     a[0] = b[0]
+ * cdef size_t searchsorted(double *array, size_t n, double value,             # <<<<<<<<<<<<<<
+ *                          size_t lower) nogil:
+ *     '''
  */
 
-static CYTHON_INLINE void __pyx_f_2gb_7sorting_7largest_swap(double *__pyx_v_a, double *__pyx_v_b) {
-  double __pyx_v_aux;
-
-  /* "gb/sorting/largest.pyx":10
- * 
- * cdef inline void swap(double *a, double *b) nogil:
- *     cdef double aux = a[0]             # <<<<<<<<<<<<<<
- *     a[0] = b[0]
- *     b[0] = aux
- */
-  __pyx_v_aux = (__pyx_v_a[0]);
-
-  /* "gb/sorting/largest.pyx":11
- * cdef inline void swap(double *a, double *b) nogil:
- *     cdef double aux = a[0]
- *     a[0] = b[0]             # <<<<<<<<<<<<<<
- *     b[0] = aux
- * 
- */
-  (__pyx_v_a[0]) = (__pyx_v_b[0]);
-
-  /* "gb/sorting/largest.pyx":12
- *     cdef double aux = a[0]
- *     a[0] = b[0]
- *     b[0] = aux             # <<<<<<<<<<<<<<
- * 
- * 
- */
-  (__pyx_v_b[0]) = __pyx_v_aux;
-
-  /* "gb/sorting/largest.pyx":9
- * 
- * 
- * cdef inline void swap(double *a, double *b) nogil:             # <<<<<<<<<<<<<<
- *     cdef double aux = a[0]
- *     a[0] = b[0]
- */
-
-  /* function exit code */
-}
-
-/* "gb/sorting/largest.pyx":15
- * 
- * 
- * cdef inline double quickselect(double *arr, size_t n, size_t k) nogil:             # <<<<<<<<<<<<<<
- *     cdef size_t i, ir, j, l, mid
- *     cdef double a, temp
- */
-
-static CYTHON_INLINE double __pyx_f_2gb_7sorting_7largest_quickselect(double *__pyx_v_arr, size_t __pyx_v_n, size_t __pyx_v_k) {
-  size_t __pyx_v_i;
-  size_t __pyx_v_ir;
-  size_t __pyx_v_j;
-  size_t __pyx_v_l;
-  size_t __pyx_v_mid;
-  double __pyx_v_a;
-  double __pyx_r;
+static size_t __pyx_f_2gb_7sorting_9binsearch_searchsorted(double *__pyx_v_array, size_t __pyx_v_n, double __pyx_v_value, size_t __pyx_v_lower) {
+  size_t __pyx_v_upper;
+  size_t __pyx_v_half;
+  size_t __pyx_v_idx;
+  size_t __pyx_r;
   int __pyx_t_1;
-  int __pyx_t_2;
 
-  /* "gb/sorting/largest.pyx":19
- *     cdef double a, temp
+  /* "gb/sorting/binsearch.pyx":24
+ *     '''
  * 
- *     l = 0             # <<<<<<<<<<<<<<
- *     ir = n - 1
- *     while True:
- */
-  __pyx_v_l = 0;
-
-  /* "gb/sorting/largest.pyx":20
+ *     if n == 0: return 0             # <<<<<<<<<<<<<<
  * 
- *     l = 0
- *     ir = n - 1             # <<<<<<<<<<<<<<
- *     while True:
- *         if ir <= l + 1:
+ *     cdef size_t upper = n - 1  # closed interval
  */
-  __pyx_v_ir = (__pyx_v_n - 1);
+  __pyx_t_1 = ((__pyx_v_n == 0) != 0);
+  if (__pyx_t_1) {
+    __pyx_r = 0;
+    goto __pyx_L0;
+  }
 
-  /* "gb/sorting/largest.pyx":21
- *     l = 0
- *     ir = n - 1
- *     while True:             # <<<<<<<<<<<<<<
- *         if ir <= l + 1:
- *             if ir == l+1 and arr[ir] < arr[l]:
+  /* "gb/sorting/binsearch.pyx":26
+ *     if n == 0: return 0
+ * 
+ *     cdef size_t upper = n - 1  # closed interval             # <<<<<<<<<<<<<<
+ *     cdef size_t half = 0
+ *     cdef size_t idx = n
+ */
+  __pyx_v_upper = (__pyx_v_n - 1);
+
+  /* "gb/sorting/binsearch.pyx":27
+ * 
+ *     cdef size_t upper = n - 1  # closed interval
+ *     cdef size_t half = 0             # <<<<<<<<<<<<<<
+ *     cdef size_t idx = n
+ * 
+ */
+  __pyx_v_half = 0;
+
+  /* "gb/sorting/binsearch.pyx":28
+ *     cdef size_t upper = n - 1  # closed interval
+ *     cdef size_t half = 0
+ *     cdef size_t idx = n             # <<<<<<<<<<<<<<
+ * 
+ *     while upper >= lower:
+ */
+  __pyx_v_idx = __pyx_v_n;
+
+  /* "gb/sorting/binsearch.pyx":30
+ *     cdef size_t idx = n
+ * 
+ *     while upper >= lower:             # <<<<<<<<<<<<<<
+ *         half = lower + ((upper - lower) // 2)
+ *         if value == array[half]:
  */
   while (1) {
+    __pyx_t_1 = ((__pyx_v_upper >= __pyx_v_lower) != 0);
+    if (!__pyx_t_1) break;
 
-    /* "gb/sorting/largest.pyx":22
- *     ir = n - 1
- *     while True:
- *         if ir <= l + 1:             # <<<<<<<<<<<<<<
- *             if ir == l+1 and arr[ir] < arr[l]:
- *                 swap(&arr[l], &arr[ir])
+    /* "gb/sorting/binsearch.pyx":31
+ * 
+ *     while upper >= lower:
+ *         half = lower + ((upper - lower) // 2)             # <<<<<<<<<<<<<<
+ *         if value == array[half]:
+ *             idx = half
  */
-    __pyx_t_1 = ((__pyx_v_ir <= (__pyx_v_l + 1)) != 0);
+    __pyx_v_half = (__pyx_v_lower + ((__pyx_v_upper - __pyx_v_lower) / 2));
+
+    /* "gb/sorting/binsearch.pyx":32
+ *     while upper >= lower:
+ *         half = lower + ((upper - lower) // 2)
+ *         if value == array[half]:             # <<<<<<<<<<<<<<
+ *             idx = half
+ *             break
+ */
+    __pyx_t_1 = ((__pyx_v_value == (__pyx_v_array[__pyx_v_half])) != 0);
     if (__pyx_t_1) {
 
-      /* "gb/sorting/largest.pyx":23
- *     while True:
- *         if ir <= l + 1:
- *             if ir == l+1 and arr[ir] < arr[l]:             # <<<<<<<<<<<<<<
- *                 swap(&arr[l], &arr[ir])
- *             return arr[k]
+      /* "gb/sorting/binsearch.pyx":33
+ *         half = lower + ((upper - lower) // 2)
+ *         if value == array[half]:
+ *             idx = half             # <<<<<<<<<<<<<<
+ *             break
+ *         elif value > array[half]:
  */
-      __pyx_t_2 = ((__pyx_v_ir == (__pyx_v_l + 1)) != 0);
-      if (__pyx_t_2) {
-      } else {
-        __pyx_t_1 = __pyx_t_2;
-        goto __pyx_L7_bool_binop_done;
-      }
-      __pyx_t_2 = (((__pyx_v_arr[__pyx_v_ir]) < (__pyx_v_arr[__pyx_v_l])) != 0);
-      __pyx_t_1 = __pyx_t_2;
-      __pyx_L7_bool_binop_done:;
-      if (__pyx_t_1) {
+      __pyx_v_idx = __pyx_v_half;
 
-        /* "gb/sorting/largest.pyx":24
- *         if ir <= l + 1:
- *             if ir == l+1 and arr[ir] < arr[l]:
- *                 swap(&arr[l], &arr[ir])             # <<<<<<<<<<<<<<
- *             return arr[k]
- *         else:
+      /* "gb/sorting/binsearch.pyx":34
+ *         if value == array[half]:
+ *             idx = half
+ *             break             # <<<<<<<<<<<<<<
+ *         elif value > array[half]:
+ *             lower = half + 1
  */
-        __pyx_f_2gb_7sorting_7largest_swap((&(__pyx_v_arr[__pyx_v_l])), (&(__pyx_v_arr[__pyx_v_ir])));
+      goto __pyx_L5_break;
 
-        /* "gb/sorting/largest.pyx":23
- *     while True:
- *         if ir <= l + 1:
- *             if ir == l+1 and arr[ir] < arr[l]:             # <<<<<<<<<<<<<<
- *                 swap(&arr[l], &arr[ir])
- *             return arr[k]
- */
-      }
-
-      /* "gb/sorting/largest.pyx":25
- *             if ir == l+1 and arr[ir] < arr[l]:
- *                 swap(&arr[l], &arr[ir])
- *             return arr[k]             # <<<<<<<<<<<<<<
- *         else:
- *             mid = (l + ir) >> 1
- */
-      __pyx_r = (__pyx_v_arr[__pyx_v_k]);
-      goto __pyx_L0;
-
-      /* "gb/sorting/largest.pyx":22
- *     ir = n - 1
- *     while True:
- *         if ir <= l + 1:             # <<<<<<<<<<<<<<
- *             if ir == l+1 and arr[ir] < arr[l]:
- *                 swap(&arr[l], &arr[ir])
+      /* "gb/sorting/binsearch.pyx":32
+ *     while upper >= lower:
+ *         half = lower + ((upper - lower) // 2)
+ *         if value == array[half]:             # <<<<<<<<<<<<<<
+ *             idx = half
+ *             break
  */
     }
 
-    /* "gb/sorting/largest.pyx":27
- *             return arr[k]
+    /* "gb/sorting/binsearch.pyx":35
+ *             idx = half
+ *             break
+ *         elif value > array[half]:             # <<<<<<<<<<<<<<
+ *             lower = half + 1
+ *         elif half > 0:
+ */
+    __pyx_t_1 = ((__pyx_v_value > (__pyx_v_array[__pyx_v_half])) != 0);
+    if (__pyx_t_1) {
+
+      /* "gb/sorting/binsearch.pyx":36
+ *             break
+ *         elif value > array[half]:
+ *             lower = half + 1             # <<<<<<<<<<<<<<
+ *         elif half > 0:
+ *             upper = half - 1
+ */
+      __pyx_v_lower = (__pyx_v_half + 1);
+
+      /* "gb/sorting/binsearch.pyx":35
+ *             idx = half
+ *             break
+ *         elif value > array[half]:             # <<<<<<<<<<<<<<
+ *             lower = half + 1
+ *         elif half > 0:
+ */
+      goto __pyx_L6;
+    }
+
+    /* "gb/sorting/binsearch.pyx":37
+ *         elif value > array[half]:
+ *             lower = half + 1
+ *         elif half > 0:             # <<<<<<<<<<<<<<
+ *             upper = half - 1
  *         else:
- *             mid = (l + ir) >> 1             # <<<<<<<<<<<<<<
- *             swap(&arr[mid], &arr[l+1])
- *             if arr[l] > arr[ir]:
+ */
+    __pyx_t_1 = ((__pyx_v_half > 0) != 0);
+    if (__pyx_t_1) {
+
+      /* "gb/sorting/binsearch.pyx":38
+ *             lower = half + 1
+ *         elif half > 0:
+ *             upper = half - 1             # <<<<<<<<<<<<<<
+ *         else:
+ *             break
+ */
+      __pyx_v_upper = (__pyx_v_half - 1);
+
+      /* "gb/sorting/binsearch.pyx":37
+ *         elif value > array[half]:
+ *             lower = half + 1
+ *         elif half > 0:             # <<<<<<<<<<<<<<
+ *             upper = half - 1
+ *         else:
+ */
+      goto __pyx_L6;
+    }
+
+    /* "gb/sorting/binsearch.pyx":40
+ *             upper = half - 1
+ *         else:
+ *             break             # <<<<<<<<<<<<<<
+ * 
+ *     # Element not found, return where it should be
  */
     /*else*/ {
-      __pyx_v_mid = ((__pyx_v_l + __pyx_v_ir) >> 1);
-
-      /* "gb/sorting/largest.pyx":28
- *         else:
- *             mid = (l + ir) >> 1
- *             swap(&arr[mid], &arr[l+1])             # <<<<<<<<<<<<<<
- *             if arr[l] > arr[ir]:
- *                 swap(&arr[l], &arr[ir])
- */
-      __pyx_f_2gb_7sorting_7largest_swap((&(__pyx_v_arr[__pyx_v_mid])), (&(__pyx_v_arr[(__pyx_v_l + 1)])));
-
-      /* "gb/sorting/largest.pyx":29
- *             mid = (l + ir) >> 1
- *             swap(&arr[mid], &arr[l+1])
- *             if arr[l] > arr[ir]:             # <<<<<<<<<<<<<<
- *                 swap(&arr[l], &arr[ir])
- *             if arr[l+1] > arr[ir]:
- */
-      __pyx_t_1 = (((__pyx_v_arr[__pyx_v_l]) > (__pyx_v_arr[__pyx_v_ir])) != 0);
-      if (__pyx_t_1) {
-
-        /* "gb/sorting/largest.pyx":30
- *             swap(&arr[mid], &arr[l+1])
- *             if arr[l] > arr[ir]:
- *                 swap(&arr[l], &arr[ir])             # <<<<<<<<<<<<<<
- *             if arr[l+1] > arr[ir]:
- *                 swap(&arr[l+1], &arr[ir])
- */
-        __pyx_f_2gb_7sorting_7largest_swap((&(__pyx_v_arr[__pyx_v_l])), (&(__pyx_v_arr[__pyx_v_ir])));
-
-        /* "gb/sorting/largest.pyx":29
- *             mid = (l + ir) >> 1
- *             swap(&arr[mid], &arr[l+1])
- *             if arr[l] > arr[ir]:             # <<<<<<<<<<<<<<
- *                 swap(&arr[l], &arr[ir])
- *             if arr[l+1] > arr[ir]:
- */
-      }
-
-      /* "gb/sorting/largest.pyx":31
- *             if arr[l] > arr[ir]:
- *                 swap(&arr[l], &arr[ir])
- *             if arr[l+1] > arr[ir]:             # <<<<<<<<<<<<<<
- *                 swap(&arr[l+1], &arr[ir])
- *             if arr[l] > arr[l+1]:
- */
-      __pyx_t_1 = (((__pyx_v_arr[(__pyx_v_l + 1)]) > (__pyx_v_arr[__pyx_v_ir])) != 0);
-      if (__pyx_t_1) {
-
-        /* "gb/sorting/largest.pyx":32
- *                 swap(&arr[l], &arr[ir])
- *             if arr[l+1] > arr[ir]:
- *                 swap(&arr[l+1], &arr[ir])             # <<<<<<<<<<<<<<
- *             if arr[l] > arr[l+1]:
- *                 swap(&arr[l], &arr[l+1])
- */
-        __pyx_f_2gb_7sorting_7largest_swap((&(__pyx_v_arr[(__pyx_v_l + 1)])), (&(__pyx_v_arr[__pyx_v_ir])));
-
-        /* "gb/sorting/largest.pyx":31
- *             if arr[l] > arr[ir]:
- *                 swap(&arr[l], &arr[ir])
- *             if arr[l+1] > arr[ir]:             # <<<<<<<<<<<<<<
- *                 swap(&arr[l+1], &arr[ir])
- *             if arr[l] > arr[l+1]:
- */
-      }
-
-      /* "gb/sorting/largest.pyx":33
- *             if arr[l+1] > arr[ir]:
- *                 swap(&arr[l+1], &arr[ir])
- *             if arr[l] > arr[l+1]:             # <<<<<<<<<<<<<<
- *                 swap(&arr[l], &arr[l+1])
- *             i = l + 1
- */
-      __pyx_t_1 = (((__pyx_v_arr[__pyx_v_l]) > (__pyx_v_arr[(__pyx_v_l + 1)])) != 0);
-      if (__pyx_t_1) {
-
-        /* "gb/sorting/largest.pyx":34
- *                 swap(&arr[l+1], &arr[ir])
- *             if arr[l] > arr[l+1]:
- *                 swap(&arr[l], &arr[l+1])             # <<<<<<<<<<<<<<
- *             i = l + 1
- *             j = ir
- */
-        __pyx_f_2gb_7sorting_7largest_swap((&(__pyx_v_arr[__pyx_v_l])), (&(__pyx_v_arr[(__pyx_v_l + 1)])));
-
-        /* "gb/sorting/largest.pyx":33
- *             if arr[l+1] > arr[ir]:
- *                 swap(&arr[l+1], &arr[ir])
- *             if arr[l] > arr[l+1]:             # <<<<<<<<<<<<<<
- *                 swap(&arr[l], &arr[l+1])
- *             i = l + 1
- */
-      }
-
-      /* "gb/sorting/largest.pyx":35
- *             if arr[l] > arr[l+1]:
- *                 swap(&arr[l], &arr[l+1])
- *             i = l + 1             # <<<<<<<<<<<<<<
- *             j = ir
- *             a = arr[l+1]
- */
-      __pyx_v_i = (__pyx_v_l + 1);
-
-      /* "gb/sorting/largest.pyx":36
- *                 swap(&arr[l], &arr[l+1])
- *             i = l + 1
- *             j = ir             # <<<<<<<<<<<<<<
- *             a = arr[l+1]
- *             while True:
- */
-      __pyx_v_j = __pyx_v_ir;
-
-      /* "gb/sorting/largest.pyx":37
- *             i = l + 1
- *             j = ir
- *             a = arr[l+1]             # <<<<<<<<<<<<<<
- *             while True:
- *                 i += 1
- */
-      __pyx_v_a = (__pyx_v_arr[(__pyx_v_l + 1)]);
-
-      /* "gb/sorting/largest.pyx":38
- *             j = ir
- *             a = arr[l+1]
- *             while True:             # <<<<<<<<<<<<<<
- *                 i += 1
- *                 while arr[i] < a:
- */
-      while (1) {
-
-        /* "gb/sorting/largest.pyx":39
- *             a = arr[l+1]
- *             while True:
- *                 i += 1             # <<<<<<<<<<<<<<
- *                 while arr[i] < a:
- *                     i += 1
- */
-        __pyx_v_i = (__pyx_v_i + 1);
-
-        /* "gb/sorting/largest.pyx":40
- *             while True:
- *                 i += 1
- *                 while arr[i] < a:             # <<<<<<<<<<<<<<
- *                     i += 1
- *                 j -= 1
- */
-        while (1) {
-          __pyx_t_1 = (((__pyx_v_arr[__pyx_v_i]) < __pyx_v_a) != 0);
-          if (!__pyx_t_1) break;
-
-          /* "gb/sorting/largest.pyx":41
- *                 i += 1
- *                 while arr[i] < a:
- *                     i += 1             # <<<<<<<<<<<<<<
- *                 j -= 1
- *                 while (arr[j] > a):
- */
-          __pyx_v_i = (__pyx_v_i + 1);
-        }
-
-        /* "gb/sorting/largest.pyx":42
- *                 while arr[i] < a:
- *                     i += 1
- *                 j -= 1             # <<<<<<<<<<<<<<
- *                 while (arr[j] > a):
- *                     j -=1
- */
-        __pyx_v_j = (__pyx_v_j - 1);
-
-        /* "gb/sorting/largest.pyx":43
- *                     i += 1
- *                 j -= 1
- *                 while (arr[j] > a):             # <<<<<<<<<<<<<<
- *                     j -=1
- *                 if j < i:
- */
-        while (1) {
-          __pyx_t_1 = (((__pyx_v_arr[__pyx_v_j]) > __pyx_v_a) != 0);
-          if (!__pyx_t_1) break;
-
-          /* "gb/sorting/largest.pyx":44
- *                 j -= 1
- *                 while (arr[j] > a):
- *                     j -=1             # <<<<<<<<<<<<<<
- *                 if j < i:
- *                     break
- */
-          __pyx_v_j = (__pyx_v_j - 1);
-        }
-
-        /* "gb/sorting/largest.pyx":45
- *                 while (arr[j] > a):
- *                     j -=1
- *                 if j < i:             # <<<<<<<<<<<<<<
- *                     break
- *                 swap(&arr[i], &arr[j]);
- */
-        __pyx_t_1 = ((__pyx_v_j < __pyx_v_i) != 0);
-        if (__pyx_t_1) {
-
-          /* "gb/sorting/largest.pyx":46
- *                     j -=1
- *                 if j < i:
- *                     break             # <<<<<<<<<<<<<<
- *                 swap(&arr[i], &arr[j]);
- *             arr[l+1] = arr[j]
- */
-          goto __pyx_L13_break;
-
-          /* "gb/sorting/largest.pyx":45
- *                 while (arr[j] > a):
- *                     j -=1
- *                 if j < i:             # <<<<<<<<<<<<<<
- *                     break
- *                 swap(&arr[i], &arr[j]);
- */
-        }
-
-        /* "gb/sorting/largest.pyx":47
- *                 if j < i:
- *                     break
- *                 swap(&arr[i], &arr[j]);             # <<<<<<<<<<<<<<
- *             arr[l+1] = arr[j]
- *             arr[j] = a
- */
-        __pyx_f_2gb_7sorting_7largest_swap((&(__pyx_v_arr[__pyx_v_i])), (&(__pyx_v_arr[__pyx_v_j])));
-      }
-      __pyx_L13_break:;
-
-      /* "gb/sorting/largest.pyx":48
- *                     break
- *                 swap(&arr[i], &arr[j]);
- *             arr[l+1] = arr[j]             # <<<<<<<<<<<<<<
- *             arr[j] = a
- *             if j >= k:
- */
-      (__pyx_v_arr[(__pyx_v_l + 1)]) = (__pyx_v_arr[__pyx_v_j]);
-
-      /* "gb/sorting/largest.pyx":49
- *                 swap(&arr[i], &arr[j]);
- *             arr[l+1] = arr[j]
- *             arr[j] = a             # <<<<<<<<<<<<<<
- *             if j >= k:
- *                 ir = j - 1
- */
-      (__pyx_v_arr[__pyx_v_j]) = __pyx_v_a;
-
-      /* "gb/sorting/largest.pyx":50
- *             arr[l+1] = arr[j]
- *             arr[j] = a
- *             if j >= k:             # <<<<<<<<<<<<<<
- *                 ir = j - 1
- *             if j <= k:
- */
-      __pyx_t_1 = ((__pyx_v_j >= __pyx_v_k) != 0);
-      if (__pyx_t_1) {
-
-        /* "gb/sorting/largest.pyx":51
- *             arr[j] = a
- *             if j >= k:
- *                 ir = j - 1             # <<<<<<<<<<<<<<
- *             if j <= k:
- *                 l = i
- */
-        __pyx_v_ir = (__pyx_v_j - 1);
-
-        /* "gb/sorting/largest.pyx":50
- *             arr[l+1] = arr[j]
- *             arr[j] = a
- *             if j >= k:             # <<<<<<<<<<<<<<
- *                 ir = j - 1
- *             if j <= k:
- */
-      }
-
-      /* "gb/sorting/largest.pyx":52
- *             if j >= k:
- *                 ir = j - 1
- *             if j <= k:             # <<<<<<<<<<<<<<
- *                 l = i
- * 
- */
-      __pyx_t_1 = ((__pyx_v_j <= __pyx_v_k) != 0);
-      if (__pyx_t_1) {
-
-        /* "gb/sorting/largest.pyx":53
- *                 ir = j - 1
- *             if j <= k:
- *                 l = i             # <<<<<<<<<<<<<<
- * 
- * 
- */
-        __pyx_v_l = __pyx_v_i;
-
-        /* "gb/sorting/largest.pyx":52
- *             if j >= k:
- *                 ir = j - 1
- *             if j <= k:             # <<<<<<<<<<<<<<
- *                 l = i
- * 
- */
-      }
+      goto __pyx_L5_break;
     }
+    __pyx_L6:;
   }
+  __pyx_L5_break:;
 
-  /* "gb/sorting/largest.pyx":15
+  /* "gb/sorting/binsearch.pyx":43
  * 
- * 
- * cdef inline double quickselect(double *arr, size_t n, size_t k) nogil:             # <<<<<<<<<<<<<<
- *     cdef size_t i, ir, j, l, mid
- *     cdef double a, temp
- */
-
-  /* function exit code */
-  __pyx_r = 0;
-  __pyx_L0:;
-  return __pyx_r;
-}
-
-/* "gb/sorting/largest.pyx":56
- * 
- * 
- * cdef double quick_median(double *array, size_t n) nogil:             # <<<<<<<<<<<<<<
- *     cdef size_t mid = n // 2
- *     quickselect(array, n, mid)
- */
-
-static double __pyx_f_2gb_7sorting_7largest_quick_median(double *__pyx_v_array, size_t __pyx_v_n) {
-  size_t __pyx_v_mid;
-  size_t __pyx_v_i;
-  double __pyx_v_max_val;
-  double __pyx_r;
-  int __pyx_t_1;
-  size_t __pyx_t_2;
-  size_t __pyx_t_3;
-
-  /* "gb/sorting/largest.pyx":57
- * 
- * cdef double quick_median(double *array, size_t n) nogil:
- *     cdef size_t mid = n // 2             # <<<<<<<<<<<<<<
- *     quickselect(array, n, mid)
+ *     # Element not found, return where it should be
+ *     if idx == n:             # <<<<<<<<<<<<<<
+ *         idx = lower
  * 
  */
-  __pyx_v_mid = (__pyx_v_n / 2);
-
-  /* "gb/sorting/largest.pyx":58
- * cdef double quick_median(double *array, size_t n) nogil:
- *     cdef size_t mid = n // 2
- *     quickselect(array, n, mid)             # <<<<<<<<<<<<<<
- * 
- *     cdef size_t i
- */
-  __pyx_f_2gb_7sorting_7largest_quickselect(__pyx_v_array, __pyx_v_n, __pyx_v_mid);
-
-  /* "gb/sorting/largest.pyx":61
- * 
- *     cdef size_t i
- *     cdef double max_val = array[0]             # <<<<<<<<<<<<<<
- *     if n % 2 != 0:
- *          return array[mid]
- */
-  __pyx_v_max_val = (__pyx_v_array[0]);
-
-  /* "gb/sorting/largest.pyx":62
- *     cdef size_t i
- *     cdef double max_val = array[0]
- *     if n % 2 != 0:             # <<<<<<<<<<<<<<
- *          return array[mid]
- *     else:
- */
-  __pyx_t_1 = (((__pyx_v_n % 2) != 0) != 0);
+  __pyx_t_1 = ((__pyx_v_idx == __pyx_v_n) != 0);
   if (__pyx_t_1) {
 
-    /* "gb/sorting/largest.pyx":63
- *     cdef double max_val = array[0]
- *     if n % 2 != 0:
- *          return array[mid]             # <<<<<<<<<<<<<<
- *     else:
- *          for i in range(1, mid):
+    /* "gb/sorting/binsearch.pyx":44
+ *     # Element not found, return where it should be
+ *     if idx == n:
+ *         idx = lower             # <<<<<<<<<<<<<<
+ * 
+ *     return idx
  */
-    __pyx_r = (__pyx_v_array[__pyx_v_mid]);
-    goto __pyx_L0;
+    __pyx_v_idx = __pyx_v_lower;
 
-    /* "gb/sorting/largest.pyx":62
- *     cdef size_t i
- *     cdef double max_val = array[0]
- *     if n % 2 != 0:             # <<<<<<<<<<<<<<
- *          return array[mid]
- *     else:
+    /* "gb/sorting/binsearch.pyx":43
+ * 
+ *     # Element not found, return where it should be
+ *     if idx == n:             # <<<<<<<<<<<<<<
+ *         idx = lower
+ * 
  */
   }
 
-  /* "gb/sorting/largest.pyx":65
- *          return array[mid]
- *     else:
- *          for i in range(1, mid):             # <<<<<<<<<<<<<<
- *              if array[i] > max_val:
- *                  max_val = array[i]
- */
-  /*else*/ {
-    __pyx_t_2 = __pyx_v_mid;
-    for (__pyx_t_3 = 1; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
-      __pyx_v_i = __pyx_t_3;
-
-      /* "gb/sorting/largest.pyx":66
- *     else:
- *          for i in range(1, mid):
- *              if array[i] > max_val:             # <<<<<<<<<<<<<<
- *                  max_val = array[i]
- *          return (array[mid] + max_val) / 2
- */
-      __pyx_t_1 = (((__pyx_v_array[__pyx_v_i]) > __pyx_v_max_val) != 0);
-      if (__pyx_t_1) {
-
-        /* "gb/sorting/largest.pyx":67
- *          for i in range(1, mid):
- *              if array[i] > max_val:
- *                  max_val = array[i]             # <<<<<<<<<<<<<<
- *          return (array[mid] + max_val) / 2
+  /* "gb/sorting/binsearch.pyx":46
+ *         idx = lower
  * 
- */
-        __pyx_v_max_val = (__pyx_v_array[__pyx_v_i]);
-
-        /* "gb/sorting/largest.pyx":66
- *     else:
- *          for i in range(1, mid):
- *              if array[i] > max_val:             # <<<<<<<<<<<<<<
- *                  max_val = array[i]
- *          return (array[mid] + max_val) / 2
- */
-      }
-    }
-
-    /* "gb/sorting/largest.pyx":68
- *              if array[i] > max_val:
- *                  max_val = array[i]
- *          return (array[mid] + max_val) / 2             # <<<<<<<<<<<<<<
+ *     return idx             # <<<<<<<<<<<<<<
  * 
  * 
  */
-    __pyx_r = (((__pyx_v_array[__pyx_v_mid]) + __pyx_v_max_val) / 2.0);
-    goto __pyx_L0;
-  }
+  __pyx_r = __pyx_v_idx;
+  goto __pyx_L0;
 
-  /* "gb/sorting/largest.pyx":56
+  /* "gb/sorting/binsearch.pyx":9
  * 
  * 
- * cdef double quick_median(double *array, size_t n) nogil:             # <<<<<<<<<<<<<<
- *     cdef size_t mid = n // 2
- *     quickselect(array, n, mid)
+ * cdef size_t searchsorted(double *array, size_t n, double value,             # <<<<<<<<<<<<<<
+ *                          size_t lower) nogil:
+ *     '''
  */
 
   /* function exit code */
@@ -2468,68 +2065,124 @@ static double __pyx_f_2gb_7sorting_7largest_quick_median(double *__pyx_v_array, 
   return __pyx_r;
 }
 
-/* "gb/sorting/largest.pyx":71
+/* "gb/sorting/binsearch.pyx":49
  * 
  * 
- * def _median(double[::1] array):             # <<<<<<<<<<<<<<
- *     return quick_median(&array[0], array.shape[0])
+ * def _searchsorted(double[::1] array, double value, size_t lower=0):             # <<<<<<<<<<<<<<
+ *     return searchsorted(&array[0], array.shape[0], value, lower)
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_2gb_7sorting_7largest_1_median(PyObject *__pyx_self, PyObject *__pyx_arg_array); /*proto*/
-static PyMethodDef __pyx_mdef_2gb_7sorting_7largest_1_median = {"_median", (PyCFunction)__pyx_pw_2gb_7sorting_7largest_1_median, METH_O, 0};
-static PyObject *__pyx_pw_2gb_7sorting_7largest_1_median(PyObject *__pyx_self, PyObject *__pyx_arg_array) {
+static PyObject *__pyx_pw_2gb_7sorting_9binsearch_1_searchsorted(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_2gb_7sorting_9binsearch_1_searchsorted = {"_searchsorted", (PyCFunction)__pyx_pw_2gb_7sorting_9binsearch_1_searchsorted, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_2gb_7sorting_9binsearch_1_searchsorted(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   __Pyx_memviewslice __pyx_v_array = { 0, 0, { 0 }, { 0 }, { 0 } };
+  double __pyx_v_value;
+  size_t __pyx_v_lower;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("_median (wrapper)", 0);
-  assert(__pyx_arg_array); {
-    __pyx_v_array = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_arg_array); if (unlikely(!__pyx_v_array.memview)) __PYX_ERR(0, 71, __pyx_L3_error)
+  __Pyx_RefNannySetupContext("_searchsorted (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_array,&__pyx_n_s_value,&__pyx_n_s_lower,0};
+    PyObject* values[3] = {0,0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+        CYTHON_FALLTHROUGH;
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_array)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_value)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("_searchsorted", 0, 2, 3, 1); __PYX_ERR(0, 49, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  2:
+        if (kw_args > 0) {
+          PyObject* value = PyDict_GetItem(__pyx_kwds, __pyx_n_s_lower);
+          if (value) { values[2] = value; kw_args--; }
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_searchsorted") < 0)) __PYX_ERR(0, 49, __pyx_L3_error)
+      }
+    } else {
+      switch (PyTuple_GET_SIZE(__pyx_args)) {
+        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+        CYTHON_FALLTHROUGH;
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+    }
+    __pyx_v_array = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[0]); if (unlikely(!__pyx_v_array.memview)) __PYX_ERR(0, 49, __pyx_L3_error)
+    __pyx_v_value = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_value == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 49, __pyx_L3_error)
+    if (values[2]) {
+      __pyx_v_lower = __Pyx_PyInt_As_size_t(values[2]); if (unlikely((__pyx_v_lower == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 49, __pyx_L3_error)
+    } else {
+      __pyx_v_lower = ((size_t)0);
+    }
   }
   goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("_searchsorted", 0, 2, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 49, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("gb.sorting.largest._median", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("gb.sorting.binsearch._searchsorted", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_2gb_7sorting_7largest__median(__pyx_self, __pyx_v_array);
+  __pyx_r = __pyx_pf_2gb_7sorting_9binsearch__searchsorted(__pyx_self, __pyx_v_array, __pyx_v_value, __pyx_v_lower);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_2gb_7sorting_7largest__median(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_array) {
+static PyObject *__pyx_pf_2gb_7sorting_9binsearch__searchsorted(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_array, double __pyx_v_value, size_t __pyx_v_lower) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   Py_ssize_t __pyx_t_1;
   PyObject *__pyx_t_2 = NULL;
-  __Pyx_RefNannySetupContext("_median", 0);
+  __Pyx_RefNannySetupContext("_searchsorted", 0);
 
-  /* "gb/sorting/largest.pyx":72
+  /* "gb/sorting/binsearch.pyx":50
  * 
- * def _median(double[::1] array):
- *     return quick_median(&array[0], array.shape[0])             # <<<<<<<<<<<<<<
+ * def _searchsorted(double[::1] array, double value, size_t lower=0):
+ *     return searchsorted(&array[0], array.shape[0], value, lower)             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
   __pyx_t_1 = 0;
-  __pyx_t_2 = PyFloat_FromDouble(__pyx_f_2gb_7sorting_7largest_quick_median((&(*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_array.data) + __pyx_t_1)) )))), (__pyx_v_array.shape[0]))); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 72, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_FromSize_t(__pyx_f_2gb_7sorting_9binsearch_searchsorted((&(*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_array.data) + __pyx_t_1)) )))), (__pyx_v_array.shape[0]), __pyx_v_value, __pyx_v_lower)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 50, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "gb/sorting/largest.pyx":71
+  /* "gb/sorting/binsearch.pyx":49
  * 
  * 
- * def _median(double[::1] array):             # <<<<<<<<<<<<<<
- *     return quick_median(&array[0], array.shape[0])
+ * def _searchsorted(double[::1] array, double value, size_t lower=0):             # <<<<<<<<<<<<<<
+ *     return searchsorted(&array[0], array.shape[0], value, lower)
  */
 
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("gb.sorting.largest._median", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("gb.sorting.binsearch._searchsorted", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __PYX_XDEC_MEMVIEW(&__pyx_v_array, 1);
@@ -15467,7 +15120,7 @@ static PyBufferProcs __pyx_tp_as_buffer_array = {
 
 static PyTypeObject __pyx_type___pyx_array = {
   PyVarObject_HEAD_INIT(0, 0)
-  "gb.sorting.largest.array", /*tp_name*/
+  "gb.sorting.binsearch.array", /*tp_name*/
   sizeof(struct __pyx_array_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_array, /*tp_dealloc*/
@@ -15575,7 +15228,7 @@ static PyMethodDef __pyx_methods_Enum[] = {
 
 static PyTypeObject __pyx_type___pyx_MemviewEnum = {
   PyVarObject_HEAD_INIT(0, 0)
-  "gb.sorting.largest.Enum", /*tp_name*/
+  "gb.sorting.binsearch.Enum", /*tp_name*/
   sizeof(struct __pyx_MemviewEnum_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_Enum, /*tp_dealloc*/
@@ -15825,7 +15478,7 @@ static PyBufferProcs __pyx_tp_as_buffer_memoryview = {
 
 static PyTypeObject __pyx_type___pyx_memoryview = {
   PyVarObject_HEAD_INIT(0, 0)
-  "gb.sorting.largest.memoryview", /*tp_name*/
+  "gb.sorting.binsearch.memoryview", /*tp_name*/
   sizeof(struct __pyx_memoryview_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_memoryview, /*tp_dealloc*/
@@ -15952,7 +15605,7 @@ static struct PyGetSetDef __pyx_getsets__memoryviewslice[] = {
 
 static PyTypeObject __pyx_type___pyx_memoryviewslice = {
   PyVarObject_HEAD_INIT(0, 0)
-  "gb.sorting.largest._memoryviewslice", /*tp_name*/
+  "gb.sorting.binsearch._memoryviewslice", /*tp_name*/
   sizeof(struct __pyx_memoryviewslice_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc__memoryviewslice, /*tp_dealloc*/
@@ -16023,17 +15676,17 @@ static PyMethodDef __pyx_methods[] = {
 #if PY_MAJOR_VERSION >= 3
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 static PyObject* __pyx_pymod_create(PyObject *spec, PyModuleDef *def); /*proto*/
-static int __pyx_pymod_exec_largest(PyObject* module); /*proto*/
+static int __pyx_pymod_exec_binsearch(PyObject* module); /*proto*/
 static PyModuleDef_Slot __pyx_moduledef_slots[] = {
   {Py_mod_create, (void*)__pyx_pymod_create},
-  {Py_mod_exec, (void*)__pyx_pymod_exec_largest},
+  {Py_mod_exec, (void*)__pyx_pymod_exec_binsearch},
   {0, NULL}
 };
 #endif
 
 static struct PyModuleDef __pyx_moduledef = {
     PyModuleDef_HEAD_INIT,
-    "largest",
+    "binsearch",
     0, /* m_doc */
   #if CYTHON_PEP489_MULTI_PHASE_INIT
     0, /* m_size */
@@ -16092,16 +15745,16 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_format, __pyx_k_format, sizeof(__pyx_k_format), 0, 0, 1, 1},
   {&__pyx_n_s_fortran, __pyx_k_fortran, sizeof(__pyx_k_fortran), 0, 0, 1, 1},
   {&__pyx_n_u_fortran, __pyx_k_fortran, sizeof(__pyx_k_fortran), 0, 1, 0, 1},
-  {&__pyx_n_s_gb_sorting_largest, __pyx_k_gb_sorting_largest, sizeof(__pyx_k_gb_sorting_largest), 0, 0, 1, 1},
-  {&__pyx_kp_s_gb_sorting_largest_pyx, __pyx_k_gb_sorting_largest_pyx, sizeof(__pyx_k_gb_sorting_largest_pyx), 0, 0, 1, 0},
+  {&__pyx_n_s_gb_sorting_binsearch, __pyx_k_gb_sorting_binsearch, sizeof(__pyx_k_gb_sorting_binsearch), 0, 0, 1, 1},
+  {&__pyx_kp_s_gb_sorting_binsearch_pyx, __pyx_k_gb_sorting_binsearch_pyx, sizeof(__pyx_k_gb_sorting_binsearch_pyx), 0, 0, 1, 0},
   {&__pyx_n_s_getstate, __pyx_k_getstate, sizeof(__pyx_k_getstate), 0, 0, 1, 1},
   {&__pyx_kp_s_got_differing_extents_in_dimensi, __pyx_k_got_differing_extents_in_dimensi, sizeof(__pyx_k_got_differing_extents_in_dimensi), 0, 0, 1, 0},
   {&__pyx_n_s_id, __pyx_k_id, sizeof(__pyx_k_id), 0, 0, 1, 1},
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
   {&__pyx_n_s_itemsize, __pyx_k_itemsize, sizeof(__pyx_k_itemsize), 0, 0, 1, 1},
   {&__pyx_kp_s_itemsize_0_for_cython_array, __pyx_k_itemsize_0_for_cython_array, sizeof(__pyx_k_itemsize_0_for_cython_array), 0, 0, 1, 0},
+  {&__pyx_n_s_lower, __pyx_k_lower, sizeof(__pyx_k_lower), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
-  {&__pyx_n_s_median, __pyx_k_median, sizeof(__pyx_k_median), 0, 0, 1, 1},
   {&__pyx_n_s_memview, __pyx_k_memview, sizeof(__pyx_k_memview), 0, 0, 1, 1},
   {&__pyx_n_s_mode, __pyx_k_mode, sizeof(__pyx_k_mode), 0, 0, 1, 1},
   {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
@@ -16124,6 +15777,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_reduce, __pyx_k_reduce, sizeof(__pyx_k_reduce), 0, 0, 1, 1},
   {&__pyx_n_s_reduce_cython, __pyx_k_reduce_cython, sizeof(__pyx_k_reduce_cython), 0, 0, 1, 1},
   {&__pyx_n_s_reduce_ex, __pyx_k_reduce_ex, sizeof(__pyx_k_reduce_ex), 0, 0, 1, 1},
+  {&__pyx_n_s_searchsorted, __pyx_k_searchsorted, sizeof(__pyx_k_searchsorted), 0, 0, 1, 1},
   {&__pyx_n_s_setstate, __pyx_k_setstate, sizeof(__pyx_k_setstate), 0, 0, 1, 1},
   {&__pyx_n_s_setstate_cython, __pyx_k_setstate_cython, sizeof(__pyx_k_setstate_cython), 0, 0, 1, 1},
   {&__pyx_n_s_shape, __pyx_k_shape, sizeof(__pyx_k_shape), 0, 0, 1, 1},
@@ -16141,13 +15795,14 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_unable_to_allocate_shape_and_str, __pyx_k_unable_to_allocate_shape_and_str, sizeof(__pyx_k_unable_to_allocate_shape_and_str), 0, 0, 1, 0},
   {&__pyx_n_s_unpack, __pyx_k_unpack, sizeof(__pyx_k_unpack), 0, 0, 1, 1},
   {&__pyx_n_s_update, __pyx_k_update, sizeof(__pyx_k_update), 0, 0, 1, 1},
+  {&__pyx_n_s_value, __pyx_k_value, sizeof(__pyx_k_value), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 65, __pyx_L1_error)
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(1, 131, __pyx_L1_error)
   __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(1, 146, __pyx_L1_error)
   __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(1, 149, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(1, 178, __pyx_L1_error)
   __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) __PYX_ERR(1, 2, __pyx_L1_error)
   __pyx_builtin_Ellipsis = __Pyx_GetBuiltinName(__pyx_n_s_Ellipsis); if (!__pyx_builtin_Ellipsis) __PYX_ERR(1, 398, __pyx_L1_error)
   __pyx_builtin_id = __Pyx_GetBuiltinName(__pyx_n_s_id); if (!__pyx_builtin_id) __PYX_ERR(1, 601, __pyx_L1_error)
@@ -16364,16 +16019,16 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__19);
   __Pyx_GIVEREF(__pyx_tuple__19);
 
-  /* "gb/sorting/largest.pyx":71
+  /* "gb/sorting/binsearch.pyx":49
  * 
  * 
- * def _median(double[::1] array):             # <<<<<<<<<<<<<<
- *     return quick_median(&array[0], array.shape[0])
+ * def _searchsorted(double[::1] array, double value, size_t lower=0):             # <<<<<<<<<<<<<<
+ *     return searchsorted(&array[0], array.shape[0], value, lower)
  */
-  __pyx_tuple__20 = PyTuple_Pack(2, __pyx_n_s_array, __pyx_n_s_array); if (unlikely(!__pyx_tuple__20)) __PYX_ERR(0, 71, __pyx_L1_error)
+  __pyx_tuple__20 = PyTuple_Pack(3, __pyx_n_s_array, __pyx_n_s_value, __pyx_n_s_lower); if (unlikely(!__pyx_tuple__20)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__20);
   __Pyx_GIVEREF(__pyx_tuple__20);
-  __pyx_codeobj__21 = (PyObject*)__Pyx_PyCode_New(1, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__20, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_gb_sorting_largest_pyx, __pyx_n_s_median, 71, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__21)) __PYX_ERR(0, 71, __pyx_L1_error)
+  __pyx_codeobj__21 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__20, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_gb_sorting_binsearch_pyx, __pyx_n_s_searchsorted, 49, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__21)) __PYX_ERR(0, 49, __pyx_L1_error)
 
   /* "View.MemoryView":284
  *         return self.name
@@ -16458,11 +16113,11 @@ static int __Pyx_InitGlobals(void) {
 }
 
 #if PY_MAJOR_VERSION < 3
-PyMODINIT_FUNC initlargest(void); /*proto*/
-PyMODINIT_FUNC initlargest(void)
+PyMODINIT_FUNC initbinsearch(void); /*proto*/
+PyMODINIT_FUNC initbinsearch(void)
 #else
-PyMODINIT_FUNC PyInit_largest(void); /*proto*/
-PyMODINIT_FUNC PyInit_largest(void)
+PyMODINIT_FUNC PyInit_binsearch(void); /*proto*/
+PyMODINIT_FUNC PyInit_binsearch(void)
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 {
   return PyModuleDef_Init(&__pyx_moduledef);
@@ -16502,7 +16157,7 @@ bad:
 }
 
 
-static int __pyx_pymod_exec_largest(PyObject *__pyx_pyinit_module)
+static int __pyx_pymod_exec_binsearch(PyObject *__pyx_pyinit_module)
 #endif
 #endif
 {
@@ -16521,7 +16176,7 @@ static int __pyx_pymod_exec_largest(PyObject *__pyx_pyinit_module)
           Py_FatalError("failed to import 'refnanny' module");
   }
   #endif
-  __Pyx_RefNannySetupContext("PyMODINIT_FUNC PyInit_largest(void)", 0);
+  __Pyx_RefNannySetupContext("PyMODINIT_FUNC PyInit_binsearch(void)", 0);
   if (__Pyx_check_binary_version() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_empty_tuple = PyTuple_New(0); if (unlikely(!__pyx_empty_tuple)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_empty_bytes = PyBytes_FromStringAndSize("", 0); if (unlikely(!__pyx_empty_bytes)) __PYX_ERR(0, 1, __pyx_L1_error)
@@ -16557,7 +16212,7 @@ static int __pyx_pymod_exec_largest(PyObject *__pyx_pyinit_module)
   Py_INCREF(__pyx_m);
   #else
   #if PY_MAJOR_VERSION < 3
-  __pyx_m = Py_InitModule4("largest", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
+  __pyx_m = Py_InitModule4("binsearch", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
   #else
   __pyx_m = PyModule_Create(&__pyx_moduledef);
   #endif
@@ -16576,14 +16231,14 @@ static int __pyx_pymod_exec_largest(PyObject *__pyx_pyinit_module)
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main_gb__sorting__largest) {
+  if (__pyx_module_is_main_gb__sorting__binsearch) {
     if (PyObject_SetAttrString(__pyx_m, "__name__", __pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "gb.sorting.largest")) {
-      if (unlikely(PyDict_SetItemString(modules, "gb.sorting.largest", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "gb.sorting.binsearch")) {
+      if (unlikely(PyDict_SetItemString(modules, "gb.sorting.binsearch", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -16599,7 +16254,7 @@ static int __pyx_pymod_exec_largest(PyObject *__pyx_pyinit_module)
   indirect_contiguous = Py_None; Py_INCREF(Py_None);
   /*--- Variable export code ---*/
   /*--- Function export code ---*/
-  if (__Pyx_ExportFunction("quick_median", (void (*)(void))__pyx_f_2gb_7sorting_7largest_quick_median, "double (double *, size_t)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportFunction("searchsorted", (void (*)(void))__pyx_f_2gb_7sorting_9binsearch_searchsorted, "size_t (double *, size_t, double, size_t)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   /*--- Type init code ---*/
   __pyx_vtabptr_array = &__pyx_vtable_array;
   __pyx_vtable_array.get_memview = (PyObject *(*)(struct __pyx_array_obj *))__pyx_array_get_memview;
@@ -16643,18 +16298,18 @@ static int __pyx_pymod_exec_largest(PyObject *__pyx_pyinit_module)
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "gb/sorting/largest.pyx":71
+  /* "gb/sorting/binsearch.pyx":49
  * 
  * 
- * def _median(double[::1] array):             # <<<<<<<<<<<<<<
- *     return quick_median(&array[0], array.shape[0])
+ * def _searchsorted(double[::1] array, double value, size_t lower=0):             # <<<<<<<<<<<<<<
+ *     return searchsorted(&array[0], array.shape[0], value, lower)
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_2gb_7sorting_7largest_1_median, NULL, __pyx_n_s_gb_sorting_largest); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 71, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_2gb_7sorting_9binsearch_1_searchsorted, NULL, __pyx_n_s_gb_sorting_binsearch); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_median, __pyx_t_1) < 0) __PYX_ERR(0, 71, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_searchsorted, __pyx_t_1) < 0) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "gb/sorting/largest.pyx":1
+  /* "gb/sorting/binsearch.pyx":1
  * # -*- coding: utf8             # <<<<<<<<<<<<<<
  * # cython: boundscheck=False
  * # cython: cdivision=True
@@ -16824,11 +16479,11 @@ static int __pyx_pymod_exec_largest(PyObject *__pyx_pyinit_module)
   __Pyx_XDECREF(__pyx_t_1);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init gb.sorting.largest", 0, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init gb.sorting.binsearch", 0, __pyx_lineno, __pyx_filename);
     }
     Py_DECREF(__pyx_m); __pyx_m = 0;
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init gb.sorting.largest");
+    PyErr_SetString(PyExc_ImportError, "init gb.sorting.binsearch");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
@@ -16858,158 +16513,6 @@ end:
     return (__Pyx_RefNannyAPIStruct *)r;
 }
 #endif
-
-/* GetBuiltinName */
-static PyObject *__Pyx_GetBuiltinName(PyObject *name) {
-    PyObject* result = __Pyx_PyObject_GetAttrStr(__pyx_b, name);
-    if (unlikely(!result)) {
-        PyErr_Format(PyExc_NameError,
-#if PY_MAJOR_VERSION >= 3
-            "name '%U' is not defined", name);
-#else
-            "name '%.200s' is not defined", PyString_AS_STRING(name));
-#endif
-    }
-    return result;
-}
-
-/* MemviewSliceInit */
-static int
-__Pyx_init_memviewslice(struct __pyx_memoryview_obj *memview,
-                        int ndim,
-                        __Pyx_memviewslice *memviewslice,
-                        int memview_is_new_reference)
-{
-    __Pyx_RefNannyDeclarations
-    int i, retval=-1;
-    Py_buffer *buf = &memview->view;
-    __Pyx_RefNannySetupContext("init_memviewslice", 0);
-    if (!buf) {
-        PyErr_SetString(PyExc_ValueError,
-            "buf is NULL.");
-        goto fail;
-    } else if (memviewslice->memview || memviewslice->data) {
-        PyErr_SetString(PyExc_ValueError,
-            "memviewslice is already initialized!");
-        goto fail;
-    }
-    if (buf->strides) {
-        for (i = 0; i < ndim; i++) {
-            memviewslice->strides[i] = buf->strides[i];
-        }
-    } else {
-        Py_ssize_t stride = buf->itemsize;
-        for (i = ndim - 1; i >= 0; i--) {
-            memviewslice->strides[i] = stride;
-            stride *= buf->shape[i];
-        }
-    }
-    for (i = 0; i < ndim; i++) {
-        memviewslice->shape[i]   = buf->shape[i];
-        if (buf->suboffsets) {
-            memviewslice->suboffsets[i] = buf->suboffsets[i];
-        } else {
-            memviewslice->suboffsets[i] = -1;
-        }
-    }
-    memviewslice->memview = memview;
-    memviewslice->data = (char *)buf->buf;
-    if (__pyx_add_acquisition_count(memview) == 0 && !memview_is_new_reference) {
-        Py_INCREF(memview);
-    }
-    retval = 0;
-    goto no_fail;
-fail:
-    memviewslice->memview = 0;
-    memviewslice->data = 0;
-    retval = -1;
-no_fail:
-    __Pyx_RefNannyFinishContext();
-    return retval;
-}
-#ifndef Py_NO_RETURN
-#define Py_NO_RETURN
-#endif
-static void __pyx_fatalerror(const char *fmt, ...) Py_NO_RETURN {
-    va_list vargs;
-    char msg[200];
-#ifdef HAVE_STDARG_PROTOTYPES
-    va_start(vargs, fmt);
-#else
-    va_start(vargs);
-#endif
-    vsnprintf(msg, 200, fmt, vargs);
-    va_end(vargs);
-    Py_FatalError(msg);
-}
-static CYTHON_INLINE int
-__pyx_add_acquisition_count_locked(__pyx_atomic_int *acquisition_count,
-                                   PyThread_type_lock lock)
-{
-    int result;
-    PyThread_acquire_lock(lock, 1);
-    result = (*acquisition_count)++;
-    PyThread_release_lock(lock);
-    return result;
-}
-static CYTHON_INLINE int
-__pyx_sub_acquisition_count_locked(__pyx_atomic_int *acquisition_count,
-                                   PyThread_type_lock lock)
-{
-    int result;
-    PyThread_acquire_lock(lock, 1);
-    result = (*acquisition_count)--;
-    PyThread_release_lock(lock);
-    return result;
-}
-static CYTHON_INLINE void
-__Pyx_INC_MEMVIEW(__Pyx_memviewslice *memslice, int have_gil, int lineno)
-{
-    int first_time;
-    struct __pyx_memoryview_obj *memview = memslice->memview;
-    if (!memview || (PyObject *) memview == Py_None)
-        return;
-    if (__pyx_get_slice_count(memview) < 0)
-        __pyx_fatalerror("Acquisition count is %d (line %d)",
-                         __pyx_get_slice_count(memview), lineno);
-    first_time = __pyx_add_acquisition_count(memview) == 0;
-    if (first_time) {
-        if (have_gil) {
-            Py_INCREF((PyObject *) memview);
-        } else {
-            PyGILState_STATE _gilstate = PyGILState_Ensure();
-            Py_INCREF((PyObject *) memview);
-            PyGILState_Release(_gilstate);
-        }
-    }
-}
-static CYTHON_INLINE void __Pyx_XDEC_MEMVIEW(__Pyx_memviewslice *memslice,
-                                             int have_gil, int lineno) {
-    int last_time;
-    struct __pyx_memoryview_obj *memview = memslice->memview;
-    if (!memview ) {
-        return;
-    } else if ((PyObject *) memview == Py_None) {
-        memslice->memview = NULL;
-        return;
-    }
-    if (__pyx_get_slice_count(memview) <= 0)
-        __pyx_fatalerror("Acquisition count is %d (line %d)",
-                         __pyx_get_slice_count(memview), lineno);
-    last_time = __pyx_sub_acquisition_count(memview) == 1;
-    memslice->data = NULL;
-    if (last_time) {
-        if (have_gil) {
-            Py_CLEAR(memslice->memview);
-        } else {
-            PyGILState_STATE _gilstate = PyGILState_Ensure();
-            Py_CLEAR(memslice->memview);
-            PyGILState_Release(_gilstate);
-        }
-    } else {
-        memslice->memview = NULL;
-    }
-}
 
 /* RaiseArgTupleInvalid */
 static void __Pyx_RaiseArgtupleInvalid(
@@ -17153,6 +16656,144 @@ bad:
     return -1;
 }
 
+/* MemviewSliceInit */
+static int
+__Pyx_init_memviewslice(struct __pyx_memoryview_obj *memview,
+                        int ndim,
+                        __Pyx_memviewslice *memviewslice,
+                        int memview_is_new_reference)
+{
+    __Pyx_RefNannyDeclarations
+    int i, retval=-1;
+    Py_buffer *buf = &memview->view;
+    __Pyx_RefNannySetupContext("init_memviewslice", 0);
+    if (!buf) {
+        PyErr_SetString(PyExc_ValueError,
+            "buf is NULL.");
+        goto fail;
+    } else if (memviewslice->memview || memviewslice->data) {
+        PyErr_SetString(PyExc_ValueError,
+            "memviewslice is already initialized!");
+        goto fail;
+    }
+    if (buf->strides) {
+        for (i = 0; i < ndim; i++) {
+            memviewslice->strides[i] = buf->strides[i];
+        }
+    } else {
+        Py_ssize_t stride = buf->itemsize;
+        for (i = ndim - 1; i >= 0; i--) {
+            memviewslice->strides[i] = stride;
+            stride *= buf->shape[i];
+        }
+    }
+    for (i = 0; i < ndim; i++) {
+        memviewslice->shape[i]   = buf->shape[i];
+        if (buf->suboffsets) {
+            memviewslice->suboffsets[i] = buf->suboffsets[i];
+        } else {
+            memviewslice->suboffsets[i] = -1;
+        }
+    }
+    memviewslice->memview = memview;
+    memviewslice->data = (char *)buf->buf;
+    if (__pyx_add_acquisition_count(memview) == 0 && !memview_is_new_reference) {
+        Py_INCREF(memview);
+    }
+    retval = 0;
+    goto no_fail;
+fail:
+    memviewslice->memview = 0;
+    memviewslice->data = 0;
+    retval = -1;
+no_fail:
+    __Pyx_RefNannyFinishContext();
+    return retval;
+}
+#ifndef Py_NO_RETURN
+#define Py_NO_RETURN
+#endif
+static void __pyx_fatalerror(const char *fmt, ...) Py_NO_RETURN {
+    va_list vargs;
+    char msg[200];
+#ifdef HAVE_STDARG_PROTOTYPES
+    va_start(vargs, fmt);
+#else
+    va_start(vargs);
+#endif
+    vsnprintf(msg, 200, fmt, vargs);
+    va_end(vargs);
+    Py_FatalError(msg);
+}
+static CYTHON_INLINE int
+__pyx_add_acquisition_count_locked(__pyx_atomic_int *acquisition_count,
+                                   PyThread_type_lock lock)
+{
+    int result;
+    PyThread_acquire_lock(lock, 1);
+    result = (*acquisition_count)++;
+    PyThread_release_lock(lock);
+    return result;
+}
+static CYTHON_INLINE int
+__pyx_sub_acquisition_count_locked(__pyx_atomic_int *acquisition_count,
+                                   PyThread_type_lock lock)
+{
+    int result;
+    PyThread_acquire_lock(lock, 1);
+    result = (*acquisition_count)--;
+    PyThread_release_lock(lock);
+    return result;
+}
+static CYTHON_INLINE void
+__Pyx_INC_MEMVIEW(__Pyx_memviewslice *memslice, int have_gil, int lineno)
+{
+    int first_time;
+    struct __pyx_memoryview_obj *memview = memslice->memview;
+    if (!memview || (PyObject *) memview == Py_None)
+        return;
+    if (__pyx_get_slice_count(memview) < 0)
+        __pyx_fatalerror("Acquisition count is %d (line %d)",
+                         __pyx_get_slice_count(memview), lineno);
+    first_time = __pyx_add_acquisition_count(memview) == 0;
+    if (first_time) {
+        if (have_gil) {
+            Py_INCREF((PyObject *) memview);
+        } else {
+            PyGILState_STATE _gilstate = PyGILState_Ensure();
+            Py_INCREF((PyObject *) memview);
+            PyGILState_Release(_gilstate);
+        }
+    }
+}
+static CYTHON_INLINE void __Pyx_XDEC_MEMVIEW(__Pyx_memviewslice *memslice,
+                                             int have_gil, int lineno) {
+    int last_time;
+    struct __pyx_memoryview_obj *memview = memslice->memview;
+    if (!memview ) {
+        return;
+    } else if ((PyObject *) memview == Py_None) {
+        memslice->memview = NULL;
+        return;
+    }
+    if (__pyx_get_slice_count(memview) <= 0)
+        __pyx_fatalerror("Acquisition count is %d (line %d)",
+                         __pyx_get_slice_count(memview), lineno);
+    last_time = __pyx_sub_acquisition_count(memview) == 1;
+    memslice->data = NULL;
+    if (last_time) {
+        if (have_gil) {
+            Py_CLEAR(memslice->memview);
+        } else {
+            PyGILState_STATE _gilstate = PyGILState_Ensure();
+            Py_CLEAR(memslice->memview);
+            PyGILState_Release(_gilstate);
+        }
+    } else {
+        memslice->memview = NULL;
+    }
+}
+
 /* ArgTypeTest */
 static int __Pyx__ArgTypeTest(PyObject *obj, PyTypeObject *type, const char *name, int exact)
 {
@@ -17172,6 +16813,20 @@ static int __Pyx__ArgTypeTest(PyObject *obj, PyTypeObject *type, const char *nam
         "Argument '%.200s' has incorrect type (expected %.200s, got %.200s)",
         name, type->tp_name, Py_TYPE(obj)->tp_name);
     return 0;
+}
+
+/* GetBuiltinName */
+static PyObject *__Pyx_GetBuiltinName(PyObject *name) {
+    PyObject* result = __Pyx_PyObject_GetAttrStr(__pyx_b, name);
+    if (unlikely(!result)) {
+        PyErr_Format(PyExc_NameError,
+#if PY_MAJOR_VERSION >= 3
+            "name '%U' is not defined", name);
+#else
+            "name '%.200s' is not defined", PyString_AS_STRING(name));
+#endif
+    }
+    return result;
 }
 
 /* PyObjectCall */
