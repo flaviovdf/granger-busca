@@ -2281,7 +2281,7 @@ static CYTHON_INLINE double __pyx_f_2gb_7kernels_update_beta_rate(size_t __pyx_v
   double __pyx_v_ti;
   double __pyx_v_tp;
   double __pyx_v_max_ti;
-  CYTHON_UNUSED size_t __pyx_v_n;
+  size_t __pyx_v_n;
   size_t *__pyx_v_state_a;
   double *__pyx_v_stamps_a;
   size_t __pyx_v_proc_b;
@@ -2334,24 +2334,24 @@ static CYTHON_INLINE double __pyx_f_2gb_7kernels_update_beta_rate(size_t __pyx_v
  *     all_stamps.get_stamps(proc_a, &stamps_a)
  *     all_stamps.get_causes(proc_a, &state_a)             # <<<<<<<<<<<<<<
  *     cdef size_t proc_b, i
- *     for i in range(proc_a):
+ *     for i in range(n):
  */
   ((struct __pyx_vtabstruct_2gb_6stamps_Timestamps *)__pyx_v_all_stamps->__pyx_vtab)->get_causes(__pyx_v_all_stamps, __pyx_v_proc_a, (&__pyx_v_state_a));
 
   /* "gb/kernels.pyx":39
  *     all_stamps.get_causes(proc_a, &state_a)
  *     cdef size_t proc_b, i
- *     for i in range(proc_a):             # <<<<<<<<<<<<<<
+ *     for i in range(n):             # <<<<<<<<<<<<<<
  *         ti = stamps_a[i]
  *         proc_b = state_a[i]
  */
-  __pyx_t_1 = __pyx_v_proc_a;
+  __pyx_t_1 = __pyx_v_n;
   for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
     __pyx_v_i = __pyx_t_2;
 
     /* "gb/kernels.pyx":40
  *     cdef size_t proc_b, i
- *     for i in range(proc_a):
+ *     for i in range(n):
  *         ti = stamps_a[i]             # <<<<<<<<<<<<<<
  *         proc_b = state_a[i]
  *         if ti > max_ti:
@@ -2359,7 +2359,7 @@ static CYTHON_INLINE double __pyx_f_2gb_7kernels_update_beta_rate(size_t __pyx_v
     __pyx_v_ti = (__pyx_v_stamps_a[__pyx_v_i]);
 
     /* "gb/kernels.pyx":41
- *     for i in range(proc_a):
+ *     for i in range(n):
  *         ti = stamps_a[i]
  *         proc_b = state_a[i]             # <<<<<<<<<<<<<<
  *         if ti > max_ti:
