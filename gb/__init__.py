@@ -84,9 +84,9 @@ class GrangerBusca(object):
                                            global_state, local_state)
 
     def fit(self, timestamps, sort=False):
-        self._init_timestamps(timestamps, sort)
-
         now = time.time()
+
+        self._init_timestamps(timestamps, sort)
         schedule, inverse_schedule = greedy_schedule(self.timestamps,
                                                      self.num_jobs)
         state_keeper, sloppy_counter = self._init_state(schedule,
