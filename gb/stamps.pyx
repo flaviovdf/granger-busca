@@ -67,12 +67,36 @@ cdef class Timestamps(object):
             tp = 0
         return tp
 
-    def _find_previous(self, size_t process, double t):
-        return self.find_previous(process, t)
-
     cdef size_t get_size(self, size_t process) nogil:
         cdef size_t pos = self.start_positions[process]
         return self.causes[pos]
 
     cdef size_t num_proc(self) nogil:
         return self.n_proc
+
+    def _get_stamps(self, size_t process):
+        cdef size_t n = self.get_size(process)
+        cdef double *at
+        self.get_stamps(process, &at)
+        return <double[:n]> at
+
+    def _get_stamp(self, size_t process, size_t i):
+        return self.get_stamp(process, i)
+
+    def _get_causes(self, size_t process):
+        cdef size_t n = self.get_size(process)
+        cdef size_t *at
+        self.get_causes(process, &at)
+        return <size_t[:n]> at
+
+    def _get_cause(self, size_t process, size_t i):
+        return self.get_cause(process, i)
+
+    def _find_previous(self, size_t process, double t):
+        return self.find_previous(process, t)
+
+    def _get_size(self, size_t process):
+        return self.get_size(process)
+
+    def _num_proc(self):
+        return self.num_proc()
