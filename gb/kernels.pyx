@@ -30,10 +30,13 @@ cdef inline double update_beta_rate(size_t proc_a, Timestamps all_stamps,
 
     cdef double ti, tp
     cdef double max_ti = 0
-    cdef double[::1] stamps_a = all_stamps.get_stamps(proc_a)
-    cdef size_t[::1] state_a = all_stamps.get_causes(proc_a)
+    cdef size_t n = all_stamps.get_size(proc_a)
+    cdef size_t *state_a
+    cdef double *stamps_a
+    all_stamps.get_stamps(proc_a, &stamps_a)
+    all_stamps.get_causes(proc_a, &state_a)
     cdef size_t proc_b, i
-    for i in range(<size_t>stamps_a.shape[0]):
+    for i in range(proc_a):
         ti = stamps_a[i]
         proc_b = state_a[i]
         if ti > max_ti:
@@ -78,15 +81,17 @@ cdef class PoissonKernel(AbstractKernel):
         self.current_process = proc
 
         cdef size_t n_proc = self.timestamps.num_proc()
-        cdef size_t[::1] causes = self.timestamps.get_causes(proc)
+        cdef size_t n = self.timestamps.get_size(proc)
+        cdef size_t *causes
+        self.timestamps.get_causes(proc, &causes)
+
         cdef size_t i
         cdef double count_background = 0
-        for i in range(<size_t>causes.shape[0]):
+        for i in range(n):
             if causes[i] == n_proc:
                 count_background += 1
 
-        cdef double[::1] timestamps_proc = self.timestamps.get_stamps(proc)
-        cdef double T = timestamps_proc[timestamps_proc.shape[0]-1]
+        cdef double T = self.timestamps.get_stamp(proc, n-1)
         cdef double rate
         if T == 0:
             rate = 0
@@ -121,7 +126,10 @@ cdef class BuscaKernel(AbstractKernel):
     cdef double cross_rate(self, size_t i, size_t b, double alpha_ab) nogil:
         cdef double E = 2.718281828459045
         cdef size_t a = self.poisson.current_process
-        cdef double[::1] stamps = self.poisson.timestamps.get_stamps(a)
+
+        cdef double *stamps
+        self.poisson.timestamps.get_stamps(a, &stamps)
+
         cdef double t = stamps[i]
         cdef double tp
         cdef double tpp
@@ -152,7 +160,8 @@ cdef class TruncatedHawkesKernel(BuscaKernel):
     cdef double cross_rate(self, size_t i, size_t b, double alpha_ab) nogil:
         cdef double E = 2.718281828459045
         cdef size_t a = self.poisson.current_process
-        cdef double[::1] stamps = self.poisson.timestamps.get_stamps(a)
+        cdef double *stamps
+        self.poisson.timestamps.get_stamps(a, &stamps)
         cdef double t = stamps[i]
         cdef double tp
         if a == b:

@@ -32,33 +32,35 @@ cdef class AbstractSampler(object):
     cdef size_t sample_for_idx(self, size_t i, AbstractKernel kernel) nogil:
         printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')
         abort()
+    cdef uint64_t is_background(self, AbstractKernel kernel, double dt) nogil:
+        printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')
+        abort()
 
 
 cdef class BaseSampler(AbstractSampler):
 
-    def __init__(self, Timestamps timestamps, SloppyCounter sloppy, size_t id,
-                 double alpha_prior):
+    def __init__(self, Timestamps timestamps, SloppyCounter sloppy,
+                 size_t worker_id, double alpha_prior):
         self.n_proc = timestamps.num_proc()
         self.alpha_prior = alpha_prior
         self.sloppy = sloppy
-        self.id = id
+        self.worker_id = worker_id
         self.timestamps = timestamps
         self.nab = np.zeros(self.n_proc, dtype='uint64')
         self.rng = RNG()
 
     cdef void set_current_process(self, size_t a) nogil:
         self.current_process = a
-        cdef size_t[::1] causes = self.timestamps.get_causes(a)
-        self.current_process_size = causes.shape[0]
+        self.current_process_size = self.timestamps.get_size(a)
 
         cdef size_t b, i
         for b in range(self.timestamps.num_proc()):
             self.nab[b] = 0
         for i in range(self.current_process_size):
-            b = causes[i]
+            b = self.timestamps.get_cause(a, i)
             if b != self.timestamps.num_proc():
                 self.nab[b] += 1
-        self.denominators = self.sloppy.get_local_counts(self.id)
+        self.sloppy.get_local_counts(self.worker_id, &self.denominators)
 
     cdef double get_probability(self, size_t b) nogil:
         cdef size_t a = self.current_process
@@ -69,13 +71,16 @@ cdef class BaseSampler(AbstractSampler):
         cdef size_t a = self.current_process
         self.denominators[b] += 1
         self.nab[b] += 1
-        self.sloppy.inc_one(self.id, b)
+        self.sloppy.inc_one(self.worker_id, b)
 
     cdef void dec_one(self, size_t b) nogil:
         cdef size_t a = self.current_process
         self.denominators[b] -= 1
         self.nab[b] -= 1
-        self.sloppy.dec_one(self.id, b)
+        self.sloppy.dec_one(self.worker_id, b)
+
+    cdef uint64_t is_background(self, AbstractKernel kernel, double dt) nogil:
+        return self.rng.rand() < kernel.background_probability(dt)
 
 
 cdef class FenwickSampler(AbstractSampler):
@@ -120,9 +125,8 @@ cdef class FenwickSampler(AbstractSampler):
         cdef size_t proc_a = self.base.current_process
         cdef size_t candidate = self.tree.sample(self.base.rng.rand() * \
                                                  self.tree.get_total())
-        cdef size_t[::1] causes = self.base.timestamps.get_causes(proc_a)
-        cdef size_t proc_b = causes[i]
 
+        cdef size_t proc_b = self.base.timestamps.get_cause(proc_a, i)
         if proc_b == self.n_proc:
             return candidate
 
@@ -139,6 +143,8 @@ cdef class FenwickSampler(AbstractSampler):
             choice = proc_b
         return choice
 
+    cdef uint64_t is_background(self, AbstractKernel kernel, double dt) nogil:
+        return self.base.is_background(kernel, dt)
 
 cdef class CollapsedGibbsSampler(AbstractSampler):
 
@@ -181,3 +187,6 @@ cdef class CollapsedGibbsSampler(AbstractSampler):
                 self.buffer[b] += self.buffer[b-1]
         return searchsorted(self.buffer, self.base.rng.rand() * \
                             self.buffer[n_proc-1], 0)
+
+    cdef uint64_t is_background(self, AbstractKernel kernel, double dt) nogil:
+        return self.base.is_background(kernel, dt)

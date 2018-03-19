@@ -22,17 +22,17 @@ cdef class AbstractSampler(object):
     cdef void inc_one(self, size_t b) nogil
     cdef void dec_one(self, size_t b) nogil
     cdef size_t sample_for_idx(self, size_t i, AbstractKernel kernel) nogil
-
+    cdef uint64_t is_background(self, AbstractKernel kernel, double dt) nogil
 
 cdef class BaseSampler(AbstractSampler):
     cdef size_t n_proc
     cdef double alpha_prior
     cdef SloppyCounter sloppy
-    cdef uint64_t[::1] denominators
+    cdef uint64_t *denominators
     cdef uint64_t[::1] nab
     cdef size_t current_process
     cdef size_t current_process_size
-    cdef size_t id
+    cdef size_t worker_id
 
     cdef FPTree tree
     cdef Timestamps timestamps

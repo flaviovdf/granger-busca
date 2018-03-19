@@ -23,4 +23,4 @@ cdef class SloppyCounter(object):
     cdef void update_counts(self, size_t worker) nogil
     cdef void inc_one(self, size_t worker, size_t idx) nogil
     cdef void dec_one(self, size_t worker, size_t idx) nogil
-    cdef uint64_t[::1] get_local_counts(self, size_t worker) nogil
+    cdef void get_local_counts(self, size_t worker, uint64_t **at) nogil

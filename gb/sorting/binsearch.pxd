@@ -5,4 +5,5 @@
 # cython: nonecheck=False
 # cython: wraparound=False
 
-cdef size_t searchsorted(double[::1] array, double value, size_t lower) nogil
+cdef size_t searchsorted(double *array, size_t n, double value,
+                         size_t lower) nogil

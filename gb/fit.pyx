@@ -11,8 +11,6 @@ from gb.kernels cimport PoissonKernel
 from gb.kernels cimport BuscaKernel
 from gb.kernels cimport TruncatedHawkesKernel
 
-from gb.randomkit.random cimport rand
-
 from gb.samplers cimport AbstractSampler
 from gb.samplers cimport BaseSampler
 from gb.samplers cimport CollapsedGibbsSampler
@@ -38,19 +36,22 @@ cdef void sample_alpha(size_t proc_a, Timestamps all_stamps,
     cdef size_t new_influencer
     cdef size_t n_proc = all_stamps.num_proc()
 
-    cdef double[::1] stamps = all_stamps.get_stamps(proc_a)
-    cdef size_t[::1] causes = all_stamps.get_causes(proc_a)
+    cdef size_t n = all_stamps.get_size(proc_a)
+    cdef double *stamps
+    all_stamps.get_stamps(proc_a, &stamps)
+    cdef size_t *causes
+    all_stamps.get_causes(proc_a, &causes)
 
     cdef double prev_back_t = 0      # stores last known background time stamp
     cdef double prev_back_t_aux = 0  # every it: prev_back_t = prev_back_t_aux
-    for i in range(<size_t>stamps.shape[0]):
+    for i in range(n):
         influencer = causes[i]
         if influencer == n_proc:
             prev_back_t_aux = stamps[i] # found a background ts
         else:
             sampler.dec_one(influencer)
 
-        if rand() < kernel.background_probability(stamps[i] - prev_back_t):
+        if sampler.is_background(kernel, stamps[i] - prev_back_t):
             new_influencer = n_proc
         else:
             new_influencer = sampler.sample_for_idx(i, kernel)
@@ -97,7 +98,8 @@ def fit(Timestamps all_stamps, SloppyCounter sloppy, double alpha_prior,
     cdef unordered_map[int, vector[int]] curr_state
 
     cdef size_t a, b, i, j
-    cdef size_t[::1] causes
+    cdef size_t n
+    cdef size_t *causes
     cdef int[::1] num_background = np.zeros(n_proc, dtype='i')
 
     printf("Worker %lu starting\n", worker_id)
@@ -107,9 +109,10 @@ def fit(Timestamps all_stamps, SloppyCounter sloppy, double alpha_prior,
 
         for i in range(<size_t>workload.shape[0]):
             a = workload[i]
-            causes = all_stamps.get_causes(a)
-            curr_state[a].resize(causes.shape[0])
-            for j in range(<size_t>causes.shape[0]):
+            n = all_stamps.get_size(a)
+            all_stamps.get_causes(a, &causes)
+            curr_state[a].resize(n)
+            for j in range(n):
                 b = causes[j]
                 curr_state[a][j] = b
                 if b != n_proc:

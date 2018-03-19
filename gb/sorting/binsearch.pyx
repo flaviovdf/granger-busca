@@ -6,7 +6,8 @@
 # cython: wraparound=False
 
 
-cdef size_t searchsorted(double[::1] array, double value, size_t lower) nogil:
+cdef size_t searchsorted(double *array, size_t n, double value,
+                         size_t lower) nogil:
     '''
     Finds the first element in the array where the given is OR should have been
     in the given array. This is simply a binary search, but if the element is
@@ -15,11 +16,11 @@ cdef size_t searchsorted(double[::1] array, double value, size_t lower) nogil:
     Parameters
     ----------
     array: vector of doubles
+    n: the size of the array
     value: double to look for
     lower: size_t to start search from [lower, n)
     '''
 
-    cdef size_t n = array.shape[0]
     if n == 0: return 0
 
     cdef size_t upper = n - 1  # closed interval
@@ -46,4 +47,4 @@ cdef size_t searchsorted(double[::1] array, double value, size_t lower) nogil:
 
 
 def _searchsorted(double[::1] array, double value, size_t lower=0):
-    return searchsorted(array, value, lower)
+    return searchsorted(&array[0], array.shape[0], value, lower)
