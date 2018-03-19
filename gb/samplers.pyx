@@ -8,7 +8,6 @@
 
 include 'dirichlet.pxi'
 
-from gb.randomkit.random cimport rand
 from gb.sorting.binsearch cimport searchsorted
 
 from libc.stdio cimport printf
@@ -45,6 +44,7 @@ cdef class BaseSampler(AbstractSampler):
         self.id = id
         self.timestamps = timestamps
         self.nab = np.zeros(self.n_proc, dtype='uint64')
+        self.rng = RNG()
 
     cdef void set_current_process(self, size_t a) nogil:
         self.current_process = a
@@ -118,7 +118,8 @@ cdef class FenwickSampler(AbstractSampler):
 
     cdef size_t sample_for_idx(self, size_t i, AbstractKernel kernel) nogil:
         cdef size_t proc_a = self.base.current_process
-        cdef size_t candidate = self.tree.sample(rand()*self.tree.get_total())
+        cdef size_t candidate = self.tree.sample(self.base.rng.rand() * \
+                                                 self.tree.get_total())
         cdef size_t[::1] causes = self.base.timestamps.get_causes(proc_a)
         cdef size_t proc_b = causes[i]
 
@@ -132,7 +133,7 @@ cdef class FenwickSampler(AbstractSampler):
         cdef double p_c = kernel.cross_rate(i, candidate, alpha_ca)
 
         cdef int choice
-        if rand() < min(1, (p_c * alpha_ba) / (p_b * alpha_ca)):
+        if self.base.rng.rand() < min(1, (p_c * alpha_ba) / (p_b * alpha_ca)):
             choice = candidate
         else:
             choice = proc_b
@@ -178,4 +179,5 @@ cdef class CollapsedGibbsSampler(AbstractSampler):
             self.buffer[b] = kernel.cross_rate(i, b, alpha_ba)
             if b > 0:
                 self.buffer[b] += self.buffer[b-1]
-        return searchsorted(self.buffer, self.buffer[n_proc-1] * rand(), 0)
+        return searchsorted(self.buffer, self.base.rng.rand() * \
+                            self.buffer[n_proc-1], 0)

@@ -9,6 +9,7 @@
 from gb.collections.fptree cimport FPTree
 
 from gb.kernels cimport AbstractKernel
+from gb.randomkit.random cimport RNG
 from gb.sloppy cimport SloppyCounter
 from gb.stamps cimport Timestamps
 
@@ -35,7 +36,7 @@ cdef class BaseSampler(AbstractSampler):
 
     cdef FPTree tree
     cdef Timestamps timestamps
-
+    cdef RNG rng
 
 cdef class FenwickSampler(AbstractSampler):
     cdef BaseSampler base
