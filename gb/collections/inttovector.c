@@ -725,7 +725,7 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "gb/collections/inttovector.pyx",
+  "inttovector.pyx",
   "stringsource",
 };
 

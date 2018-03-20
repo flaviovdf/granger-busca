@@ -14,7 +14,7 @@ import os
 import time
 
 
-def to_csr(sparse_dict, dtype='d'):
+def to_csr(sparse_dict, n_proc, dtype='d'):
     vals = []
     rows = []
     cols = []
@@ -23,7 +23,8 @@ def to_csr(sparse_dict, dtype='d'):
             rows.append(row)
             cols.append(col)
             vals.append(sparse_dict[col][row])
-    return sp.csr_matrix((vals, (rows, cols)), dtype=dtype)
+    return sp.csr_matrix((vals, (rows, cols)), shape=(n_proc, n_proc),
+                         dtype=dtype)
 
 
 class GrangerBusca(object):
@@ -75,10 +76,13 @@ class GrangerBusca(object):
             causes = state_keeper._get_causes(a)
             init_state = np.random.randint(0, n_proc + 1, size=causes.shape[0],
                                            dtype='uint64')
-            for b in init_state[init_state != n_proc]:
-                global_state[b] += 1
+            causes[:] = init_state
+            unique, counts = np.unique(init_state[init_state != n_proc],
+                                       return_counts=True)
+            for b, count in zip(unique, counts):
+                global_state[b] += count
                 worker_id = proc2worker[b]
-                local_state[worker_id, b] += 1
+                local_state[worker_id, b] += count
 
         return state_keeper, SloppyCounter(n_workers, self.sloppy,
                                            global_state, local_state)
@@ -105,7 +109,7 @@ class GrangerBusca(object):
         with futures.ThreadPoolExecutor(max_workers=self.num_jobs) as executor:
             jobs = [executor.submit(parallel_fit, worker_id)
                     for worker_id in range(self.num_jobs)]
-            for job in futures.as_completed(jobs):
+            for job in jobs:
                 Alpha_, mu_, Beta_, back_, curr_state_ = job.result()
                 self.Alpha_.update(Alpha_)
                 self.mu_ += mu_
@@ -113,8 +117,8 @@ class GrangerBusca(object):
                 self.back_ += back_
                 self.curr_state_.update(curr_state_)
 
-        self.Alpha_ = to_csr(self.Alpha_)
-        self.Beta_ = to_csr(self.Beta_)
+        self.Alpha_ = to_csr(self.Alpha_, self.n_proc, dtype='i')
+        self.Beta_ = to_csr(self.Beta_, self.n_proc)
 
         dt = time.time() - now
         self.training_time = dt

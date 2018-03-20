@@ -12,6 +12,9 @@ from cpython.pythread cimport PyThread_free_lock
 from cpython.pythread cimport PyThread_release_lock
 from cpython.pythread cimport NOWAIT_LOCK
 
+from libc.stdio cimport printf
+from libc.stdlib cimport abort
+
 import numpy as np
 
 
@@ -44,11 +47,16 @@ cdef class SloppyCounter(object):
         cdef size_t i
         self.delay[worker] += 1
         if self.delay[worker] == self.sloppy_level:
+            while True:
+                if not PyThread_acquire_lock(self.lock, NOWAIT_LOCK):
+                    if not PyThread_acquire_lock(self.lock, WAIT_LOCK):
+                        continue
 
-            PyThread_acquire_lock(self.lock, NOWAIT_LOCK)
+            printf("Worker %lu is updating sloppy counter\n", worker)
             for i in range(<size_t>self.global_counts.shape[0]):
                 self.global_counts[i] += self.updates[worker, i]
                 self.local_counts[worker, i] = self.global_counts[i]
+            printf("Worker %lu is done updating sloppy counter\n", worker)
             PyThread_release_lock(self.lock)
 
             for i in range(<size_t>self.global_counts.shape[0]):

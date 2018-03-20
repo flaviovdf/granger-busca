@@ -730,11 +730,11 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "gb/kernels.pyx",
+  "kernels.pyx",
   "stringsource",
-  "gb/collections/inttovector.pxd",
-  "gb/collections/table.pxd",
-  "gb/stamps.pxd",
+  "collections/inttovector.pxd",
+  "collections/table.pxd",
+  "stamps.pxd",
 };
 /* MemviewSliceStruct.proto */
 struct __pyx_memoryview_obj;

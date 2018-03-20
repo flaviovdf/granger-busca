@@ -53,11 +53,14 @@ cdef class BaseSampler(AbstractSampler):
         self.current_process = a
         self.current_process_size = self.timestamps.get_size(a)
 
+        cdef size_t *causes
+        self.timestamps.get_causes(a, &causes)
+
         cdef size_t b, i
         for b in range(self.timestamps.num_proc()):
             self.nab[b] = 0
         for i in range(self.current_process_size):
-            b = self.timestamps.get_cause(a, i)
+            b = causes[i]
             if b != self.timestamps.num_proc():
                 self.nab[b] += 1
         self.sloppy.get_local_counts(self.worker_id, &self.denominators)

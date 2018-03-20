@@ -6,6 +6,8 @@
 # cython: wraparound=False
 
 
+from cython cimport parallel
+
 from gb.kernels cimport AbstractKernel
 from gb.kernels cimport PoissonKernel
 from gb.kernels cimport BuscaKernel
@@ -124,7 +126,7 @@ def fit(Timestamps all_stamps, SloppyCounter sloppy, double alpha_prior,
 
         kernel.set_current_process(a)
         for b in range(n_proc):
-            if b not in Beta[a]:
+            if b in Alpha[a]:
                 Beta[a][b] = kernel.get_beta_rates()[b]
 
     return Alpha, np.asanyarray(poisson.get_mu_rates()), Beta, \
