@@ -52,8 +52,8 @@ cdef class BaseSampler(AbstractSampler):
 
     cdef void set_current_process(self, size_t a) nogil:
         self.current_process = a
-        self.current_process_size = self.timestamps.get_size(a)
 
+        cdef size_t n = self.timestamps.get_size(a)
         cdef size_t *causes
         self.timestamps.get_causes(a, &causes)
 
@@ -61,14 +61,14 @@ cdef class BaseSampler(AbstractSampler):
         cdef size_t n_proc = self.nab.shape[0]
         for b in range(n_proc):
             self.nab[b] = 0
-        for i in range(self.current_process_size):
+        for i in range(n):
             b = causes[i]
             if b != n_proc:
                 self.nab[b] += 1
 
     cdef double get_probability(self, size_t b) nogil:
         return dirmulti_posterior(self.nab[b], self.denominators[b],
-                                  self.current_process_size, self.alpha_prior)
+                                  self.nab.shape[0], self.alpha_prior)
 
     cdef void inc_one(self, size_t b) nogil:
         self.denominators[b] += 1

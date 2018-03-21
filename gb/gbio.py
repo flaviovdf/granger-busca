@@ -10,7 +10,7 @@ import numpy as np
 def save_model(filename, granger_model):
     state = {}
     for key, val in granger_model.curr_state_.items():
-        state['id_{}'.format(key)] = np.array(val)
+        state['id_{}'.format(key)] = np.asanyarray(val)
 
     np.savez_compressed(filename,
                         Alpha_data=granger_model.Alpha_.data,

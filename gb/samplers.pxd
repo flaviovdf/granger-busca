@@ -31,7 +31,6 @@ cdef class BaseSampler(AbstractSampler):
     cdef uint64_t *denominators
     cdef uint64_t[::1] nab
     cdef size_t current_process
-    cdef size_t current_process_size
     cdef size_t worker_id
 
     cdef FPTree tree
