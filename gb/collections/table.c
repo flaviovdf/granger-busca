@@ -727,7 +727,7 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "table.pyx",
+  "gb/collections/table.pyx",
   "stringsource",
 };
 

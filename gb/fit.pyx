@@ -54,9 +54,8 @@ cdef void sample_alpha(size_t proc_a, Timestamps all_stamps,
             new_influencer = n_proc
         else:
             new_influencer = sampler.sample_for_idx(i, kernel)
-
-        if new_influencer != n_proc:
             sampler.inc_one(new_influencer)
+
         causes[i] = new_influencer
         prev_back_t = prev_back_t_aux
 
@@ -105,7 +104,7 @@ def fit(Timestamps all_stamps, SloppyCounter sloppy, double alpha_prior,
     cdef size_t a, b, i, j
     cdef size_t n
     cdef size_t *causes
-    cdef int[::1] num_background = np.zeros(n_proc, dtype='i')
+    cdef uint64_t[::1] num_background = np.zeros(n_proc, dtype='uint64')
 
     for i in range(<size_t>workload.shape[0]):
         a = workload[i]

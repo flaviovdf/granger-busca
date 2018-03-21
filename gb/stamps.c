@@ -729,9 +729,9 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "stamps.pyx",
+  "gb/stamps.pyx",
   "stringsource",
-  "collections/table.pxd",
+  "gb/collections/table.pxd",
 };
 /* MemviewSliceStruct.proto */
 struct __pyx_memoryview_obj;

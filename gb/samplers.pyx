@@ -47,6 +47,7 @@ cdef class BaseSampler(AbstractSampler):
         self.worker_id = worker_id
         self.timestamps = timestamps
         self.nab = np.zeros(self.n_proc, dtype='uint64')
+        self.sloppy.get_local_counts(self.worker_id, &self.denominators)
         self.rng = RNG()
 
     cdef void set_current_process(self, size_t a) nogil:
@@ -57,27 +58,24 @@ cdef class BaseSampler(AbstractSampler):
         self.timestamps.get_causes(a, &causes)
 
         cdef size_t b, i
-        for b in range(self.timestamps.num_proc()):
+        cdef size_t n_proc = self.nab.shape[0]
+        for b in range(n_proc):
             self.nab[b] = 0
         for i in range(self.current_process_size):
             b = causes[i]
-            if b != self.timestamps.num_proc():
+            if b != n_proc:
                 self.nab[b] += 1
-        self.sloppy.get_local_counts(self.worker_id, &self.denominators)
 
     cdef double get_probability(self, size_t b) nogil:
-        cdef size_t a = self.current_process
         return dirmulti_posterior(self.nab[b], self.denominators[b],
                                   self.current_process_size, self.alpha_prior)
 
     cdef void inc_one(self, size_t b) nogil:
-        cdef size_t a = self.current_process
         self.denominators[b] += 1
         self.nab[b] += 1
         self.sloppy.inc_one(self.worker_id, b)
 
     cdef void dec_one(self, size_t b) nogil:
-        cdef size_t a = self.current_process
         self.denominators[b] -= 1
         self.nab[b] -= 1
         self.sloppy.dec_one(self.worker_id, b)
@@ -159,7 +157,7 @@ cdef class CollapsedGibbsSampler(AbstractSampler):
         self.base.set_current_process(a)
 
     def _set_current_process(self, size_t a):
-        return self.set_current_process(a)
+        self.set_current_process(a)
 
     cdef double get_probability(self, size_t b) nogil:
         return self.base.get_probability(b)

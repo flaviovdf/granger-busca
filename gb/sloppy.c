@@ -2008,31 +2008,22 @@ static int __pyx_pf_2gb_6sloppy_13SloppyCounter___init__(struct __pyx_obj_2gb_6s
  *     def __init__(self, size_t n_workers, size_t sloppy_level,
  *                  uint64_t[::1] global_counts, uint64_t[:, ::1] init_state):
  *         cdef size_t n_proc = global_counts.shape[0]             # <<<<<<<<<<<<<<
- *         printf("Sloppy == %lu\n", sloppy_level)
  *         self.sloppy_level = sloppy_level
+ *         self.local_counts = init_state
  */
   __pyx_v_n_proc = (__pyx_v_global_counts.shape[0]);
 
   /* "gb/sloppy.pyx":26
  *                  uint64_t[::1] global_counts, uint64_t[:, ::1] init_state):
  *         cdef size_t n_proc = global_counts.shape[0]
- *         printf("Sloppy == %lu\n", sloppy_level)             # <<<<<<<<<<<<<<
- *         self.sloppy_level = sloppy_level
- *         self.local_counts = init_state
- */
-  printf(((char const *)"Sloppy == %lu\n"), __pyx_v_sloppy_level);
-
-  /* "gb/sloppy.pyx":27
- *         cdef size_t n_proc = global_counts.shape[0]
- *         printf("Sloppy == %lu\n", sloppy_level)
  *         self.sloppy_level = sloppy_level             # <<<<<<<<<<<<<<
  *         self.local_counts = init_state
  *         self.global_counts = global_counts
  */
   __pyx_v_self->sloppy_level = __pyx_v_sloppy_level;
 
-  /* "gb/sloppy.pyx":28
- *         printf("Sloppy == %lu\n", sloppy_level)
+  /* "gb/sloppy.pyx":27
+ *         cdef size_t n_proc = global_counts.shape[0]
  *         self.sloppy_level = sloppy_level
  *         self.local_counts = init_state             # <<<<<<<<<<<<<<
  *         self.global_counts = global_counts
@@ -2042,7 +2033,7 @@ static int __pyx_pf_2gb_6sloppy_13SloppyCounter___init__(struct __pyx_obj_2gb_6s
   __PYX_INC_MEMVIEW(&__pyx_v_init_state, 0);
   __pyx_v_self->local_counts = __pyx_v_init_state;
 
-  /* "gb/sloppy.pyx":29
+  /* "gb/sloppy.pyx":28
  *         self.sloppy_level = sloppy_level
  *         self.local_counts = init_state
  *         self.global_counts = global_counts             # <<<<<<<<<<<<<<
@@ -2053,58 +2044,58 @@ static int __pyx_pf_2gb_6sloppy_13SloppyCounter___init__(struct __pyx_obj_2gb_6s
   __PYX_INC_MEMVIEW(&__pyx_v_global_counts, 0);
   __pyx_v_self->global_counts = __pyx_v_global_counts;
 
-  /* "gb/sloppy.pyx":30
+  /* "gb/sloppy.pyx":29
  *         self.local_counts = init_state
  *         self.global_counts = global_counts
  *         self.delay = np.zeros(n_workers, dtype='uint64')             # <<<<<<<<<<<<<<
  *         self.updates = np.zeros((n_workers, n_proc), dtype='i')
  *         self.lock = PyThread_allocate_lock()
  */
-  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 30, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 29, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 30, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 29, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyInt_FromSize_t(__pyx_v_n_workers); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 30, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_FromSize_t(__pyx_v_n_workers); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 29, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 30, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 29, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 30, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 29, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_n_s_uint64) < 0) __PYX_ERR(0, 30, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 30, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_n_s_uint64) < 0) __PYX_ERR(0, 29, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 29, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_dc_nn_uint64_t(__pyx_t_4);
-  if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 30, __pyx_L1_error)
+  if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 29, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __PYX_XDEC_MEMVIEW(&__pyx_v_self->delay, 0);
   __pyx_v_self->delay = __pyx_t_5;
   __pyx_t_5.memview = NULL;
   __pyx_t_5.data = NULL;
 
-  /* "gb/sloppy.pyx":31
+  /* "gb/sloppy.pyx":30
  *         self.global_counts = global_counts
  *         self.delay = np.zeros(n_workers, dtype='uint64')
  *         self.updates = np.zeros((n_workers, n_proc), dtype='i')             # <<<<<<<<<<<<<<
  *         self.lock = PyThread_allocate_lock()
  * 
  */
-  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 31, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 30, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_zeros); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 31, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_zeros); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 30, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyInt_FromSize_t(__pyx_v_n_workers); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 31, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_FromSize_t(__pyx_v_n_workers); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 30, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_3 = __Pyx_PyInt_FromSize_t(__pyx_v_n_proc); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 31, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_FromSize_t(__pyx_v_n_proc); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 30, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 31, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 30, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_4);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_4);
@@ -2112,28 +2103,28 @@ static int __pyx_pf_2gb_6sloppy_13SloppyCounter___init__(struct __pyx_obj_2gb_6s
   PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_t_3);
   __pyx_t_4 = 0;
   __pyx_t_3 = 0;
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 31, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 30, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_2);
   PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_2);
   __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 31, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 30, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, __pyx_n_s_i) < 0) __PYX_ERR(0, 31, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 31, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, __pyx_n_s_i) < 0) __PYX_ERR(0, 30, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 30, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_d_dc_int(__pyx_t_4);
-  if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 31, __pyx_L1_error)
+  if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 30, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __PYX_XDEC_MEMVIEW(&__pyx_v_self->updates, 0);
   __pyx_v_self->updates = __pyx_t_6;
   __pyx_t_6.memview = NULL;
   __pyx_t_6.data = NULL;
 
-  /* "gb/sloppy.pyx":32
+  /* "gb/sloppy.pyx":31
  *         self.delay = np.zeros(n_workers, dtype='uint64')
  *         self.updates = np.zeros((n_workers, n_proc), dtype='i')
  *         self.lock = PyThread_allocate_lock()             # <<<<<<<<<<<<<<
@@ -2169,7 +2160,7 @@ static int __pyx_pf_2gb_6sloppy_13SloppyCounter___init__(struct __pyx_obj_2gb_6s
   return __pyx_r;
 }
 
-/* "gb/sloppy.pyx":34
+/* "gb/sloppy.pyx":33
  *         self.lock = PyThread_allocate_lock()
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -2193,7 +2184,7 @@ static void __pyx_pf_2gb_6sloppy_13SloppyCounter_2__dealloc__(struct __pyx_obj_2
   int __pyx_t_1;
   __Pyx_RefNannySetupContext("__dealloc__", 0);
 
-  /* "gb/sloppy.pyx":35
+  /* "gb/sloppy.pyx":34
  * 
  *     def __dealloc__(self):
  *         if self.lock != NULL:             # <<<<<<<<<<<<<<
@@ -2203,7 +2194,7 @@ static void __pyx_pf_2gb_6sloppy_13SloppyCounter_2__dealloc__(struct __pyx_obj_2
   __pyx_t_1 = ((__pyx_v_self->lock != NULL) != 0);
   if (__pyx_t_1) {
 
-    /* "gb/sloppy.pyx":36
+    /* "gb/sloppy.pyx":35
  *     def __dealloc__(self):
  *         if self.lock != NULL:
  *             PyThread_free_lock(self.lock)             # <<<<<<<<<<<<<<
@@ -2212,7 +2203,7 @@ static void __pyx_pf_2gb_6sloppy_13SloppyCounter_2__dealloc__(struct __pyx_obj_2
  */
     PyThread_free_lock(__pyx_v_self->lock);
 
-    /* "gb/sloppy.pyx":35
+    /* "gb/sloppy.pyx":34
  * 
  *     def __dealloc__(self):
  *         if self.lock != NULL:             # <<<<<<<<<<<<<<
@@ -2221,7 +2212,7 @@ static void __pyx_pf_2gb_6sloppy_13SloppyCounter_2__dealloc__(struct __pyx_obj_2
  */
   }
 
-  /* "gb/sloppy.pyx":34
+  /* "gb/sloppy.pyx":33
  *         self.lock = PyThread_allocate_lock()
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -2233,7 +2224,7 @@ static void __pyx_pf_2gb_6sloppy_13SloppyCounter_2__dealloc__(struct __pyx_obj_2
   __Pyx_RefNannyFinishContext();
 }
 
-/* "gb/sloppy.pyx":38
+/* "gb/sloppy.pyx":37
  *             PyThread_free_lock(self.lock)
  * 
  *     cdef void inc_one(self, size_t worker, size_t idx) nogil:             # <<<<<<<<<<<<<<
@@ -2245,7 +2236,7 @@ static void __pyx_f_2gb_6sloppy_13SloppyCounter_inc_one(struct __pyx_obj_2gb_6sl
   size_t __pyx_t_1;
   size_t __pyx_t_2;
 
-  /* "gb/sloppy.pyx":39
+  /* "gb/sloppy.pyx":38
  * 
  *     cdef void inc_one(self, size_t worker, size_t idx) nogil:
  *         self.updates[worker, idx] += 1             # <<<<<<<<<<<<<<
@@ -2256,7 +2247,7 @@ static void __pyx_f_2gb_6sloppy_13SloppyCounter_inc_one(struct __pyx_obj_2gb_6sl
   __pyx_t_2 = __pyx_v_idx;
   *((int *) ( /* dim=1 */ ((char *) (((int *) ( /* dim=0 */ (__pyx_v_self->updates.data + __pyx_t_1 * __pyx_v_self->updates.strides[0]) )) + __pyx_t_2)) )) += 1;
 
-  /* "gb/sloppy.pyx":38
+  /* "gb/sloppy.pyx":37
  *             PyThread_free_lock(self.lock)
  * 
  *     cdef void inc_one(self, size_t worker, size_t idx) nogil:             # <<<<<<<<<<<<<<
@@ -2267,7 +2258,7 @@ static void __pyx_f_2gb_6sloppy_13SloppyCounter_inc_one(struct __pyx_obj_2gb_6sl
   /* function exit code */
 }
 
-/* "gb/sloppy.pyx":41
+/* "gb/sloppy.pyx":40
  *         self.updates[worker, idx] += 1
  * 
  *     cdef void dec_one(self, size_t worker, size_t idx) nogil:             # <<<<<<<<<<<<<<
@@ -2279,7 +2270,7 @@ static void __pyx_f_2gb_6sloppy_13SloppyCounter_dec_one(struct __pyx_obj_2gb_6sl
   size_t __pyx_t_1;
   size_t __pyx_t_2;
 
-  /* "gb/sloppy.pyx":42
+  /* "gb/sloppy.pyx":41
  * 
  *     cdef void dec_one(self, size_t worker, size_t idx) nogil:
  *         self.updates[worker, idx] -= 1             # <<<<<<<<<<<<<<
@@ -2290,7 +2281,7 @@ static void __pyx_f_2gb_6sloppy_13SloppyCounter_dec_one(struct __pyx_obj_2gb_6sl
   __pyx_t_2 = __pyx_v_idx;
   *((int *) ( /* dim=1 */ ((char *) (((int *) ( /* dim=0 */ (__pyx_v_self->updates.data + __pyx_t_1 * __pyx_v_self->updates.strides[0]) )) + __pyx_t_2)) )) -= 1;
 
-  /* "gb/sloppy.pyx":41
+  /* "gb/sloppy.pyx":40
  *         self.updates[worker, idx] += 1
  * 
  *     cdef void dec_one(self, size_t worker, size_t idx) nogil:             # <<<<<<<<<<<<<<
@@ -2301,7 +2292,7 @@ static void __pyx_f_2gb_6sloppy_13SloppyCounter_dec_one(struct __pyx_obj_2gb_6sl
   /* function exit code */
 }
 
-/* "gb/sloppy.pyx":44
+/* "gb/sloppy.pyx":43
  *         self.updates[worker, idx] -= 1
  * 
  *     cdef void get_local_counts(self, size_t worker, uint64_t **at) nogil:             # <<<<<<<<<<<<<<
@@ -2313,7 +2304,7 @@ static void __pyx_f_2gb_6sloppy_13SloppyCounter_get_local_counts(struct __pyx_ob
   size_t __pyx_t_1;
   Py_ssize_t __pyx_t_2;
 
-  /* "gb/sloppy.pyx":45
+  /* "gb/sloppy.pyx":44
  * 
  *     cdef void get_local_counts(self, size_t worker, uint64_t **at) nogil:
  *         at[0] = &self.local_counts[worker, 0]             # <<<<<<<<<<<<<<
@@ -2324,7 +2315,7 @@ static void __pyx_f_2gb_6sloppy_13SloppyCounter_get_local_counts(struct __pyx_ob
   __pyx_t_2 = 0;
   (__pyx_v_at[0]) = (&(*((uint64_t *) ( /* dim=1 */ ((char *) (((uint64_t *) ( /* dim=0 */ (__pyx_v_self->local_counts.data + __pyx_t_1 * __pyx_v_self->local_counts.strides[0]) )) + __pyx_t_2)) ))));
 
-  /* "gb/sloppy.pyx":44
+  /* "gb/sloppy.pyx":43
  *         self.updates[worker, idx] -= 1
  * 
  *     cdef void get_local_counts(self, size_t worker, uint64_t **at) nogil:             # <<<<<<<<<<<<<<
@@ -2335,7 +2326,7 @@ static void __pyx_f_2gb_6sloppy_13SloppyCounter_get_local_counts(struct __pyx_ob
   /* function exit code */
 }
 
-/* "gb/sloppy.pyx":47
+/* "gb/sloppy.pyx":46
  *         at[0] = &self.local_counts[worker, 0]
  * 
  *     cdef void update_counts(self, size_t worker) nogil:             # <<<<<<<<<<<<<<
@@ -2359,67 +2350,52 @@ static void __pyx_f_2gb_6sloppy_13SloppyCounter_update_counts(struct __pyx_obj_2
   size_t __pyx_t_12;
   size_t __pyx_t_13;
 
-  /* "gb/sloppy.pyx":49
+  /* "gb/sloppy.pyx":48
  *     cdef void update_counts(self, size_t worker) nogil:
  *         cdef size_t i
  *         self.delay[worker] += 1             # <<<<<<<<<<<<<<
  *         if self.delay[worker] == self.sloppy_level:
- * 
+ *             while not PyThread_acquire_lock(self.lock, NOWAIT_LOCK):
  */
   __pyx_t_1 = __pyx_v_worker;
   *((uint64_t *) ( /* dim=0 */ ((char *) (((uint64_t *) __pyx_v_self->delay.data) + __pyx_t_1)) )) += 1;
 
-  /* "gb/sloppy.pyx":50
+  /* "gb/sloppy.pyx":49
  *         cdef size_t i
  *         self.delay[worker] += 1
  *         if self.delay[worker] == self.sloppy_level:             # <<<<<<<<<<<<<<
- * 
- *             if not PyThread_acquire_lock(self.lock, NOWAIT_LOCK):
+ *             while not PyThread_acquire_lock(self.lock, NOWAIT_LOCK):
+ *                 continue
  */
   __pyx_t_2 = __pyx_v_worker;
   __pyx_t_3 = (((*((uint64_t *) ( /* dim=0 */ ((char *) (((uint64_t *) __pyx_v_self->delay.data) + __pyx_t_2)) ))) == __pyx_v_self->sloppy_level) != 0);
   if (__pyx_t_3) {
 
-    /* "gb/sloppy.pyx":52
+    /* "gb/sloppy.pyx":50
+ *         self.delay[worker] += 1
  *         if self.delay[worker] == self.sloppy_level:
- * 
- *             if not PyThread_acquire_lock(self.lock, NOWAIT_LOCK):             # <<<<<<<<<<<<<<
- *                 abort()
- *             printf("Worker %lu is updating sloppy counter\n", worker)
- */
-    __pyx_t_3 = ((!(PyThread_acquire_lock(__pyx_v_self->lock, NOWAIT_LOCK) != 0)) != 0);
-    if (__pyx_t_3) {
-
-      /* "gb/sloppy.pyx":53
- * 
- *             if not PyThread_acquire_lock(self.lock, NOWAIT_LOCK):
- *                 abort()             # <<<<<<<<<<<<<<
- *             printf("Worker %lu is updating sloppy counter\n", worker)
+ *             while not PyThread_acquire_lock(self.lock, NOWAIT_LOCK):             # <<<<<<<<<<<<<<
+ *                 continue
  *             for i in range(<size_t>self.global_counts.shape[0]):
  */
-      abort();
+    while (1) {
+      __pyx_t_3 = ((!(PyThread_acquire_lock(__pyx_v_self->lock, NOWAIT_LOCK) != 0)) != 0);
+      if (!__pyx_t_3) break;
 
-      /* "gb/sloppy.pyx":52
+      /* "gb/sloppy.pyx":51
  *         if self.delay[worker] == self.sloppy_level:
- * 
- *             if not PyThread_acquire_lock(self.lock, NOWAIT_LOCK):             # <<<<<<<<<<<<<<
- *                 abort()
- *             printf("Worker %lu is updating sloppy counter\n", worker)
- */
-    }
-
-    /* "gb/sloppy.pyx":54
- *             if not PyThread_acquire_lock(self.lock, NOWAIT_LOCK):
- *                 abort()
- *             printf("Worker %lu is updating sloppy counter\n", worker)             # <<<<<<<<<<<<<<
+ *             while not PyThread_acquire_lock(self.lock, NOWAIT_LOCK):
+ *                 continue             # <<<<<<<<<<<<<<
  *             for i in range(<size_t>self.global_counts.shape[0]):
  *                 self.global_counts[i] += self.updates[worker, i]
  */
-    printf(((char const *)"Worker %lu is updating sloppy counter\n"), __pyx_v_worker);
+      goto __pyx_L4_continue;
+      __pyx_L4_continue:;
+    }
 
-    /* "gb/sloppy.pyx":55
- *                 abort()
- *             printf("Worker %lu is updating sloppy counter\n", worker)
+    /* "gb/sloppy.pyx":52
+ *             while not PyThread_acquire_lock(self.lock, NOWAIT_LOCK):
+ *                 continue
  *             for i in range(<size_t>self.global_counts.shape[0]):             # <<<<<<<<<<<<<<
  *                 self.global_counts[i] += self.updates[worker, i]
  *                 self.local_counts[worker, i] = self.global_counts[i]
@@ -2428,24 +2404,24 @@ static void __pyx_f_2gb_6sloppy_13SloppyCounter_update_counts(struct __pyx_obj_2
     for (__pyx_t_5 = 0; __pyx_t_5 < __pyx_t_4; __pyx_t_5+=1) {
       __pyx_v_i = __pyx_t_5;
 
-      /* "gb/sloppy.pyx":56
- *             printf("Worker %lu is updating sloppy counter\n", worker)
+      /* "gb/sloppy.pyx":53
+ *                 continue
  *             for i in range(<size_t>self.global_counts.shape[0]):
  *                 self.global_counts[i] += self.updates[worker, i]             # <<<<<<<<<<<<<<
  *                 self.local_counts[worker, i] = self.global_counts[i]
- *             printf("Worker %lu is done updating sloppy counter\n", worker)
+ *             PyThread_release_lock(self.lock)
  */
       __pyx_t_6 = __pyx_v_worker;
       __pyx_t_7 = __pyx_v_i;
       __pyx_t_8 = __pyx_v_i;
       *((uint64_t *) ( /* dim=0 */ ((char *) (((uint64_t *) __pyx_v_self->global_counts.data) + __pyx_t_8)) )) += (*((int *) ( /* dim=1 */ ((char *) (((int *) ( /* dim=0 */ (__pyx_v_self->updates.data + __pyx_t_6 * __pyx_v_self->updates.strides[0]) )) + __pyx_t_7)) )));
 
-      /* "gb/sloppy.pyx":57
+      /* "gb/sloppy.pyx":54
  *             for i in range(<size_t>self.global_counts.shape[0]):
  *                 self.global_counts[i] += self.updates[worker, i]
  *                 self.local_counts[worker, i] = self.global_counts[i]             # <<<<<<<<<<<<<<
- *             printf("Worker %lu is done updating sloppy counter\n", worker)
  *             PyThread_release_lock(self.lock)
+ * 
  */
       __pyx_t_9 = __pyx_v_i;
       __pyx_t_10 = __pyx_v_worker;
@@ -2453,25 +2429,16 @@ static void __pyx_f_2gb_6sloppy_13SloppyCounter_update_counts(struct __pyx_obj_2
       *((uint64_t *) ( /* dim=1 */ ((char *) (((uint64_t *) ( /* dim=0 */ (__pyx_v_self->local_counts.data + __pyx_t_10 * __pyx_v_self->local_counts.strides[0]) )) + __pyx_t_11)) )) = (*((uint64_t *) ( /* dim=0 */ ((char *) (((uint64_t *) __pyx_v_self->global_counts.data) + __pyx_t_9)) )));
     }
 
-    /* "gb/sloppy.pyx":58
+    /* "gb/sloppy.pyx":55
  *                 self.global_counts[i] += self.updates[worker, i]
  *                 self.local_counts[worker, i] = self.global_counts[i]
- *             printf("Worker %lu is done updating sloppy counter\n", worker)             # <<<<<<<<<<<<<<
- *             PyThread_release_lock(self.lock)
- * 
- */
-    printf(((char const *)"Worker %lu is done updating sloppy counter\n"), __pyx_v_worker);
-
-    /* "gb/sloppy.pyx":59
- *                 self.local_counts[worker, i] = self.global_counts[i]
- *             printf("Worker %lu is done updating sloppy counter\n", worker)
  *             PyThread_release_lock(self.lock)             # <<<<<<<<<<<<<<
  * 
  *             for i in range(<size_t>self.global_counts.shape[0]):
  */
     PyThread_release_lock(__pyx_v_self->lock);
 
-    /* "gb/sloppy.pyx":61
+    /* "gb/sloppy.pyx":57
  *             PyThread_release_lock(self.lock)
  * 
  *             for i in range(<size_t>self.global_counts.shape[0]):             # <<<<<<<<<<<<<<
@@ -2482,7 +2449,7 @@ static void __pyx_f_2gb_6sloppy_13SloppyCounter_update_counts(struct __pyx_obj_2
     for (__pyx_t_5 = 0; __pyx_t_5 < __pyx_t_4; __pyx_t_5+=1) {
       __pyx_v_i = __pyx_t_5;
 
-      /* "gb/sloppy.pyx":62
+      /* "gb/sloppy.pyx":58
  * 
  *             for i in range(<size_t>self.global_counts.shape[0]):
  *                 self.updates[worker, i] = 0             # <<<<<<<<<<<<<<
@@ -2493,7 +2460,7 @@ static void __pyx_f_2gb_6sloppy_13SloppyCounter_update_counts(struct __pyx_obj_2
       *((int *) ( /* dim=1 */ ((char *) (((int *) ( /* dim=0 */ (__pyx_v_self->updates.data + __pyx_t_12 * __pyx_v_self->updates.strides[0]) )) + __pyx_t_13)) )) = 0;
     }
 
-    /* "gb/sloppy.pyx":63
+    /* "gb/sloppy.pyx":59
  *             for i in range(<size_t>self.global_counts.shape[0]):
  *                 self.updates[worker, i] = 0
  *             self.delay[worker] = 0             # <<<<<<<<<<<<<<
@@ -2501,16 +2468,16 @@ static void __pyx_f_2gb_6sloppy_13SloppyCounter_update_counts(struct __pyx_obj_2
     __pyx_t_4 = __pyx_v_worker;
     *((uint64_t *) ( /* dim=0 */ ((char *) (((uint64_t *) __pyx_v_self->delay.data) + __pyx_t_4)) )) = 0;
 
-    /* "gb/sloppy.pyx":50
+    /* "gb/sloppy.pyx":49
  *         cdef size_t i
  *         self.delay[worker] += 1
  *         if self.delay[worker] == self.sloppy_level:             # <<<<<<<<<<<<<<
- * 
- *             if not PyThread_acquire_lock(self.lock, NOWAIT_LOCK):
+ *             while not PyThread_acquire_lock(self.lock, NOWAIT_LOCK):
+ *                 continue
  */
   }
 
-  /* "gb/sloppy.pyx":47
+  /* "gb/sloppy.pyx":46
  *         at[0] = &self.local_counts[worker, 0]
  * 
  *     cdef void update_counts(self, size_t worker) nogil:             # <<<<<<<<<<<<<<
@@ -16353,7 +16320,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0, 0, 0, 0}
 };
 static int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 55, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 52, __pyx_L1_error)
   __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) __PYX_ERR(1, 2, __pyx_L1_error)
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(1, 131, __pyx_L1_error)
   __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(1, 146, __pyx_L1_error)

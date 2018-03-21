@@ -37,8 +37,7 @@ kernels = [[hk.HawkesKernelExp(a, b) for (a, b) in zip(a_list, b_list)]
            for (a_list, b_list) in zip(Alpha, Beta)]
 h = hk.SimuHawkes(kernels=kernels, baseline=list(mus), end_time=T)
 h.simulate()
-granger_model = GrangerBusca(alpha_prior=1.0/len(h.timestamps), num_iter=300,
-                             num_jobs=4, metropolis=True)
+granger_model = GrangerBusca(alpha_prior=1.0/len(h.timestamps), num_iter=300)
 granger_model.fit(h.timestamps)
 print(granger_model.mu_)
 print(np.array(granger_model.Beta_.toarray()))

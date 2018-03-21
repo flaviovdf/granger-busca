@@ -728,7 +728,7 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "fptree.pyx",
+  "gb/collections/fptree.pyx",
   "stringsource",
 };
 /* MemviewSliceStruct.proto */

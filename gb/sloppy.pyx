@@ -47,16 +47,11 @@ cdef class SloppyCounter(object):
         cdef size_t i
         self.delay[worker] += 1
         if self.delay[worker] == self.sloppy_level:
-            while True:
-                if not PyThread_acquire_lock(self.lock, NOWAIT_LOCK):
-                    if not PyThread_acquire_lock(self.lock, WAIT_LOCK):
-                        continue
-
-            printf("Worker %lu is updating sloppy counter\n", worker)
+            while not PyThread_acquire_lock(self.lock, NOWAIT_LOCK):
+                continue
             for i in range(<size_t>self.global_counts.shape[0]):
                 self.global_counts[i] += self.updates[worker, i]
                 self.local_counts[worker, i] = self.global_counts[i]
-            printf("Worker %lu is done updating sloppy counter\n", worker)
             PyThread_release_lock(self.lock)
 
             for i in range(<size_t>self.global_counts.shape[0]):

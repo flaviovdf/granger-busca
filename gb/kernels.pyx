@@ -31,9 +31,9 @@ cdef inline double update_beta_rate(size_t proc_a, Timestamps all_stamps,
     cdef double max_ti = 0
     cdef size_t n = all_stamps.get_size(proc_a)
     cdef size_t *state_a
+    all_stamps.get_causes(proc_a, &state_a)
     cdef double *stamps_a
     all_stamps.get_stamps(proc_a, &stamps_a)
-    all_stamps.get_causes(proc_a, &state_a)
     cdef size_t proc_b, i
     for i in range(n):
         ti = stamps_a[i]

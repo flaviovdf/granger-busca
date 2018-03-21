@@ -730,11 +730,11 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "kernels.pyx",
+  "gb/kernels.pyx",
   "stringsource",
-  "collections/inttovector.pxd",
-  "collections/table.pxd",
-  "stamps.pxd",
+  "gb/collections/inttovector.pxd",
+  "gb/collections/table.pxd",
+  "gb/stamps.pxd",
 };
 /* MemviewSliceStruct.proto */
 struct __pyx_memoryview_obj;
@@ -2309,30 +2309,30 @@ static CYTHON_INLINE double __pyx_f_2gb_7kernels_update_beta_rate(size_t __pyx_v
  *     cdef double max_ti = 0
  *     cdef size_t n = all_stamps.get_size(proc_a)             # <<<<<<<<<<<<<<
  *     cdef size_t *state_a
- *     cdef double *stamps_a
+ *     all_stamps.get_causes(proc_a, &state_a)
  */
   __pyx_v_n = ((struct __pyx_vtabstruct_2gb_6stamps_Timestamps *)__pyx_v_all_stamps->__pyx_vtab)->get_size(__pyx_v_all_stamps, __pyx_v_proc_a);
 
-  /* "gb/kernels.pyx":35
+  /* "gb/kernels.pyx":34
+ *     cdef size_t n = all_stamps.get_size(proc_a)
  *     cdef size_t *state_a
- *     cdef double *stamps_a
- *     all_stamps.get_stamps(proc_a, &stamps_a)             # <<<<<<<<<<<<<<
- *     all_stamps.get_causes(proc_a, &state_a)
- *     cdef size_t proc_b, i
- */
-  ((struct __pyx_vtabstruct_2gb_6stamps_Timestamps *)__pyx_v_all_stamps->__pyx_vtab)->get_stamps(__pyx_v_all_stamps, __pyx_v_proc_a, (&__pyx_v_stamps_a));
-
-  /* "gb/kernels.pyx":36
+ *     all_stamps.get_causes(proc_a, &state_a)             # <<<<<<<<<<<<<<
  *     cdef double *stamps_a
  *     all_stamps.get_stamps(proc_a, &stamps_a)
- *     all_stamps.get_causes(proc_a, &state_a)             # <<<<<<<<<<<<<<
- *     cdef size_t proc_b, i
- *     for i in range(n):
  */
   ((struct __pyx_vtabstruct_2gb_6stamps_Timestamps *)__pyx_v_all_stamps->__pyx_vtab)->get_causes(__pyx_v_all_stamps, __pyx_v_proc_a, (&__pyx_v_state_a));
 
-  /* "gb/kernels.pyx":38
+  /* "gb/kernels.pyx":36
  *     all_stamps.get_causes(proc_a, &state_a)
+ *     cdef double *stamps_a
+ *     all_stamps.get_stamps(proc_a, &stamps_a)             # <<<<<<<<<<<<<<
+ *     cdef size_t proc_b, i
+ *     for i in range(n):
+ */
+  ((struct __pyx_vtabstruct_2gb_6stamps_Timestamps *)__pyx_v_all_stamps->__pyx_vtab)->get_stamps(__pyx_v_all_stamps, __pyx_v_proc_a, (&__pyx_v_stamps_a));
+
+  /* "gb/kernels.pyx":38
+ *     all_stamps.get_stamps(proc_a, &stamps_a)
  *     cdef size_t proc_b, i
  *     for i in range(n):             # <<<<<<<<<<<<<<
  *         ti = stamps_a[i]

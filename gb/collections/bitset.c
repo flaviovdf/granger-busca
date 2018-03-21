@@ -729,7 +729,7 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "bitset.pyx",
+  "gb/collections/bitset.pyx",
   "stringsource",
 };
 /* MemviewSliceStruct.proto */

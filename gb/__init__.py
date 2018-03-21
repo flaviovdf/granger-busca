@@ -63,7 +63,7 @@ class GrangerBusca(object):
         self.timestamps = timestamps
         self.time_range = max_all
 
-    def _init_state(self, static_schedule, proc2worker):
+    def _init_state(self, static_schedule):
         state_keeper = Timestamps(self.timestamps)
 
         n_proc = len(self.timestamps)
@@ -79,10 +79,9 @@ class GrangerBusca(object):
             causes[:] = init_state
             unique, counts = np.unique(init_state[init_state != n_proc],
                                        return_counts=True)
-            for b, count in zip(unique, counts):
-                global_state[b] += count
-                worker_id = proc2worker[b]
-                local_state[worker_id, b] += count
+            counts = np.array(counts, dtype='uint64')
+            global_state[unique] += counts
+            local_state[:, unique] += counts
 
         return state_keeper, SloppyCounter(n_workers, self.sloppy,
                                            global_state, local_state)
@@ -91,10 +90,8 @@ class GrangerBusca(object):
         now = time.time()
 
         self._init_timestamps(timestamps, sort)
-        schedule, inverse_schedule = greedy_schedule(self.timestamps,
-                                                     self.num_jobs)
-        state_keeper, sloppy_counter = self._init_state(schedule,
-                                                        inverse_schedule)
+        schedule, _ = greedy_schedule(self.timestamps, self.num_jobs)
+        state_keeper, sloppy_counter = self._init_state(schedule)
 
         def parallel_fit(worker_id):
             return cyfit(state_keeper, sloppy_counter, self.alpha_prior,
@@ -104,7 +101,7 @@ class GrangerBusca(object):
         self.Alpha_ = {}
         self.mu_ = np.zeros(len(self.timestamps), dtype='d')
         self.Beta_ = {}
-        self.back_ = np.zeros(len(self.timestamps), dtype='i')
+        self.back_ = np.zeros(len(self.timestamps), dtype='uint64')
         self.curr_state_ = {}
         with futures.ThreadPoolExecutor(max_workers=self.num_jobs) as executor:
             jobs = [executor.submit(parallel_fit, worker_id)
@@ -117,7 +114,7 @@ class GrangerBusca(object):
                 self.back_ += back_
                 self.curr_state_.update(curr_state_)
 
-        self.Alpha_ = to_csr(self.Alpha_, self.n_proc, dtype='i')
+        self.Alpha_ = to_csr(self.Alpha_, self.n_proc, dtype='uint64')
         self.Beta_ = to_csr(self.Beta_, self.n_proc)
 
         dt = time.time() - now
