@@ -5,9 +5,9 @@ import numpy as np
 
 class GrangeBuscaSimulator(object):
 
-    def __init__(self, mu_rates, beta_rates, Alpha_ba):
+    def __init__(self, mu_rates, Beta_ba, Alpha_ba):
         self.mu_rates = np.asanyarray(mu_rates)
-        self.beta_rates = np.asanyarray(beta_rates)
+        self.Beta_ba = np.asanyarray(Beta_ba)
         self.Alpha_ba = np.asanyarray(Alpha_ba)
         self.past = [[0] for i in range(self.Alpha_ba.shape[0])]
         self.t = 0
@@ -24,8 +24,8 @@ class GrangeBuscaSimulator(object):
                     tpp = self.past[proc_b][-2]
                 else:
                     tpp = 0
-                busca_rate = self.Alpha_ba[proc_b][proc_a]
-                busca_rate /= (self.beta_rates[proc_b]/e + tp - tpp)
+                busca_rate = self.Alpha_ba[proc_b, proc_a]
+                busca_rate /= (self.Beta_ba[proc_b, proc_a]/e + tp - tpp)
                 lambdas_t[proc_a] += busca_rate
         return lambdas_t
 
