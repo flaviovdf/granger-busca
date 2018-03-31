@@ -1895,7 +1895,6 @@ static PyObject *contiguous = 0;
 static PyObject *indirect_contiguous = 0;
 static int __pyx_memoryview_thread_locks_used;
 static PyThread_type_lock __pyx_memoryview_thread_locks[8];
-static CYTHON_INLINE double __pyx_f_2gb_7kernels_update_beta_rate(size_t, struct __pyx_obj_2gb_6stamps_Timestamps *, __Pyx_memviewslice, struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *); /*proto*/
 static PyObject *__pyx_f_2gb_7kernels___pyx_unpickle_AbstractKernel__set_state(struct __pyx_obj_2gb_7kernels_AbstractKernel *, PyObject *); /*proto*/
 static PyObject *__pyx_f_2gb_7kernels___pyx_unpickle_PoissonKernel__set_state(struct __pyx_obj_2gb_7kernels_PoissonKernel *, PyObject *); /*proto*/
 static PyObject *__pyx_f_2gb_7kernels___pyx_unpickle_BuscaKernel__set_state(struct __pyx_obj_2gb_7kernels_BuscaKernel *, PyObject *); /*proto*/
@@ -3922,7 +3921,7 @@ static int __pyx_pf_2gb_7kernels_11BuscaKernel___init__(struct __pyx_obj_2gb_7ke
  * 
  *     cdef void set_current_process(self, size_t proc) nogil:             # <<<<<<<<<<<<<<
  *         self.poisson.set_current_process(proc)
- *         update_beta_rate(proc, self.poisson.timestamps, self.beta_rates,
+ *         # update_beta_rate(proc, self.poisson.timestamps, self.beta_rates,
  */
 
 static void __pyx_f_2gb_7kernels_11BuscaKernel_set_current_process(struct __pyx_obj_2gb_7kernels_BuscaKernel *__pyx_v_self, size_t __pyx_v_proc) {
@@ -3931,33 +3930,24 @@ static void __pyx_f_2gb_7kernels_11BuscaKernel_set_current_process(struct __pyx_
  * 
  *     cdef void set_current_process(self, size_t proc) nogil:
  *         self.poisson.set_current_process(proc)             # <<<<<<<<<<<<<<
- *         update_beta_rate(proc, self.poisson.timestamps, self.beta_rates,
- *                          self.dts)
+ *         # update_beta_rate(proc, self.poisson.timestamps, self.beta_rates,
+ *         #                  self.dts)
  */
   ((struct __pyx_vtabstruct_2gb_7kernels_PoissonKernel *)__pyx_v_self->poisson->__pyx_base.__pyx_vtab)->__pyx_base.set_current_process(((struct __pyx_obj_2gb_7kernels_AbstractKernel *)__pyx_v_self->poisson), __pyx_v_proc);
-
-  /* "gb/kernels.pyx":121
- *     cdef void set_current_process(self, size_t proc) nogil:
- *         self.poisson.set_current_process(proc)
- *         update_beta_rate(proc, self.poisson.timestamps, self.beta_rates,             # <<<<<<<<<<<<<<
- *                          self.dts)
- * 
- */
-  __pyx_f_2gb_7kernels_update_beta_rate(__pyx_v_proc, __pyx_v_self->poisson->timestamps, __pyx_v_self->beta_rates, __pyx_v_self->dts);
 
   /* "gb/kernels.pyx":119
  *         self.dts = IntToVector(n_proc, 100)
  * 
  *     cdef void set_current_process(self, size_t proc) nogil:             # <<<<<<<<<<<<<<
  *         self.poisson.set_current_process(proc)
- *         update_beta_rate(proc, self.poisson.timestamps, self.beta_rates,
+ *         # update_beta_rate(proc, self.poisson.timestamps, self.beta_rates,
  */
 
   /* function exit code */
 }
 
 /* "gb/kernels.pyx":124
- *                          self.dts)
+ *         #                  self.dts)
  * 
  *     cdef double background_probability(self, double dt) nogil:             # <<<<<<<<<<<<<<
  *         return self.poisson.background_probability(dt)
@@ -3978,7 +3968,7 @@ static double __pyx_f_2gb_7kernels_11BuscaKernel_background_probability(struct _
   goto __pyx_L0;
 
   /* "gb/kernels.pyx":124
- *                          self.dts)
+ *         #                  self.dts)
  * 
  *     cdef double background_probability(self, double dt) nogil:             # <<<<<<<<<<<<<<
  *         return self.poisson.background_probability(dt)

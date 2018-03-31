@@ -118,8 +118,8 @@ cdef class BuscaKernel(AbstractKernel):
 
     cdef void set_current_process(self, size_t proc) nogil:
         self.poisson.set_current_process(proc)
-        update_beta_rate(proc, self.poisson.timestamps, self.beta_rates,
-                         self.dts)
+        # update_beta_rate(proc, self.poisson.timestamps, self.beta_rates,
+        #                  self.dts)
 
     cdef double background_probability(self, double dt) nogil:
         return self.poisson.background_probability(dt)

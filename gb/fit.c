@@ -3171,7 +3171,7 @@ static PyObject *__pyx_pf_2gb_3fit_fit(CYTHON_UNUSED PyObject *__pyx_self, struc
  *         sampler = CollapsedGibbsSampler(base_sampler, n_proc)
  * 
  *     cdef PoissonKernel poisson = PoissonKernel(all_stamps, n_proc)             # <<<<<<<<<<<<<<
- *     cdef AbstractKernel kernel = TruncatedHawkesKernel(poisson, n_proc)
+ *     cdef AbstractKernel kernel = BuscaKernel(poisson, n_proc)
  * 
  */
   __pyx_t_2 = __Pyx_PyInt_FromSize_t(__pyx_v_n_proc); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 91, __pyx_L1_error)
@@ -3193,7 +3193,7 @@ static PyObject *__pyx_pf_2gb_3fit_fit(CYTHON_UNUSED PyObject *__pyx_self, struc
   /* "gb/fit.pyx":92
  * 
  *     cdef PoissonKernel poisson = PoissonKernel(all_stamps, n_proc)
- *     cdef AbstractKernel kernel = TruncatedHawkesKernel(poisson, n_proc)             # <<<<<<<<<<<<<<
+ *     cdef AbstractKernel kernel = BuscaKernel(poisson, n_proc)             # <<<<<<<<<<<<<<
  * 
  *     printf("Worker %lu starting\n", worker_id)
  */
@@ -3207,14 +3207,14 @@ static PyObject *__pyx_pf_2gb_3fit_fit(CYTHON_UNUSED PyObject *__pyx_self, struc
   __Pyx_GIVEREF(__pyx_t_2);
   PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_2);
   __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_2gb_7kernels_TruncatedHawkesKernel), __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 92, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_2gb_7kernels_BuscaKernel), __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 92, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_kernel = ((struct __pyx_obj_2gb_7kernels_AbstractKernel *)__pyx_t_2);
   __pyx_t_2 = 0;
 
   /* "gb/fit.pyx":94
- *     cdef AbstractKernel kernel = TruncatedHawkesKernel(poisson, n_proc)
+ *     cdef AbstractKernel kernel = BuscaKernel(poisson, n_proc)
  * 
  *     printf("Worker %lu starting\n", worker_id)             # <<<<<<<<<<<<<<
  *     with nogil:
