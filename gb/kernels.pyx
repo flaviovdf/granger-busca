@@ -6,9 +6,6 @@
 # cython: wraparound=False
 
 
-from gb.collections.inttovector cimport IntToVector
-from gb.sorting.largest cimport quick_median
-
 from libc.stdio cimport printf
 from libc.stdint cimport uint64_t
 from libc.stdlib cimport abort
@@ -18,38 +15,6 @@ import numpy as np
 
 cdef extern from 'math.h':
     double exp(double) nogil
-
-
-cdef inline double update_beta_rate(size_t proc_a, Timestamps all_stamps,
-                                    double[::1] beta_rates,
-                                    IntToVector dts) nogil:
-
-    cdef size_t n_proc = all_stamps.num_proc()
-    dts.reset()
-
-    cdef double ti, tp
-    cdef double max_ti = 0
-    cdef size_t n = all_stamps.get_size(proc_a)
-    cdef size_t *state_a
-    all_stamps.get_causes(proc_a, &state_a)
-    cdef double *stamps_a
-    all_stamps.get_stamps(proc_a, &stamps_a)
-    cdef size_t proc_b, i
-    for i in range(n):
-        ti = stamps_a[i]
-        proc_b = state_a[i]
-        if ti > max_ti:
-            max_ti = ti
-        if proc_b != n_proc:
-            tp = all_stamps.find_previous(proc_b, ti)
-            dts.push_back(proc_b, ti - tp)
-
-    for proc_b in range(n_proc):
-        if dts.get_size(proc_b) >= 1:
-            beta_rates[proc_b] = quick_median(dts.get_values(proc_b),
-                                              dts.get_size(proc_b))
-        else:
-            beta_rates[proc_b] = max_ti
 
 
 cdef class AbstractKernel(object):
@@ -63,9 +28,6 @@ cdef class AbstractKernel(object):
         printf('[gb.kernels] Do not use the AbstractKernel\n')
         abort()
     cdef double[::1] get_mu_rates(self) nogil:
-        printf('[gb.kernels] Do not use the AbstractKernel\n')
-        abort()
-    cdef double[::1] get_beta_rates(self) nogil:
         printf('[gb.kernels] Do not use the AbstractKernel\n')
         abort()
 
@@ -109,23 +71,19 @@ cdef class PoissonKernel(AbstractKernel):
         return self.mu
 
 
-cdef class BuscaKernel(AbstractKernel):
+cdef class WoldKernel(AbstractKernel):
 
     def __init__(self, PoissonKernel poisson, size_t n_proc):
         self.poisson = poisson
-        self.beta_rates = np.zeros(n_proc, dtype='d')
         self.dts = IntToVector(n_proc, 100)
 
     cdef void set_current_process(self, size_t proc) nogil:
         self.poisson.set_current_process(proc)
-        # update_beta_rate(proc, self.poisson.timestamps, self.beta_rates,
-        #                  self.dts)
 
     cdef double background_probability(self, double dt) nogil:
         return self.poisson.background_probability(dt)
 
     cdef double cross_rate(self, size_t i, size_t b, double alpha_ab) nogil:
-        cdef double E = 2.718281828459045
         cdef size_t a = self.poisson.current_process
 
         cdef double *stamps
@@ -149,17 +107,13 @@ cdef class BuscaKernel(AbstractKernel):
         else:
             tpp = 0
 
-        cdef double rate = alpha_ab / (self.beta_rates[b]/E + tp - tpp)
+        cdef double rate = alpha_ab / (tp - tpp)
         return rate
 
-    cdef double[::1] get_beta_rates(self) nogil:
-        return self.beta_rates
 
-
-cdef class TruncatedHawkesKernel(BuscaKernel):
+cdef class TruncatedHawkesKernel(WoldKernel):
 
     cdef double cross_rate(self, size_t i, size_t b, double alpha_ab) nogil:
-        cdef double E = 2.718281828459045
         cdef size_t a = self.poisson.current_process
         cdef double *stamps
         self.poisson.timestamps.get_stamps(a, &stamps)
@@ -173,5 +127,5 @@ cdef class TruncatedHawkesKernel(BuscaKernel):
         else:
             tp = self.poisson.timestamps.find_previous(b, t)
 
-        cdef double rate = alpha_ab / (self.beta_rates[b]/E + t - tp)
+        cdef double rate = alpha_ab / (t - tp)
         return rate

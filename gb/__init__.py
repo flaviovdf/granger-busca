@@ -100,22 +100,18 @@ class GrangerBusca(object):
 
         self.Alpha_ = {}
         self.mu_ = np.zeros(len(self.timestamps), dtype='d')
-        self.Beta_ = {}
         self.back_ = np.zeros(len(self.timestamps), dtype='uint64')
         self.curr_state_ = {}
         with futures.ThreadPoolExecutor(max_workers=self.num_jobs) as executor:
             jobs = [executor.submit(parallel_fit, worker_id)
                     for worker_id in range(self.num_jobs)]
             for job in jobs:
-                Alpha_, mu_, Beta_, back_, curr_state_ = job.result()
+                Alpha_, mu_, back_, curr_state_ = job.result()
                 self.Alpha_.update(Alpha_)
                 self.mu_ += mu_
-                self.Beta_.update(Beta_)
                 self.back_ += back_
                 self.curr_state_.update(curr_state_)
 
         self.Alpha_ = to_csr(self.Alpha_, self.n_proc, dtype='uint64')
-        self.Beta_ = to_csr(self.Beta_, self.n_proc)
-
         dt = time.time() - now
         self.training_time = dt

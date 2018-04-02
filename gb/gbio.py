@@ -18,10 +18,6 @@ def save_model(filename, granger_model):
                         Alpha_indptr=granger_model.Alpha_.indptr,
                         Alpha_shape=granger_model.Alpha_.shape,
                         alpha_prior=granger_model.alpha_prior,
-                        Beta_data=granger_model.Beta_.data,
-                        Beta_indices=granger_model.Beta_.indices,
-                        Beta_indptr=granger_model.Beta_.indptr,
-                        Beta_shape=granger_model.Beta_.shape,
                         mu_=granger_model.mu_,
                         num_iter=granger_model.num_iter,
                         metropolis=granger_model.metropolis,
@@ -37,10 +33,6 @@ def load_model(filename):
                                  loader['Alpha_indices'],
                                  loader['Alpha_indptr']),
                                  shape=loader['Alpha_shape'])
-    model.Beta_ = sp.csr_matrix((loader['Beta_data'],
-                                 loader['Beta_indices'],
-                                 loader['Beta_indptr']),
-                                shape=loader['Beta_shape'])
     model.alpha_prior = loader['alpha_prior']
     model.mu_ = loader['mu_']
     model.num_iter = loader['num_iter']

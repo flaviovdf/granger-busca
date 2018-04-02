@@ -8,8 +8,8 @@ with open('ticks.dat') as data:
     for l in data:
         timestamps.append([float(x) for x in l.split()[1:]])
 
-granger_model = GrangerBusca(alpha_prior=0.1, num_iter=300)
+granger_model = GrangerBusca(alpha_prior=1/len(timestamps), num_iter=300)
 
 granger_model.fit(timestamps)
 print(granger_model.training_time)
-save_model('first_model01.npz', granger_model)
+save_model('first_model_beta0.npz', granger_model)

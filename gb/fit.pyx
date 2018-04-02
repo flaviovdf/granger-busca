@@ -10,8 +10,8 @@ from cython cimport parallel
 
 from gb.kernels cimport AbstractKernel
 from gb.kernels cimport PoissonKernel
-from gb.kernels cimport BuscaKernel
 from gb.kernels cimport TruncatedHawkesKernel
+from gb.kernels cimport WoldKernel
 
 from gb.samplers cimport AbstractSampler
 from gb.samplers cimport BaseSampler
@@ -89,7 +89,7 @@ def fit(Timestamps all_stamps, SloppyCounter sloppy, double alpha_prior,
         sampler = CollapsedGibbsSampler(base_sampler, n_proc)
 
     cdef PoissonKernel poisson = PoissonKernel(all_stamps, n_proc)
-    cdef AbstractKernel kernel = BuscaKernel(poisson, n_proc)
+    cdef AbstractKernel kernel = WoldKernel(poisson, n_proc)
 
     printf("Worker %lu starting\n", worker_id)
     with nogil:
@@ -98,7 +98,6 @@ def fit(Timestamps all_stamps, SloppyCounter sloppy, double alpha_prior,
     printf("Worker %lu done\n", worker_id)
 
     cdef dict Alpha = {}
-    cdef dict Beta = {}
     cdef dict curr_state = {}
 
     cdef size_t a, b, i, j
@@ -111,7 +110,6 @@ def fit(Timestamps all_stamps, SloppyCounter sloppy, double alpha_prior,
         n = all_stamps.get_size(a)
         all_stamps.get_causes(a, &causes)
         Alpha[a] = {}
-        Beta[a] = {}
         curr_state[a] = np.zeros(n, dtype='uint64', order='C')
         for j in range(n):
             b = causes[j]
@@ -123,10 +121,5 @@ def fit(Timestamps all_stamps, SloppyCounter sloppy, double alpha_prior,
             else:
                 num_background[a] += 1
 
-        kernel.set_current_process(a)
-        for b in range(n_proc):
-            if b in Alpha[a]:
-                Beta[a][b] = kernel.get_beta_rates()[b]
-
-    return Alpha, np.asanyarray(poisson.get_mu_rates()), Beta, \
+    return Alpha, np.asanyarray(poisson.get_mu_rates()), \
         np.asanyarray(num_background), curr_state

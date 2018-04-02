@@ -857,7 +857,7 @@ struct __pyx_obj_2gb_11collections_5table_RobinHoodHash;
 struct __pyx_obj_2gb_6stamps_Timestamps;
 struct __pyx_obj_2gb_7kernels_AbstractKernel;
 struct __pyx_obj_2gb_7kernels_PoissonKernel;
-struct __pyx_obj_2gb_7kernels_BuscaKernel;
+struct __pyx_obj_2gb_7kernels_WoldKernel;
 struct __pyx_obj_2gb_7kernels_TruncatedHawkesKernel;
 struct __pyx_obj_2gb_9randomkit_6random_RNG;
 struct __pyx_obj_2gb_6sloppy_SloppyCounter;
@@ -1008,7 +1008,7 @@ struct __pyx_obj_2gb_7kernels_AbstractKernel {
 };
 
 
-/* "gb/kernels.pxd":23
+/* "gb/kernels.pxd":22
  * 
  * 
  * cdef class PoissonKernel(AbstractKernel):             # <<<<<<<<<<<<<<
@@ -1023,29 +1023,28 @@ struct __pyx_obj_2gb_7kernels_PoissonKernel {
 };
 
 
-/* "gb/kernels.pxd":29
+/* "gb/kernels.pxd":28
  * 
  * 
- * cdef class BuscaKernel(AbstractKernel):             # <<<<<<<<<<<<<<
+ * cdef class WoldKernel(AbstractKernel):             # <<<<<<<<<<<<<<
  *     cdef PoissonKernel poisson
- *     cdef double[::1] beta_rates
+ *     cdef IntToVector dts
  */
-struct __pyx_obj_2gb_7kernels_BuscaKernel {
+struct __pyx_obj_2gb_7kernels_WoldKernel {
   struct __pyx_obj_2gb_7kernels_AbstractKernel __pyx_base;
   struct __pyx_obj_2gb_7kernels_PoissonKernel *poisson;
-  __Pyx_memviewslice beta_rates;
   struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *dts;
 };
 
 
-/* "gb/kernels.pxd":34
+/* "gb/kernels.pxd":32
  *     cdef IntToVector dts
  * 
- * cdef class TruncatedHawkesKernel(BuscaKernel):             # <<<<<<<<<<<<<<
+ * cdef class TruncatedHawkesKernel(WoldKernel):             # <<<<<<<<<<<<<<
  *     pass
  */
 struct __pyx_obj_2gb_7kernels_TruncatedHawkesKernel {
-  struct __pyx_obj_2gb_7kernels_BuscaKernel __pyx_base;
+  struct __pyx_obj_2gb_7kernels_WoldKernel __pyx_base;
 };
 
 
@@ -1323,13 +1322,12 @@ struct __pyx_vtabstruct_2gb_7kernels_AbstractKernel {
   void (*set_current_process)(struct __pyx_obj_2gb_7kernels_AbstractKernel *, size_t);
   double (*background_probability)(struct __pyx_obj_2gb_7kernels_AbstractKernel *, double);
   double (*cross_rate)(struct __pyx_obj_2gb_7kernels_AbstractKernel *, size_t, size_t, double);
-  __Pyx_memviewslice (*get_beta_rates)(struct __pyx_obj_2gb_7kernels_AbstractKernel *);
   __Pyx_memviewslice (*get_mu_rates)(struct __pyx_obj_2gb_7kernels_AbstractKernel *);
 };
 static struct __pyx_vtabstruct_2gb_7kernels_AbstractKernel *__pyx_vtabptr_2gb_7kernels_AbstractKernel;
 
 
-/* "gb/kernels.pxd":23
+/* "gb/kernels.pxd":22
  * 
  * 
  * cdef class PoissonKernel(AbstractKernel):             # <<<<<<<<<<<<<<
@@ -1343,29 +1341,29 @@ struct __pyx_vtabstruct_2gb_7kernels_PoissonKernel {
 static struct __pyx_vtabstruct_2gb_7kernels_PoissonKernel *__pyx_vtabptr_2gb_7kernels_PoissonKernel;
 
 
-/* "gb/kernels.pxd":29
+/* "gb/kernels.pxd":28
  * 
  * 
- * cdef class BuscaKernel(AbstractKernel):             # <<<<<<<<<<<<<<
+ * cdef class WoldKernel(AbstractKernel):             # <<<<<<<<<<<<<<
  *     cdef PoissonKernel poisson
- *     cdef double[::1] beta_rates
+ *     cdef IntToVector dts
  */
 
-struct __pyx_vtabstruct_2gb_7kernels_BuscaKernel {
+struct __pyx_vtabstruct_2gb_7kernels_WoldKernel {
   struct __pyx_vtabstruct_2gb_7kernels_AbstractKernel __pyx_base;
 };
-static struct __pyx_vtabstruct_2gb_7kernels_BuscaKernel *__pyx_vtabptr_2gb_7kernels_BuscaKernel;
+static struct __pyx_vtabstruct_2gb_7kernels_WoldKernel *__pyx_vtabptr_2gb_7kernels_WoldKernel;
 
 
-/* "gb/kernels.pxd":34
+/* "gb/kernels.pxd":32
  *     cdef IntToVector dts
  * 
- * cdef class TruncatedHawkesKernel(BuscaKernel):             # <<<<<<<<<<<<<<
+ * cdef class TruncatedHawkesKernel(WoldKernel):             # <<<<<<<<<<<<<<
  *     pass
  */
 
 struct __pyx_vtabstruct_2gb_7kernels_TruncatedHawkesKernel {
-  struct __pyx_vtabstruct_2gb_7kernels_BuscaKernel __pyx_base;
+  struct __pyx_vtabstruct_2gb_7kernels_WoldKernel __pyx_base;
 };
 static struct __pyx_vtabstruct_2gb_7kernels_TruncatedHawkesKernel *__pyx_vtabptr_2gb_7kernels_TruncatedHawkesKernel;
 
@@ -2124,7 +2122,7 @@ static PyTypeObject *__pyx_ptype_2gb_6stamps_Timestamps = 0;
 /* Module declarations from 'gb.kernels' */
 static PyTypeObject *__pyx_ptype_2gb_7kernels_AbstractKernel = 0;
 static PyTypeObject *__pyx_ptype_2gb_7kernels_PoissonKernel = 0;
-static PyTypeObject *__pyx_ptype_2gb_7kernels_BuscaKernel = 0;
+static PyTypeObject *__pyx_ptype_2gb_7kernels_WoldKernel = 0;
 static PyTypeObject *__pyx_ptype_2gb_7kernels_TruncatedHawkesKernel = 0;
 
 /* Module declarations from 'gb.randomkit.random' */
@@ -21994,12 +21992,12 @@ static int __pyx_pymod_exec_samplers(PyObject *__pyx_pyinit_module)
   __pyx_vtabptr_2gb_6stamps_Timestamps = (struct __pyx_vtabstruct_2gb_6stamps_Timestamps*)__Pyx_GetVtable(__pyx_ptype_2gb_6stamps_Timestamps->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_6stamps_Timestamps)) __PYX_ERR(5, 12, __pyx_L1_error)
   __pyx_ptype_2gb_7kernels_AbstractKernel = __Pyx_ImportType("gb.kernels", "AbstractKernel", sizeof(struct __pyx_obj_2gb_7kernels_AbstractKernel), 1); if (unlikely(!__pyx_ptype_2gb_7kernels_AbstractKernel)) __PYX_ERR(6, 15, __pyx_L1_error)
   __pyx_vtabptr_2gb_7kernels_AbstractKernel = (struct __pyx_vtabstruct_2gb_7kernels_AbstractKernel*)__Pyx_GetVtable(__pyx_ptype_2gb_7kernels_AbstractKernel->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_7kernels_AbstractKernel)) __PYX_ERR(6, 15, __pyx_L1_error)
-  __pyx_ptype_2gb_7kernels_PoissonKernel = __Pyx_ImportType("gb.kernels", "PoissonKernel", sizeof(struct __pyx_obj_2gb_7kernels_PoissonKernel), 1); if (unlikely(!__pyx_ptype_2gb_7kernels_PoissonKernel)) __PYX_ERR(6, 23, __pyx_L1_error)
-  __pyx_vtabptr_2gb_7kernels_PoissonKernel = (struct __pyx_vtabstruct_2gb_7kernels_PoissonKernel*)__Pyx_GetVtable(__pyx_ptype_2gb_7kernels_PoissonKernel->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_7kernels_PoissonKernel)) __PYX_ERR(6, 23, __pyx_L1_error)
-  __pyx_ptype_2gb_7kernels_BuscaKernel = __Pyx_ImportType("gb.kernels", "BuscaKernel", sizeof(struct __pyx_obj_2gb_7kernels_BuscaKernel), 1); if (unlikely(!__pyx_ptype_2gb_7kernels_BuscaKernel)) __PYX_ERR(6, 29, __pyx_L1_error)
-  __pyx_vtabptr_2gb_7kernels_BuscaKernel = (struct __pyx_vtabstruct_2gb_7kernels_BuscaKernel*)__Pyx_GetVtable(__pyx_ptype_2gb_7kernels_BuscaKernel->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_7kernels_BuscaKernel)) __PYX_ERR(6, 29, __pyx_L1_error)
-  __pyx_ptype_2gb_7kernels_TruncatedHawkesKernel = __Pyx_ImportType("gb.kernels", "TruncatedHawkesKernel", sizeof(struct __pyx_obj_2gb_7kernels_TruncatedHawkesKernel), 1); if (unlikely(!__pyx_ptype_2gb_7kernels_TruncatedHawkesKernel)) __PYX_ERR(6, 34, __pyx_L1_error)
-  __pyx_vtabptr_2gb_7kernels_TruncatedHawkesKernel = (struct __pyx_vtabstruct_2gb_7kernels_TruncatedHawkesKernel*)__Pyx_GetVtable(__pyx_ptype_2gb_7kernels_TruncatedHawkesKernel->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_7kernels_TruncatedHawkesKernel)) __PYX_ERR(6, 34, __pyx_L1_error)
+  __pyx_ptype_2gb_7kernels_PoissonKernel = __Pyx_ImportType("gb.kernels", "PoissonKernel", sizeof(struct __pyx_obj_2gb_7kernels_PoissonKernel), 1); if (unlikely(!__pyx_ptype_2gb_7kernels_PoissonKernel)) __PYX_ERR(6, 22, __pyx_L1_error)
+  __pyx_vtabptr_2gb_7kernels_PoissonKernel = (struct __pyx_vtabstruct_2gb_7kernels_PoissonKernel*)__Pyx_GetVtable(__pyx_ptype_2gb_7kernels_PoissonKernel->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_7kernels_PoissonKernel)) __PYX_ERR(6, 22, __pyx_L1_error)
+  __pyx_ptype_2gb_7kernels_WoldKernel = __Pyx_ImportType("gb.kernels", "WoldKernel", sizeof(struct __pyx_obj_2gb_7kernels_WoldKernel), 1); if (unlikely(!__pyx_ptype_2gb_7kernels_WoldKernel)) __PYX_ERR(6, 28, __pyx_L1_error)
+  __pyx_vtabptr_2gb_7kernels_WoldKernel = (struct __pyx_vtabstruct_2gb_7kernels_WoldKernel*)__Pyx_GetVtable(__pyx_ptype_2gb_7kernels_WoldKernel->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_7kernels_WoldKernel)) __PYX_ERR(6, 28, __pyx_L1_error)
+  __pyx_ptype_2gb_7kernels_TruncatedHawkesKernel = __Pyx_ImportType("gb.kernels", "TruncatedHawkesKernel", sizeof(struct __pyx_obj_2gb_7kernels_TruncatedHawkesKernel), 1); if (unlikely(!__pyx_ptype_2gb_7kernels_TruncatedHawkesKernel)) __PYX_ERR(6, 32, __pyx_L1_error)
+  __pyx_vtabptr_2gb_7kernels_TruncatedHawkesKernel = (struct __pyx_vtabstruct_2gb_7kernels_TruncatedHawkesKernel*)__Pyx_GetVtable(__pyx_ptype_2gb_7kernels_TruncatedHawkesKernel->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_7kernels_TruncatedHawkesKernel)) __PYX_ERR(6, 32, __pyx_L1_error)
   __pyx_ptype_2gb_9randomkit_6random_RNG = __Pyx_ImportType("gb.randomkit.random", "RNG", sizeof(struct __pyx_obj_2gb_9randomkit_6random_RNG), 1); if (unlikely(!__pyx_ptype_2gb_9randomkit_6random_RNG)) __PYX_ERR(7, 17, __pyx_L1_error)
   __pyx_vtabptr_2gb_9randomkit_6random_RNG = (struct __pyx_vtabstruct_2gb_9randomkit_6random_RNG*)__Pyx_GetVtable(__pyx_ptype_2gb_9randomkit_6random_RNG->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_9randomkit_6random_RNG)) __PYX_ERR(7, 17, __pyx_L1_error)
   __pyx_ptype_2gb_6sloppy_SloppyCounter = __Pyx_ImportType("gb.sloppy", "SloppyCounter", sizeof(struct __pyx_obj_2gb_6sloppy_SloppyCounter), 1); if (unlikely(!__pyx_ptype_2gb_6sloppy_SloppyCounter)) __PYX_ERR(8, 14, __pyx_L1_error)
