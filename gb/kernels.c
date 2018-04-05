@@ -1198,7 +1198,7 @@ struct __pyx_vtabstruct_2gb_7kernels_PoissonKernel {
 static struct __pyx_vtabstruct_2gb_7kernels_PoissonKernel *__pyx_vtabptr_2gb_7kernels_PoissonKernel;
 
 
-/* "gb/kernels.pyx":74
+/* "gb/kernels.pyx":76
  * 
  * 
  * cdef class WoldKernel(AbstractKernel):             # <<<<<<<<<<<<<<
@@ -1212,7 +1212,7 @@ struct __pyx_vtabstruct_2gb_7kernels_WoldKernel {
 static struct __pyx_vtabstruct_2gb_7kernels_WoldKernel *__pyx_vtabptr_2gb_7kernels_WoldKernel;
 
 
-/* "gb/kernels.pyx":115
+/* "gb/kernels.pyx":116
  * 
  * 
  * cdef class TruncatedHawkesKernel(WoldKernel):             # <<<<<<<<<<<<<<
@@ -2858,10 +2858,11 @@ static void __pyx_f_2gb_7kernels_13PoissonKernel_set_current_process(struct __py
   size_t __pyx_v_n_proc;
   size_t __pyx_v_n;
   size_t *__pyx_v_causes;
+  double *__pyx_v_stamps;
   size_t __pyx_v_i;
   double __pyx_v_count_background;
-  double __pyx_v_T;
-  double __pyx_v_rate;
+  double __pyx_v_prev_poisson;
+  double __pyx_v_dts;
   size_t __pyx_t_1;
   size_t __pyx_t_2;
   int __pyx_t_3;
@@ -2898,118 +2899,123 @@ static void __pyx_f_2gb_7kernels_13PoissonKernel_set_current_process(struct __py
  *         cdef size_t *causes
  *         self.timestamps.get_causes(proc, &causes)             # <<<<<<<<<<<<<<
  * 
- *         cdef size_t i
+ *         cdef double *stamps
  */
   ((struct __pyx_vtabstruct_2gb_6stamps_Timestamps *)__pyx_v_self->timestamps->__pyx_vtab)->get_causes(__pyx_v_self->timestamps, __pyx_v_proc, (&__pyx_v_causes));
 
   /* "gb/kernels.pyx":50
  * 
+ *         cdef double *stamps
+ *         self.timestamps.get_stamps(proc, &stamps)             # <<<<<<<<<<<<<<
+ * 
+ *         cdef size_t i
+ */
+  ((struct __pyx_vtabstruct_2gb_6stamps_Timestamps *)__pyx_v_self->timestamps->__pyx_vtab)->get_stamps(__pyx_v_self->timestamps, __pyx_v_proc, (&__pyx_v_stamps));
+
+  /* "gb/kernels.pyx":53
+ * 
  *         cdef size_t i
  *         cdef double count_background = 0             # <<<<<<<<<<<<<<
- *         for i in range(n):
- *             if causes[i] == n_proc:
+ *         cdef double prev_poisson = -1
+ *         cdef double dts
  */
   __pyx_v_count_background = 0.0;
 
-  /* "gb/kernels.pyx":51
+  /* "gb/kernels.pyx":54
  *         cdef size_t i
  *         cdef double count_background = 0
+ *         cdef double prev_poisson = -1             # <<<<<<<<<<<<<<
+ *         cdef double dts
+ *         for i in range(n):
+ */
+  __pyx_v_prev_poisson = -1.0;
+
+  /* "gb/kernels.pyx":56
+ *         cdef double prev_poisson = -1
+ *         cdef double dts
  *         for i in range(n):             # <<<<<<<<<<<<<<
  *             if causes[i] == n_proc:
- *                 count_background += 1
+ *                 if prev_poisson != -1:
  */
   __pyx_t_1 = __pyx_v_n;
   for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
     __pyx_v_i = __pyx_t_2;
 
-    /* "gb/kernels.pyx":52
- *         cdef double count_background = 0
+    /* "gb/kernels.pyx":57
+ *         cdef double dts
  *         for i in range(n):
  *             if causes[i] == n_proc:             # <<<<<<<<<<<<<<
- *                 count_background += 1
- * 
+ *                 if prev_poisson != -1:
+ *                     count_background += 1
  */
     __pyx_t_3 = (((__pyx_v_causes[__pyx_v_i]) == __pyx_v_n_proc) != 0);
     if (__pyx_t_3) {
 
-      /* "gb/kernels.pyx":53
+      /* "gb/kernels.pyx":58
  *         for i in range(n):
  *             if causes[i] == n_proc:
- *                 count_background += 1             # <<<<<<<<<<<<<<
- * 
- *         cdef double T = self.timestamps.get_stamp(proc, n-1)
+ *                 if prev_poisson != -1:             # <<<<<<<<<<<<<<
+ *                     count_background += 1
+ *                     dts += stamps[i] - prev_poisson
  */
-      __pyx_v_count_background = (__pyx_v_count_background + 1.0);
+      __pyx_t_3 = ((__pyx_v_prev_poisson != -1.0) != 0);
+      if (__pyx_t_3) {
 
-      /* "gb/kernels.pyx":52
- *         cdef double count_background = 0
+        /* "gb/kernels.pyx":59
+ *             if causes[i] == n_proc:
+ *                 if prev_poisson != -1:
+ *                     count_background += 1             # <<<<<<<<<<<<<<
+ *                     dts += stamps[i] - prev_poisson
+ *                 prev_poisson = stamps[i]
+ */
+        __pyx_v_count_background = (__pyx_v_count_background + 1.0);
+
+        /* "gb/kernels.pyx":60
+ *                 if prev_poisson != -1:
+ *                     count_background += 1
+ *                     dts += stamps[i] - prev_poisson             # <<<<<<<<<<<<<<
+ *                 prev_poisson = stamps[i]
+ * 
+ */
+        __pyx_v_dts = (__pyx_v_dts + ((__pyx_v_stamps[__pyx_v_i]) - __pyx_v_prev_poisson));
+
+        /* "gb/kernels.pyx":58
+ *         for i in range(n):
+ *             if causes[i] == n_proc:
+ *                 if prev_poisson != -1:             # <<<<<<<<<<<<<<
+ *                     count_background += 1
+ *                     dts += stamps[i] - prev_poisson
+ */
+      }
+
+      /* "gb/kernels.pyx":61
+ *                     count_background += 1
+ *                     dts += stamps[i] - prev_poisson
+ *                 prev_poisson = stamps[i]             # <<<<<<<<<<<<<<
+ * 
+ *         self.mu[proc] = count_background / dts
+ */
+      __pyx_v_prev_poisson = (__pyx_v_stamps[__pyx_v_i]);
+
+      /* "gb/kernels.pyx":57
+ *         cdef double dts
  *         for i in range(n):
  *             if causes[i] == n_proc:             # <<<<<<<<<<<<<<
- *                 count_background += 1
- * 
+ *                 if prev_poisson != -1:
+ *                     count_background += 1
  */
     }
   }
 
-  /* "gb/kernels.pyx":55
- *                 count_background += 1
+  /* "gb/kernels.pyx":63
+ *                 prev_poisson = stamps[i]
  * 
- *         cdef double T = self.timestamps.get_stamp(proc, n-1)             # <<<<<<<<<<<<<<
- *         cdef double rate
- *         if T == 0:
- */
-  __pyx_v_T = ((struct __pyx_vtabstruct_2gb_6stamps_Timestamps *)__pyx_v_self->timestamps->__pyx_vtab)->get_stamp(__pyx_v_self->timestamps, __pyx_v_proc, (__pyx_v_n - 1));
-
-  /* "gb/kernels.pyx":57
- *         cdef double T = self.timestamps.get_stamp(proc, n-1)
- *         cdef double rate
- *         if T == 0:             # <<<<<<<<<<<<<<
- *             rate = 0
- *         else:
- */
-  __pyx_t_3 = ((__pyx_v_T == 0.0) != 0);
-  if (__pyx_t_3) {
-
-    /* "gb/kernels.pyx":58
- *         cdef double rate
- *         if T == 0:
- *             rate = 0             # <<<<<<<<<<<<<<
- *         else:
- *             rate = (<double>count_background) / T
- */
-    __pyx_v_rate = 0.0;
-
-    /* "gb/kernels.pyx":57
- *         cdef double T = self.timestamps.get_stamp(proc, n-1)
- *         cdef double rate
- *         if T == 0:             # <<<<<<<<<<<<<<
- *             rate = 0
- *         else:
- */
-    goto __pyx_L6;
-  }
-
-  /* "gb/kernels.pyx":60
- *             rate = 0
- *         else:
- *             rate = (<double>count_background) / T             # <<<<<<<<<<<<<<
- *         self.mu[proc] = rate
- * 
- */
-  /*else*/ {
-    __pyx_v_rate = (((double)__pyx_v_count_background) / __pyx_v_T);
-  }
-  __pyx_L6:;
-
-  /* "gb/kernels.pyx":61
- *         else:
- *             rate = (<double>count_background) / T
- *         self.mu[proc] = rate             # <<<<<<<<<<<<<<
+ *         self.mu[proc] = count_background / dts             # <<<<<<<<<<<<<<
  * 
  *     cdef double background_probability(self, double dt) nogil:
  */
   __pyx_t_1 = __pyx_v_proc;
-  *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_self->mu.data) + __pyx_t_1)) )) = __pyx_v_rate;
+  *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_self->mu.data) + __pyx_t_1)) )) = (__pyx_v_count_background / __pyx_v_dts);
 
   /* "gb/kernels.pyx":41
  *         self.mu = np.zeros(n_proc, dtype='d')
@@ -3022,8 +3028,8 @@ static void __pyx_f_2gb_7kernels_13PoissonKernel_set_current_process(struct __py
   /* function exit code */
 }
 
-/* "gb/kernels.pyx":63
- *         self.mu[proc] = rate
+/* "gb/kernels.pyx":65
+ *         self.mu[proc] = count_background / dts
  * 
  *     cdef double background_probability(self, double dt) nogil:             # <<<<<<<<<<<<<<
  *         cdef double mu_rate = self.mu[self.current_process]
@@ -3035,7 +3041,7 @@ static double __pyx_f_2gb_7kernels_13PoissonKernel_background_probability(struct
   double __pyx_r;
   size_t __pyx_t_1;
 
-  /* "gb/kernels.pyx":64
+  /* "gb/kernels.pyx":66
  * 
  *     cdef double background_probability(self, double dt) nogil:
  *         cdef double mu_rate = self.mu[self.current_process]             # <<<<<<<<<<<<<<
@@ -3045,7 +3051,7 @@ static double __pyx_f_2gb_7kernels_13PoissonKernel_background_probability(struct
   __pyx_t_1 = __pyx_v_self->current_process;
   __pyx_v_mu_rate = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_self->mu.data) + __pyx_t_1)) )));
 
-  /* "gb/kernels.pyx":65
+  /* "gb/kernels.pyx":67
  *     cdef double background_probability(self, double dt) nogil:
  *         cdef double mu_rate = self.mu[self.current_process]
  *         return mu_rate * dt * exp(-mu_rate * dt)             # <<<<<<<<<<<<<<
@@ -3055,8 +3061,8 @@ static double __pyx_f_2gb_7kernels_13PoissonKernel_background_probability(struct
   __pyx_r = ((__pyx_v_mu_rate * __pyx_v_dt) * exp(((-__pyx_v_mu_rate) * __pyx_v_dt)));
   goto __pyx_L0;
 
-  /* "gb/kernels.pyx":63
- *         self.mu[proc] = rate
+  /* "gb/kernels.pyx":65
+ *         self.mu[proc] = count_background / dts
  * 
  *     cdef double background_probability(self, double dt) nogil:             # <<<<<<<<<<<<<<
  *         cdef double mu_rate = self.mu[self.current_process]
@@ -3068,7 +3074,7 @@ static double __pyx_f_2gb_7kernels_13PoissonKernel_background_probability(struct
   return __pyx_r;
 }
 
-/* "gb/kernels.pyx":67
+/* "gb/kernels.pyx":69
  *         return mu_rate * dt * exp(-mu_rate * dt)
  * 
  *     cdef double cross_rate(self, size_t i, size_t b, double alpha_ab) nogil:             # <<<<<<<<<<<<<<
@@ -3079,7 +3085,7 @@ static double __pyx_f_2gb_7kernels_13PoissonKernel_background_probability(struct
 static double __pyx_f_2gb_7kernels_13PoissonKernel_cross_rate(CYTHON_UNUSED struct __pyx_obj_2gb_7kernels_PoissonKernel *__pyx_v_self, CYTHON_UNUSED size_t __pyx_v_i, CYTHON_UNUSED size_t __pyx_v_b, CYTHON_UNUSED double __pyx_v_alpha_ab) {
   double __pyx_r;
 
-  /* "gb/kernels.pyx":68
+  /* "gb/kernels.pyx":70
  * 
  *     cdef double cross_rate(self, size_t i, size_t b, double alpha_ab) nogil:
  *         return 0.0             # <<<<<<<<<<<<<<
@@ -3089,7 +3095,7 @@ static double __pyx_f_2gb_7kernels_13PoissonKernel_cross_rate(CYTHON_UNUSED stru
   __pyx_r = 0.0;
   goto __pyx_L0;
 
-  /* "gb/kernels.pyx":67
+  /* "gb/kernels.pyx":69
  *         return mu_rate * dt * exp(-mu_rate * dt)
  * 
  *     cdef double cross_rate(self, size_t i, size_t b, double alpha_ab) nogil:             # <<<<<<<<<<<<<<
@@ -3102,7 +3108,7 @@ static double __pyx_f_2gb_7kernels_13PoissonKernel_cross_rate(CYTHON_UNUSED stru
   return __pyx_r;
 }
 
-/* "gb/kernels.pyx":70
+/* "gb/kernels.pyx":72
  *         return 0.0
  * 
  *     cdef double[::1] get_mu_rates(self) nogil:             # <<<<<<<<<<<<<<
@@ -3113,7 +3119,7 @@ static double __pyx_f_2gb_7kernels_13PoissonKernel_cross_rate(CYTHON_UNUSED stru
 static __Pyx_memviewslice __pyx_f_2gb_7kernels_13PoissonKernel_get_mu_rates(struct __pyx_obj_2gb_7kernels_PoissonKernel *__pyx_v_self) {
   __Pyx_memviewslice __pyx_r = { 0, 0, { 0 }, { 0 }, { 0 } };
 
-  /* "gb/kernels.pyx":71
+  /* "gb/kernels.pyx":73
  * 
  *     cdef double[::1] get_mu_rates(self) nogil:
  *         return self.mu             # <<<<<<<<<<<<<<
@@ -3124,7 +3130,7 @@ static __Pyx_memviewslice __pyx_f_2gb_7kernels_13PoissonKernel_get_mu_rates(stru
   __pyx_r = __pyx_v_self->mu;
   goto __pyx_L0;
 
-  /* "gb/kernels.pyx":70
+  /* "gb/kernels.pyx":72
  *         return 0.0
  * 
  *     cdef double[::1] get_mu_rates(self) nogil:             # <<<<<<<<<<<<<<
@@ -3437,7 +3443,7 @@ static PyObject *__pyx_pf_2gb_7kernels_13PoissonKernel_4__setstate_cython__(stru
   return __pyx_r;
 }
 
-/* "gb/kernels.pyx":76
+/* "gb/kernels.pyx":78
  * cdef class WoldKernel(AbstractKernel):
  * 
  *     def __init__(self, PoissonKernel poisson, size_t n_proc):             # <<<<<<<<<<<<<<
@@ -3476,11 +3482,11 @@ static int __pyx_pw_2gb_7kernels_10WoldKernel_1__init__(PyObject *__pyx_v_self, 
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_n_proc)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__init__", 1, 2, 2, 1); __PYX_ERR(0, 76, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__init__", 1, 2, 2, 1); __PYX_ERR(0, 78, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 76, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 78, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -3489,17 +3495,17 @@ static int __pyx_pw_2gb_7kernels_10WoldKernel_1__init__(PyObject *__pyx_v_self, 
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
     __pyx_v_poisson = ((struct __pyx_obj_2gb_7kernels_PoissonKernel *)values[0]);
-    __pyx_v_n_proc = __Pyx_PyInt_As_size_t(values[1]); if (unlikely((__pyx_v_n_proc == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 76, __pyx_L3_error)
+    __pyx_v_n_proc = __Pyx_PyInt_As_size_t(values[1]); if (unlikely((__pyx_v_n_proc == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 78, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__init__", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 76, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__init__", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 78, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gb.kernels.WoldKernel.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_poisson), __pyx_ptype_2gb_7kernels_PoissonKernel, 1, "poisson", 0))) __PYX_ERR(0, 76, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_poisson), __pyx_ptype_2gb_7kernels_PoissonKernel, 1, "poisson", 0))) __PYX_ERR(0, 78, __pyx_L1_error)
   __pyx_r = __pyx_pf_2gb_7kernels_10WoldKernel___init__(((struct __pyx_obj_2gb_7kernels_WoldKernel *)__pyx_v_self), __pyx_v_poisson, __pyx_v_n_proc);
 
   /* function exit code */
@@ -3518,7 +3524,7 @@ static int __pyx_pf_2gb_7kernels_10WoldKernel___init__(struct __pyx_obj_2gb_7ker
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("__init__", 0);
 
-  /* "gb/kernels.pyx":77
+  /* "gb/kernels.pyx":79
  * 
  *     def __init__(self, PoissonKernel poisson, size_t n_proc):
  *         self.poisson = poisson             # <<<<<<<<<<<<<<
@@ -3531,16 +3537,16 @@ static int __pyx_pf_2gb_7kernels_10WoldKernel___init__(struct __pyx_obj_2gb_7ker
   __Pyx_DECREF(((PyObject *)__pyx_v_self->poisson));
   __pyx_v_self->poisson = __pyx_v_poisson;
 
-  /* "gb/kernels.pyx":78
+  /* "gb/kernels.pyx":80
  *     def __init__(self, PoissonKernel poisson, size_t n_proc):
  *         self.poisson = poisson
  *         self.dts = IntToVector(n_proc, 100)             # <<<<<<<<<<<<<<
  * 
  *     cdef void set_current_process(self, size_t proc) nogil:
  */
-  __pyx_t_1 = __Pyx_PyInt_FromSize_t(__pyx_v_n_proc); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 78, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_FromSize_t(__pyx_v_n_proc); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 80, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 78, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 80, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
@@ -3548,7 +3554,7 @@ static int __pyx_pf_2gb_7kernels_10WoldKernel___init__(struct __pyx_obj_2gb_7ker
   __Pyx_GIVEREF(__pyx_int_100);
   PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_int_100);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_2gb_11collections_11inttovector_IntToVector), __pyx_t_2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 78, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_2gb_11collections_11inttovector_IntToVector), __pyx_t_2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 80, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_GIVEREF(__pyx_t_1);
@@ -3557,7 +3563,7 @@ static int __pyx_pf_2gb_7kernels_10WoldKernel___init__(struct __pyx_obj_2gb_7ker
   __pyx_v_self->dts = ((struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "gb/kernels.pyx":76
+  /* "gb/kernels.pyx":78
  * cdef class WoldKernel(AbstractKernel):
  * 
  *     def __init__(self, PoissonKernel poisson, size_t n_proc):             # <<<<<<<<<<<<<<
@@ -3578,7 +3584,7 @@ static int __pyx_pf_2gb_7kernels_10WoldKernel___init__(struct __pyx_obj_2gb_7ker
   return __pyx_r;
 }
 
-/* "gb/kernels.pyx":80
+/* "gb/kernels.pyx":82
  *         self.dts = IntToVector(n_proc, 100)
  * 
  *     cdef void set_current_process(self, size_t proc) nogil:             # <<<<<<<<<<<<<<
@@ -3588,7 +3594,7 @@ static int __pyx_pf_2gb_7kernels_10WoldKernel___init__(struct __pyx_obj_2gb_7ker
 
 static void __pyx_f_2gb_7kernels_10WoldKernel_set_current_process(struct __pyx_obj_2gb_7kernels_WoldKernel *__pyx_v_self, size_t __pyx_v_proc) {
 
-  /* "gb/kernels.pyx":81
+  /* "gb/kernels.pyx":83
  * 
  *     cdef void set_current_process(self, size_t proc) nogil:
  *         self.poisson.set_current_process(proc)             # <<<<<<<<<<<<<<
@@ -3597,7 +3603,7 @@ static void __pyx_f_2gb_7kernels_10WoldKernel_set_current_process(struct __pyx_o
  */
   ((struct __pyx_vtabstruct_2gb_7kernels_PoissonKernel *)__pyx_v_self->poisson->__pyx_base.__pyx_vtab)->__pyx_base.set_current_process(((struct __pyx_obj_2gb_7kernels_AbstractKernel *)__pyx_v_self->poisson), __pyx_v_proc);
 
-  /* "gb/kernels.pyx":80
+  /* "gb/kernels.pyx":82
  *         self.dts = IntToVector(n_proc, 100)
  * 
  *     cdef void set_current_process(self, size_t proc) nogil:             # <<<<<<<<<<<<<<
@@ -3608,7 +3614,7 @@ static void __pyx_f_2gb_7kernels_10WoldKernel_set_current_process(struct __pyx_o
   /* function exit code */
 }
 
-/* "gb/kernels.pyx":83
+/* "gb/kernels.pyx":85
  *         self.poisson.set_current_process(proc)
  * 
  *     cdef double background_probability(self, double dt) nogil:             # <<<<<<<<<<<<<<
@@ -3619,7 +3625,7 @@ static void __pyx_f_2gb_7kernels_10WoldKernel_set_current_process(struct __pyx_o
 static double __pyx_f_2gb_7kernels_10WoldKernel_background_probability(struct __pyx_obj_2gb_7kernels_WoldKernel *__pyx_v_self, double __pyx_v_dt) {
   double __pyx_r;
 
-  /* "gb/kernels.pyx":84
+  /* "gb/kernels.pyx":86
  * 
  *     cdef double background_probability(self, double dt) nogil:
  *         return self.poisson.background_probability(dt)             # <<<<<<<<<<<<<<
@@ -3629,7 +3635,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_background_probability(struct __
   __pyx_r = ((struct __pyx_vtabstruct_2gb_7kernels_PoissonKernel *)__pyx_v_self->poisson->__pyx_base.__pyx_vtab)->__pyx_base.background_probability(((struct __pyx_obj_2gb_7kernels_AbstractKernel *)__pyx_v_self->poisson), __pyx_v_dt);
   goto __pyx_L0;
 
-  /* "gb/kernels.pyx":83
+  /* "gb/kernels.pyx":85
  *         self.poisson.set_current_process(proc)
  * 
  *     cdef double background_probability(self, double dt) nogil:             # <<<<<<<<<<<<<<
@@ -3642,16 +3648,15 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_background_probability(struct __
   return __pyx_r;
 }
 
-/* "gb/kernels.pyx":86
+/* "gb/kernels.pyx":88
  *         return self.poisson.background_probability(dt)
  * 
  *     cdef double cross_rate(self, size_t i, size_t b, double alpha_ab) nogil:             # <<<<<<<<<<<<<<
- *         cdef double E = 2.718281828459045
  *         cdef size_t a = self.poisson.current_process
+ * 
  */
 
 static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_7kernels_WoldKernel *__pyx_v_self, size_t __pyx_v_i, size_t __pyx_v_b, double __pyx_v_alpha_ab) {
-  CYTHON_UNUSED double __pyx_v_E;
   size_t __pyx_v_a;
   double *__pyx_v_stamps;
   CYTHON_UNUSED double __pyx_v_t;
@@ -3662,18 +3667,9 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
   size_t __pyx_t_1;
   int __pyx_t_2;
 
-  /* "gb/kernels.pyx":87
+  /* "gb/kernels.pyx":89
  * 
  *     cdef double cross_rate(self, size_t i, size_t b, double alpha_ab) nogil:
- *         cdef double E = 2.718281828459045             # <<<<<<<<<<<<<<
- *         cdef size_t a = self.poisson.current_process
- * 
- */
-  __pyx_v_E = 2.718281828459045;
-
-  /* "gb/kernels.pyx":88
- *     cdef double cross_rate(self, size_t i, size_t b, double alpha_ab) nogil:
- *         cdef double E = 2.718281828459045
  *         cdef size_t a = self.poisson.current_process             # <<<<<<<<<<<<<<
  * 
  *         cdef double *stamps
@@ -3681,7 +3677,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
   __pyx_t_1 = __pyx_v_self->poisson->current_process;
   __pyx_v_a = __pyx_t_1;
 
-  /* "gb/kernels.pyx":91
+  /* "gb/kernels.pyx":92
  * 
  *         cdef double *stamps
  *         self.poisson.timestamps.get_stamps(a, &stamps)             # <<<<<<<<<<<<<<
@@ -3690,7 +3686,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
  */
   ((struct __pyx_vtabstruct_2gb_6stamps_Timestamps *)__pyx_v_self->poisson->timestamps->__pyx_vtab)->get_stamps(__pyx_v_self->poisson->timestamps, __pyx_v_a, (&__pyx_v_stamps));
 
-  /* "gb/kernels.pyx":93
+  /* "gb/kernels.pyx":94
  *         self.poisson.timestamps.get_stamps(a, &stamps)
  * 
  *         cdef double t = stamps[i]             # <<<<<<<<<<<<<<
@@ -3699,7 +3695,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
  */
   __pyx_v_t = (__pyx_v_stamps[__pyx_v_i]);
 
-  /* "gb/kernels.pyx":96
+  /* "gb/kernels.pyx":97
  *         cdef double tp
  *         cdef double tpp
  *         if i > 0:             # <<<<<<<<<<<<<<
@@ -3709,7 +3705,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
   __pyx_t_2 = ((__pyx_v_i > 0) != 0);
   if (__pyx_t_2) {
 
-    /* "gb/kernels.pyx":97
+    /* "gb/kernels.pyx":98
  *         cdef double tpp
  *         if i > 0:
  *             tp = stamps[i-1]             # <<<<<<<<<<<<<<
@@ -3718,7 +3714,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
  */
     __pyx_v_tp = (__pyx_v_stamps[(__pyx_v_i - 1)]);
 
-    /* "gb/kernels.pyx":96
+    /* "gb/kernels.pyx":97
  *         cdef double tp
  *         cdef double tpp
  *         if i > 0:             # <<<<<<<<<<<<<<
@@ -3728,7 +3724,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
     goto __pyx_L3;
   }
 
-  /* "gb/kernels.pyx":99
+  /* "gb/kernels.pyx":100
  *             tp = stamps[i-1]
  *         else:
  *             tp = 0             # <<<<<<<<<<<<<<
@@ -3740,7 +3736,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
   }
   __pyx_L3:;
 
-  /* "gb/kernels.pyx":100
+  /* "gb/kernels.pyx":101
  *         else:
  *             tp = 0
  *         if tp != 0:             # <<<<<<<<<<<<<<
@@ -3750,7 +3746,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
   __pyx_t_2 = ((__pyx_v_tp != 0.0) != 0);
   if (__pyx_t_2) {
 
-    /* "gb/kernels.pyx":101
+    /* "gb/kernels.pyx":102
  *             tp = 0
  *         if tp != 0:
  *             if a == b:             # <<<<<<<<<<<<<<
@@ -3760,7 +3756,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
     __pyx_t_2 = ((__pyx_v_a == __pyx_v_b) != 0);
     if (__pyx_t_2) {
 
-      /* "gb/kernels.pyx":102
+      /* "gb/kernels.pyx":103
  *         if tp != 0:
  *             if a == b:
  *                 if i > 1:             # <<<<<<<<<<<<<<
@@ -3770,7 +3766,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
       __pyx_t_2 = ((__pyx_v_i > 1) != 0);
       if (__pyx_t_2) {
 
-        /* "gb/kernels.pyx":103
+        /* "gb/kernels.pyx":104
  *             if a == b:
  *                 if i > 1:
  *                     tpp = stamps[i-2]             # <<<<<<<<<<<<<<
@@ -3779,7 +3775,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
  */
         __pyx_v_tpp = (__pyx_v_stamps[(__pyx_v_i - 2)]);
 
-        /* "gb/kernels.pyx":102
+        /* "gb/kernels.pyx":103
  *         if tp != 0:
  *             if a == b:
  *                 if i > 1:             # <<<<<<<<<<<<<<
@@ -3789,7 +3785,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
         goto __pyx_L6;
       }
 
-      /* "gb/kernels.pyx":105
+      /* "gb/kernels.pyx":106
  *                     tpp = stamps[i-2]
  *                 else:
  *                     tpp = 0             # <<<<<<<<<<<<<<
@@ -3801,7 +3797,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
       }
       __pyx_L6:;
 
-      /* "gb/kernels.pyx":101
+      /* "gb/kernels.pyx":102
  *             tp = 0
  *         if tp != 0:
  *             if a == b:             # <<<<<<<<<<<<<<
@@ -3811,7 +3807,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
       goto __pyx_L5;
     }
 
-    /* "gb/kernels.pyx":107
+    /* "gb/kernels.pyx":108
  *                     tpp = 0
  *             else:
  *                 tpp = self.poisson.timestamps.find_previous(b, tp)             # <<<<<<<<<<<<<<
@@ -3823,7 +3819,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
     }
     __pyx_L5:;
 
-    /* "gb/kernels.pyx":100
+    /* "gb/kernels.pyx":101
  *         else:
  *             tp = 0
  *         if tp != 0:             # <<<<<<<<<<<<<<
@@ -3833,7 +3829,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
     goto __pyx_L4;
   }
 
-  /* "gb/kernels.pyx":109
+  /* "gb/kernels.pyx":110
  *                 tpp = self.poisson.timestamps.find_previous(b, tp)
  *         else:
  *             tpp = 0             # <<<<<<<<<<<<<<
@@ -3845,7 +3841,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
   }
   __pyx_L4:;
 
-  /* "gb/kernels.pyx":111
+  /* "gb/kernels.pyx":112
  *             tpp = 0
  * 
  *         cdef double rate = alpha_ab / (tp - tpp)             # <<<<<<<<<<<<<<
@@ -3854,7 +3850,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
  */
   __pyx_v_rate = (__pyx_v_alpha_ab / (__pyx_v_tp - __pyx_v_tpp));
 
-  /* "gb/kernels.pyx":112
+  /* "gb/kernels.pyx":113
  * 
  *         cdef double rate = alpha_ab / (tp - tpp)
  *         return rate             # <<<<<<<<<<<<<<
@@ -3864,12 +3860,12 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
   __pyx_r = __pyx_v_rate;
   goto __pyx_L0;
 
-  /* "gb/kernels.pyx":86
+  /* "gb/kernels.pyx":88
  *         return self.poisson.background_probability(dt)
  * 
  *     cdef double cross_rate(self, size_t i, size_t b, double alpha_ab) nogil:             # <<<<<<<<<<<<<<
- *         cdef double E = 2.718281828459045
  *         cdef size_t a = self.poisson.current_process
+ * 
  */
 
   /* function exit code */
@@ -4178,16 +4174,15 @@ static PyObject *__pyx_pf_2gb_7kernels_10WoldKernel_4__setstate_cython__(struct 
   return __pyx_r;
 }
 
-/* "gb/kernels.pyx":117
+/* "gb/kernels.pyx":118
  * cdef class TruncatedHawkesKernel(WoldKernel):
  * 
  *     cdef double cross_rate(self, size_t i, size_t b, double alpha_ab) nogil:             # <<<<<<<<<<<<<<
- *         cdef double E = 2.718281828459045
  *         cdef size_t a = self.poisson.current_process
+ *         cdef double *stamps
  */
 
 static double __pyx_f_2gb_7kernels_21TruncatedHawkesKernel_cross_rate(struct __pyx_obj_2gb_7kernels_TruncatedHawkesKernel *__pyx_v_self, size_t __pyx_v_i, size_t __pyx_v_b, double __pyx_v_alpha_ab) {
-  CYTHON_UNUSED double __pyx_v_E;
   size_t __pyx_v_a;
   double *__pyx_v_stamps;
   double __pyx_v_t;
@@ -4197,18 +4192,9 @@ static double __pyx_f_2gb_7kernels_21TruncatedHawkesKernel_cross_rate(struct __p
   size_t __pyx_t_1;
   int __pyx_t_2;
 
-  /* "gb/kernels.pyx":118
+  /* "gb/kernels.pyx":119
  * 
  *     cdef double cross_rate(self, size_t i, size_t b, double alpha_ab) nogil:
- *         cdef double E = 2.718281828459045             # <<<<<<<<<<<<<<
- *         cdef size_t a = self.poisson.current_process
- *         cdef double *stamps
- */
-  __pyx_v_E = 2.718281828459045;
-
-  /* "gb/kernels.pyx":119
- *     cdef double cross_rate(self, size_t i, size_t b, double alpha_ab) nogil:
- *         cdef double E = 2.718281828459045
  *         cdef size_t a = self.poisson.current_process             # <<<<<<<<<<<<<<
  *         cdef double *stamps
  *         self.poisson.timestamps.get_stamps(a, &stamps)
@@ -4323,12 +4309,12 @@ static double __pyx_f_2gb_7kernels_21TruncatedHawkesKernel_cross_rate(struct __p
   __pyx_r = __pyx_v_rate;
   goto __pyx_L0;
 
-  /* "gb/kernels.pyx":117
+  /* "gb/kernels.pyx":118
  * cdef class TruncatedHawkesKernel(WoldKernel):
  * 
  *     cdef double cross_rate(self, size_t i, size_t b, double alpha_ab) nogil:             # <<<<<<<<<<<<<<
- *         cdef double E = 2.718281828459045
  *         cdef size_t a = self.poisson.current_process
+ *         cdef double *stamps
  */
 
   /* function exit code */
@@ -20565,7 +20551,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0, 0, 0, 0}
 };
 static int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 51, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 56, __pyx_L1_error)
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(1, 131, __pyx_L1_error)
   __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(1, 146, __pyx_L1_error)
   __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(1, 149, __pyx_L1_error)
@@ -21066,21 +21052,21 @@ static int __pyx_pymod_exec_kernels(PyObject *__pyx_pyinit_module)
   __pyx_vtable_2gb_7kernels_WoldKernel.__pyx_base.background_probability = (double (*)(struct __pyx_obj_2gb_7kernels_AbstractKernel *, double))__pyx_f_2gb_7kernels_10WoldKernel_background_probability;
   __pyx_vtable_2gb_7kernels_WoldKernel.__pyx_base.cross_rate = (double (*)(struct __pyx_obj_2gb_7kernels_AbstractKernel *, size_t, size_t, double))__pyx_f_2gb_7kernels_10WoldKernel_cross_rate;
   __pyx_type_2gb_7kernels_WoldKernel.tp_base = __pyx_ptype_2gb_7kernels_AbstractKernel;
-  if (PyType_Ready(&__pyx_type_2gb_7kernels_WoldKernel) < 0) __PYX_ERR(0, 74, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_2gb_7kernels_WoldKernel) < 0) __PYX_ERR(0, 76, __pyx_L1_error)
   __pyx_type_2gb_7kernels_WoldKernel.tp_print = 0;
-  if (__Pyx_SetVtable(__pyx_type_2gb_7kernels_WoldKernel.tp_dict, __pyx_vtabptr_2gb_7kernels_WoldKernel) < 0) __PYX_ERR(0, 74, __pyx_L1_error)
-  if (PyObject_SetAttrString(__pyx_m, "WoldKernel", (PyObject *)&__pyx_type_2gb_7kernels_WoldKernel) < 0) __PYX_ERR(0, 74, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_2gb_7kernels_WoldKernel) < 0) __PYX_ERR(0, 74, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_type_2gb_7kernels_WoldKernel.tp_dict, __pyx_vtabptr_2gb_7kernels_WoldKernel) < 0) __PYX_ERR(0, 76, __pyx_L1_error)
+  if (PyObject_SetAttrString(__pyx_m, "WoldKernel", (PyObject *)&__pyx_type_2gb_7kernels_WoldKernel) < 0) __PYX_ERR(0, 76, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_2gb_7kernels_WoldKernel) < 0) __PYX_ERR(0, 76, __pyx_L1_error)
   __pyx_ptype_2gb_7kernels_WoldKernel = &__pyx_type_2gb_7kernels_WoldKernel;
   __pyx_vtabptr_2gb_7kernels_TruncatedHawkesKernel = &__pyx_vtable_2gb_7kernels_TruncatedHawkesKernel;
   __pyx_vtable_2gb_7kernels_TruncatedHawkesKernel.__pyx_base = *__pyx_vtabptr_2gb_7kernels_WoldKernel;
   __pyx_vtable_2gb_7kernels_TruncatedHawkesKernel.__pyx_base.__pyx_base.cross_rate = (double (*)(struct __pyx_obj_2gb_7kernels_AbstractKernel *, size_t, size_t, double))__pyx_f_2gb_7kernels_21TruncatedHawkesKernel_cross_rate;
   __pyx_type_2gb_7kernels_TruncatedHawkesKernel.tp_base = __pyx_ptype_2gb_7kernels_WoldKernel;
-  if (PyType_Ready(&__pyx_type_2gb_7kernels_TruncatedHawkesKernel) < 0) __PYX_ERR(0, 115, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_2gb_7kernels_TruncatedHawkesKernel) < 0) __PYX_ERR(0, 116, __pyx_L1_error)
   __pyx_type_2gb_7kernels_TruncatedHawkesKernel.tp_print = 0;
-  if (__Pyx_SetVtable(__pyx_type_2gb_7kernels_TruncatedHawkesKernel.tp_dict, __pyx_vtabptr_2gb_7kernels_TruncatedHawkesKernel) < 0) __PYX_ERR(0, 115, __pyx_L1_error)
-  if (PyObject_SetAttrString(__pyx_m, "TruncatedHawkesKernel", (PyObject *)&__pyx_type_2gb_7kernels_TruncatedHawkesKernel) < 0) __PYX_ERR(0, 115, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_2gb_7kernels_TruncatedHawkesKernel) < 0) __PYX_ERR(0, 115, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_type_2gb_7kernels_TruncatedHawkesKernel.tp_dict, __pyx_vtabptr_2gb_7kernels_TruncatedHawkesKernel) < 0) __PYX_ERR(0, 116, __pyx_L1_error)
+  if (PyObject_SetAttrString(__pyx_m, "TruncatedHawkesKernel", (PyObject *)&__pyx_type_2gb_7kernels_TruncatedHawkesKernel) < 0) __PYX_ERR(0, 116, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_2gb_7kernels_TruncatedHawkesKernel) < 0) __PYX_ERR(0, 116, __pyx_L1_error)
   __pyx_ptype_2gb_7kernels_TruncatedHawkesKernel = &__pyx_type_2gb_7kernels_TruncatedHawkesKernel;
   __pyx_vtabptr_array = &__pyx_vtable_array;
   __pyx_vtable_array.get_memview = (PyObject *(*)(struct __pyx_array_obj *))__pyx_array_get_memview;

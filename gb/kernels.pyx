@@ -46,19 +46,21 @@ cdef class PoissonKernel(AbstractKernel):
         cdef size_t *causes
         self.timestamps.get_causes(proc, &causes)
 
+        cdef double *stamps
+        self.timestamps.get_stamps(proc, &stamps)
+
         cdef size_t i
         cdef double count_background = 0
+        cdef double prev_poisson = -1
+        cdef double dts
         for i in range(n):
             if causes[i] == n_proc:
-                count_background += 1
+                if prev_poisson != -1:
+                    count_background += 1
+                    dts += stamps[i] - prev_poisson
+                prev_poisson = stamps[i]
 
-        cdef double T = self.timestamps.get_stamp(proc, n-1)
-        cdef double rate
-        if T == 0:
-            rate = 0
-        else:
-            rate = (<double>count_background) / T
-        self.mu[proc] = rate
+        self.mu[proc] = count_background / dts
 
     cdef double background_probability(self, double dt) nogil:
         cdef double mu_rate = self.mu[self.current_process]
