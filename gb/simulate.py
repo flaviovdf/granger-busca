@@ -5,7 +5,7 @@ import numpy as np
 
 class GrangeBuscaSimulator(object):
 
-    def __init__(self, mu_rates, Alpha_ba, Beta_ba=None):
+    def __init__(self, mu_rates, Alpha_ba, Beta_ba=None, thinning=False):
         self.mu_rates = np.asanyarray(mu_rates)
         self.Alpha_ba = np.asanyarray(Alpha_ba)
         if Beta_ba is not None:
@@ -13,12 +13,14 @@ class GrangeBuscaSimulator(object):
         else:
             self.Beta_ba = np.ones(shape=self.Alpha_ba.shape)
         self.past = [[] for i in range(self.Alpha_ba.shape[0])]
+        self.integrals = [[] for i in range(self.Alpha_ba.shape[0])]
         self.upper_bound = 0.0
         for proc_a in range(self.Alpha_ba.shape[0]):
             self.upper_bound += self.mu_rates[proc_a]
             for proc_b in range(self.Alpha_ba.shape[0]):
                 self.upper_bound += self.Alpha_ba[proc_b, proc_a] / \
                     self.Beta_ba[proc_b, proc_a]
+        self.thinning = thinning
         self.t = 0
 
     def total_intensity(self, t):
@@ -53,10 +55,18 @@ class GrangeBuscaSimulator(object):
         while t < max_time:
             lambdas_t = self.total_intensity(t)
             sum_lambdas_t = lambdas_t.cumsum()
-            dt = np.random.exponential(1.0 / sum_lambdas_t[-1])
+            if self.thinning:
+                dt = np.random.exponential(1.0 / self.upper_bound)
+            else:
+                dt = np.random.exponential(1.0 / sum_lambdas_t[-1])
+
             t = t + dt
             if t > max_time:
                 break
+
+            if self.thinning:
+                if np.random.rand() < (sum_lambdas_t[-1] / self.upper_bound):
+                    continue
 
             i = 0
             u = np.random.rand() * sum_lambdas_t[-1]
@@ -64,6 +74,8 @@ class GrangeBuscaSimulator(object):
                 if sum_lambdas_t[i] >= u:
                     break
                 i += 1
+            if len(self.past[i]) > 1:
+                self.integrals[i].append(lambdas_t[i] * (t - self.past[i][-1]))
             self.past[i].append(t)
         self.t = t
         return self.past
