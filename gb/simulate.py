@@ -5,10 +5,20 @@ import numpy as np
 
 class GrangeBuscaSimulator(object):
 
-    def __init__(self, mu_rates, Alpha_ba):
+    def __init__(self, mu_rates, Alpha_ba, Beta_ba=None):
         self.mu_rates = np.asanyarray(mu_rates)
         self.Alpha_ba = np.asanyarray(Alpha_ba)
+        if Beta_ba is not None:
+            self.Beta_ba = np.asanyarray(Beta_ba)
+        else:
+            self.Beta_ba = np.ones(shape=self.Alpha_ba.shape)
         self.past = [[] for i in range(self.Alpha_ba.shape[0])]
+        self.upper_bound = 0.0
+        for proc_a in range(self.Alpha_ba.shape[0]):
+            self.upper_bound += self.mu_rates[proc_a]
+            for proc_b in range(self.Alpha_ba.shape[0]):
+                self.upper_bound += self.Alpha_ba[proc_b, proc_a] / \
+                    self.Beta_ba[proc_b, proc_a]
         self.t = 0
 
     def total_intensity(self, t):
@@ -17,6 +27,7 @@ class GrangeBuscaSimulator(object):
             lambdas_t[proc_a] = self.mu_rates[proc_a]
             if len(self.past[proc_a]) == 0:
                 continue
+
             tp = self.past[proc_a][-1]
             assert tp <= t
             for proc_b in range(self.Alpha_ba.shape[0]):
@@ -26,11 +37,13 @@ class GrangeBuscaSimulator(object):
                 if tpp_idx >= len(self.past[proc_b]):
                     tpp_idx = -1
                 tpp = self.past[proc_b][tpp_idx]
-                if tpp >= tp:
+                if tpp > tp:
                     continue
-
+                while tpp == tp and tpp_idx > 0:
+                    tpp_idx = tpp_idx - 1
+                    tpp = self.past[proc_b][tpp_idx]
                 busca_rate = self.Alpha_ba[proc_b, proc_a]
-                busca_rate /= (tp - tpp)
+                busca_rate /= (self.Beta_ba[proc_b, proc_a] + tp - tpp)
                 lambdas_t[proc_a] += busca_rate
         return lambdas_t
 

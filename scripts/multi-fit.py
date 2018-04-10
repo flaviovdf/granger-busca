@@ -6,7 +6,7 @@ Alpha = [[0.5, 0.5, 0, 0],
          [0,   0,   0.5, 0.5],
          [0,   0,   0, 1]]
 sim = simulate.GrangeBuscaSimulator([0.01]*4, Alpha)
-ticks = sim.simulate(100000)
+ticks = sim.simulate(10000)
 
 granger_model = GrangerBusca(alpha_prior=1.0/len(ticks), num_iter=300)
 granger_model.fit(ticks)

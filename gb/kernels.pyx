@@ -109,7 +109,7 @@ cdef class WoldKernel(AbstractKernel):
         else:
             tpp = 0
 
-        cdef double rate = alpha_ab / (tp - tpp)
+        cdef double rate = alpha_ab / (1 + tp - tpp)
         return rate
 
 
@@ -129,5 +129,5 @@ cdef class TruncatedHawkesKernel(WoldKernel):
         else:
             tp = self.poisson.timestamps.find_previous(b, t)
 
-        cdef double rate = alpha_ab / (t - tp)
+        cdef double rate = alpha_ab / (1 + t - tp)
         return rate

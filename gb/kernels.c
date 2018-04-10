@@ -3834,7 +3834,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
  *         else:
  *             tpp = 0             # <<<<<<<<<<<<<<
  * 
- *         cdef double rate = alpha_ab / (tp - tpp)
+ *         cdef double rate = alpha_ab / (1 + tp - tpp)
  */
   /*else*/ {
     __pyx_v_tpp = 0.0;
@@ -3844,15 +3844,15 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
   /* "gb/kernels.pyx":112
  *             tpp = 0
  * 
- *         cdef double rate = alpha_ab / (tp - tpp)             # <<<<<<<<<<<<<<
+ *         cdef double rate = alpha_ab / (1 + tp - tpp)             # <<<<<<<<<<<<<<
  *         return rate
  * 
  */
-  __pyx_v_rate = (__pyx_v_alpha_ab / (__pyx_v_tp - __pyx_v_tpp));
+  __pyx_v_rate = (__pyx_v_alpha_ab / ((1.0 + __pyx_v_tp) - __pyx_v_tpp));
 
   /* "gb/kernels.pyx":113
  * 
- *         cdef double rate = alpha_ab / (tp - tpp)
+ *         cdef double rate = alpha_ab / (1 + tp - tpp)
  *         return rate             # <<<<<<<<<<<<<<
  * 
  * 
@@ -4286,7 +4286,7 @@ static double __pyx_f_2gb_7kernels_21TruncatedHawkesKernel_cross_rate(struct __p
  *         else:
  *             tp = self.poisson.timestamps.find_previous(b, t)             # <<<<<<<<<<<<<<
  * 
- *         cdef double rate = alpha_ab / (t - tp)
+ *         cdef double rate = alpha_ab / (1 + t - tp)
  */
   /*else*/ {
     __pyx_v_tp = ((struct __pyx_vtabstruct_2gb_6stamps_Timestamps *)__pyx_v_self->__pyx_base.poisson->timestamps->__pyx_vtab)->find_previous(__pyx_v_self->__pyx_base.poisson->timestamps, __pyx_v_b, __pyx_v_t);
@@ -4296,14 +4296,14 @@ static double __pyx_f_2gb_7kernels_21TruncatedHawkesKernel_cross_rate(struct __p
   /* "gb/kernels.pyx":132
  *             tp = self.poisson.timestamps.find_previous(b, t)
  * 
- *         cdef double rate = alpha_ab / (t - tp)             # <<<<<<<<<<<<<<
+ *         cdef double rate = alpha_ab / (1 + t - tp)             # <<<<<<<<<<<<<<
  *         return rate
  */
-  __pyx_v_rate = (__pyx_v_alpha_ab / (__pyx_v_t - __pyx_v_tp));
+  __pyx_v_rate = (__pyx_v_alpha_ab / ((1.0 + __pyx_v_t) - __pyx_v_tp));
 
   /* "gb/kernels.pyx":133
  * 
- *         cdef double rate = alpha_ab / (t - tp)
+ *         cdef double rate = alpha_ab / (1 + t - tp)
  *         return rate             # <<<<<<<<<<<<<<
  */
   __pyx_r = __pyx_v_rate;
