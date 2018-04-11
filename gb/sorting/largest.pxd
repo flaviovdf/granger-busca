@@ -5,6 +5,4 @@
 # cython: nonecheck=False
 # cython: wraparound=False
 
-cdef double k_largest(double[::1] array, size_t k) nogil
-
-cdef double quick_median(double[::1] array) nogil
+cdef double quick_median(double *array, size_t n) nogil

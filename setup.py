@@ -52,7 +52,7 @@ def get_extensions():
     for pkg in packages:
         pkg_folder = pkg.replace('.', '/')
         pyx_files = glob.glob(os.path.join(pkg_folder, '*.pyx'))
-        include_dirs = ['gb/myrandom/', numpy.get_include()]
+        include_dirs = ['gb/randomkit/', numpy.get_include()]
         for pyx in pyx_files:
             pxd = pyx.replace('pyx', 'pxd')
             module = pyx.replace('.pyx', '').replace('/', '.')
@@ -69,7 +69,6 @@ def get_extensions():
             extra_compile_args = ['-msse', '-msse2', '-mfpmath=sse']
             extension = Extension(module, ext_files,
                                   include_dirs=include_dirs,
-                                  # language='c++',
                                   extra_compile_args=extra_compile_args)
             extensions.append(extension)
 

@@ -2,7 +2,12 @@
 
 from gb import GrangerBusca
 
-import tick.simulation as hk
+try:
+    import tick.simulation as hk
+    hk.HawkesKernelExp
+except (ImportError, AttributeError):
+    import tick.hawkes as hk
+
 import numpy as np
 
 # Simulation of a 10-dimensional Hawkes process
@@ -32,12 +37,10 @@ kernels = [[hk.HawkesKernelExp(a, b) for (a, b) in zip(a_list, b_list)]
            for (a_list, b_list) in zip(Alpha, Beta)]
 h = hk.SimuHawkes(kernels=kernels, baseline=list(mus), end_time=T)
 h.simulate()
-granger_model = GrangerBusca(alpha_p=1.0/len(h.timestamps), num_iter=300,
-                             burn_in=200, metropolis=True)
+granger_model = GrangerBusca(alpha_prior=1.0/len(h.timestamps), num_iter=2000,
+                             metropolis=True)
 granger_model.fit(h.timestamps)
-print(granger_model.back_)
 print(granger_model.mu_)
-print(granger_model.beta_)
 np.set_printoptions(precision=2)
 print(np.array(granger_model.Alpha_.toarray(), dtype='i').T)
 print(np.array(Alpha > 0, dtype='i'))

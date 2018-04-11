@@ -53,17 +53,13 @@ cdef inline double quickselect(double *arr, size_t n, size_t k) nogil:
                 l = i
 
 
-cdef double k_largest(double[::1] array, size_t k) nogil:
-    return quickselect(&array[0], array.shape[0], k)
-
-
-cdef double quick_median(double[::1] array) nogil:
-    cdef size_t mid = array.shape[0] // 2
-    k_largest(array, mid)
+cdef double quick_median(double *array, size_t n) nogil:
+    cdef size_t mid = n // 2
+    quickselect(array, n, mid)
 
     cdef size_t i
     cdef double max_val = array[0]
-    if array.shape[0] % 2 != 0:
+    if n % 2 != 0:
          return array[mid]
     else:
          for i in range(1, mid):
@@ -73,4 +69,4 @@ cdef double quick_median(double[::1] array) nogil:
 
 
 def _median(double[::1] array):
-    return quick_median(array)
+    return quick_median(&array[0], array.shape[0])

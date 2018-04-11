@@ -6,6 +6,9 @@ import numpy as np
 
 
 def test_median():
+    x = np.array([1.0])
+    assert 1.0 == _median(x)
+
     x = np.array([1.0, 2.0, 3.0])
     assert 2.0 == _median(x)
 

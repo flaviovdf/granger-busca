@@ -8,7 +8,6 @@
 
 include 'dirichlet.pxi'
 
-from gb.randomkit.random cimport rand
 from gb.sorting.binsearch cimport searchsorted
 
 from libc.stdio cimport printf
@@ -18,9 +17,6 @@ import numpy as np
 
 
 cdef class AbstractSampler(object):
-    cdef void update_denominators(self, uint64_t[::1] denominators) nogil:
-        printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')
-        abort()
     cdef void set_current_process(self, size_t a) nogil:
         printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')
         abort()
@@ -36,44 +32,56 @@ cdef class AbstractSampler(object):
     cdef size_t sample_for_idx(self, size_t i, AbstractKernel kernel) nogil:
         printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')
         abort()
+    cdef uint64_t is_background(self, AbstractKernel kernel, double dt) nogil:
+        printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')
+        abort()
 
 
 cdef class BaseSampler(AbstractSampler):
 
-    def __init__(self, Table joint_counts, Timestamps timestamps,
-                 uint64_t[::1] denominators, double alpha_prior,
-                 size_t initial_process):
-        self.n_proc = denominators.shape[0]
+    def __init__(self, Timestamps timestamps, SloppyCounter sloppy,
+                 size_t worker_id, double alpha_prior):
+        self.n_proc = timestamps.num_proc()
         self.alpha_prior = alpha_prior
-        self.denominators = denominators
-        self.joint_counts = joint_counts
+        self.sloppy = sloppy
+        self.worker_id = worker_id
         self.timestamps = timestamps
-        self.set_current_process(initial_process)
-
-    cdef void update_denominators(self, uint64_t[::1] denominators) nogil:
-        self.denominators = denominators
+        self.nab = np.zeros(self.n_proc, dtype='uint64')
+        self.sloppy.get_local_counts(self.worker_id, &self.denominators)
+        self.rng = RNG()
 
     cdef void set_current_process(self, size_t a) nogil:
         self.current_process = a
-        self.current_process_size = self.timestamps.get_stamps(a).shape[0]
+
+        cdef size_t n = self.timestamps.get_size(a)
+        cdef size_t *causes
+        self.timestamps.get_causes(a, &causes)
+
+        cdef size_t b, i
+        cdef size_t n_proc = self.nab.shape[0]
+        for b in range(n_proc):
+            self.nab[b] = 0
+        for i in range(n):
+            b = causes[i]
+            if b != n_proc:
+                self.nab[b] += 1
 
     cdef double get_probability(self, size_t b) nogil:
-        cdef size_t a = self.current_process
-        cdef uint64_t joint_count = self.joint_counts.get_cell(a, b)
-        return dirmulti_posterior(joint_count, self.denominators[b],
-                                  self.current_process_size, self.alpha_prior)
+        return dirmulti_posterior(self.nab[b], self.denominators[b],
+                                  self.nab.shape[0], self.alpha_prior)
 
     cdef void inc_one(self, size_t b) nogil:
-        cdef size_t a = self.current_process
-        cdef uint64_t joint_count = self.joint_counts.get_cell(a, b)
         self.denominators[b] += 1
-        self.joint_counts.set_cell(a, b, joint_count + 1)
+        self.nab[b] += 1
+        self.sloppy.inc_one(self.worker_id, b)
 
     cdef void dec_one(self, size_t b) nogil:
-        cdef size_t a = self.current_process
-        cdef uint64_t joint_count = self.joint_counts.get_cell(a, b)
         self.denominators[b] -= 1
-        self.joint_counts.set_cell(a, b, joint_count - 1)
+        self.nab[b] -= 1
+        self.sloppy.dec_one(self.worker_id, b)
+
+    cdef uint64_t is_background(self, AbstractKernel kernel, double dt) nogil:
+        return self.rng.rand() < kernel.background_probability(dt)
 
 
 cdef class FenwickSampler(AbstractSampler):
@@ -82,12 +90,6 @@ cdef class FenwickSampler(AbstractSampler):
         self.base = base
         self.tree = FPTree(n_proc)
         self.n_proc = n_proc
-
-    cdef void update_denominators(self, uint64_t[::1] denominators) nogil:
-        self.base.update_denominators(denominators)
-
-    def _update_denominators(self, uint64_t[::1] denominators):
-        return self.update_denominators(denominators)
 
     cdef void set_current_process(self, size_t a) nogil:
         self.base.set_current_process(a)
@@ -122,10 +124,10 @@ cdef class FenwickSampler(AbstractSampler):
 
     cdef size_t sample_for_idx(self, size_t i, AbstractKernel kernel) nogil:
         cdef size_t proc_a = self.base.current_process
-        cdef size_t candidate = self.tree.sample(rand()*self.tree.get_total())
-        cdef size_t[::1] causes = self.base.timestamps.get_causes(proc_a)
-        cdef size_t proc_b = causes[i]
+        cdef size_t candidate = self.tree.sample(self.base.rng.rand() * \
+                                                 self.tree.get_total())
 
+        cdef size_t proc_b = self.base.timestamps.get_cause(proc_a, i)
         if proc_b == self.n_proc:
             return candidate
 
@@ -136,12 +138,14 @@ cdef class FenwickSampler(AbstractSampler):
         cdef double p_c = kernel.cross_rate(i, candidate, alpha_ca)
 
         cdef int choice
-        if rand() < min(1, (p_c * alpha_ba) / (p_b * alpha_ca)):
+        if self.base.rng.rand() < min(1, (p_c * alpha_ba) / (p_b * alpha_ca)):
             choice = candidate
         else:
             choice = proc_b
         return choice
 
+    cdef uint64_t is_background(self, AbstractKernel kernel, double dt) nogil:
+        return self.base.is_background(kernel, dt)
 
 cdef class CollapsedGibbsSampler(AbstractSampler):
 
@@ -149,17 +153,11 @@ cdef class CollapsedGibbsSampler(AbstractSampler):
         self.base = base
         self.buffer = np.zeros(n_proc, dtype='d')
 
-    cdef void update_denominators(self, uint64_t[::1] denominators) nogil:
-        self.base.update_denominators(denominators)
-
-    def _update_denominators(self, uint64_t[::1] denominators):
-        return self.update_denominators(denominators)
-
     cdef void set_current_process(self, size_t a) nogil:
         self.base.set_current_process(a)
 
     def _set_current_process(self, size_t a):
-        return self.set_current_process(a)
+        self.set_current_process(a)
 
     cdef double get_probability(self, size_t b) nogil:
         return self.base.get_probability(b)
@@ -188,4 +186,8 @@ cdef class CollapsedGibbsSampler(AbstractSampler):
             self.buffer[b] = kernel.cross_rate(i, b, alpha_ba)
             if b > 0:
                 self.buffer[b] += self.buffer[b-1]
-        return searchsorted(self.buffer, self.buffer[n_proc-1] * rand(), 0)
+        return searchsorted(&self.buffer[0], self.buffer.shape[0],
+                            self.base.rng.rand() * self.buffer[n_proc-1], 0)
+
+    cdef uint64_t is_background(self, AbstractKernel kernel, double dt) nogil:
+        return self.base.is_background(kernel, dt)

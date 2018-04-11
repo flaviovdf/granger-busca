@@ -11,8 +11,8 @@ Alpha = [[0.25, 0.25, 0.25, 0.25],
          [0, 1, 0, 0],
          [0, 0, 0.2, 0.8],
          [0, 1, 0, 0]]
-sim = simulate.GrangeBuscaSimulator([0.01]*4, [2, 10, 20, 30], Alpha)
-ticks = sim.simulate(500000)
+sim = simulate.GrangeBuscaSimulator([0.001]*4, Alpha)
+ticks = sim.simulate(10000)
 
 counting = [np.arange(len(ticks[i])) for i in range(len(ticks))]
 

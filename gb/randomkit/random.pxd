@@ -5,6 +5,18 @@
 # cython: nonecheck=False
 # cython: wraparound=False
 
-cdef void set_seed(unsigned long seed) nogil
-cdef double rand() nogil
-cdef double gamma(double shape, double scale) nogil
+
+cdef extern from 'randomkit.h':
+    ctypedef struct rk_state:
+        unsigned long key[624]
+        int pos
+        int has_gauss
+        double gauss
+
+
+cdef class RNG(object):
+    cdef rk_state *rng_state
+
+    cdef void set_seed(self, unsigned long seed) nogil
+    cdef double rand(self) nogil
+    cdef double gamma(self, double scale, double shape) nogil

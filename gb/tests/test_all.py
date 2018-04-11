@@ -1,8 +1,14 @@
 # -*- coding: utf8
 
+
 from gb import GrangerBusca
 
-import tick.simulation as hk
+try:
+    import tick.simulation as hk
+    hk.HawkesKernelExp
+except (ImportError, AttributeError):
+    import tick.hawkes as hk
+
 import numpy as np
 
 
@@ -32,15 +38,15 @@ def test_metropolis():
                for (a_list, b_list) in zip(Alpha, Beta)]
     h = hk.SimuHawkes(kernels=kernels, baseline=list(mus), end_time=T)
     h.simulate()
-    granger_model = GrangerBusca(alpha_p=1.0/len(h.timestamps), num_iter=300,
-                                 burn_in=200, metropolis=True)
+    granger_model = GrangerBusca(alpha_prior=1.0/len(h.timestamps),
+                                 num_iter=300, metropolis=True, num_jobs=1)
     granger_model.fit(h.timestamps)
     P = np.array(granger_model.Alpha_.toarray() > 0, dtype='i').T
     T = np.array(Alpha > 0, dtype='i')
     assert (((P - T) == 0).sum() / P.size) > 0.5
 
 
-def test_gibbs():
+def test_metropolis_multithread():
     # Simulation of a 10-dimensional Hawkes process
     beta = 1.
     mu = 0.01  # 0.01
@@ -66,8 +72,8 @@ def test_gibbs():
                for (a_list, b_list) in zip(Alpha, Beta)]
     h = hk.SimuHawkes(kernels=kernels, baseline=list(mus), end_time=T)
     h.simulate()
-    granger_model = GrangerBusca(alpha_p=1.0/len(h.timestamps), num_iter=300,
-                                 burn_in=200, metropolis=False)
+    granger_model = GrangerBusca(alpha_prior=1.0/len(h.timestamps),
+                                 num_iter=300, metropolis=True, num_jobs=4)
     granger_model.fit(h.timestamps)
     P = np.array(granger_model.Alpha_.toarray() > 0, dtype='i').T
     T = np.array(Alpha > 0, dtype='i')
