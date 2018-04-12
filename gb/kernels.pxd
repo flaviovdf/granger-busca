@@ -6,7 +6,7 @@
 # cython: wraparound=False
 
 
-from gb.collections.inttovector cimport IntToVector
+from gb.randomkit.random cimport RNG
 from gb.stamps cimport Timestamps
 
 from libc.stdint cimport uint64_t
@@ -23,11 +23,10 @@ cdef class PoissonKernel(AbstractKernel):
     cdef Timestamps timestamps
     cdef size_t current_process
     cdef double[::1] mu
-
+    cdef RNG rng
 
 cdef class WoldKernel(AbstractKernel):
     cdef PoissonKernel poisson
-    cdef IntToVector dts
 
 cdef class TruncatedHawkesKernel(WoldKernel):
     pass

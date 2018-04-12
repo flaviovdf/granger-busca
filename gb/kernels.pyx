@@ -34,9 +34,10 @@ cdef class AbstractKernel(object):
 
 cdef class PoissonKernel(AbstractKernel):
 
-    def __init__(self, Timestamps timestamps, size_t n_proc):
+    def __init__(self, Timestamps timestamps, size_t n_proc, RNG rng):
         self.timestamps = timestamps
         self.mu = np.zeros(n_proc, dtype='d')
+        self.rng = rng
 
     cdef void set_current_process(self, size_t proc) nogil:
         self.current_process = proc
@@ -52,7 +53,7 @@ cdef class PoissonKernel(AbstractKernel):
         cdef size_t i
         cdef double count_background = 0
         cdef double prev_poisson = -1
-        cdef double dts
+        cdef double dts = 0.0
         for i in range(n):
             if causes[i] == n_proc:
                 if prev_poisson != -1:
@@ -60,7 +61,10 @@ cdef class PoissonKernel(AbstractKernel):
                     dts += stamps[i] - prev_poisson
                 prev_poisson = stamps[i]
 
-        self.mu[proc] = count_background / dts
+        if dts > 0:
+            self.mu[proc] = count_background / dts
+        else:
+            self.mu[proc] = 0
 
     cdef double background_probability(self, double dt) nogil:
         cdef double mu_rate = self.mu[self.current_process]
@@ -77,7 +81,6 @@ cdef class WoldKernel(AbstractKernel):
 
     def __init__(self, PoissonKernel poisson, size_t n_proc):
         self.poisson = poisson
-        self.dts = IntToVector(n_proc, 100)
 
     cdef void set_current_process(self, size_t proc) nogil:
         self.poisson.set_current_process(proc)

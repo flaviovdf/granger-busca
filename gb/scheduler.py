@@ -46,6 +46,7 @@ def greedy_schedule(timestamps, n_workers):
         schedule[worker].append(proc)
         heapq.heappush(heap, (load + n, worker))
 
-    print(worker_load)
     rv = dict((k, np.array(v, dtype='uint64')) for k, v in schedule.items())
+    print(worker_load)
+    print(rv)
     return rv, define_worker_for_each_process(rv)

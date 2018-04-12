@@ -520,8 +520,8 @@ static CYTHON_INLINE float __PYX_NAN() {
 
 #define __PYX_HAVE__gb__samplers
 #define __PYX_HAVE_API__gb__samplers
-#include <stdint.h>
 #include "randomkit.h"
+#include <stdint.h>
 #include "pythread.h"
 #include <string.h>
 #include <stdio.h>
@@ -733,11 +733,10 @@ static const char *__pyx_f[] = {
   "gb/samplers.pyx",
   "stringsource",
   "gb/collections/fptree.pxd",
-  "gb/collections/inttovector.pxd",
+  "gb/randomkit/random.pxd",
   "gb/collections/table.pxd",
   "gb/stamps.pxd",
   "gb/kernels.pxd",
-  "gb/randomkit/random.pxd",
   "gb/sloppy.pxd",
 };
 /* MemviewSliceStruct.proto */
@@ -851,7 +850,7 @@ typedef struct {
 
 /*--- Type declarations ---*/
 struct __pyx_obj_2gb_11collections_6fptree_FPTree;
-struct __pyx_obj_2gb_11collections_11inttovector_IntToVector;
+struct __pyx_obj_2gb_9randomkit_6random_RNG;
 struct __pyx_obj_2gb_11collections_5table_Table;
 struct __pyx_obj_2gb_11collections_5table_RobinHoodHash;
 struct __pyx_obj_2gb_6stamps_Timestamps;
@@ -859,7 +858,6 @@ struct __pyx_obj_2gb_7kernels_AbstractKernel;
 struct __pyx_obj_2gb_7kernels_PoissonKernel;
 struct __pyx_obj_2gb_7kernels_WoldKernel;
 struct __pyx_obj_2gb_7kernels_TruncatedHawkesKernel;
-struct __pyx_obj_2gb_9randomkit_6random_RNG;
 struct __pyx_obj_2gb_6sloppy_SloppyCounter;
 struct __pyx_obj_2gb_8samplers_AbstractSampler;
 struct __pyx_obj_2gb_8samplers_BaseSampler;
@@ -869,21 +867,6 @@ struct __pyx_array_obj;
 struct __pyx_MemviewEnum_obj;
 struct __pyx_memoryview_obj;
 struct __pyx_memoryviewslice_obj;
-struct __pyx_t_2gb_11collections_11inttovector_vector;
-typedef struct __pyx_t_2gb_11collections_11inttovector_vector __pyx_t_2gb_11collections_11inttovector_vector;
-
-/* "gb/collections/inttovector.pxd":9
- * 
- * 
- * ctypedef struct vector:             # <<<<<<<<<<<<<<
- *     double *data
- *     size_t size
- */
-struct __pyx_t_2gb_11collections_11inttovector_vector {
-  double *data;
-  size_t size;
-  size_t capacity;
-};
 struct __pyx_t_2gb_11collections_5table_entry_t;
 typedef struct __pyx_t_2gb_11collections_5table_entry_t __pyx_t_2gb_11collections_5table_entry_t;
 struct __pyx_t_2gb_11collections_5table_rh_hash_t;
@@ -933,18 +916,17 @@ struct __pyx_obj_2gb_11collections_6fptree_FPTree {
 };
 
 
-/* "gb/collections/inttovector.pxd":14
- *     size_t capacity
+/* "gb/randomkit/random.pxd":17
  * 
- * cdef class IntToVector(object):             # <<<<<<<<<<<<<<
- *     cdef size_t n_proc
- *     cdef vector *vectors
+ * 
+ * cdef class RNG(object):             # <<<<<<<<<<<<<<
+ *     cdef rk_state *rng_state
+ * 
  */
-struct __pyx_obj_2gb_11collections_11inttovector_IntToVector {
+struct __pyx_obj_2gb_9randomkit_6random_RNG {
   PyObject_HEAD
-  struct __pyx_vtabstruct_2gb_11collections_11inttovector_IntToVector *__pyx_vtab;
-  size_t n_proc;
-  __pyx_t_2gb_11collections_11inttovector_vector *vectors;
+  struct __pyx_vtabstruct_2gb_9randomkit_6random_RNG *__pyx_vtab;
+  rk_state *rng_state;
 };
 
 
@@ -1020,45 +1002,31 @@ struct __pyx_obj_2gb_7kernels_PoissonKernel {
   struct __pyx_obj_2gb_6stamps_Timestamps *timestamps;
   size_t current_process;
   __Pyx_memviewslice mu;
+  struct __pyx_obj_2gb_9randomkit_6random_RNG *rng;
 };
 
 
 /* "gb/kernels.pxd":28
- * 
+ *     cdef RNG rng
  * 
  * cdef class WoldKernel(AbstractKernel):             # <<<<<<<<<<<<<<
  *     cdef PoissonKernel poisson
- *     cdef IntToVector dts
+ * 
  */
 struct __pyx_obj_2gb_7kernels_WoldKernel {
   struct __pyx_obj_2gb_7kernels_AbstractKernel __pyx_base;
   struct __pyx_obj_2gb_7kernels_PoissonKernel *poisson;
-  struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *dts;
 };
 
 
-/* "gb/kernels.pxd":32
- *     cdef IntToVector dts
+/* "gb/kernels.pxd":31
+ *     cdef PoissonKernel poisson
  * 
  * cdef class TruncatedHawkesKernel(WoldKernel):             # <<<<<<<<<<<<<<
  *     pass
  */
 struct __pyx_obj_2gb_7kernels_TruncatedHawkesKernel {
   struct __pyx_obj_2gb_7kernels_WoldKernel __pyx_base;
-};
-
-
-/* "gb/randomkit/random.pxd":17
- * 
- * 
- * cdef class RNG(object):             # <<<<<<<<<<<<<<
- *     cdef rk_state *rng_state
- * 
- */
-struct __pyx_obj_2gb_9randomkit_6random_RNG {
-  PyObject_HEAD
-  struct __pyx_vtabstruct_2gb_9randomkit_6random_RNG *__pyx_vtab;
-  rk_state *rng_state;
 };
 
 
@@ -1242,21 +1210,20 @@ struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree {
 static struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *__pyx_vtabptr_2gb_11collections_6fptree_FPTree;
 
 
-/* "gb/collections/inttovector.pxd":14
- *     size_t capacity
+/* "gb/randomkit/random.pxd":17
  * 
- * cdef class IntToVector(object):             # <<<<<<<<<<<<<<
- *     cdef size_t n_proc
- *     cdef vector *vectors
+ * 
+ * cdef class RNG(object):             # <<<<<<<<<<<<<<
+ *     cdef rk_state *rng_state
+ * 
  */
 
-struct __pyx_vtabstruct_2gb_11collections_11inttovector_IntToVector {
-  void (*push_back)(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *, size_t, double);
-  void (*reset)(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *);
-  size_t (*get_size)(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *, size_t);
-  double *(*get_values)(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector *, size_t);
+struct __pyx_vtabstruct_2gb_9randomkit_6random_RNG {
+  void (*set_seed)(struct __pyx_obj_2gb_9randomkit_6random_RNG *, unsigned long);
+  double (*rand)(struct __pyx_obj_2gb_9randomkit_6random_RNG *);
+  double (*gamma)(struct __pyx_obj_2gb_9randomkit_6random_RNG *, double, double);
 };
-static struct __pyx_vtabstruct_2gb_11collections_11inttovector_IntToVector *__pyx_vtabptr_2gb_11collections_11inttovector_IntToVector;
+static struct __pyx_vtabstruct_2gb_9randomkit_6random_RNG *__pyx_vtabptr_2gb_9randomkit_6random_RNG;
 
 
 /* "gb/collections/table.pxd":26
@@ -1342,11 +1309,11 @@ static struct __pyx_vtabstruct_2gb_7kernels_PoissonKernel *__pyx_vtabptr_2gb_7ke
 
 
 /* "gb/kernels.pxd":28
- * 
+ *     cdef RNG rng
  * 
  * cdef class WoldKernel(AbstractKernel):             # <<<<<<<<<<<<<<
  *     cdef PoissonKernel poisson
- *     cdef IntToVector dts
+ * 
  */
 
 struct __pyx_vtabstruct_2gb_7kernels_WoldKernel {
@@ -1355,8 +1322,8 @@ struct __pyx_vtabstruct_2gb_7kernels_WoldKernel {
 static struct __pyx_vtabstruct_2gb_7kernels_WoldKernel *__pyx_vtabptr_2gb_7kernels_WoldKernel;
 
 
-/* "gb/kernels.pxd":32
- *     cdef IntToVector dts
+/* "gb/kernels.pxd":31
+ *     cdef PoissonKernel poisson
  * 
  * cdef class TruncatedHawkesKernel(WoldKernel):             # <<<<<<<<<<<<<<
  *     pass
@@ -1366,22 +1333,6 @@ struct __pyx_vtabstruct_2gb_7kernels_TruncatedHawkesKernel {
   struct __pyx_vtabstruct_2gb_7kernels_WoldKernel __pyx_base;
 };
 static struct __pyx_vtabstruct_2gb_7kernels_TruncatedHawkesKernel *__pyx_vtabptr_2gb_7kernels_TruncatedHawkesKernel;
-
-
-/* "gb/randomkit/random.pxd":17
- * 
- * 
- * cdef class RNG(object):             # <<<<<<<<<<<<<<
- *     cdef rk_state *rng_state
- * 
- */
-
-struct __pyx_vtabstruct_2gb_9randomkit_6random_RNG {
-  void (*set_seed)(struct __pyx_obj_2gb_9randomkit_6random_RNG *, unsigned long);
-  double (*rand)(struct __pyx_obj_2gb_9randomkit_6random_RNG *);
-  double (*gamma)(struct __pyx_obj_2gb_9randomkit_6random_RNG *, double, double);
-};
-static struct __pyx_vtabstruct_2gb_9randomkit_6random_RNG *__pyx_vtabptr_2gb_9randomkit_6random_RNG;
 
 
 /* "gb/sloppy.pxd":14
@@ -2107,8 +2058,8 @@ static PyObject *__pyx_memoryviewslice_assign_item_from_object(struct __pyx_memo
 /* Module declarations from 'gb.collections.fptree' */
 static PyTypeObject *__pyx_ptype_2gb_11collections_6fptree_FPTree = 0;
 
-/* Module declarations from 'gb.collections.inttovector' */
-static PyTypeObject *__pyx_ptype_2gb_11collections_11inttovector_IntToVector = 0;
+/* Module declarations from 'gb.randomkit.random' */
+static PyTypeObject *__pyx_ptype_2gb_9randomkit_6random_RNG = 0;
 
 /* Module declarations from 'libc.stdint' */
 
@@ -2124,9 +2075,6 @@ static PyTypeObject *__pyx_ptype_2gb_7kernels_AbstractKernel = 0;
 static PyTypeObject *__pyx_ptype_2gb_7kernels_PoissonKernel = 0;
 static PyTypeObject *__pyx_ptype_2gb_7kernels_WoldKernel = 0;
 static PyTypeObject *__pyx_ptype_2gb_7kernels_TruncatedHawkesKernel = 0;
-
-/* Module declarations from 'gb.randomkit.random' */
-static PyTypeObject *__pyx_ptype_2gb_9randomkit_6random_RNG = 0;
 
 /* Module declarations from 'cpython.pythread' */
 
@@ -2217,6 +2165,7 @@ static const char __pyx_k_id[] = "id";
 static const char __pyx_k_np[] = "np";
 static const char __pyx_k_new[] = "__new__";
 static const char __pyx_k_obj[] = "obj";
+static const char __pyx_k_rng[] = "rng";
 static const char __pyx_k_base[] = "base";
 static const char __pyx_k_dict[] = "__dict__";
 static const char __pyx_k_main[] = "__main__";
@@ -2391,6 +2340,7 @@ static PyObject *__pyx_n_s_range;
 static PyObject *__pyx_n_s_reduce;
 static PyObject *__pyx_n_s_reduce_cython;
 static PyObject *__pyx_n_s_reduce_ex;
+static PyObject *__pyx_n_s_rng;
 static PyObject *__pyx_kp_s_self_denominators_cannot_be_conv;
 static PyObject *__pyx_n_s_setstate;
 static PyObject *__pyx_n_s_setstate_cython;
@@ -2416,7 +2366,7 @@ static PyObject *__pyx_n_s_worker_id;
 static PyObject *__pyx_n_s_zeros;
 static PyObject *__pyx_pf_2gb_8samplers_15AbstractSampler___reduce_cython__(struct __pyx_obj_2gb_8samplers_AbstractSampler *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_2gb_8samplers_15AbstractSampler_2__setstate_cython__(struct __pyx_obj_2gb_8samplers_AbstractSampler *__pyx_v_self, PyObject *__pyx_v___pyx_state); /* proto */
-static int __pyx_pf_2gb_8samplers_11BaseSampler___init__(struct __pyx_obj_2gb_8samplers_BaseSampler *__pyx_v_self, struct __pyx_obj_2gb_6stamps_Timestamps *__pyx_v_timestamps, struct __pyx_obj_2gb_6sloppy_SloppyCounter *__pyx_v_sloppy, size_t __pyx_v_worker_id, double __pyx_v_alpha_prior); /* proto */
+static int __pyx_pf_2gb_8samplers_11BaseSampler___init__(struct __pyx_obj_2gb_8samplers_BaseSampler *__pyx_v_self, struct __pyx_obj_2gb_6stamps_Timestamps *__pyx_v_timestamps, struct __pyx_obj_2gb_6sloppy_SloppyCounter *__pyx_v_sloppy, size_t __pyx_v_worker_id, double __pyx_v_alpha_prior, struct __pyx_obj_2gb_9randomkit_6random_RNG *__pyx_v_rng); /* proto */
 static PyObject *__pyx_pf_2gb_8samplers_11BaseSampler_2__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_2gb_8samplers_BaseSampler *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_2gb_8samplers_11BaseSampler_4__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_2gb_8samplers_BaseSampler *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
 static int __pyx_pf_2gb_8samplers_14FenwickSampler___init__(struct __pyx_obj_2gb_8samplers_FenwickSampler *__pyx_v_self, struct __pyx_obj_2gb_8samplers_BaseSampler *__pyx_v_base, size_t __pyx_v_n_proc); /* proto */
@@ -3088,7 +3038,7 @@ static PyObject *__pyx_pf_2gb_8samplers_15AbstractSampler_2__setstate_cython__(s
  * cdef class BaseSampler(AbstractSampler):
  * 
  *     def __init__(self, Timestamps timestamps, SloppyCounter sloppy,             # <<<<<<<<<<<<<<
- *                  size_t worker_id, double alpha_prior):
+ *                  size_t worker_id, double alpha_prior, RNG rng):
  *         self.n_proc = timestamps.num_proc()
  */
 
@@ -3099,16 +3049,19 @@ static int __pyx_pw_2gb_8samplers_11BaseSampler_1__init__(PyObject *__pyx_v_self
   struct __pyx_obj_2gb_6sloppy_SloppyCounter *__pyx_v_sloppy = 0;
   size_t __pyx_v_worker_id;
   double __pyx_v_alpha_prior;
+  struct __pyx_obj_2gb_9randomkit_6random_RNG *__pyx_v_rng = 0;
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__init__ (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_timestamps,&__pyx_n_s_sloppy,&__pyx_n_s_worker_id,&__pyx_n_s_alpha_prior,0};
-    PyObject* values[4] = {0,0,0,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_timestamps,&__pyx_n_s_sloppy,&__pyx_n_s_worker_id,&__pyx_n_s_alpha_prior,&__pyx_n_s_rng,0};
+    PyObject* values[5] = {0,0,0,0,0};
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
       switch (pos_args) {
+        case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
+        CYTHON_FALLTHROUGH;
         case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
         CYTHON_FALLTHROUGH;
         case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
@@ -3129,40 +3082,48 @@ static int __pyx_pw_2gb_8samplers_11BaseSampler_1__init__(PyObject *__pyx_v_self
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_sloppy)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__init__", 1, 4, 4, 1); __PYX_ERR(0, 42, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, 1); __PYX_ERR(0, 42, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_worker_id)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__init__", 1, 4, 4, 2); __PYX_ERR(0, 42, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, 2); __PYX_ERR(0, 42, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_alpha_prior)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__init__", 1, 4, 4, 3); __PYX_ERR(0, 42, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, 3); __PYX_ERR(0, 42, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  4:
+        if (likely((values[4] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_rng)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, 4); __PYX_ERR(0, 42, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 42, __pyx_L3_error)
       }
-    } else if (PyTuple_GET_SIZE(__pyx_args) != 4) {
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 5) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
       values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
       values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
+      values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
     }
     __pyx_v_timestamps = ((struct __pyx_obj_2gb_6stamps_Timestamps *)values[0]);
     __pyx_v_sloppy = ((struct __pyx_obj_2gb_6sloppy_SloppyCounter *)values[1]);
     __pyx_v_worker_id = __Pyx_PyInt_As_size_t(values[2]); if (unlikely((__pyx_v_worker_id == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 43, __pyx_L3_error)
     __pyx_v_alpha_prior = __pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_alpha_prior == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 43, __pyx_L3_error)
+    __pyx_v_rng = ((struct __pyx_obj_2gb_9randomkit_6random_RNG *)values[4]);
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__init__", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 42, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 42, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gb.samplers.BaseSampler.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -3170,7 +3131,8 @@ static int __pyx_pw_2gb_8samplers_11BaseSampler_1__init__(PyObject *__pyx_v_self
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_timestamps), __pyx_ptype_2gb_6stamps_Timestamps, 1, "timestamps", 0))) __PYX_ERR(0, 42, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_sloppy), __pyx_ptype_2gb_6sloppy_SloppyCounter, 1, "sloppy", 0))) __PYX_ERR(0, 42, __pyx_L1_error)
-  __pyx_r = __pyx_pf_2gb_8samplers_11BaseSampler___init__(((struct __pyx_obj_2gb_8samplers_BaseSampler *)__pyx_v_self), __pyx_v_timestamps, __pyx_v_sloppy, __pyx_v_worker_id, __pyx_v_alpha_prior);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_rng), __pyx_ptype_2gb_9randomkit_6random_RNG, 1, "rng", 0))) __PYX_ERR(0, 43, __pyx_L1_error)
+  __pyx_r = __pyx_pf_2gb_8samplers_11BaseSampler___init__(((struct __pyx_obj_2gb_8samplers_BaseSampler *)__pyx_v_self), __pyx_v_timestamps, __pyx_v_sloppy, __pyx_v_worker_id, __pyx_v_alpha_prior, __pyx_v_rng);
 
   /* function exit code */
   goto __pyx_L0;
@@ -3181,7 +3143,7 @@ static int __pyx_pw_2gb_8samplers_11BaseSampler_1__init__(PyObject *__pyx_v_self
   return __pyx_r;
 }
 
-static int __pyx_pf_2gb_8samplers_11BaseSampler___init__(struct __pyx_obj_2gb_8samplers_BaseSampler *__pyx_v_self, struct __pyx_obj_2gb_6stamps_Timestamps *__pyx_v_timestamps, struct __pyx_obj_2gb_6sloppy_SloppyCounter *__pyx_v_sloppy, size_t __pyx_v_worker_id, double __pyx_v_alpha_prior) {
+static int __pyx_pf_2gb_8samplers_11BaseSampler___init__(struct __pyx_obj_2gb_8samplers_BaseSampler *__pyx_v_self, struct __pyx_obj_2gb_6stamps_Timestamps *__pyx_v_timestamps, struct __pyx_obj_2gb_6sloppy_SloppyCounter *__pyx_v_sloppy, size_t __pyx_v_worker_id, double __pyx_v_alpha_prior, struct __pyx_obj_2gb_9randomkit_6random_RNG *__pyx_v_rng) {
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -3193,7 +3155,7 @@ static int __pyx_pf_2gb_8samplers_11BaseSampler___init__(struct __pyx_obj_2gb_8s
 
   /* "gb/samplers.pyx":44
  *     def __init__(self, Timestamps timestamps, SloppyCounter sloppy,
- *                  size_t worker_id, double alpha_prior):
+ *                  size_t worker_id, double alpha_prior, RNG rng):
  *         self.n_proc = timestamps.num_proc()             # <<<<<<<<<<<<<<
  *         self.alpha_prior = alpha_prior
  *         self.sloppy = sloppy
@@ -3201,7 +3163,7 @@ static int __pyx_pf_2gb_8samplers_11BaseSampler___init__(struct __pyx_obj_2gb_8s
   __pyx_v_self->n_proc = ((struct __pyx_vtabstruct_2gb_6stamps_Timestamps *)__pyx_v_timestamps->__pyx_vtab)->num_proc(__pyx_v_timestamps);
 
   /* "gb/samplers.pyx":45
- *                  size_t worker_id, double alpha_prior):
+ *                  size_t worker_id, double alpha_prior, RNG rng):
  *         self.n_proc = timestamps.num_proc()
  *         self.alpha_prior = alpha_prior             # <<<<<<<<<<<<<<
  *         self.sloppy = sloppy
@@ -3249,7 +3211,7 @@ static int __pyx_pf_2gb_8samplers_11BaseSampler___init__(struct __pyx_obj_2gb_8s
  *         self.timestamps = timestamps
  *         self.nab = np.zeros(self.n_proc, dtype='uint64')             # <<<<<<<<<<<<<<
  *         self.sloppy.get_local_counts(self.worker_id, &self.denominators)
- *         self.rng = RNG()
+ *         self.rng = rng
  */
   __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -3283,7 +3245,7 @@ static int __pyx_pf_2gb_8samplers_11BaseSampler___init__(struct __pyx_obj_2gb_8s
  *         self.timestamps = timestamps
  *         self.nab = np.zeros(self.n_proc, dtype='uint64')
  *         self.sloppy.get_local_counts(self.worker_id, &self.denominators)             # <<<<<<<<<<<<<<
- *         self.rng = RNG()
+ *         self.rng = rng
  * 
  */
   ((struct __pyx_vtabstruct_2gb_6sloppy_SloppyCounter *)__pyx_v_self->sloppy->__pyx_vtab)->get_local_counts(__pyx_v_self->sloppy, __pyx_v_self->worker_id, (&__pyx_v_self->denominators));
@@ -3291,23 +3253,21 @@ static int __pyx_pf_2gb_8samplers_11BaseSampler___init__(struct __pyx_obj_2gb_8s
   /* "gb/samplers.pyx":51
  *         self.nab = np.zeros(self.n_proc, dtype='uint64')
  *         self.sloppy.get_local_counts(self.worker_id, &self.denominators)
- *         self.rng = RNG()             # <<<<<<<<<<<<<<
+ *         self.rng = rng             # <<<<<<<<<<<<<<
  * 
  *     cdef void set_current_process(self, size_t a) nogil:
  */
-  __pyx_t_4 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_2gb_9randomkit_6random_RNG), __pyx_empty_tuple, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 51, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_GIVEREF(__pyx_t_4);
+  __Pyx_INCREF(((PyObject *)__pyx_v_rng));
+  __Pyx_GIVEREF(((PyObject *)__pyx_v_rng));
   __Pyx_GOTREF(__pyx_v_self->rng);
   __Pyx_DECREF(((PyObject *)__pyx_v_self->rng));
-  __pyx_v_self->rng = ((struct __pyx_obj_2gb_9randomkit_6random_RNG *)__pyx_t_4);
-  __pyx_t_4 = 0;
+  __pyx_v_self->rng = __pyx_v_rng;
 
   /* "gb/samplers.pyx":42
  * cdef class BaseSampler(AbstractSampler):
  * 
  *     def __init__(self, Timestamps timestamps, SloppyCounter sloppy,             # <<<<<<<<<<<<<<
- *                  size_t worker_id, double alpha_prior):
+ *                  size_t worker_id, double alpha_prior, RNG rng):
  *         self.n_proc = timestamps.num_proc()
  */
 
@@ -3328,7 +3288,7 @@ static int __pyx_pf_2gb_8samplers_11BaseSampler___init__(struct __pyx_obj_2gb_8s
 }
 
 /* "gb/samplers.pyx":53
- *         self.rng = RNG()
+ *         self.rng = rng
  * 
  *     cdef void set_current_process(self, size_t a) nogil:             # <<<<<<<<<<<<<<
  *         self.current_process = a
@@ -3456,7 +3416,7 @@ static void __pyx_f_2gb_8samplers_11BaseSampler_set_current_process(struct __pyx
   }
 
   /* "gb/samplers.pyx":53
- *         self.rng = RNG()
+ *         self.rng = rng
  * 
  *     cdef void set_current_process(self, size_t a) nogil:             # <<<<<<<<<<<<<<
  *         self.current_process = a
@@ -21376,6 +21336,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_reduce, __pyx_k_reduce, sizeof(__pyx_k_reduce), 0, 0, 1, 1},
   {&__pyx_n_s_reduce_cython, __pyx_k_reduce_cython, sizeof(__pyx_k_reduce_cython), 0, 0, 1, 1},
   {&__pyx_n_s_reduce_ex, __pyx_k_reduce_ex, sizeof(__pyx_k_reduce_ex), 0, 0, 1, 1},
+  {&__pyx_n_s_rng, __pyx_k_rng, sizeof(__pyx_k_rng), 0, 0, 1, 1},
   {&__pyx_kp_s_self_denominators_cannot_be_conv, __pyx_k_self_denominators_cannot_be_conv, sizeof(__pyx_k_self_denominators_cannot_be_conv), 0, 0, 1, 0},
   {&__pyx_n_s_setstate, __pyx_k_setstate, sizeof(__pyx_k_setstate), 0, 0, 1, 1},
   {&__pyx_n_s_setstate_cython, __pyx_k_setstate_cython, sizeof(__pyx_k_setstate_cython), 0, 0, 1, 1},
@@ -21982,8 +21943,8 @@ static int __pyx_pymod_exec_samplers(PyObject *__pyx_pyinit_module)
   /*--- Type import code ---*/
   __pyx_ptype_2gb_11collections_6fptree_FPTree = __Pyx_ImportType("gb.collections.fptree", "FPTree", sizeof(struct __pyx_obj_2gb_11collections_6fptree_FPTree), 1); if (unlikely(!__pyx_ptype_2gb_11collections_6fptree_FPTree)) __PYX_ERR(2, 9, __pyx_L1_error)
   __pyx_vtabptr_2gb_11collections_6fptree_FPTree = (struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree*)__Pyx_GetVtable(__pyx_ptype_2gb_11collections_6fptree_FPTree->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_11collections_6fptree_FPTree)) __PYX_ERR(2, 9, __pyx_L1_error)
-  __pyx_ptype_2gb_11collections_11inttovector_IntToVector = __Pyx_ImportType("gb.collections.inttovector", "IntToVector", sizeof(struct __pyx_obj_2gb_11collections_11inttovector_IntToVector), 1); if (unlikely(!__pyx_ptype_2gb_11collections_11inttovector_IntToVector)) __PYX_ERR(3, 14, __pyx_L1_error)
-  __pyx_vtabptr_2gb_11collections_11inttovector_IntToVector = (struct __pyx_vtabstruct_2gb_11collections_11inttovector_IntToVector*)__Pyx_GetVtable(__pyx_ptype_2gb_11collections_11inttovector_IntToVector->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_11collections_11inttovector_IntToVector)) __PYX_ERR(3, 14, __pyx_L1_error)
+  __pyx_ptype_2gb_9randomkit_6random_RNG = __Pyx_ImportType("gb.randomkit.random", "RNG", sizeof(struct __pyx_obj_2gb_9randomkit_6random_RNG), 1); if (unlikely(!__pyx_ptype_2gb_9randomkit_6random_RNG)) __PYX_ERR(3, 17, __pyx_L1_error)
+  __pyx_vtabptr_2gb_9randomkit_6random_RNG = (struct __pyx_vtabstruct_2gb_9randomkit_6random_RNG*)__Pyx_GetVtable(__pyx_ptype_2gb_9randomkit_6random_RNG->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_9randomkit_6random_RNG)) __PYX_ERR(3, 17, __pyx_L1_error)
   __pyx_ptype_2gb_11collections_5table_Table = __Pyx_ImportType("gb.collections.table", "Table", sizeof(struct __pyx_obj_2gb_11collections_5table_Table), 1); if (unlikely(!__pyx_ptype_2gb_11collections_5table_Table)) __PYX_ERR(4, 26, __pyx_L1_error)
   __pyx_vtabptr_2gb_11collections_5table_Table = (struct __pyx_vtabstruct_2gb_11collections_5table_Table*)__Pyx_GetVtable(__pyx_ptype_2gb_11collections_5table_Table->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_11collections_5table_Table)) __PYX_ERR(4, 26, __pyx_L1_error)
   __pyx_ptype_2gb_11collections_5table_RobinHoodHash = __Pyx_ImportType("gb.collections.table", "RobinHoodHash", sizeof(struct __pyx_obj_2gb_11collections_5table_RobinHoodHash), 1); if (unlikely(!__pyx_ptype_2gb_11collections_5table_RobinHoodHash)) __PYX_ERR(4, 34, __pyx_L1_error)
@@ -21996,12 +21957,10 @@ static int __pyx_pymod_exec_samplers(PyObject *__pyx_pyinit_module)
   __pyx_vtabptr_2gb_7kernels_PoissonKernel = (struct __pyx_vtabstruct_2gb_7kernels_PoissonKernel*)__Pyx_GetVtable(__pyx_ptype_2gb_7kernels_PoissonKernel->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_7kernels_PoissonKernel)) __PYX_ERR(6, 22, __pyx_L1_error)
   __pyx_ptype_2gb_7kernels_WoldKernel = __Pyx_ImportType("gb.kernels", "WoldKernel", sizeof(struct __pyx_obj_2gb_7kernels_WoldKernel), 1); if (unlikely(!__pyx_ptype_2gb_7kernels_WoldKernel)) __PYX_ERR(6, 28, __pyx_L1_error)
   __pyx_vtabptr_2gb_7kernels_WoldKernel = (struct __pyx_vtabstruct_2gb_7kernels_WoldKernel*)__Pyx_GetVtable(__pyx_ptype_2gb_7kernels_WoldKernel->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_7kernels_WoldKernel)) __PYX_ERR(6, 28, __pyx_L1_error)
-  __pyx_ptype_2gb_7kernels_TruncatedHawkesKernel = __Pyx_ImportType("gb.kernels", "TruncatedHawkesKernel", sizeof(struct __pyx_obj_2gb_7kernels_TruncatedHawkesKernel), 1); if (unlikely(!__pyx_ptype_2gb_7kernels_TruncatedHawkesKernel)) __PYX_ERR(6, 32, __pyx_L1_error)
-  __pyx_vtabptr_2gb_7kernels_TruncatedHawkesKernel = (struct __pyx_vtabstruct_2gb_7kernels_TruncatedHawkesKernel*)__Pyx_GetVtable(__pyx_ptype_2gb_7kernels_TruncatedHawkesKernel->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_7kernels_TruncatedHawkesKernel)) __PYX_ERR(6, 32, __pyx_L1_error)
-  __pyx_ptype_2gb_9randomkit_6random_RNG = __Pyx_ImportType("gb.randomkit.random", "RNG", sizeof(struct __pyx_obj_2gb_9randomkit_6random_RNG), 1); if (unlikely(!__pyx_ptype_2gb_9randomkit_6random_RNG)) __PYX_ERR(7, 17, __pyx_L1_error)
-  __pyx_vtabptr_2gb_9randomkit_6random_RNG = (struct __pyx_vtabstruct_2gb_9randomkit_6random_RNG*)__Pyx_GetVtable(__pyx_ptype_2gb_9randomkit_6random_RNG->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_9randomkit_6random_RNG)) __PYX_ERR(7, 17, __pyx_L1_error)
-  __pyx_ptype_2gb_6sloppy_SloppyCounter = __Pyx_ImportType("gb.sloppy", "SloppyCounter", sizeof(struct __pyx_obj_2gb_6sloppy_SloppyCounter), 1); if (unlikely(!__pyx_ptype_2gb_6sloppy_SloppyCounter)) __PYX_ERR(8, 14, __pyx_L1_error)
-  __pyx_vtabptr_2gb_6sloppy_SloppyCounter = (struct __pyx_vtabstruct_2gb_6sloppy_SloppyCounter*)__Pyx_GetVtable(__pyx_ptype_2gb_6sloppy_SloppyCounter->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_6sloppy_SloppyCounter)) __PYX_ERR(8, 14, __pyx_L1_error)
+  __pyx_ptype_2gb_7kernels_TruncatedHawkesKernel = __Pyx_ImportType("gb.kernels", "TruncatedHawkesKernel", sizeof(struct __pyx_obj_2gb_7kernels_TruncatedHawkesKernel), 1); if (unlikely(!__pyx_ptype_2gb_7kernels_TruncatedHawkesKernel)) __PYX_ERR(6, 31, __pyx_L1_error)
+  __pyx_vtabptr_2gb_7kernels_TruncatedHawkesKernel = (struct __pyx_vtabstruct_2gb_7kernels_TruncatedHawkesKernel*)__Pyx_GetVtable(__pyx_ptype_2gb_7kernels_TruncatedHawkesKernel->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_7kernels_TruncatedHawkesKernel)) __PYX_ERR(6, 31, __pyx_L1_error)
+  __pyx_ptype_2gb_6sloppy_SloppyCounter = __Pyx_ImportType("gb.sloppy", "SloppyCounter", sizeof(struct __pyx_obj_2gb_6sloppy_SloppyCounter), 1); if (unlikely(!__pyx_ptype_2gb_6sloppy_SloppyCounter)) __PYX_ERR(7, 14, __pyx_L1_error)
+  __pyx_vtabptr_2gb_6sloppy_SloppyCounter = (struct __pyx_vtabstruct_2gb_6sloppy_SloppyCounter*)__Pyx_GetVtable(__pyx_ptype_2gb_6sloppy_SloppyCounter->tp_dict); if (unlikely(!__pyx_vtabptr_2gb_6sloppy_SloppyCounter)) __PYX_ERR(7, 14, __pyx_L1_error)
   /*--- Variable import code ---*/
   /*--- Function import code ---*/
   __pyx_t_1 = __Pyx_ImportModule("gb.sorting.binsearch"); if (!__pyx_t_1) __PYX_ERR(0, 1, __pyx_L1_error)

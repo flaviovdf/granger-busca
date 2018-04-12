@@ -13,6 +13,8 @@ from gb.kernels cimport PoissonKernel
 from gb.kernels cimport TruncatedHawkesKernel
 from gb.kernels cimport WoldKernel
 
+from gb.randomkit.random cimport RNG
+
 from gb.samplers cimport AbstractSampler
 from gb.samplers cimport BaseSampler
 from gb.samplers cimport CollapsedGibbsSampler
@@ -79,16 +81,17 @@ def fit(Timestamps all_stamps, SloppyCounter sloppy, double alpha_prior,
         size_t n_iter, size_t worker_id, size_t[::1] workload,
         int metropolis_walker=True):
 
+    cdef RNG rng = RNG()
     cdef size_t n_proc = all_stamps.num_proc()
     cdef BaseSampler base_sampler = BaseSampler(all_stamps, sloppy, worker_id,
-                                                alpha_prior)
+                                                alpha_prior, rng)
     cdef AbstractSampler sampler
     if metropolis_walker == 1:
         sampler = FenwickSampler(base_sampler, n_proc)
     else:
         sampler = CollapsedGibbsSampler(base_sampler, n_proc)
 
-    cdef PoissonKernel poisson = PoissonKernel(all_stamps, n_proc)
+    cdef PoissonKernel poisson = PoissonKernel(all_stamps, n_proc, rng)
     cdef AbstractKernel kernel = WoldKernel(poisson, n_proc)
 
     printf("Worker %lu starting\n", worker_id)

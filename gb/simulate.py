@@ -44,6 +44,8 @@ class GrangeBuscaSimulator(object):
                 while tpp == tp and tpp_idx > 0:
                     tpp_idx = tpp_idx - 1
                     tpp = self.past[proc_b][tpp_idx]
+                if tpp >= tp:
+                    continue
                 busca_rate = self.Alpha_ba[proc_b, proc_a]
                 busca_rate /= (self.Beta_ba[proc_b, proc_a] + tp - tpp)
                 lambdas_t[proc_a] += busca_rate
@@ -78,4 +80,8 @@ class GrangeBuscaSimulator(object):
                 self.integrals[i].append(lambdas_t[i] * (t - self.past[i][-1]))
             self.past[i].append(t)
         self.t = t
+        print(len(self.past[0]))
+        print(len(self.past[1]))
+        print(len(self.past[2]))
+        print(len(self.past[3]))
         return self.past

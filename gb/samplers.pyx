@@ -40,7 +40,7 @@ cdef class AbstractSampler(object):
 cdef class BaseSampler(AbstractSampler):
 
     def __init__(self, Timestamps timestamps, SloppyCounter sloppy,
-                 size_t worker_id, double alpha_prior):
+                 size_t worker_id, double alpha_prior, RNG rng):
         self.n_proc = timestamps.num_proc()
         self.alpha_prior = alpha_prior
         self.sloppy = sloppy
@@ -48,7 +48,7 @@ cdef class BaseSampler(AbstractSampler):
         self.timestamps = timestamps
         self.nab = np.zeros(self.n_proc, dtype='uint64')
         self.sloppy.get_local_counts(self.worker_id, &self.denominators)
-        self.rng = RNG()
+        self.rng = rng
 
     cdef void set_current_process(self, size_t a) nogil:
         self.current_process = a
