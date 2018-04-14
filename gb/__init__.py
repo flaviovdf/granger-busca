@@ -66,7 +66,7 @@ class GrangerBusca(object):
         medians = []
         for i in range(n_proc):
             timestamps[i] -= min_all
-            medians.append(np.median(timestamps[i]))
+            medians.append(np.median(np.ediff1d(timestamps[i])))
 
         self.n_proc = n_proc
         self.timestamps = timestamps
