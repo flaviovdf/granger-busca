@@ -14,6 +14,9 @@ import os
 import time
 
 
+np.seterr(all='raise')
+
+
 def to_csr(sparse_dict, n_proc, dtype='d'):
     vals = []
     rows = []
@@ -66,7 +69,10 @@ class GrangerBusca(object):
         medians = []
         for i in range(n_proc):
             timestamps[i] -= min_all
-            medians.append(np.median(np.ediff1d(timestamps[i])))
+            if len(timestamps[i]) > 1:
+                medians.append(np.median(np.ediff1d(timestamps[i])))
+            else:
+                medians.append(timestamps[i])
 
         self.n_proc = n_proc
         self.timestamps = timestamps
