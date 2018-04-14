@@ -90,8 +90,8 @@ cdef void do_work(Timestamps all_stamps, SloppyCounter sloppy,
 
 
 def fit(Timestamps all_stamps, SloppyCounter sloppy, double alpha_prior,
-        size_t n_iter, size_t worker_id, size_t[::1] workload,
-        int metropolis_walker=True):
+        double[::1] beta, size_t n_iter, size_t worker_id,
+        size_t[::1] workload, int metropolis_walker=True):
 
     cdef RNG rng = RNG()
     cdef size_t n_proc = all_stamps.num_proc()
@@ -103,8 +103,9 @@ def fit(Timestamps all_stamps, SloppyCounter sloppy, double alpha_prior,
     else:
         sampler = CollapsedGibbsSampler(base_sampler, n_proc)
 
+    print(np.array(beta))
     cdef PoissonKernel poisson = PoissonKernel(all_stamps, n_proc, rng)
-    cdef AbstractKernel kernel = WoldKernel(poisson, n_proc)
+    cdef AbstractKernel kernel = WoldKernel(poisson, beta)
 
     printf("Worker %lu starting\n", worker_id)
     with nogil:

@@ -85,8 +85,9 @@ cdef class PoissonKernel(AbstractKernel):
 
 cdef class WoldKernel(AbstractKernel):
 
-    def __init__(self, PoissonKernel poisson, size_t n_proc):
+    def __init__(self, PoissonKernel poisson, double[::1] beta):
         self.poisson = poisson
+        self.beta = beta
 
     cdef void set_current_process(self, size_t proc) nogil:
         self.poisson.set_current_process(proc)
@@ -121,7 +122,7 @@ cdef class WoldKernel(AbstractKernel):
         else:
             tpp = 0
 
-        cdef double rate = alpha_ab / (1 + tp - tpp)
+        cdef double rate = alpha_ab / (self.beta[b] + tp - tpp)
         return rate
 
 
@@ -141,5 +142,5 @@ cdef class TruncatedHawkesKernel(WoldKernel):
         else:
             tp = self.poisson.timestamps.find_previous(b, t)
 
-        cdef double rate = alpha_ab / (1 + t - tp)
+        cdef double rate = alpha_ab / (self.beta[b] + t - tp)
         return rate

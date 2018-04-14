@@ -28,6 +28,7 @@ cdef class PoissonKernel(AbstractKernel):
 
 cdef class WoldKernel(AbstractKernel):
     cdef PoissonKernel poisson
+    cdef double[::1] beta
 
 cdef class TruncatedHawkesKernel(WoldKernel):
     pass

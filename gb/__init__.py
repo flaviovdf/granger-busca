@@ -30,7 +30,13 @@ def to_csr(sparse_dict, n_proc, dtype='d'):
 class GrangerBusca(object):
 
     def __init__(self, alpha_prior, num_iter, metropolis=True, sloppy=1,
-                 num_jobs=None):
+                 beta_strategy=1, num_jobs=None):
+
+        if isinstance(beta_strategy, str):
+            if beta_strategy != 'busca':
+                raise AttributeError('Please choose "busca" or a number ' +
+                                     'for the beta_strategy attribute')
+
         self.alpha_prior = alpha_prior
         self.num_iter = num_iter
         self.sloppy = sloppy
@@ -40,6 +46,7 @@ class GrangerBusca(object):
             sloppy = 2 * num_iter
         self.num_jobs = num_jobs
         self.metropolis = metropolis
+        self.beta_strategy = beta_strategy
 
     def _init_timestamps(self, timestamps, sort):
         min_all = np.float('inf')
@@ -56,12 +63,15 @@ class GrangerBusca(object):
 
         timestamps = copy_of_timestamps
         max_all -= min_all
+        medians = []
         for i in range(n_proc):
             timestamps[i] -= min_all
+            medians.append(np.median(timestamps[i]))
 
         self.n_proc = n_proc
         self.timestamps = timestamps
         self.time_range = max_all
+        self.medians = np.array(medians)
 
     def _init_state(self, static_schedule):
         state_keeper = Timestamps(self.timestamps)
@@ -93,10 +103,16 @@ class GrangerBusca(object):
         schedule, _ = greedy_schedule(self.timestamps, self.num_jobs)
         state_keeper, sloppy_counter = self._init_state(schedule)
 
+        if self.beta_strategy == 'busca':
+            self.beta_ = self.medians / np.e
+        else:
+            self.beta_ = np.ones(self.medians.shape[0], dtype='d', order='C')
+            self.beta_ = self.beta_ * self.beta_strategy
+
         def parallel_fit(worker_id):
             return cyfit(state_keeper, sloppy_counter, self.alpha_prior,
-                         self.num_iter, worker_id, schedule[worker_id],
-                         int(self.metropolis))
+                         self.beta_, self.num_iter, worker_id,
+                         schedule[worker_id], int(self.metropolis))
 
         self.Alpha_ = {}
         self.mu_ = np.zeros(len(self.timestamps), dtype='d')

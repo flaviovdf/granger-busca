@@ -987,16 +987,17 @@ struct __pyx_obj_2gb_7kernels_PoissonKernel {
  * 
  * cdef class WoldKernel(AbstractKernel):             # <<<<<<<<<<<<<<
  *     cdef PoissonKernel poisson
- * 
+ *     cdef double[::1] beta
  */
 struct __pyx_obj_2gb_7kernels_WoldKernel {
   struct __pyx_obj_2gb_7kernels_AbstractKernel __pyx_base;
   struct __pyx_obj_2gb_7kernels_PoissonKernel *poisson;
+  __Pyx_memviewslice beta;
 };
 
 
-/* "gb/kernels.pxd":32
- *     cdef PoissonKernel poisson
+/* "gb/kernels.pxd":33
+ *     cdef double[::1] beta
  * 
  * cdef class TruncatedHawkesKernel(WoldKernel):             # <<<<<<<<<<<<<<
  *     pass
@@ -1188,7 +1189,7 @@ static struct __pyx_vtabstruct_2gb_7kernels_PoissonKernel *__pyx_vtabptr_2gb_7ke
  * 
  * cdef class WoldKernel(AbstractKernel):             # <<<<<<<<<<<<<<
  * 
- *     def __init__(self, PoissonKernel poisson, size_t n_proc):
+ *     def __init__(self, PoissonKernel poisson, double[::1] beta):
  */
 
 struct __pyx_vtabstruct_2gb_7kernels_WoldKernel {
@@ -1197,7 +1198,7 @@ struct __pyx_vtabstruct_2gb_7kernels_WoldKernel {
 static struct __pyx_vtabstruct_2gb_7kernels_WoldKernel *__pyx_vtabptr_2gb_7kernels_WoldKernel;
 
 
-/* "gb/kernels.pyx":128
+/* "gb/kernels.pyx":129
  * 
  * 
  * cdef class TruncatedHawkesKernel(WoldKernel):             # <<<<<<<<<<<<<<
@@ -1933,6 +1934,7 @@ static const char __pyx_k_new[] = "__new__";
 static const char __pyx_k_obj[] = "obj";
 static const char __pyx_k_rng[] = "rng";
 static const char __pyx_k_base[] = "base";
+static const char __pyx_k_beta[] = "beta";
 static const char __pyx_k_dict[] = "__dict__";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_mode[] = "mode";
@@ -2012,7 +2014,7 @@ static const char __pyx_k_strided_and_direct_or_indirect[] = "<strided and direc
 static const char __pyx_k_Buffer_view_does_not_expose_stri[] = "Buffer view does not expose strides";
 static const char __pyx_k_Can_only_create_a_buffer_that_is[] = "Can only create a buffer that is contiguous in memory.";
 static const char __pyx_k_Empty_shape_tuple_for_cython_arr[] = "Empty shape tuple for cython.array";
-static const char __pyx_k_Incompatible_checksums_s_vs_0x2c[] = "Incompatible checksums (%s vs 0x2c7fa5b = (poisson))";
+static const char __pyx_k_Incompatible_checksums_s_vs_0x5f[] = "Incompatible checksums (%s vs 0x5fd62be = (beta, poisson))";
 static const char __pyx_k_Incompatible_checksums_s_vs_0xb0[] = "Incompatible checksums (%s vs 0xb068931 = (name))";
 static const char __pyx_k_Incompatible_checksums_s_vs_0xc2[] = "Incompatible checksums (%s vs 0xc2494fd = (current_process, mu, rng, timestamps))";
 static const char __pyx_k_Incompatible_checksums_s_vs_0xd4[] = "Incompatible checksums (%s vs 0xd41d8cd = ())";
@@ -2029,7 +2031,7 @@ static PyObject *__pyx_kp_s_Can_only_create_a_buffer_that_is;
 static PyObject *__pyx_kp_s_Cannot_index_with_type_s;
 static PyObject *__pyx_n_s_Ellipsis;
 static PyObject *__pyx_kp_s_Empty_shape_tuple_for_cython_arr;
-static PyObject *__pyx_kp_s_Incompatible_checksums_s_vs_0x2c;
+static PyObject *__pyx_kp_s_Incompatible_checksums_s_vs_0x5f;
 static PyObject *__pyx_kp_s_Incompatible_checksums_s_vs_0xb0;
 static PyObject *__pyx_kp_s_Incompatible_checksums_s_vs_0xc2;
 static PyObject *__pyx_kp_s_Incompatible_checksums_s_vs_0xd4;
@@ -2049,6 +2051,7 @@ static PyObject *__pyx_n_s_ValueError;
 static PyObject *__pyx_n_s_View_MemoryView;
 static PyObject *__pyx_n_s_allocate_buffer;
 static PyObject *__pyx_n_s_base;
+static PyObject *__pyx_n_s_beta;
 static PyObject *__pyx_n_s_c;
 static PyObject *__pyx_n_u_c;
 static PyObject *__pyx_n_s_class;
@@ -2129,7 +2132,7 @@ static PyObject *__pyx_pf_2gb_7kernels_14AbstractKernel_2__setstate_cython__(str
 static int __pyx_pf_2gb_7kernels_13PoissonKernel___init__(struct __pyx_obj_2gb_7kernels_PoissonKernel *__pyx_v_self, struct __pyx_obj_2gb_6stamps_Timestamps *__pyx_v_timestamps, size_t __pyx_v_n_proc, struct __pyx_obj_2gb_9randomkit_6random_RNG *__pyx_v_rng); /* proto */
 static PyObject *__pyx_pf_2gb_7kernels_13PoissonKernel_2__reduce_cython__(struct __pyx_obj_2gb_7kernels_PoissonKernel *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_2gb_7kernels_13PoissonKernel_4__setstate_cython__(struct __pyx_obj_2gb_7kernels_PoissonKernel *__pyx_v_self, PyObject *__pyx_v___pyx_state); /* proto */
-static int __pyx_pf_2gb_7kernels_10WoldKernel___init__(struct __pyx_obj_2gb_7kernels_WoldKernel *__pyx_v_self, struct __pyx_obj_2gb_7kernels_PoissonKernel *__pyx_v_poisson, CYTHON_UNUSED size_t __pyx_v_n_proc); /* proto */
+static int __pyx_pf_2gb_7kernels_10WoldKernel___init__(struct __pyx_obj_2gb_7kernels_WoldKernel *__pyx_v_self, struct __pyx_obj_2gb_7kernels_PoissonKernel *__pyx_v_poisson, __Pyx_memviewslice __pyx_v_beta); /* proto */
 static PyObject *__pyx_pf_2gb_7kernels_10WoldKernel_2__reduce_cython__(struct __pyx_obj_2gb_7kernels_WoldKernel *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_2gb_7kernels_10WoldKernel_4__setstate_cython__(struct __pyx_obj_2gb_7kernels_WoldKernel *__pyx_v_self, PyObject *__pyx_v___pyx_state); /* proto */
 static PyObject *__pyx_pf_2gb_7kernels_21TruncatedHawkesKernel___reduce_cython__(struct __pyx_obj_2gb_7kernels_TruncatedHawkesKernel *__pyx_v_self); /* proto */
@@ -2190,7 +2193,7 @@ static PyObject *__pyx_tp_new_memoryview(PyTypeObject *t, PyObject *a, PyObject 
 static PyObject *__pyx_tp_new__memoryviewslice(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_int_0;
 static PyObject *__pyx_int_1;
-static PyObject *__pyx_int_46660187;
+static PyObject *__pyx_int_100491966;
 static PyObject *__pyx_int_184977713;
 static PyObject *__pyx_int_203724029;
 static PyObject *__pyx_int_222419149;
@@ -3594,21 +3597,21 @@ static PyObject *__pyx_pf_2gb_7kernels_13PoissonKernel_4__setstate_cython__(stru
 /* "gb/kernels.pyx":88
  * cdef class WoldKernel(AbstractKernel):
  * 
- *     def __init__(self, PoissonKernel poisson, size_t n_proc):             # <<<<<<<<<<<<<<
+ *     def __init__(self, PoissonKernel poisson, double[::1] beta):             # <<<<<<<<<<<<<<
  *         self.poisson = poisson
- * 
+ *         self.beta = beta
  */
 
 /* Python wrapper */
 static int __pyx_pw_2gb_7kernels_10WoldKernel_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static int __pyx_pw_2gb_7kernels_10WoldKernel_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   struct __pyx_obj_2gb_7kernels_PoissonKernel *__pyx_v_poisson = 0;
-  CYTHON_UNUSED size_t __pyx_v_n_proc;
+  __Pyx_memviewslice __pyx_v_beta = { 0, 0, { 0 }, { 0 }, { 0 } };
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__init__ (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_poisson,&__pyx_n_s_n_proc,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_poisson,&__pyx_n_s_beta,0};
     PyObject* values[2] = {0,0};
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
@@ -3628,7 +3631,7 @@ static int __pyx_pw_2gb_7kernels_10WoldKernel_1__init__(PyObject *__pyx_v_self, 
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
-        if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_n_proc)) != 0)) kw_args--;
+        if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_beta)) != 0)) kw_args--;
         else {
           __Pyx_RaiseArgtupleInvalid("__init__", 1, 2, 2, 1); __PYX_ERR(0, 88, __pyx_L3_error)
         }
@@ -3643,7 +3646,7 @@ static int __pyx_pw_2gb_7kernels_10WoldKernel_1__init__(PyObject *__pyx_v_self, 
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
     __pyx_v_poisson = ((struct __pyx_obj_2gb_7kernels_PoissonKernel *)values[0]);
-    __pyx_v_n_proc = __Pyx_PyInt_As_size_t(values[1]); if (unlikely((__pyx_v_n_proc == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 88, __pyx_L3_error)
+    __pyx_v_beta = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[1]); if (unlikely(!__pyx_v_beta.memview)) __PYX_ERR(0, 88, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
@@ -3654,7 +3657,7 @@ static int __pyx_pw_2gb_7kernels_10WoldKernel_1__init__(PyObject *__pyx_v_self, 
   return -1;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_poisson), __pyx_ptype_2gb_7kernels_PoissonKernel, 1, "poisson", 0))) __PYX_ERR(0, 88, __pyx_L1_error)
-  __pyx_r = __pyx_pf_2gb_7kernels_10WoldKernel___init__(((struct __pyx_obj_2gb_7kernels_WoldKernel *)__pyx_v_self), __pyx_v_poisson, __pyx_v_n_proc);
+  __pyx_r = __pyx_pf_2gb_7kernels_10WoldKernel___init__(((struct __pyx_obj_2gb_7kernels_WoldKernel *)__pyx_v_self), __pyx_v_poisson, __pyx_v_beta);
 
   /* function exit code */
   goto __pyx_L0;
@@ -3665,17 +3668,17 @@ static int __pyx_pw_2gb_7kernels_10WoldKernel_1__init__(PyObject *__pyx_v_self, 
   return __pyx_r;
 }
 
-static int __pyx_pf_2gb_7kernels_10WoldKernel___init__(struct __pyx_obj_2gb_7kernels_WoldKernel *__pyx_v_self, struct __pyx_obj_2gb_7kernels_PoissonKernel *__pyx_v_poisson, CYTHON_UNUSED size_t __pyx_v_n_proc) {
+static int __pyx_pf_2gb_7kernels_10WoldKernel___init__(struct __pyx_obj_2gb_7kernels_WoldKernel *__pyx_v_self, struct __pyx_obj_2gb_7kernels_PoissonKernel *__pyx_v_poisson, __Pyx_memviewslice __pyx_v_beta) {
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__init__", 0);
 
   /* "gb/kernels.pyx":89
  * 
- *     def __init__(self, PoissonKernel poisson, size_t n_proc):
+ *     def __init__(self, PoissonKernel poisson, double[::1] beta):
  *         self.poisson = poisson             # <<<<<<<<<<<<<<
+ *         self.beta = beta
  * 
- *     cdef void set_current_process(self, size_t proc) nogil:
  */
   __Pyx_INCREF(((PyObject *)__pyx_v_poisson));
   __Pyx_GIVEREF(((PyObject *)__pyx_v_poisson));
@@ -3683,22 +3686,34 @@ static int __pyx_pf_2gb_7kernels_10WoldKernel___init__(struct __pyx_obj_2gb_7ker
   __Pyx_DECREF(((PyObject *)__pyx_v_self->poisson));
   __pyx_v_self->poisson = __pyx_v_poisson;
 
+  /* "gb/kernels.pyx":90
+ *     def __init__(self, PoissonKernel poisson, double[::1] beta):
+ *         self.poisson = poisson
+ *         self.beta = beta             # <<<<<<<<<<<<<<
+ * 
+ *     cdef void set_current_process(self, size_t proc) nogil:
+ */
+  __PYX_XDEC_MEMVIEW(&__pyx_v_self->beta, 0);
+  __PYX_INC_MEMVIEW(&__pyx_v_beta, 0);
+  __pyx_v_self->beta = __pyx_v_beta;
+
   /* "gb/kernels.pyx":88
  * cdef class WoldKernel(AbstractKernel):
  * 
- *     def __init__(self, PoissonKernel poisson, size_t n_proc):             # <<<<<<<<<<<<<<
+ *     def __init__(self, PoissonKernel poisson, double[::1] beta):             # <<<<<<<<<<<<<<
  *         self.poisson = poisson
- * 
+ *         self.beta = beta
  */
 
   /* function exit code */
   __pyx_r = 0;
+  __PYX_XDEC_MEMVIEW(&__pyx_v_beta, 1);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "gb/kernels.pyx":91
- *         self.poisson = poisson
+/* "gb/kernels.pyx":92
+ *         self.beta = beta
  * 
  *     cdef void set_current_process(self, size_t proc) nogil:             # <<<<<<<<<<<<<<
  *         self.poisson.set_current_process(proc)
@@ -3707,7 +3722,7 @@ static int __pyx_pf_2gb_7kernels_10WoldKernel___init__(struct __pyx_obj_2gb_7ker
 
 static void __pyx_f_2gb_7kernels_10WoldKernel_set_current_process(struct __pyx_obj_2gb_7kernels_WoldKernel *__pyx_v_self, size_t __pyx_v_proc) {
 
-  /* "gb/kernels.pyx":92
+  /* "gb/kernels.pyx":93
  * 
  *     cdef void set_current_process(self, size_t proc) nogil:
  *         self.poisson.set_current_process(proc)             # <<<<<<<<<<<<<<
@@ -3716,8 +3731,8 @@ static void __pyx_f_2gb_7kernels_10WoldKernel_set_current_process(struct __pyx_o
  */
   ((struct __pyx_vtabstruct_2gb_7kernels_PoissonKernel *)__pyx_v_self->poisson->__pyx_base.__pyx_vtab)->__pyx_base.set_current_process(((struct __pyx_obj_2gb_7kernels_AbstractKernel *)__pyx_v_self->poisson), __pyx_v_proc);
 
-  /* "gb/kernels.pyx":91
- *         self.poisson = poisson
+  /* "gb/kernels.pyx":92
+ *         self.beta = beta
  * 
  *     cdef void set_current_process(self, size_t proc) nogil:             # <<<<<<<<<<<<<<
  *         self.poisson.set_current_process(proc)
@@ -3727,7 +3742,7 @@ static void __pyx_f_2gb_7kernels_10WoldKernel_set_current_process(struct __pyx_o
   /* function exit code */
 }
 
-/* "gb/kernels.pyx":94
+/* "gb/kernels.pyx":95
  *         self.poisson.set_current_process(proc)
  * 
  *     cdef double background_probability(self, double dt) nogil:             # <<<<<<<<<<<<<<
@@ -3738,7 +3753,7 @@ static void __pyx_f_2gb_7kernels_10WoldKernel_set_current_process(struct __pyx_o
 static double __pyx_f_2gb_7kernels_10WoldKernel_background_probability(struct __pyx_obj_2gb_7kernels_WoldKernel *__pyx_v_self, double __pyx_v_dt) {
   double __pyx_r;
 
-  /* "gb/kernels.pyx":95
+  /* "gb/kernels.pyx":96
  * 
  *     cdef double background_probability(self, double dt) nogil:
  *         return self.poisson.background_probability(dt)             # <<<<<<<<<<<<<<
@@ -3748,7 +3763,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_background_probability(struct __
   __pyx_r = ((struct __pyx_vtabstruct_2gb_7kernels_PoissonKernel *)__pyx_v_self->poisson->__pyx_base.__pyx_vtab)->__pyx_base.background_probability(((struct __pyx_obj_2gb_7kernels_AbstractKernel *)__pyx_v_self->poisson), __pyx_v_dt);
   goto __pyx_L0;
 
-  /* "gb/kernels.pyx":94
+  /* "gb/kernels.pyx":95
  *         self.poisson.set_current_process(proc)
  * 
  *     cdef double background_probability(self, double dt) nogil:             # <<<<<<<<<<<<<<
@@ -3761,7 +3776,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_background_probability(struct __
   return __pyx_r;
 }
 
-/* "gb/kernels.pyx":97
+/* "gb/kernels.pyx":98
  *         return self.poisson.background_probability(dt)
  * 
  *     cdef double mu_rate(self, size_t process) nogil:             # <<<<<<<<<<<<<<
@@ -3772,7 +3787,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_background_probability(struct __
 static double __pyx_f_2gb_7kernels_10WoldKernel_mu_rate(struct __pyx_obj_2gb_7kernels_WoldKernel *__pyx_v_self, size_t __pyx_v_process) {
   double __pyx_r;
 
-  /* "gb/kernels.pyx":98
+  /* "gb/kernels.pyx":99
  * 
  *     cdef double mu_rate(self, size_t process) nogil:
  *         return self.poisson.mu_rate(process)             # <<<<<<<<<<<<<<
@@ -3782,7 +3797,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_mu_rate(struct __pyx_obj_2gb_7ke
   __pyx_r = ((struct __pyx_vtabstruct_2gb_7kernels_PoissonKernel *)__pyx_v_self->poisson->__pyx_base.__pyx_vtab)->__pyx_base.mu_rate(((struct __pyx_obj_2gb_7kernels_AbstractKernel *)__pyx_v_self->poisson), __pyx_v_process);
   goto __pyx_L0;
 
-  /* "gb/kernels.pyx":97
+  /* "gb/kernels.pyx":98
  *         return self.poisson.background_probability(dt)
  * 
  *     cdef double mu_rate(self, size_t process) nogil:             # <<<<<<<<<<<<<<
@@ -3795,7 +3810,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_mu_rate(struct __pyx_obj_2gb_7ke
   return __pyx_r;
 }
 
-/* "gb/kernels.pyx":100
+/* "gb/kernels.pyx":101
  *         return self.poisson.mu_rate(process)
  * 
  *     cdef double cross_rate(self, size_t i, size_t b, double alpha_ab) nogil:             # <<<<<<<<<<<<<<
@@ -3814,7 +3829,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
   size_t __pyx_t_1;
   int __pyx_t_2;
 
-  /* "gb/kernels.pyx":101
+  /* "gb/kernels.pyx":102
  * 
  *     cdef double cross_rate(self, size_t i, size_t b, double alpha_ab) nogil:
  *         cdef size_t a = self.poisson.current_process             # <<<<<<<<<<<<<<
@@ -3824,7 +3839,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
   __pyx_t_1 = __pyx_v_self->poisson->current_process;
   __pyx_v_a = __pyx_t_1;
 
-  /* "gb/kernels.pyx":104
+  /* "gb/kernels.pyx":105
  * 
  *         cdef double *stamps
  *         self.poisson.timestamps.get_stamps(a, &stamps)             # <<<<<<<<<<<<<<
@@ -3833,7 +3848,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
  */
   ((struct __pyx_vtabstruct_2gb_6stamps_Timestamps *)__pyx_v_self->poisson->timestamps->__pyx_vtab)->get_stamps(__pyx_v_self->poisson->timestamps, __pyx_v_a, (&__pyx_v_stamps));
 
-  /* "gb/kernels.pyx":106
+  /* "gb/kernels.pyx":107
  *         self.poisson.timestamps.get_stamps(a, &stamps)
  * 
  *         cdef double t = stamps[i]             # <<<<<<<<<<<<<<
@@ -3842,7 +3857,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
  */
   __pyx_v_t = (__pyx_v_stamps[__pyx_v_i]);
 
-  /* "gb/kernels.pyx":109
+  /* "gb/kernels.pyx":110
  *         cdef double tp
  *         cdef double tpp
  *         if i > 0:             # <<<<<<<<<<<<<<
@@ -3852,7 +3867,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
   __pyx_t_2 = ((__pyx_v_i > 0) != 0);
   if (__pyx_t_2) {
 
-    /* "gb/kernels.pyx":110
+    /* "gb/kernels.pyx":111
  *         cdef double tpp
  *         if i > 0:
  *             tp = stamps[i-1]             # <<<<<<<<<<<<<<
@@ -3861,7 +3876,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
  */
     __pyx_v_tp = (__pyx_v_stamps[(__pyx_v_i - 1)]);
 
-    /* "gb/kernels.pyx":109
+    /* "gb/kernels.pyx":110
  *         cdef double tp
  *         cdef double tpp
  *         if i > 0:             # <<<<<<<<<<<<<<
@@ -3871,7 +3886,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
     goto __pyx_L3;
   }
 
-  /* "gb/kernels.pyx":112
+  /* "gb/kernels.pyx":113
  *             tp = stamps[i-1]
  *         else:
  *             tp = 0             # <<<<<<<<<<<<<<
@@ -3883,7 +3898,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
   }
   __pyx_L3:;
 
-  /* "gb/kernels.pyx":113
+  /* "gb/kernels.pyx":114
  *         else:
  *             tp = 0
  *         if tp != 0:             # <<<<<<<<<<<<<<
@@ -3893,7 +3908,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
   __pyx_t_2 = ((__pyx_v_tp != 0.0) != 0);
   if (__pyx_t_2) {
 
-    /* "gb/kernels.pyx":114
+    /* "gb/kernels.pyx":115
  *             tp = 0
  *         if tp != 0:
  *             if a == b:             # <<<<<<<<<<<<<<
@@ -3903,7 +3918,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
     __pyx_t_2 = ((__pyx_v_a == __pyx_v_b) != 0);
     if (__pyx_t_2) {
 
-      /* "gb/kernels.pyx":115
+      /* "gb/kernels.pyx":116
  *         if tp != 0:
  *             if a == b:
  *                 if i > 1:             # <<<<<<<<<<<<<<
@@ -3913,7 +3928,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
       __pyx_t_2 = ((__pyx_v_i > 1) != 0);
       if (__pyx_t_2) {
 
-        /* "gb/kernels.pyx":116
+        /* "gb/kernels.pyx":117
  *             if a == b:
  *                 if i > 1:
  *                     tpp = stamps[i-2]             # <<<<<<<<<<<<<<
@@ -3922,7 +3937,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
  */
         __pyx_v_tpp = (__pyx_v_stamps[(__pyx_v_i - 2)]);
 
-        /* "gb/kernels.pyx":115
+        /* "gb/kernels.pyx":116
  *         if tp != 0:
  *             if a == b:
  *                 if i > 1:             # <<<<<<<<<<<<<<
@@ -3932,7 +3947,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
         goto __pyx_L6;
       }
 
-      /* "gb/kernels.pyx":118
+      /* "gb/kernels.pyx":119
  *                     tpp = stamps[i-2]
  *                 else:
  *                     tpp = 0             # <<<<<<<<<<<<<<
@@ -3944,7 +3959,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
       }
       __pyx_L6:;
 
-      /* "gb/kernels.pyx":114
+      /* "gb/kernels.pyx":115
  *             tp = 0
  *         if tp != 0:
  *             if a == b:             # <<<<<<<<<<<<<<
@@ -3954,7 +3969,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
       goto __pyx_L5;
     }
 
-    /* "gb/kernels.pyx":120
+    /* "gb/kernels.pyx":121
  *                     tpp = 0
  *             else:
  *                 tpp = self.poisson.timestamps.find_previous(b, tp)             # <<<<<<<<<<<<<<
@@ -3966,7 +3981,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
     }
     __pyx_L5:;
 
-    /* "gb/kernels.pyx":113
+    /* "gb/kernels.pyx":114
  *         else:
  *             tp = 0
  *         if tp != 0:             # <<<<<<<<<<<<<<
@@ -3976,30 +3991,31 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
     goto __pyx_L4;
   }
 
-  /* "gb/kernels.pyx":122
+  /* "gb/kernels.pyx":123
  *                 tpp = self.poisson.timestamps.find_previous(b, tp)
  *         else:
  *             tpp = 0             # <<<<<<<<<<<<<<
  * 
- *         cdef double rate = alpha_ab / (1 + tp - tpp)
+ *         cdef double rate = alpha_ab / (self.beta[b] + tp - tpp)
  */
   /*else*/ {
     __pyx_v_tpp = 0.0;
   }
   __pyx_L4:;
 
-  /* "gb/kernels.pyx":124
+  /* "gb/kernels.pyx":125
  *             tpp = 0
  * 
- *         cdef double rate = alpha_ab / (1 + tp - tpp)             # <<<<<<<<<<<<<<
+ *         cdef double rate = alpha_ab / (self.beta[b] + tp - tpp)             # <<<<<<<<<<<<<<
  *         return rate
  * 
  */
-  __pyx_v_rate = (__pyx_v_alpha_ab / ((1.0 + __pyx_v_tp) - __pyx_v_tpp));
+  __pyx_t_1 = __pyx_v_b;
+  __pyx_v_rate = (__pyx_v_alpha_ab / (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_self->beta.data) + __pyx_t_1)) ))) + __pyx_v_tp) - __pyx_v_tpp));
 
-  /* "gb/kernels.pyx":125
+  /* "gb/kernels.pyx":126
  * 
- *         cdef double rate = alpha_ab / (1 + tp - tpp)
+ *         cdef double rate = alpha_ab / (self.beta[b] + tp - tpp)
  *         return rate             # <<<<<<<<<<<<<<
  * 
  * 
@@ -4007,7 +4023,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
   __pyx_r = __pyx_v_rate;
   goto __pyx_L0;
 
-  /* "gb/kernels.pyx":100
+  /* "gb/kernels.pyx":101
  *         return self.poisson.mu_rate(process)
  * 
  *     cdef double cross_rate(self, size_t i, size_t b, double alpha_ab) nogil:             # <<<<<<<<<<<<<<
@@ -4023,7 +4039,7 @@ static double __pyx_f_2gb_7kernels_10WoldKernel_cross_rate(struct __pyx_obj_2gb_
 /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
  *     cdef bint use_setstate
- *     state = (self.poisson,)
+ *     state = (self.beta, self.poisson)
  */
 
 /* Python wrapper */
@@ -4046,49 +4062,54 @@ static PyObject *__pyx_pf_2gb_7kernels_10WoldKernel_2__reduce_cython__(struct __
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
-  int __pyx_t_2;
+  PyObject *__pyx_t_2 = NULL;
   int __pyx_t_3;
-  PyObject *__pyx_t_4 = NULL;
+  int __pyx_t_4;
   PyObject *__pyx_t_5 = NULL;
   __Pyx_RefNannySetupContext("__reduce_cython__", 0);
 
   /* "(tree fragment)":3
  * def __reduce_cython__(self):
  *     cdef bint use_setstate
- *     state = (self.poisson,)             # <<<<<<<<<<<<<<
+ *     state = (self.beta, self.poisson)             # <<<<<<<<<<<<<<
  *     _dict = getattr(self, '__dict__', None)
  *     if _dict is not None:
  */
-  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 3, __pyx_L1_error)
+  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_self->beta, 1, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 3, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 3, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_GIVEREF(__pyx_t_1);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
   __Pyx_INCREF(((PyObject *)__pyx_v_self->poisson));
   __Pyx_GIVEREF(((PyObject *)__pyx_v_self->poisson));
-  PyTuple_SET_ITEM(__pyx_t_1, 0, ((PyObject *)__pyx_v_self->poisson));
-  __pyx_v_state = ((PyObject*)__pyx_t_1);
+  PyTuple_SET_ITEM(__pyx_t_2, 1, ((PyObject *)__pyx_v_self->poisson));
   __pyx_t_1 = 0;
+  __pyx_v_state = ((PyObject*)__pyx_t_2);
+  __pyx_t_2 = 0;
 
   /* "(tree fragment)":4
  *     cdef bint use_setstate
- *     state = (self.poisson,)
+ *     state = (self.beta, self.poisson)
  *     _dict = getattr(self, '__dict__', None)             # <<<<<<<<<<<<<<
  *     if _dict is not None:
  *         state += (_dict,)
  */
-  __pyx_t_1 = __Pyx_GetAttr3(((PyObject *)__pyx_v_self), __pyx_n_s_dict, Py_None); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 4, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_v__dict = __pyx_t_1;
-  __pyx_t_1 = 0;
+  __pyx_t_2 = __Pyx_GetAttr3(((PyObject *)__pyx_v_self), __pyx_n_s_dict, Py_None); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 4, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_v__dict = __pyx_t_2;
+  __pyx_t_2 = 0;
 
   /* "(tree fragment)":5
- *     state = (self.poisson,)
+ *     state = (self.beta, self.poisson)
  *     _dict = getattr(self, '__dict__', None)
  *     if _dict is not None:             # <<<<<<<<<<<<<<
  *         state += (_dict,)
  *         use_setstate = True
  */
-  __pyx_t_2 = (__pyx_v__dict != Py_None);
-  __pyx_t_3 = (__pyx_t_2 != 0);
-  if (__pyx_t_3) {
+  __pyx_t_3 = (__pyx_v__dict != Py_None);
+  __pyx_t_4 = (__pyx_t_3 != 0);
+  if (__pyx_t_4) {
 
     /* "(tree fragment)":6
  *     _dict = getattr(self, '__dict__', None)
@@ -4097,16 +4118,16 @@ static PyObject *__pyx_pf_2gb_7kernels_10WoldKernel_2__reduce_cython__(struct __
  *         use_setstate = True
  *     else:
  */
-    __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 6, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 6, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
     __Pyx_INCREF(__pyx_v__dict);
     __Pyx_GIVEREF(__pyx_v__dict);
-    PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_v__dict);
-    __pyx_t_4 = PyNumber_InPlaceAdd(__pyx_v_state, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 6, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __Pyx_DECREF_SET(__pyx_v_state, ((PyObject*)__pyx_t_4));
-    __pyx_t_4 = 0;
+    PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v__dict);
+    __pyx_t_1 = PyNumber_InPlaceAdd(__pyx_v_state, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 6, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __Pyx_DECREF_SET(__pyx_v_state, ((PyObject*)__pyx_t_1));
+    __pyx_t_1 = 0;
 
     /* "(tree fragment)":7
  *     if _dict is not None:
@@ -4118,7 +4139,7 @@ static PyObject *__pyx_pf_2gb_7kernels_10WoldKernel_2__reduce_cython__(struct __
     __pyx_v_use_setstate = 1;
 
     /* "(tree fragment)":5
- *     state = (self.poisson,)
+ *     state = (self.beta, self.poisson)
  *     _dict = getattr(self, '__dict__', None)
  *     if _dict is not None:             # <<<<<<<<<<<<<<
  *         state += (_dict,)
@@ -4132,11 +4153,11 @@ static PyObject *__pyx_pf_2gb_7kernels_10WoldKernel_2__reduce_cython__(struct __
  *     else:
  *         use_setstate = self.poisson is not None             # <<<<<<<<<<<<<<
  *     if use_setstate:
- *         return __pyx_unpickle_WoldKernel, (type(self), 0x2c7fa5b, None), state
+ *         return __pyx_unpickle_WoldKernel, (type(self), 0x5fd62be, None), state
  */
   /*else*/ {
-    __pyx_t_3 = (((PyObject *)__pyx_v_self->poisson) != Py_None);
-    __pyx_v_use_setstate = __pyx_t_3;
+    __pyx_t_4 = (((PyObject *)__pyx_v_self->poisson) != Py_None);
+    __pyx_v_use_setstate = __pyx_t_4;
   }
   __pyx_L3:;
 
@@ -4144,44 +4165,44 @@ static PyObject *__pyx_pf_2gb_7kernels_10WoldKernel_2__reduce_cython__(struct __
  *     else:
  *         use_setstate = self.poisson is not None
  *     if use_setstate:             # <<<<<<<<<<<<<<
- *         return __pyx_unpickle_WoldKernel, (type(self), 0x2c7fa5b, None), state
+ *         return __pyx_unpickle_WoldKernel, (type(self), 0x5fd62be, None), state
  *     else:
  */
-  __pyx_t_3 = (__pyx_v_use_setstate != 0);
-  if (__pyx_t_3) {
+  __pyx_t_4 = (__pyx_v_use_setstate != 0);
+  if (__pyx_t_4) {
 
     /* "(tree fragment)":11
  *         use_setstate = self.poisson is not None
  *     if use_setstate:
- *         return __pyx_unpickle_WoldKernel, (type(self), 0x2c7fa5b, None), state             # <<<<<<<<<<<<<<
+ *         return __pyx_unpickle_WoldKernel, (type(self), 0x5fd62be, None), state             # <<<<<<<<<<<<<<
  *     else:
- *         return __pyx_unpickle_WoldKernel, (type(self), 0x2c7fa5b, state)
+ *         return __pyx_unpickle_WoldKernel, (type(self), 0x5fd62be, state)
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_pyx_unpickle_WoldKernel); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 11, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_1 = PyTuple_New(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 11, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_pyx_unpickle_WoldKernel); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 11, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_2 = PyTuple_New(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 11, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
     __Pyx_INCREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
     __Pyx_GIVEREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    PyTuple_SET_ITEM(__pyx_t_1, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    __Pyx_INCREF(__pyx_int_46660187);
-    __Pyx_GIVEREF(__pyx_int_46660187);
-    PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_int_46660187);
+    PyTuple_SET_ITEM(__pyx_t_2, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
+    __Pyx_INCREF(__pyx_int_100491966);
+    __Pyx_GIVEREF(__pyx_int_100491966);
+    PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_int_100491966);
     __Pyx_INCREF(Py_None);
     __Pyx_GIVEREF(Py_None);
-    PyTuple_SET_ITEM(__pyx_t_1, 2, Py_None);
+    PyTuple_SET_ITEM(__pyx_t_2, 2, Py_None);
     __pyx_t_5 = PyTuple_New(3); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 11, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __Pyx_GIVEREF(__pyx_t_4);
-    PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_4);
     __Pyx_GIVEREF(__pyx_t_1);
-    PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_t_1);
+    PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_1);
+    __Pyx_GIVEREF(__pyx_t_2);
+    PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_t_2);
     __Pyx_INCREF(__pyx_v_state);
     __Pyx_GIVEREF(__pyx_v_state);
     PyTuple_SET_ITEM(__pyx_t_5, 2, __pyx_v_state);
-    __pyx_t_4 = 0;
     __pyx_t_1 = 0;
+    __pyx_t_2 = 0;
     __pyx_r = __pyx_t_5;
     __pyx_t_5 = 0;
     goto __pyx_L0;
@@ -4190,15 +4211,15 @@ static PyObject *__pyx_pf_2gb_7kernels_10WoldKernel_2__reduce_cython__(struct __
  *     else:
  *         use_setstate = self.poisson is not None
  *     if use_setstate:             # <<<<<<<<<<<<<<
- *         return __pyx_unpickle_WoldKernel, (type(self), 0x2c7fa5b, None), state
+ *         return __pyx_unpickle_WoldKernel, (type(self), 0x5fd62be, None), state
  *     else:
  */
   }
 
   /* "(tree fragment)":13
- *         return __pyx_unpickle_WoldKernel, (type(self), 0x2c7fa5b, None), state
+ *         return __pyx_unpickle_WoldKernel, (type(self), 0x5fd62be, None), state
  *     else:
- *         return __pyx_unpickle_WoldKernel, (type(self), 0x2c7fa5b, state)             # <<<<<<<<<<<<<<
+ *         return __pyx_unpickle_WoldKernel, (type(self), 0x5fd62be, state)             # <<<<<<<<<<<<<<
  * def __setstate_cython__(self, __pyx_state):
  *     __pyx_unpickle_WoldKernel__set_state(self, __pyx_state)
  */
@@ -4206,40 +4227,40 @@ static PyObject *__pyx_pf_2gb_7kernels_10WoldKernel_2__reduce_cython__(struct __
     __Pyx_XDECREF(__pyx_r);
     __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_pyx_unpickle_WoldKernel); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 13, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_1 = PyTuple_New(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 13, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_2 = PyTuple_New(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 13, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
     __Pyx_INCREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
     __Pyx_GIVEREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    PyTuple_SET_ITEM(__pyx_t_1, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    __Pyx_INCREF(__pyx_int_46660187);
-    __Pyx_GIVEREF(__pyx_int_46660187);
-    PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_int_46660187);
+    PyTuple_SET_ITEM(__pyx_t_2, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
+    __Pyx_INCREF(__pyx_int_100491966);
+    __Pyx_GIVEREF(__pyx_int_100491966);
+    PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_int_100491966);
     __Pyx_INCREF(__pyx_v_state);
     __Pyx_GIVEREF(__pyx_v_state);
-    PyTuple_SET_ITEM(__pyx_t_1, 2, __pyx_v_state);
-    __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 13, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
+    PyTuple_SET_ITEM(__pyx_t_2, 2, __pyx_v_state);
+    __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 13, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
     __Pyx_GIVEREF(__pyx_t_5);
-    PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_5);
-    __Pyx_GIVEREF(__pyx_t_1);
-    PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_1);
+    PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_5);
+    __Pyx_GIVEREF(__pyx_t_2);
+    PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_t_2);
     __pyx_t_5 = 0;
+    __pyx_t_2 = 0;
+    __pyx_r = __pyx_t_1;
     __pyx_t_1 = 0;
-    __pyx_r = __pyx_t_4;
-    __pyx_t_4 = 0;
     goto __pyx_L0;
   }
 
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
  *     cdef bint use_setstate
- *     state = (self.poisson,)
+ *     state = (self.beta, self.poisson)
  */
 
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_AddTraceback("gb.kernels.WoldKernel.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
@@ -4253,7 +4274,7 @@ static PyObject *__pyx_pf_2gb_7kernels_10WoldKernel_2__reduce_cython__(struct __
 
 /* "(tree fragment)":14
  *     else:
- *         return __pyx_unpickle_WoldKernel, (type(self), 0x2c7fa5b, state)
+ *         return __pyx_unpickle_WoldKernel, (type(self), 0x5fd62be, state)
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
  *     __pyx_unpickle_WoldKernel__set_state(self, __pyx_state)
  */
@@ -4278,7 +4299,7 @@ static PyObject *__pyx_pf_2gb_7kernels_10WoldKernel_4__setstate_cython__(struct 
   __Pyx_RefNannySetupContext("__setstate_cython__", 0);
 
   /* "(tree fragment)":15
- *         return __pyx_unpickle_WoldKernel, (type(self), 0x2c7fa5b, state)
+ *         return __pyx_unpickle_WoldKernel, (type(self), 0x5fd62be, state)
  * def __setstate_cython__(self, __pyx_state):
  *     __pyx_unpickle_WoldKernel__set_state(self, __pyx_state)             # <<<<<<<<<<<<<<
  */
@@ -4289,7 +4310,7 @@ static PyObject *__pyx_pf_2gb_7kernels_10WoldKernel_4__setstate_cython__(struct 
 
   /* "(tree fragment)":14
  *     else:
- *         return __pyx_unpickle_WoldKernel, (type(self), 0x2c7fa5b, state)
+ *         return __pyx_unpickle_WoldKernel, (type(self), 0x5fd62be, state)
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
  *     __pyx_unpickle_WoldKernel__set_state(self, __pyx_state)
  */
@@ -4307,7 +4328,7 @@ static PyObject *__pyx_pf_2gb_7kernels_10WoldKernel_4__setstate_cython__(struct 
   return __pyx_r;
 }
 
-/* "gb/kernels.pyx":130
+/* "gb/kernels.pyx":131
  * cdef class TruncatedHawkesKernel(WoldKernel):
  * 
  *     cdef double cross_rate(self, size_t i, size_t b, double alpha_ab) nogil:             # <<<<<<<<<<<<<<
@@ -4325,7 +4346,7 @@ static double __pyx_f_2gb_7kernels_21TruncatedHawkesKernel_cross_rate(struct __p
   size_t __pyx_t_1;
   int __pyx_t_2;
 
-  /* "gb/kernels.pyx":131
+  /* "gb/kernels.pyx":132
  * 
  *     cdef double cross_rate(self, size_t i, size_t b, double alpha_ab) nogil:
  *         cdef size_t a = self.poisson.current_process             # <<<<<<<<<<<<<<
@@ -4335,7 +4356,7 @@ static double __pyx_f_2gb_7kernels_21TruncatedHawkesKernel_cross_rate(struct __p
   __pyx_t_1 = __pyx_v_self->__pyx_base.poisson->current_process;
   __pyx_v_a = __pyx_t_1;
 
-  /* "gb/kernels.pyx":133
+  /* "gb/kernels.pyx":134
  *         cdef size_t a = self.poisson.current_process
  *         cdef double *stamps
  *         self.poisson.timestamps.get_stamps(a, &stamps)             # <<<<<<<<<<<<<<
@@ -4344,7 +4365,7 @@ static double __pyx_f_2gb_7kernels_21TruncatedHawkesKernel_cross_rate(struct __p
  */
   ((struct __pyx_vtabstruct_2gb_6stamps_Timestamps *)__pyx_v_self->__pyx_base.poisson->timestamps->__pyx_vtab)->get_stamps(__pyx_v_self->__pyx_base.poisson->timestamps, __pyx_v_a, (&__pyx_v_stamps));
 
-  /* "gb/kernels.pyx":134
+  /* "gb/kernels.pyx":135
  *         cdef double *stamps
  *         self.poisson.timestamps.get_stamps(a, &stamps)
  *         cdef double t = stamps[i]             # <<<<<<<<<<<<<<
@@ -4353,7 +4374,7 @@ static double __pyx_f_2gb_7kernels_21TruncatedHawkesKernel_cross_rate(struct __p
  */
   __pyx_v_t = (__pyx_v_stamps[__pyx_v_i]);
 
-  /* "gb/kernels.pyx":136
+  /* "gb/kernels.pyx":137
  *         cdef double t = stamps[i]
  *         cdef double tp
  *         if a == b:             # <<<<<<<<<<<<<<
@@ -4363,7 +4384,7 @@ static double __pyx_f_2gb_7kernels_21TruncatedHawkesKernel_cross_rate(struct __p
   __pyx_t_2 = ((__pyx_v_a == __pyx_v_b) != 0);
   if (__pyx_t_2) {
 
-    /* "gb/kernels.pyx":137
+    /* "gb/kernels.pyx":138
  *         cdef double tp
  *         if a == b:
  *             if i > 1:             # <<<<<<<<<<<<<<
@@ -4373,7 +4394,7 @@ static double __pyx_f_2gb_7kernels_21TruncatedHawkesKernel_cross_rate(struct __p
     __pyx_t_2 = ((__pyx_v_i > 1) != 0);
     if (__pyx_t_2) {
 
-      /* "gb/kernels.pyx":138
+      /* "gb/kernels.pyx":139
  *         if a == b:
  *             if i > 1:
  *                 tp = stamps[i-2]             # <<<<<<<<<<<<<<
@@ -4382,7 +4403,7 @@ static double __pyx_f_2gb_7kernels_21TruncatedHawkesKernel_cross_rate(struct __p
  */
       __pyx_v_tp = (__pyx_v_stamps[(__pyx_v_i - 2)]);
 
-      /* "gb/kernels.pyx":137
+      /* "gb/kernels.pyx":138
  *         cdef double tp
  *         if a == b:
  *             if i > 1:             # <<<<<<<<<<<<<<
@@ -4392,7 +4413,7 @@ static double __pyx_f_2gb_7kernels_21TruncatedHawkesKernel_cross_rate(struct __p
       goto __pyx_L4;
     }
 
-    /* "gb/kernels.pyx":140
+    /* "gb/kernels.pyx":141
  *                 tp = stamps[i-2]
  *             else:
  *                 tp = 0             # <<<<<<<<<<<<<<
@@ -4404,7 +4425,7 @@ static double __pyx_f_2gb_7kernels_21TruncatedHawkesKernel_cross_rate(struct __p
     }
     __pyx_L4:;
 
-    /* "gb/kernels.pyx":136
+    /* "gb/kernels.pyx":137
  *         cdef double t = stamps[i]
  *         cdef double tp
  *         if a == b:             # <<<<<<<<<<<<<<
@@ -4414,35 +4435,36 @@ static double __pyx_f_2gb_7kernels_21TruncatedHawkesKernel_cross_rate(struct __p
     goto __pyx_L3;
   }
 
-  /* "gb/kernels.pyx":142
+  /* "gb/kernels.pyx":143
  *                 tp = 0
  *         else:
  *             tp = self.poisson.timestamps.find_previous(b, t)             # <<<<<<<<<<<<<<
  * 
- *         cdef double rate = alpha_ab / (1 + t - tp)
+ *         cdef double rate = alpha_ab / (self.beta[b] + t - tp)
  */
   /*else*/ {
     __pyx_v_tp = ((struct __pyx_vtabstruct_2gb_6stamps_Timestamps *)__pyx_v_self->__pyx_base.poisson->timestamps->__pyx_vtab)->find_previous(__pyx_v_self->__pyx_base.poisson->timestamps, __pyx_v_b, __pyx_v_t);
   }
   __pyx_L3:;
 
-  /* "gb/kernels.pyx":144
+  /* "gb/kernels.pyx":145
  *             tp = self.poisson.timestamps.find_previous(b, t)
  * 
- *         cdef double rate = alpha_ab / (1 + t - tp)             # <<<<<<<<<<<<<<
+ *         cdef double rate = alpha_ab / (self.beta[b] + t - tp)             # <<<<<<<<<<<<<<
  *         return rate
  */
-  __pyx_v_rate = (__pyx_v_alpha_ab / ((1.0 + __pyx_v_t) - __pyx_v_tp));
+  __pyx_t_1 = __pyx_v_b;
+  __pyx_v_rate = (__pyx_v_alpha_ab / (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_self->__pyx_base.beta.data) + __pyx_t_1)) ))) + __pyx_v_t) - __pyx_v_tp));
 
-  /* "gb/kernels.pyx":145
+  /* "gb/kernels.pyx":146
  * 
- *         cdef double rate = alpha_ab / (1 + t - tp)
+ *         cdef double rate = alpha_ab / (self.beta[b] + t - tp)
  *         return rate             # <<<<<<<<<<<<<<
  */
   __pyx_r = __pyx_v_rate;
   goto __pyx_L0;
 
-  /* "gb/kernels.pyx":130
+  /* "gb/kernels.pyx":131
  * cdef class TruncatedHawkesKernel(WoldKernel):
  * 
  *     cdef double cross_rate(self, size_t i, size_t b, double alpha_ab) nogil:             # <<<<<<<<<<<<<<
@@ -4458,7 +4480,7 @@ static double __pyx_f_2gb_7kernels_21TruncatedHawkesKernel_cross_rate(struct __p
 /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
  *     cdef bint use_setstate
- *     state = (self.poisson,)
+ *     state = (self.beta, self.poisson)
  */
 
 /* Python wrapper */
@@ -4481,49 +4503,54 @@ static PyObject *__pyx_pf_2gb_7kernels_21TruncatedHawkesKernel___reduce_cython__
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
-  int __pyx_t_2;
+  PyObject *__pyx_t_2 = NULL;
   int __pyx_t_3;
-  PyObject *__pyx_t_4 = NULL;
+  int __pyx_t_4;
   PyObject *__pyx_t_5 = NULL;
   __Pyx_RefNannySetupContext("__reduce_cython__", 0);
 
   /* "(tree fragment)":3
  * def __reduce_cython__(self):
  *     cdef bint use_setstate
- *     state = (self.poisson,)             # <<<<<<<<<<<<<<
+ *     state = (self.beta, self.poisson)             # <<<<<<<<<<<<<<
  *     _dict = getattr(self, '__dict__', None)
  *     if _dict is not None:
  */
-  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 3, __pyx_L1_error)
+  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_self->__pyx_base.beta, 1, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 3, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 3, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_GIVEREF(__pyx_t_1);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
   __Pyx_INCREF(((PyObject *)__pyx_v_self->__pyx_base.poisson));
   __Pyx_GIVEREF(((PyObject *)__pyx_v_self->__pyx_base.poisson));
-  PyTuple_SET_ITEM(__pyx_t_1, 0, ((PyObject *)__pyx_v_self->__pyx_base.poisson));
-  __pyx_v_state = ((PyObject*)__pyx_t_1);
+  PyTuple_SET_ITEM(__pyx_t_2, 1, ((PyObject *)__pyx_v_self->__pyx_base.poisson));
   __pyx_t_1 = 0;
+  __pyx_v_state = ((PyObject*)__pyx_t_2);
+  __pyx_t_2 = 0;
 
   /* "(tree fragment)":4
  *     cdef bint use_setstate
- *     state = (self.poisson,)
+ *     state = (self.beta, self.poisson)
  *     _dict = getattr(self, '__dict__', None)             # <<<<<<<<<<<<<<
  *     if _dict is not None:
  *         state += (_dict,)
  */
-  __pyx_t_1 = __Pyx_GetAttr3(((PyObject *)__pyx_v_self), __pyx_n_s_dict, Py_None); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 4, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_v__dict = __pyx_t_1;
-  __pyx_t_1 = 0;
+  __pyx_t_2 = __Pyx_GetAttr3(((PyObject *)__pyx_v_self), __pyx_n_s_dict, Py_None); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 4, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_v__dict = __pyx_t_2;
+  __pyx_t_2 = 0;
 
   /* "(tree fragment)":5
- *     state = (self.poisson,)
+ *     state = (self.beta, self.poisson)
  *     _dict = getattr(self, '__dict__', None)
  *     if _dict is not None:             # <<<<<<<<<<<<<<
  *         state += (_dict,)
  *         use_setstate = True
  */
-  __pyx_t_2 = (__pyx_v__dict != Py_None);
-  __pyx_t_3 = (__pyx_t_2 != 0);
-  if (__pyx_t_3) {
+  __pyx_t_3 = (__pyx_v__dict != Py_None);
+  __pyx_t_4 = (__pyx_t_3 != 0);
+  if (__pyx_t_4) {
 
     /* "(tree fragment)":6
  *     _dict = getattr(self, '__dict__', None)
@@ -4532,16 +4559,16 @@ static PyObject *__pyx_pf_2gb_7kernels_21TruncatedHawkesKernel___reduce_cython__
  *         use_setstate = True
  *     else:
  */
-    __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 6, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 6, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
     __Pyx_INCREF(__pyx_v__dict);
     __Pyx_GIVEREF(__pyx_v__dict);
-    PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_v__dict);
-    __pyx_t_4 = PyNumber_InPlaceAdd(__pyx_v_state, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 6, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __Pyx_DECREF_SET(__pyx_v_state, ((PyObject*)__pyx_t_4));
-    __pyx_t_4 = 0;
+    PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v__dict);
+    __pyx_t_1 = PyNumber_InPlaceAdd(__pyx_v_state, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 6, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __Pyx_DECREF_SET(__pyx_v_state, ((PyObject*)__pyx_t_1));
+    __pyx_t_1 = 0;
 
     /* "(tree fragment)":7
  *     if _dict is not None:
@@ -4553,7 +4580,7 @@ static PyObject *__pyx_pf_2gb_7kernels_21TruncatedHawkesKernel___reduce_cython__
     __pyx_v_use_setstate = 1;
 
     /* "(tree fragment)":5
- *     state = (self.poisson,)
+ *     state = (self.beta, self.poisson)
  *     _dict = getattr(self, '__dict__', None)
  *     if _dict is not None:             # <<<<<<<<<<<<<<
  *         state += (_dict,)
@@ -4567,11 +4594,11 @@ static PyObject *__pyx_pf_2gb_7kernels_21TruncatedHawkesKernel___reduce_cython__
  *     else:
  *         use_setstate = self.poisson is not None             # <<<<<<<<<<<<<<
  *     if use_setstate:
- *         return __pyx_unpickle_TruncatedHawkesKernel, (type(self), 0x2c7fa5b, None), state
+ *         return __pyx_unpickle_TruncatedHawkesKernel, (type(self), 0x5fd62be, None), state
  */
   /*else*/ {
-    __pyx_t_3 = (((PyObject *)__pyx_v_self->__pyx_base.poisson) != Py_None);
-    __pyx_v_use_setstate = __pyx_t_3;
+    __pyx_t_4 = (((PyObject *)__pyx_v_self->__pyx_base.poisson) != Py_None);
+    __pyx_v_use_setstate = __pyx_t_4;
   }
   __pyx_L3:;
 
@@ -4579,44 +4606,44 @@ static PyObject *__pyx_pf_2gb_7kernels_21TruncatedHawkesKernel___reduce_cython__
  *     else:
  *         use_setstate = self.poisson is not None
  *     if use_setstate:             # <<<<<<<<<<<<<<
- *         return __pyx_unpickle_TruncatedHawkesKernel, (type(self), 0x2c7fa5b, None), state
+ *         return __pyx_unpickle_TruncatedHawkesKernel, (type(self), 0x5fd62be, None), state
  *     else:
  */
-  __pyx_t_3 = (__pyx_v_use_setstate != 0);
-  if (__pyx_t_3) {
+  __pyx_t_4 = (__pyx_v_use_setstate != 0);
+  if (__pyx_t_4) {
 
     /* "(tree fragment)":11
  *         use_setstate = self.poisson is not None
  *     if use_setstate:
- *         return __pyx_unpickle_TruncatedHawkesKernel, (type(self), 0x2c7fa5b, None), state             # <<<<<<<<<<<<<<
+ *         return __pyx_unpickle_TruncatedHawkesKernel, (type(self), 0x5fd62be, None), state             # <<<<<<<<<<<<<<
  *     else:
- *         return __pyx_unpickle_TruncatedHawkesKernel, (type(self), 0x2c7fa5b, state)
+ *         return __pyx_unpickle_TruncatedHawkesKernel, (type(self), 0x5fd62be, state)
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_pyx_unpickle_TruncatedHawkesKe); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 11, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_1 = PyTuple_New(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 11, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_pyx_unpickle_TruncatedHawkesKe); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 11, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_2 = PyTuple_New(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 11, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
     __Pyx_INCREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
     __Pyx_GIVEREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    PyTuple_SET_ITEM(__pyx_t_1, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    __Pyx_INCREF(__pyx_int_46660187);
-    __Pyx_GIVEREF(__pyx_int_46660187);
-    PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_int_46660187);
+    PyTuple_SET_ITEM(__pyx_t_2, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
+    __Pyx_INCREF(__pyx_int_100491966);
+    __Pyx_GIVEREF(__pyx_int_100491966);
+    PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_int_100491966);
     __Pyx_INCREF(Py_None);
     __Pyx_GIVEREF(Py_None);
-    PyTuple_SET_ITEM(__pyx_t_1, 2, Py_None);
+    PyTuple_SET_ITEM(__pyx_t_2, 2, Py_None);
     __pyx_t_5 = PyTuple_New(3); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 11, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __Pyx_GIVEREF(__pyx_t_4);
-    PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_4);
     __Pyx_GIVEREF(__pyx_t_1);
-    PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_t_1);
+    PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_1);
+    __Pyx_GIVEREF(__pyx_t_2);
+    PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_t_2);
     __Pyx_INCREF(__pyx_v_state);
     __Pyx_GIVEREF(__pyx_v_state);
     PyTuple_SET_ITEM(__pyx_t_5, 2, __pyx_v_state);
-    __pyx_t_4 = 0;
     __pyx_t_1 = 0;
+    __pyx_t_2 = 0;
     __pyx_r = __pyx_t_5;
     __pyx_t_5 = 0;
     goto __pyx_L0;
@@ -4625,15 +4652,15 @@ static PyObject *__pyx_pf_2gb_7kernels_21TruncatedHawkesKernel___reduce_cython__
  *     else:
  *         use_setstate = self.poisson is not None
  *     if use_setstate:             # <<<<<<<<<<<<<<
- *         return __pyx_unpickle_TruncatedHawkesKernel, (type(self), 0x2c7fa5b, None), state
+ *         return __pyx_unpickle_TruncatedHawkesKernel, (type(self), 0x5fd62be, None), state
  *     else:
  */
   }
 
   /* "(tree fragment)":13
- *         return __pyx_unpickle_TruncatedHawkesKernel, (type(self), 0x2c7fa5b, None), state
+ *         return __pyx_unpickle_TruncatedHawkesKernel, (type(self), 0x5fd62be, None), state
  *     else:
- *         return __pyx_unpickle_TruncatedHawkesKernel, (type(self), 0x2c7fa5b, state)             # <<<<<<<<<<<<<<
+ *         return __pyx_unpickle_TruncatedHawkesKernel, (type(self), 0x5fd62be, state)             # <<<<<<<<<<<<<<
  * def __setstate_cython__(self, __pyx_state):
  *     __pyx_unpickle_TruncatedHawkesKernel__set_state(self, __pyx_state)
  */
@@ -4641,40 +4668,40 @@ static PyObject *__pyx_pf_2gb_7kernels_21TruncatedHawkesKernel___reduce_cython__
     __Pyx_XDECREF(__pyx_r);
     __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_pyx_unpickle_TruncatedHawkesKe); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 13, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_1 = PyTuple_New(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 13, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_2 = PyTuple_New(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 13, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
     __Pyx_INCREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
     __Pyx_GIVEREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    PyTuple_SET_ITEM(__pyx_t_1, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    __Pyx_INCREF(__pyx_int_46660187);
-    __Pyx_GIVEREF(__pyx_int_46660187);
-    PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_int_46660187);
+    PyTuple_SET_ITEM(__pyx_t_2, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
+    __Pyx_INCREF(__pyx_int_100491966);
+    __Pyx_GIVEREF(__pyx_int_100491966);
+    PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_int_100491966);
     __Pyx_INCREF(__pyx_v_state);
     __Pyx_GIVEREF(__pyx_v_state);
-    PyTuple_SET_ITEM(__pyx_t_1, 2, __pyx_v_state);
-    __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 13, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
+    PyTuple_SET_ITEM(__pyx_t_2, 2, __pyx_v_state);
+    __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 13, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
     __Pyx_GIVEREF(__pyx_t_5);
-    PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_5);
-    __Pyx_GIVEREF(__pyx_t_1);
-    PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_1);
+    PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_5);
+    __Pyx_GIVEREF(__pyx_t_2);
+    PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_t_2);
     __pyx_t_5 = 0;
+    __pyx_t_2 = 0;
+    __pyx_r = __pyx_t_1;
     __pyx_t_1 = 0;
-    __pyx_r = __pyx_t_4;
-    __pyx_t_4 = 0;
     goto __pyx_L0;
   }
 
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
  *     cdef bint use_setstate
- *     state = (self.poisson,)
+ *     state = (self.beta, self.poisson)
  */
 
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_AddTraceback("gb.kernels.TruncatedHawkesKernel.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
@@ -4688,7 +4715,7 @@ static PyObject *__pyx_pf_2gb_7kernels_21TruncatedHawkesKernel___reduce_cython__
 
 /* "(tree fragment)":14
  *     else:
- *         return __pyx_unpickle_TruncatedHawkesKernel, (type(self), 0x2c7fa5b, state)
+ *         return __pyx_unpickle_TruncatedHawkesKernel, (type(self), 0x5fd62be, state)
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
  *     __pyx_unpickle_TruncatedHawkesKernel__set_state(self, __pyx_state)
  */
@@ -4713,7 +4740,7 @@ static PyObject *__pyx_pf_2gb_7kernels_21TruncatedHawkesKernel_2__setstate_cytho
   __Pyx_RefNannySetupContext("__setstate_cython__", 0);
 
   /* "(tree fragment)":15
- *         return __pyx_unpickle_TruncatedHawkesKernel, (type(self), 0x2c7fa5b, state)
+ *         return __pyx_unpickle_TruncatedHawkesKernel, (type(self), 0x5fd62be, state)
  * def __setstate_cython__(self, __pyx_state):
  *     __pyx_unpickle_TruncatedHawkesKernel__set_state(self, __pyx_state)             # <<<<<<<<<<<<<<
  */
@@ -4724,7 +4751,7 @@ static PyObject *__pyx_pf_2gb_7kernels_21TruncatedHawkesKernel_2__setstate_cytho
 
   /* "(tree fragment)":14
  *     else:
- *         return __pyx_unpickle_TruncatedHawkesKernel, (type(self), 0x2c7fa5b, state)
+ *         return __pyx_unpickle_TruncatedHawkesKernel, (type(self), 0x5fd62be, state)
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
  *     __pyx_unpickle_TruncatedHawkesKernel__set_state(self, __pyx_state)
  */
@@ -5699,7 +5726,7 @@ static PyObject *__pyx_f_2gb_7kernels___pyx_unpickle_PoissonKernel__set_state(st
 
 /* "(tree fragment)":1
  * def __pyx_unpickle_WoldKernel(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
- *     if __pyx_checksum != 0x2c7fa5b:
+ *     if __pyx_checksum != 0x5fd62be:
  *         from pickle import PickleError as __pyx_PickleError
  */
 
@@ -5792,18 +5819,18 @@ static PyObject *__pyx_pf_2gb_7kernels_4__pyx_unpickle_WoldKernel(CYTHON_UNUSED 
 
   /* "(tree fragment)":2
  * def __pyx_unpickle_WoldKernel(__pyx_type, long __pyx_checksum, __pyx_state):
- *     if __pyx_checksum != 0x2c7fa5b:             # <<<<<<<<<<<<<<
+ *     if __pyx_checksum != 0x5fd62be:             # <<<<<<<<<<<<<<
  *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x2c7fa5b = (poisson))" % __pyx_checksum)
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x5fd62be = (beta, poisson))" % __pyx_checksum)
  */
-  __pyx_t_1 = ((__pyx_v___pyx_checksum != 0x2c7fa5b) != 0);
+  __pyx_t_1 = ((__pyx_v___pyx_checksum != 0x5fd62be) != 0);
   if (__pyx_t_1) {
 
     /* "(tree fragment)":3
  * def __pyx_unpickle_WoldKernel(__pyx_type, long __pyx_checksum, __pyx_state):
- *     if __pyx_checksum != 0x2c7fa5b:
+ *     if __pyx_checksum != 0x5fd62be:
  *         from pickle import PickleError as __pyx_PickleError             # <<<<<<<<<<<<<<
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x2c7fa5b = (poisson))" % __pyx_checksum)
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x5fd62be = (beta, poisson))" % __pyx_checksum)
  *     __pyx_result = WoldKernel.__new__(__pyx_type)
  */
     __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 3, __pyx_L1_error)
@@ -5822,15 +5849,15 @@ static PyObject *__pyx_pf_2gb_7kernels_4__pyx_unpickle_WoldKernel(CYTHON_UNUSED 
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
     /* "(tree fragment)":4
- *     if __pyx_checksum != 0x2c7fa5b:
+ *     if __pyx_checksum != 0x5fd62be:
  *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x2c7fa5b = (poisson))" % __pyx_checksum)             # <<<<<<<<<<<<<<
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x5fd62be = (beta, poisson))" % __pyx_checksum)             # <<<<<<<<<<<<<<
  *     __pyx_result = WoldKernel.__new__(__pyx_type)
  *     if __pyx_state is not None:
  */
     __pyx_t_2 = __Pyx_PyInt_From_long(__pyx_v___pyx_checksum); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 4, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = __Pyx_PyString_Format(__pyx_kp_s_Incompatible_checksums_s_vs_0x2c, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 4, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyString_Format(__pyx_kp_s_Incompatible_checksums_s_vs_0x5f, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 4, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_INCREF(__pyx_v___pyx_PickleError);
@@ -5886,15 +5913,15 @@ static PyObject *__pyx_pf_2gb_7kernels_4__pyx_unpickle_WoldKernel(CYTHON_UNUSED 
 
     /* "(tree fragment)":2
  * def __pyx_unpickle_WoldKernel(__pyx_type, long __pyx_checksum, __pyx_state):
- *     if __pyx_checksum != 0x2c7fa5b:             # <<<<<<<<<<<<<<
+ *     if __pyx_checksum != 0x5fd62be:             # <<<<<<<<<<<<<<
  *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x2c7fa5b = (poisson))" % __pyx_checksum)
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x5fd62be = (beta, poisson))" % __pyx_checksum)
  */
   }
 
   /* "(tree fragment)":5
  *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x2c7fa5b = (poisson))" % __pyx_checksum)
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x5fd62be = (beta, poisson))" % __pyx_checksum)
  *     __pyx_result = WoldKernel.__new__(__pyx_type)             # <<<<<<<<<<<<<<
  *     if __pyx_state is not None:
  *         __pyx_unpickle_WoldKernel__set_state(<WoldKernel> __pyx_result, __pyx_state)
@@ -5948,7 +5975,7 @@ static PyObject *__pyx_pf_2gb_7kernels_4__pyx_unpickle_WoldKernel(CYTHON_UNUSED 
   __pyx_t_3 = 0;
 
   /* "(tree fragment)":6
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x2c7fa5b = (poisson))" % __pyx_checksum)
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x5fd62be = (beta, poisson))" % __pyx_checksum)
  *     __pyx_result = WoldKernel.__new__(__pyx_type)
  *     if __pyx_state is not None:             # <<<<<<<<<<<<<<
  *         __pyx_unpickle_WoldKernel__set_state(<WoldKernel> __pyx_result, __pyx_state)
@@ -5971,7 +5998,7 @@ static PyObject *__pyx_pf_2gb_7kernels_4__pyx_unpickle_WoldKernel(CYTHON_UNUSED 
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
     /* "(tree fragment)":6
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x2c7fa5b = (poisson))" % __pyx_checksum)
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x5fd62be = (beta, poisson))" % __pyx_checksum)
  *     __pyx_result = WoldKernel.__new__(__pyx_type)
  *     if __pyx_state is not None:             # <<<<<<<<<<<<<<
  *         __pyx_unpickle_WoldKernel__set_state(<WoldKernel> __pyx_result, __pyx_state)
@@ -5984,7 +6011,7 @@ static PyObject *__pyx_pf_2gb_7kernels_4__pyx_unpickle_WoldKernel(CYTHON_UNUSED 
  *         __pyx_unpickle_WoldKernel__set_state(<WoldKernel> __pyx_result, __pyx_state)
  *     return __pyx_result             # <<<<<<<<<<<<<<
  * cdef __pyx_unpickle_WoldKernel__set_state(WoldKernel __pyx_result, tuple __pyx_state):
- *     __pyx_result.poisson = __pyx_state[0]
+ *     __pyx_result.beta = __pyx_state[0]; __pyx_result.poisson = __pyx_state[1]
  */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(__pyx_v___pyx_result);
@@ -5993,7 +6020,7 @@ static PyObject *__pyx_pf_2gb_7kernels_4__pyx_unpickle_WoldKernel(CYTHON_UNUSED 
 
   /* "(tree fragment)":1
  * def __pyx_unpickle_WoldKernel(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
- *     if __pyx_checksum != 0x2c7fa5b:
+ *     if __pyx_checksum != 0x5fd62be:
  *         from pickle import PickleError as __pyx_PickleError
  */
 
@@ -6018,130 +6045,141 @@ static PyObject *__pyx_pf_2gb_7kernels_4__pyx_unpickle_WoldKernel(CYTHON_UNUSED 
  *         __pyx_unpickle_WoldKernel__set_state(<WoldKernel> __pyx_result, __pyx_state)
  *     return __pyx_result
  * cdef __pyx_unpickle_WoldKernel__set_state(WoldKernel __pyx_result, tuple __pyx_state):             # <<<<<<<<<<<<<<
- *     __pyx_result.poisson = __pyx_state[0]
- *     if len(__pyx_state) > 1 and hasattr(__pyx_result, '__dict__'):
+ *     __pyx_result.beta = __pyx_state[0]; __pyx_result.poisson = __pyx_state[1]
+ *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):
  */
 
 static PyObject *__pyx_f_2gb_7kernels___pyx_unpickle_WoldKernel__set_state(struct __pyx_obj_2gb_7kernels_WoldKernel *__pyx_v___pyx_result, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  int __pyx_t_2;
-  Py_ssize_t __pyx_t_3;
-  int __pyx_t_4;
+  __Pyx_memviewslice __pyx_t_1 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  PyObject *__pyx_t_2 = NULL;
+  int __pyx_t_3;
+  Py_ssize_t __pyx_t_4;
   int __pyx_t_5;
-  PyObject *__pyx_t_6 = NULL;
+  int __pyx_t_6;
   PyObject *__pyx_t_7 = NULL;
   PyObject *__pyx_t_8 = NULL;
+  PyObject *__pyx_t_9 = NULL;
   __Pyx_RefNannySetupContext("__pyx_unpickle_WoldKernel__set_state", 0);
 
   /* "(tree fragment)":10
  *     return __pyx_result
  * cdef __pyx_unpickle_WoldKernel__set_state(WoldKernel __pyx_result, tuple __pyx_state):
- *     __pyx_result.poisson = __pyx_state[0]             # <<<<<<<<<<<<<<
- *     if len(__pyx_state) > 1 and hasattr(__pyx_result, '__dict__'):
- *         __pyx_result.__dict__.update(__pyx_state[1])
+ *     __pyx_result.beta = __pyx_state[0]; __pyx_result.poisson = __pyx_state[1]             # <<<<<<<<<<<<<<
+ *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):
+ *         __pyx_result.__dict__.update(__pyx_state[2])
  */
   if (unlikely(__pyx_v___pyx_state == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(1, 10, __pyx_L1_error)
   }
-  if (!(likely(((PyTuple_GET_ITEM(__pyx_v___pyx_state, 0)) == Py_None) || likely(__Pyx_TypeTest(PyTuple_GET_ITEM(__pyx_v___pyx_state, 0), __pyx_ptype_2gb_7kernels_PoissonKernel))))) __PYX_ERR(1, 10, __pyx_L1_error)
-  __pyx_t_1 = PyTuple_GET_ITEM(__pyx_v___pyx_state, 0);
-  __Pyx_INCREF(__pyx_t_1);
-  __Pyx_GIVEREF(__pyx_t_1);
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(PyTuple_GET_ITEM(__pyx_v___pyx_state, 0));
+  if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(1, 10, __pyx_L1_error)
+  __PYX_XDEC_MEMVIEW(&__pyx_v___pyx_result->beta, 0);
+  __pyx_v___pyx_result->beta = __pyx_t_1;
+  __pyx_t_1.memview = NULL;
+  __pyx_t_1.data = NULL;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 10, __pyx_L1_error)
+  }
+  if (!(likely(((PyTuple_GET_ITEM(__pyx_v___pyx_state, 1)) == Py_None) || likely(__Pyx_TypeTest(PyTuple_GET_ITEM(__pyx_v___pyx_state, 1), __pyx_ptype_2gb_7kernels_PoissonKernel))))) __PYX_ERR(1, 10, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_GET_ITEM(__pyx_v___pyx_state, 1);
+  __Pyx_INCREF(__pyx_t_2);
+  __Pyx_GIVEREF(__pyx_t_2);
   __Pyx_GOTREF(__pyx_v___pyx_result->poisson);
   __Pyx_DECREF(((PyObject *)__pyx_v___pyx_result->poisson));
-  __pyx_v___pyx_result->poisson = ((struct __pyx_obj_2gb_7kernels_PoissonKernel *)__pyx_t_1);
-  __pyx_t_1 = 0;
+  __pyx_v___pyx_result->poisson = ((struct __pyx_obj_2gb_7kernels_PoissonKernel *)__pyx_t_2);
+  __pyx_t_2 = 0;
 
   /* "(tree fragment)":11
  * cdef __pyx_unpickle_WoldKernel__set_state(WoldKernel __pyx_result, tuple __pyx_state):
- *     __pyx_result.poisson = __pyx_state[0]
- *     if len(__pyx_state) > 1 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
- *         __pyx_result.__dict__.update(__pyx_state[1])
+ *     __pyx_result.beta = __pyx_state[0]; __pyx_result.poisson = __pyx_state[1]
+ *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
+ *         __pyx_result.__dict__.update(__pyx_state[2])
  */
   if (unlikely(__pyx_v___pyx_state == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
     __PYX_ERR(1, 11, __pyx_L1_error)
   }
-  __pyx_t_3 = PyTuple_GET_SIZE(__pyx_v___pyx_state); if (unlikely(__pyx_t_3 == ((Py_ssize_t)-1))) __PYX_ERR(1, 11, __pyx_L1_error)
-  __pyx_t_4 = ((__pyx_t_3 > 1) != 0);
-  if (__pyx_t_4) {
+  __pyx_t_4 = PyTuple_GET_SIZE(__pyx_v___pyx_state); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(1, 11, __pyx_L1_error)
+  __pyx_t_5 = ((__pyx_t_4 > 2) != 0);
+  if (__pyx_t_5) {
   } else {
-    __pyx_t_2 = __pyx_t_4;
+    __pyx_t_3 = __pyx_t_5;
     goto __pyx_L4_bool_binop_done;
   }
-  __pyx_t_4 = __Pyx_HasAttr(((PyObject *)__pyx_v___pyx_result), __pyx_n_s_dict); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(1, 11, __pyx_L1_error)
-  __pyx_t_5 = (__pyx_t_4 != 0);
-  __pyx_t_2 = __pyx_t_5;
+  __pyx_t_5 = __Pyx_HasAttr(((PyObject *)__pyx_v___pyx_result), __pyx_n_s_dict); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(1, 11, __pyx_L1_error)
+  __pyx_t_6 = (__pyx_t_5 != 0);
+  __pyx_t_3 = __pyx_t_6;
   __pyx_L4_bool_binop_done:;
-  if (__pyx_t_2) {
+  if (__pyx_t_3) {
 
     /* "(tree fragment)":12
- *     __pyx_result.poisson = __pyx_state[0]
- *     if len(__pyx_state) > 1 and hasattr(__pyx_result, '__dict__'):
- *         __pyx_result.__dict__.update(__pyx_state[1])             # <<<<<<<<<<<<<<
+ *     __pyx_result.beta = __pyx_state[0]; __pyx_result.poisson = __pyx_state[1]
+ *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):
+ *         __pyx_result.__dict__.update(__pyx_state[2])             # <<<<<<<<<<<<<<
  */
-    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v___pyx_result), __pyx_n_s_dict); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 12, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_update); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 12, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v___pyx_result), __pyx_n_s_dict); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 12, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_update); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 12, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_8);
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     if (unlikely(__pyx_v___pyx_state == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
       __PYX_ERR(1, 12, __pyx_L1_error)
     }
-    __pyx_t_6 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_7))) {
-      __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_7);
-      if (likely(__pyx_t_6)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_7);
-        __Pyx_INCREF(__pyx_t_6);
+    __pyx_t_7 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_8))) {
+      __pyx_t_7 = PyMethod_GET_SELF(__pyx_t_8);
+      if (likely(__pyx_t_7)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_8);
+        __Pyx_INCREF(__pyx_t_7);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_7, function);
+        __Pyx_DECREF_SET(__pyx_t_8, function);
       }
     }
-    if (!__pyx_t_6) {
-      __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_7, PyTuple_GET_ITEM(__pyx_v___pyx_state, 1)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
+    if (!__pyx_t_7) {
+      __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_8, PyTuple_GET_ITEM(__pyx_v___pyx_state, 2)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 12, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_2);
     } else {
       #if CYTHON_FAST_PYCALL
-      if (PyFunction_Check(__pyx_t_7)) {
-        PyObject *__pyx_temp[2] = {__pyx_t_6, PyTuple_GET_ITEM(__pyx_v___pyx_state, 1)};
-        __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_7, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
-        __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-        __Pyx_GOTREF(__pyx_t_1);
+      if (PyFunction_Check(__pyx_t_8)) {
+        PyObject *__pyx_temp[2] = {__pyx_t_7, PyTuple_GET_ITEM(__pyx_v___pyx_state, 2)};
+        __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_8, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 12, __pyx_L1_error)
+        __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
+        __Pyx_GOTREF(__pyx_t_2);
       } else
       #endif
       #if CYTHON_FAST_PYCCALL
-      if (__Pyx_PyFastCFunction_Check(__pyx_t_7)) {
-        PyObject *__pyx_temp[2] = {__pyx_t_6, PyTuple_GET_ITEM(__pyx_v___pyx_state, 1)};
-        __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_7, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
-        __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-        __Pyx_GOTREF(__pyx_t_1);
+      if (__Pyx_PyFastCFunction_Check(__pyx_t_8)) {
+        PyObject *__pyx_temp[2] = {__pyx_t_7, PyTuple_GET_ITEM(__pyx_v___pyx_state, 2)};
+        __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_8, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 12, __pyx_L1_error)
+        __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
+        __Pyx_GOTREF(__pyx_t_2);
       } else
       #endif
       {
-        __pyx_t_8 = PyTuple_New(1+1); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 12, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_8);
-        __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_6); __pyx_t_6 = NULL;
-        __Pyx_INCREF(PyTuple_GET_ITEM(__pyx_v___pyx_state, 1));
-        __Pyx_GIVEREF(PyTuple_GET_ITEM(__pyx_v___pyx_state, 1));
-        PyTuple_SET_ITEM(__pyx_t_8, 0+1, PyTuple_GET_ITEM(__pyx_v___pyx_state, 1));
-        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_t_8, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_1);
-        __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+        __pyx_t_9 = PyTuple_New(1+1); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 12, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_9);
+        __Pyx_GIVEREF(__pyx_t_7); PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_7); __pyx_t_7 = NULL;
+        __Pyx_INCREF(PyTuple_GET_ITEM(__pyx_v___pyx_state, 2));
+        __Pyx_GIVEREF(PyTuple_GET_ITEM(__pyx_v___pyx_state, 2));
+        PyTuple_SET_ITEM(__pyx_t_9, 0+1, PyTuple_GET_ITEM(__pyx_v___pyx_state, 2));
+        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_8, __pyx_t_9, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 12, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       }
     }
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
     /* "(tree fragment)":11
  * cdef __pyx_unpickle_WoldKernel__set_state(WoldKernel __pyx_result, tuple __pyx_state):
- *     __pyx_result.poisson = __pyx_state[0]
- *     if len(__pyx_state) > 1 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
- *         __pyx_result.__dict__.update(__pyx_state[1])
+ *     __pyx_result.beta = __pyx_state[0]; __pyx_result.poisson = __pyx_state[1]
+ *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
+ *         __pyx_result.__dict__.update(__pyx_state[2])
  */
   }
 
@@ -6149,18 +6187,19 @@ static PyObject *__pyx_f_2gb_7kernels___pyx_unpickle_WoldKernel__set_state(struc
  *         __pyx_unpickle_WoldKernel__set_state(<WoldKernel> __pyx_result, __pyx_state)
  *     return __pyx_result
  * cdef __pyx_unpickle_WoldKernel__set_state(WoldKernel __pyx_result, tuple __pyx_state):             # <<<<<<<<<<<<<<
- *     __pyx_result.poisson = __pyx_state[0]
- *     if len(__pyx_state) > 1 and hasattr(__pyx_result, '__dict__'):
+ *     __pyx_result.beta = __pyx_state[0]; __pyx_result.poisson = __pyx_state[1]
+ *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):
  */
 
   /* function exit code */
   __pyx_r = Py_None; __Pyx_INCREF(Py_None);
   goto __pyx_L0;
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_6);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_1, 1);
+  __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_7);
   __Pyx_XDECREF(__pyx_t_8);
+  __Pyx_XDECREF(__pyx_t_9);
   __Pyx_AddTraceback("gb.kernels.__pyx_unpickle_WoldKernel__set_state", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
@@ -6171,7 +6210,7 @@ static PyObject *__pyx_f_2gb_7kernels___pyx_unpickle_WoldKernel__set_state(struc
 
 /* "(tree fragment)":1
  * def __pyx_unpickle_TruncatedHawkesKernel(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
- *     if __pyx_checksum != 0x2c7fa5b:
+ *     if __pyx_checksum != 0x5fd62be:
  *         from pickle import PickleError as __pyx_PickleError
  */
 
@@ -6264,18 +6303,18 @@ static PyObject *__pyx_pf_2gb_7kernels_6__pyx_unpickle_TruncatedHawkesKernel(CYT
 
   /* "(tree fragment)":2
  * def __pyx_unpickle_TruncatedHawkesKernel(__pyx_type, long __pyx_checksum, __pyx_state):
- *     if __pyx_checksum != 0x2c7fa5b:             # <<<<<<<<<<<<<<
+ *     if __pyx_checksum != 0x5fd62be:             # <<<<<<<<<<<<<<
  *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x2c7fa5b = (poisson))" % __pyx_checksum)
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x5fd62be = (beta, poisson))" % __pyx_checksum)
  */
-  __pyx_t_1 = ((__pyx_v___pyx_checksum != 0x2c7fa5b) != 0);
+  __pyx_t_1 = ((__pyx_v___pyx_checksum != 0x5fd62be) != 0);
   if (__pyx_t_1) {
 
     /* "(tree fragment)":3
  * def __pyx_unpickle_TruncatedHawkesKernel(__pyx_type, long __pyx_checksum, __pyx_state):
- *     if __pyx_checksum != 0x2c7fa5b:
+ *     if __pyx_checksum != 0x5fd62be:
  *         from pickle import PickleError as __pyx_PickleError             # <<<<<<<<<<<<<<
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x2c7fa5b = (poisson))" % __pyx_checksum)
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x5fd62be = (beta, poisson))" % __pyx_checksum)
  *     __pyx_result = TruncatedHawkesKernel.__new__(__pyx_type)
  */
     __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 3, __pyx_L1_error)
@@ -6294,15 +6333,15 @@ static PyObject *__pyx_pf_2gb_7kernels_6__pyx_unpickle_TruncatedHawkesKernel(CYT
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
     /* "(tree fragment)":4
- *     if __pyx_checksum != 0x2c7fa5b:
+ *     if __pyx_checksum != 0x5fd62be:
  *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x2c7fa5b = (poisson))" % __pyx_checksum)             # <<<<<<<<<<<<<<
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x5fd62be = (beta, poisson))" % __pyx_checksum)             # <<<<<<<<<<<<<<
  *     __pyx_result = TruncatedHawkesKernel.__new__(__pyx_type)
  *     if __pyx_state is not None:
  */
     __pyx_t_2 = __Pyx_PyInt_From_long(__pyx_v___pyx_checksum); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 4, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = __Pyx_PyString_Format(__pyx_kp_s_Incompatible_checksums_s_vs_0x2c, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 4, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyString_Format(__pyx_kp_s_Incompatible_checksums_s_vs_0x5f, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 4, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_INCREF(__pyx_v___pyx_PickleError);
@@ -6358,15 +6397,15 @@ static PyObject *__pyx_pf_2gb_7kernels_6__pyx_unpickle_TruncatedHawkesKernel(CYT
 
     /* "(tree fragment)":2
  * def __pyx_unpickle_TruncatedHawkesKernel(__pyx_type, long __pyx_checksum, __pyx_state):
- *     if __pyx_checksum != 0x2c7fa5b:             # <<<<<<<<<<<<<<
+ *     if __pyx_checksum != 0x5fd62be:             # <<<<<<<<<<<<<<
  *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x2c7fa5b = (poisson))" % __pyx_checksum)
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x5fd62be = (beta, poisson))" % __pyx_checksum)
  */
   }
 
   /* "(tree fragment)":5
  *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x2c7fa5b = (poisson))" % __pyx_checksum)
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x5fd62be = (beta, poisson))" % __pyx_checksum)
  *     __pyx_result = TruncatedHawkesKernel.__new__(__pyx_type)             # <<<<<<<<<<<<<<
  *     if __pyx_state is not None:
  *         __pyx_unpickle_TruncatedHawkesKernel__set_state(<TruncatedHawkesKernel> __pyx_result, __pyx_state)
@@ -6420,7 +6459,7 @@ static PyObject *__pyx_pf_2gb_7kernels_6__pyx_unpickle_TruncatedHawkesKernel(CYT
   __pyx_t_3 = 0;
 
   /* "(tree fragment)":6
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x2c7fa5b = (poisson))" % __pyx_checksum)
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x5fd62be = (beta, poisson))" % __pyx_checksum)
  *     __pyx_result = TruncatedHawkesKernel.__new__(__pyx_type)
  *     if __pyx_state is not None:             # <<<<<<<<<<<<<<
  *         __pyx_unpickle_TruncatedHawkesKernel__set_state(<TruncatedHawkesKernel> __pyx_result, __pyx_state)
@@ -6443,7 +6482,7 @@ static PyObject *__pyx_pf_2gb_7kernels_6__pyx_unpickle_TruncatedHawkesKernel(CYT
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
     /* "(tree fragment)":6
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x2c7fa5b = (poisson))" % __pyx_checksum)
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x5fd62be = (beta, poisson))" % __pyx_checksum)
  *     __pyx_result = TruncatedHawkesKernel.__new__(__pyx_type)
  *     if __pyx_state is not None:             # <<<<<<<<<<<<<<
  *         __pyx_unpickle_TruncatedHawkesKernel__set_state(<TruncatedHawkesKernel> __pyx_result, __pyx_state)
@@ -6456,7 +6495,7 @@ static PyObject *__pyx_pf_2gb_7kernels_6__pyx_unpickle_TruncatedHawkesKernel(CYT
  *         __pyx_unpickle_TruncatedHawkesKernel__set_state(<TruncatedHawkesKernel> __pyx_result, __pyx_state)
  *     return __pyx_result             # <<<<<<<<<<<<<<
  * cdef __pyx_unpickle_TruncatedHawkesKernel__set_state(TruncatedHawkesKernel __pyx_result, tuple __pyx_state):
- *     __pyx_result.poisson = __pyx_state[0]
+ *     __pyx_result.beta = __pyx_state[0]; __pyx_result.poisson = __pyx_state[1]
  */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(__pyx_v___pyx_result);
@@ -6465,7 +6504,7 @@ static PyObject *__pyx_pf_2gb_7kernels_6__pyx_unpickle_TruncatedHawkesKernel(CYT
 
   /* "(tree fragment)":1
  * def __pyx_unpickle_TruncatedHawkesKernel(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
- *     if __pyx_checksum != 0x2c7fa5b:
+ *     if __pyx_checksum != 0x5fd62be:
  *         from pickle import PickleError as __pyx_PickleError
  */
 
@@ -6490,130 +6529,141 @@ static PyObject *__pyx_pf_2gb_7kernels_6__pyx_unpickle_TruncatedHawkesKernel(CYT
  *         __pyx_unpickle_TruncatedHawkesKernel__set_state(<TruncatedHawkesKernel> __pyx_result, __pyx_state)
  *     return __pyx_result
  * cdef __pyx_unpickle_TruncatedHawkesKernel__set_state(TruncatedHawkesKernel __pyx_result, tuple __pyx_state):             # <<<<<<<<<<<<<<
- *     __pyx_result.poisson = __pyx_state[0]
- *     if len(__pyx_state) > 1 and hasattr(__pyx_result, '__dict__'):
+ *     __pyx_result.beta = __pyx_state[0]; __pyx_result.poisson = __pyx_state[1]
+ *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):
  */
 
 static PyObject *__pyx_f_2gb_7kernels___pyx_unpickle_TruncatedHawkesKernel__set_state(struct __pyx_obj_2gb_7kernels_TruncatedHawkesKernel *__pyx_v___pyx_result, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  int __pyx_t_2;
-  Py_ssize_t __pyx_t_3;
-  int __pyx_t_4;
+  __Pyx_memviewslice __pyx_t_1 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  PyObject *__pyx_t_2 = NULL;
+  int __pyx_t_3;
+  Py_ssize_t __pyx_t_4;
   int __pyx_t_5;
-  PyObject *__pyx_t_6 = NULL;
+  int __pyx_t_6;
   PyObject *__pyx_t_7 = NULL;
   PyObject *__pyx_t_8 = NULL;
+  PyObject *__pyx_t_9 = NULL;
   __Pyx_RefNannySetupContext("__pyx_unpickle_TruncatedHawkesKernel__set_state", 0);
 
   /* "(tree fragment)":10
  *     return __pyx_result
  * cdef __pyx_unpickle_TruncatedHawkesKernel__set_state(TruncatedHawkesKernel __pyx_result, tuple __pyx_state):
- *     __pyx_result.poisson = __pyx_state[0]             # <<<<<<<<<<<<<<
- *     if len(__pyx_state) > 1 and hasattr(__pyx_result, '__dict__'):
- *         __pyx_result.__dict__.update(__pyx_state[1])
+ *     __pyx_result.beta = __pyx_state[0]; __pyx_result.poisson = __pyx_state[1]             # <<<<<<<<<<<<<<
+ *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):
+ *         __pyx_result.__dict__.update(__pyx_state[2])
  */
   if (unlikely(__pyx_v___pyx_state == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(1, 10, __pyx_L1_error)
   }
-  if (!(likely(((PyTuple_GET_ITEM(__pyx_v___pyx_state, 0)) == Py_None) || likely(__Pyx_TypeTest(PyTuple_GET_ITEM(__pyx_v___pyx_state, 0), __pyx_ptype_2gb_7kernels_PoissonKernel))))) __PYX_ERR(1, 10, __pyx_L1_error)
-  __pyx_t_1 = PyTuple_GET_ITEM(__pyx_v___pyx_state, 0);
-  __Pyx_INCREF(__pyx_t_1);
-  __Pyx_GIVEREF(__pyx_t_1);
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(PyTuple_GET_ITEM(__pyx_v___pyx_state, 0));
+  if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(1, 10, __pyx_L1_error)
+  __PYX_XDEC_MEMVIEW(&__pyx_v___pyx_result->__pyx_base.beta, 0);
+  __pyx_v___pyx_result->__pyx_base.beta = __pyx_t_1;
+  __pyx_t_1.memview = NULL;
+  __pyx_t_1.data = NULL;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 10, __pyx_L1_error)
+  }
+  if (!(likely(((PyTuple_GET_ITEM(__pyx_v___pyx_state, 1)) == Py_None) || likely(__Pyx_TypeTest(PyTuple_GET_ITEM(__pyx_v___pyx_state, 1), __pyx_ptype_2gb_7kernels_PoissonKernel))))) __PYX_ERR(1, 10, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_GET_ITEM(__pyx_v___pyx_state, 1);
+  __Pyx_INCREF(__pyx_t_2);
+  __Pyx_GIVEREF(__pyx_t_2);
   __Pyx_GOTREF(__pyx_v___pyx_result->__pyx_base.poisson);
   __Pyx_DECREF(((PyObject *)__pyx_v___pyx_result->__pyx_base.poisson));
-  __pyx_v___pyx_result->__pyx_base.poisson = ((struct __pyx_obj_2gb_7kernels_PoissonKernel *)__pyx_t_1);
-  __pyx_t_1 = 0;
+  __pyx_v___pyx_result->__pyx_base.poisson = ((struct __pyx_obj_2gb_7kernels_PoissonKernel *)__pyx_t_2);
+  __pyx_t_2 = 0;
 
   /* "(tree fragment)":11
  * cdef __pyx_unpickle_TruncatedHawkesKernel__set_state(TruncatedHawkesKernel __pyx_result, tuple __pyx_state):
- *     __pyx_result.poisson = __pyx_state[0]
- *     if len(__pyx_state) > 1 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
- *         __pyx_result.__dict__.update(__pyx_state[1])
+ *     __pyx_result.beta = __pyx_state[0]; __pyx_result.poisson = __pyx_state[1]
+ *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
+ *         __pyx_result.__dict__.update(__pyx_state[2])
  */
   if (unlikely(__pyx_v___pyx_state == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
     __PYX_ERR(1, 11, __pyx_L1_error)
   }
-  __pyx_t_3 = PyTuple_GET_SIZE(__pyx_v___pyx_state); if (unlikely(__pyx_t_3 == ((Py_ssize_t)-1))) __PYX_ERR(1, 11, __pyx_L1_error)
-  __pyx_t_4 = ((__pyx_t_3 > 1) != 0);
-  if (__pyx_t_4) {
+  __pyx_t_4 = PyTuple_GET_SIZE(__pyx_v___pyx_state); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(1, 11, __pyx_L1_error)
+  __pyx_t_5 = ((__pyx_t_4 > 2) != 0);
+  if (__pyx_t_5) {
   } else {
-    __pyx_t_2 = __pyx_t_4;
+    __pyx_t_3 = __pyx_t_5;
     goto __pyx_L4_bool_binop_done;
   }
-  __pyx_t_4 = __Pyx_HasAttr(((PyObject *)__pyx_v___pyx_result), __pyx_n_s_dict); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(1, 11, __pyx_L1_error)
-  __pyx_t_5 = (__pyx_t_4 != 0);
-  __pyx_t_2 = __pyx_t_5;
+  __pyx_t_5 = __Pyx_HasAttr(((PyObject *)__pyx_v___pyx_result), __pyx_n_s_dict); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(1, 11, __pyx_L1_error)
+  __pyx_t_6 = (__pyx_t_5 != 0);
+  __pyx_t_3 = __pyx_t_6;
   __pyx_L4_bool_binop_done:;
-  if (__pyx_t_2) {
+  if (__pyx_t_3) {
 
     /* "(tree fragment)":12
- *     __pyx_result.poisson = __pyx_state[0]
- *     if len(__pyx_state) > 1 and hasattr(__pyx_result, '__dict__'):
- *         __pyx_result.__dict__.update(__pyx_state[1])             # <<<<<<<<<<<<<<
+ *     __pyx_result.beta = __pyx_state[0]; __pyx_result.poisson = __pyx_state[1]
+ *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):
+ *         __pyx_result.__dict__.update(__pyx_state[2])             # <<<<<<<<<<<<<<
  */
-    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v___pyx_result), __pyx_n_s_dict); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 12, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_update); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 12, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v___pyx_result), __pyx_n_s_dict); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 12, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_update); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 12, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_8);
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     if (unlikely(__pyx_v___pyx_state == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
       __PYX_ERR(1, 12, __pyx_L1_error)
     }
-    __pyx_t_6 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_7))) {
-      __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_7);
-      if (likely(__pyx_t_6)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_7);
-        __Pyx_INCREF(__pyx_t_6);
+    __pyx_t_7 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_8))) {
+      __pyx_t_7 = PyMethod_GET_SELF(__pyx_t_8);
+      if (likely(__pyx_t_7)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_8);
+        __Pyx_INCREF(__pyx_t_7);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_7, function);
+        __Pyx_DECREF_SET(__pyx_t_8, function);
       }
     }
-    if (!__pyx_t_6) {
-      __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_7, PyTuple_GET_ITEM(__pyx_v___pyx_state, 1)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
+    if (!__pyx_t_7) {
+      __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_8, PyTuple_GET_ITEM(__pyx_v___pyx_state, 2)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 12, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_2);
     } else {
       #if CYTHON_FAST_PYCALL
-      if (PyFunction_Check(__pyx_t_7)) {
-        PyObject *__pyx_temp[2] = {__pyx_t_6, PyTuple_GET_ITEM(__pyx_v___pyx_state, 1)};
-        __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_7, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
-        __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-        __Pyx_GOTREF(__pyx_t_1);
+      if (PyFunction_Check(__pyx_t_8)) {
+        PyObject *__pyx_temp[2] = {__pyx_t_7, PyTuple_GET_ITEM(__pyx_v___pyx_state, 2)};
+        __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_8, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 12, __pyx_L1_error)
+        __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
+        __Pyx_GOTREF(__pyx_t_2);
       } else
       #endif
       #if CYTHON_FAST_PYCCALL
-      if (__Pyx_PyFastCFunction_Check(__pyx_t_7)) {
-        PyObject *__pyx_temp[2] = {__pyx_t_6, PyTuple_GET_ITEM(__pyx_v___pyx_state, 1)};
-        __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_7, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
-        __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-        __Pyx_GOTREF(__pyx_t_1);
+      if (__Pyx_PyFastCFunction_Check(__pyx_t_8)) {
+        PyObject *__pyx_temp[2] = {__pyx_t_7, PyTuple_GET_ITEM(__pyx_v___pyx_state, 2)};
+        __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_8, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 12, __pyx_L1_error)
+        __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
+        __Pyx_GOTREF(__pyx_t_2);
       } else
       #endif
       {
-        __pyx_t_8 = PyTuple_New(1+1); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 12, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_8);
-        __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_6); __pyx_t_6 = NULL;
-        __Pyx_INCREF(PyTuple_GET_ITEM(__pyx_v___pyx_state, 1));
-        __Pyx_GIVEREF(PyTuple_GET_ITEM(__pyx_v___pyx_state, 1));
-        PyTuple_SET_ITEM(__pyx_t_8, 0+1, PyTuple_GET_ITEM(__pyx_v___pyx_state, 1));
-        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_t_8, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_1);
-        __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+        __pyx_t_9 = PyTuple_New(1+1); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 12, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_9);
+        __Pyx_GIVEREF(__pyx_t_7); PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_7); __pyx_t_7 = NULL;
+        __Pyx_INCREF(PyTuple_GET_ITEM(__pyx_v___pyx_state, 2));
+        __Pyx_GIVEREF(PyTuple_GET_ITEM(__pyx_v___pyx_state, 2));
+        PyTuple_SET_ITEM(__pyx_t_9, 0+1, PyTuple_GET_ITEM(__pyx_v___pyx_state, 2));
+        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_8, __pyx_t_9, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 12, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       }
     }
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
     /* "(tree fragment)":11
  * cdef __pyx_unpickle_TruncatedHawkesKernel__set_state(TruncatedHawkesKernel __pyx_result, tuple __pyx_state):
- *     __pyx_result.poisson = __pyx_state[0]
- *     if len(__pyx_state) > 1 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
- *         __pyx_result.__dict__.update(__pyx_state[1])
+ *     __pyx_result.beta = __pyx_state[0]; __pyx_result.poisson = __pyx_state[1]
+ *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
+ *         __pyx_result.__dict__.update(__pyx_state[2])
  */
   }
 
@@ -6621,18 +6671,19 @@ static PyObject *__pyx_f_2gb_7kernels___pyx_unpickle_TruncatedHawkesKernel__set_
  *         __pyx_unpickle_TruncatedHawkesKernel__set_state(<TruncatedHawkesKernel> __pyx_result, __pyx_state)
  *     return __pyx_result
  * cdef __pyx_unpickle_TruncatedHawkesKernel__set_state(TruncatedHawkesKernel __pyx_result, tuple __pyx_state):             # <<<<<<<<<<<<<<
- *     __pyx_result.poisson = __pyx_state[0]
- *     if len(__pyx_state) > 1 and hasattr(__pyx_result, '__dict__'):
+ *     __pyx_result.beta = __pyx_state[0]; __pyx_result.poisson = __pyx_state[1]
+ *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):
  */
 
   /* function exit code */
   __pyx_r = Py_None; __Pyx_INCREF(Py_None);
   goto __pyx_L0;
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_6);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_1, 1);
+  __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_7);
   __Pyx_XDECREF(__pyx_t_8);
+  __Pyx_XDECREF(__pyx_t_9);
   __Pyx_AddTraceback("gb.kernels.__pyx_unpickle_TruncatedHawkesKernel__set_state", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
@@ -19666,6 +19717,8 @@ static PyObject *__pyx_tp_new_2gb_7kernels_WoldKernel(PyTypeObject *t, PyObject 
   p = ((struct __pyx_obj_2gb_7kernels_WoldKernel *)o);
   p->__pyx_base.__pyx_vtab = (struct __pyx_vtabstruct_2gb_7kernels_AbstractKernel*)__pyx_vtabptr_2gb_7kernels_WoldKernel;
   p->poisson = ((struct __pyx_obj_2gb_7kernels_PoissonKernel *)Py_None); Py_INCREF(Py_None);
+  p->beta.data = NULL;
+  p->beta.memview = NULL;
   return o;
 }
 
@@ -19678,6 +19731,7 @@ static void __pyx_tp_dealloc_2gb_7kernels_WoldKernel(PyObject *o) {
   #endif
   PyObject_GC_UnTrack(o);
   Py_CLEAR(p->poisson);
+  __PYX_XDEC_MEMVIEW(&p->beta, 1);
   #if CYTHON_USE_TYPE_SLOTS
   if (PyType_IS_GC(Py_TYPE(o)->tp_base))
   #endif
@@ -20561,7 +20615,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_Cannot_index_with_type_s, __pyx_k_Cannot_index_with_type_s, sizeof(__pyx_k_Cannot_index_with_type_s), 0, 0, 1, 0},
   {&__pyx_n_s_Ellipsis, __pyx_k_Ellipsis, sizeof(__pyx_k_Ellipsis), 0, 0, 1, 1},
   {&__pyx_kp_s_Empty_shape_tuple_for_cython_arr, __pyx_k_Empty_shape_tuple_for_cython_arr, sizeof(__pyx_k_Empty_shape_tuple_for_cython_arr), 0, 0, 1, 0},
-  {&__pyx_kp_s_Incompatible_checksums_s_vs_0x2c, __pyx_k_Incompatible_checksums_s_vs_0x2c, sizeof(__pyx_k_Incompatible_checksums_s_vs_0x2c), 0, 0, 1, 0},
+  {&__pyx_kp_s_Incompatible_checksums_s_vs_0x5f, __pyx_k_Incompatible_checksums_s_vs_0x5f, sizeof(__pyx_k_Incompatible_checksums_s_vs_0x5f), 0, 0, 1, 0},
   {&__pyx_kp_s_Incompatible_checksums_s_vs_0xb0, __pyx_k_Incompatible_checksums_s_vs_0xb0, sizeof(__pyx_k_Incompatible_checksums_s_vs_0xb0), 0, 0, 1, 0},
   {&__pyx_kp_s_Incompatible_checksums_s_vs_0xc2, __pyx_k_Incompatible_checksums_s_vs_0xc2, sizeof(__pyx_k_Incompatible_checksums_s_vs_0xc2), 0, 0, 1, 0},
   {&__pyx_kp_s_Incompatible_checksums_s_vs_0xd4, __pyx_k_Incompatible_checksums_s_vs_0xd4, sizeof(__pyx_k_Incompatible_checksums_s_vs_0xd4), 0, 0, 1, 0},
@@ -20581,6 +20635,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_View_MemoryView, __pyx_k_View_MemoryView, sizeof(__pyx_k_View_MemoryView), 0, 0, 1, 1},
   {&__pyx_n_s_allocate_buffer, __pyx_k_allocate_buffer, sizeof(__pyx_k_allocate_buffer), 0, 0, 1, 1},
   {&__pyx_n_s_base, __pyx_k_base, sizeof(__pyx_k_base), 0, 0, 1, 1},
+  {&__pyx_n_s_beta, __pyx_k_beta, sizeof(__pyx_k_beta), 0, 0, 1, 1},
   {&__pyx_n_s_c, __pyx_k_c, sizeof(__pyx_k_c), 0, 0, 1, 1},
   {&__pyx_n_u_c, __pyx_k_c, sizeof(__pyx_k_c), 0, 1, 0, 1},
   {&__pyx_n_s_class, __pyx_k_class, sizeof(__pyx_k_class), 0, 0, 1, 1},
@@ -20976,7 +21031,7 @@ static int __Pyx_InitGlobals(void) {
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   __pyx_int_0 = PyInt_FromLong(0); if (unlikely(!__pyx_int_0)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_1 = PyInt_FromLong(1); if (unlikely(!__pyx_int_1)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_46660187 = PyInt_FromLong(46660187L); if (unlikely(!__pyx_int_46660187)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_100491966 = PyInt_FromLong(100491966L); if (unlikely(!__pyx_int_100491966)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_184977713 = PyInt_FromLong(184977713L); if (unlikely(!__pyx_int_184977713)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_203724029 = PyInt_FromLong(203724029L); if (unlikely(!__pyx_int_203724029)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_222419149 = PyInt_FromLong(222419149L); if (unlikely(!__pyx_int_222419149)) __PYX_ERR(0, 1, __pyx_L1_error)
@@ -21172,11 +21227,11 @@ static int __pyx_pymod_exec_kernels(PyObject *__pyx_pyinit_module)
   __pyx_vtable_2gb_7kernels_TruncatedHawkesKernel.__pyx_base = *__pyx_vtabptr_2gb_7kernels_WoldKernel;
   __pyx_vtable_2gb_7kernels_TruncatedHawkesKernel.__pyx_base.__pyx_base.cross_rate = (double (*)(struct __pyx_obj_2gb_7kernels_AbstractKernel *, size_t, size_t, double))__pyx_f_2gb_7kernels_21TruncatedHawkesKernel_cross_rate;
   __pyx_type_2gb_7kernels_TruncatedHawkesKernel.tp_base = __pyx_ptype_2gb_7kernels_WoldKernel;
-  if (PyType_Ready(&__pyx_type_2gb_7kernels_TruncatedHawkesKernel) < 0) __PYX_ERR(0, 128, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_2gb_7kernels_TruncatedHawkesKernel) < 0) __PYX_ERR(0, 129, __pyx_L1_error)
   __pyx_type_2gb_7kernels_TruncatedHawkesKernel.tp_print = 0;
-  if (__Pyx_SetVtable(__pyx_type_2gb_7kernels_TruncatedHawkesKernel.tp_dict, __pyx_vtabptr_2gb_7kernels_TruncatedHawkesKernel) < 0) __PYX_ERR(0, 128, __pyx_L1_error)
-  if (PyObject_SetAttrString(__pyx_m, "TruncatedHawkesKernel", (PyObject *)&__pyx_type_2gb_7kernels_TruncatedHawkesKernel) < 0) __PYX_ERR(0, 128, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_2gb_7kernels_TruncatedHawkesKernel) < 0) __PYX_ERR(0, 128, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_type_2gb_7kernels_TruncatedHawkesKernel.tp_dict, __pyx_vtabptr_2gb_7kernels_TruncatedHawkesKernel) < 0) __PYX_ERR(0, 129, __pyx_L1_error)
+  if (PyObject_SetAttrString(__pyx_m, "TruncatedHawkesKernel", (PyObject *)&__pyx_type_2gb_7kernels_TruncatedHawkesKernel) < 0) __PYX_ERR(0, 129, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_2gb_7kernels_TruncatedHawkesKernel) < 0) __PYX_ERR(0, 129, __pyx_L1_error)
   __pyx_ptype_2gb_7kernels_TruncatedHawkesKernel = &__pyx_type_2gb_7kernels_TruncatedHawkesKernel;
   __pyx_vtabptr_array = &__pyx_vtable_array;
   __pyx_vtable_array.get_memview = (PyObject *(*)(struct __pyx_array_obj *))__pyx_array_get_memview;
@@ -21264,7 +21319,7 @@ static int __pyx_pymod_exec_kernels(PyObject *__pyx_pyinit_module)
 
   /* "(tree fragment)":1
  * def __pyx_unpickle_WoldKernel(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
- *     if __pyx_checksum != 0x2c7fa5b:
+ *     if __pyx_checksum != 0x5fd62be:
  *         from pickle import PickleError as __pyx_PickleError
  */
   __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_2gb_7kernels_5__pyx_unpickle_WoldKernel, NULL, __pyx_n_s_gb_kernels); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 1, __pyx_L1_error)
@@ -21276,8 +21331,8 @@ static int __pyx_pymod_exec_kernels(PyObject *__pyx_pyinit_module)
  *         __pyx_unpickle_WoldKernel__set_state(<WoldKernel> __pyx_result, __pyx_state)
  *     return __pyx_result
  * cdef __pyx_unpickle_WoldKernel__set_state(WoldKernel __pyx_result, tuple __pyx_state):             # <<<<<<<<<<<<<<
- *     __pyx_result.poisson = __pyx_state[0]
- *     if len(__pyx_state) > 1 and hasattr(__pyx_result, '__dict__'):
+ *     __pyx_result.beta = __pyx_state[0]; __pyx_result.poisson = __pyx_state[1]
+ *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):
  */
   __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_2gb_7kernels_7__pyx_unpickle_TruncatedHawkesKernel, NULL, __pyx_n_s_gb_kernels); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
