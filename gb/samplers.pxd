@@ -21,8 +21,10 @@ cdef class AbstractSampler(object):
     cdef double get_probability(self, size_t b) nogil
     cdef void inc_one(self, size_t b) nogil
     cdef void dec_one(self, size_t b) nogil
-    cdef size_t sample_for_idx(self, size_t i, AbstractKernel kernel) nogil
-    cdef uint64_t is_background(self, AbstractKernel kernel, double dt) nogil
+    cdef void sample_for_idx(self, size_t i, AbstractKernel kernel,
+                             size_t *result_sample, double *prob_sample) nogil
+    cdef uint64_t is_background(self, double mu_rate, double dt_mu,
+                                double cross_rate, double dt_cross) nogil
 
 cdef class BaseSampler(AbstractSampler):
     cdef size_t n_proc

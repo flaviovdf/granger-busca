@@ -27,6 +27,9 @@ cdef class AbstractKernel(object):
     cdef double cross_rate(self, size_t i, size_t b, double alpha_ab) nogil:
         printf('[gb.kernels] Do not use the AbstractKernel\n')
         abort()
+    cdef double mu_rate(self, size_t process) nogil:
+        printf('[gb.kernels] Do not use the AbstractKernel\n')
+        abort()
     cdef double[::1] get_mu_rates(self) nogil:
         printf('[gb.kernels] Do not use the AbstractKernel\n')
         abort()
@@ -70,6 +73,9 @@ cdef class PoissonKernel(AbstractKernel):
         cdef double mu_rate = self.mu[self.current_process]
         return mu_rate * dt * exp(-mu_rate * dt)
 
+    cdef double mu_rate(self, size_t process) nogil:
+        return self.mu[process]
+
     cdef double cross_rate(self, size_t i, size_t b, double alpha_ab) nogil:
         return 0.0
 
@@ -87,6 +93,9 @@ cdef class WoldKernel(AbstractKernel):
 
     cdef double background_probability(self, double dt) nogil:
         return self.poisson.background_probability(dt)
+
+    cdef double mu_rate(self, size_t process) nogil:
+        return self.poisson.mu_rate(process)
 
     cdef double cross_rate(self, size_t i, size_t b, double alpha_ab) nogil:
         cdef size_t a = self.poisson.current_process

@@ -16,6 +16,7 @@ cdef class AbstractKernel(object):
     cdef void set_current_process(self, size_t process) nogil
     cdef double background_probability(self, double dt) nogil
     cdef double cross_rate(self, size_t i, size_t b, double alpha_ab) nogil
+    cdef double mu_rate(self, size_t process) nogil
     cdef double[::1] get_mu_rates(self) nogil
 
 

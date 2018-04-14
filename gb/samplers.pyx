@@ -16,6 +16,10 @@ from libc.stdlib cimport abort
 import numpy as np
 
 
+cdef extern from 'math.h':
+    double exp(double) nogil
+
+
 cdef class AbstractSampler(object):
     cdef void set_current_process(self, size_t a) nogil:
         printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')
@@ -29,10 +33,12 @@ cdef class AbstractSampler(object):
     cdef void dec_one(self, size_t b) nogil:
         printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')
         abort()
-    cdef size_t sample_for_idx(self, size_t i, AbstractKernel kernel) nogil:
+    cdef void sample_for_idx(self, size_t i, AbstractKernel kernel,
+                             size_t *result_sample, double *prob_sample) nogil:
         printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')
         abort()
-    cdef uint64_t is_background(self, AbstractKernel kernel, double dt) nogil:
+    cdef uint64_t is_background(self, double mu_rate, double dt_mu,
+                                double cross_rate, double dt_cross) nogil:
         printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')
         abort()
 
@@ -80,9 +86,9 @@ cdef class BaseSampler(AbstractSampler):
         self.nab[b] -= 1
         self.sloppy.dec_one(self.worker_id, b)
 
-    cdef uint64_t is_background(self, AbstractKernel kernel, double dt) nogil:
-        return self.rng.rand() < kernel.background_probability(dt)
-
+    cdef uint64_t is_background(self, double mu_rate, double dt_mu,
+                                double cross_rate, double dt_cross) nogil:
+        return self.rng.rand() < (mu_rate / (cross_rate))
 
 cdef class FenwickSampler(AbstractSampler):
 
@@ -122,30 +128,39 @@ cdef class FenwickSampler(AbstractSampler):
     def _dec_one(self, size_t b):
         return self.dec_one(b)
 
-    cdef size_t sample_for_idx(self, size_t i, AbstractKernel kernel) nogil:
+    cdef void sample_for_idx(self, size_t i, AbstractKernel kernel,
+                             size_t *result_sample, double *prob_sample) nogil:
         cdef size_t proc_a = self.base.current_process
         cdef size_t candidate = self.tree.sample(self.base.rng.rand() * \
                                                  self.tree.get_total())
 
-        cdef size_t proc_b = self.base.timestamps.get_cause(proc_a, i)
-        if proc_b == self.n_proc:
-            return candidate
-
-        cdef double alpha_ba = self.get_probability(proc_b)
         cdef double alpha_ca = self.get_probability(candidate)
-
-        cdef double p_b = kernel.cross_rate(i, proc_b, alpha_ba)
         cdef double p_c = kernel.cross_rate(i, candidate, alpha_ca)
 
+        cdef size_t proc_b = self.base.timestamps.get_cause(proc_a, i)
+        if proc_b == self.n_proc:
+            result_sample[0] = candidate
+            prob_sample[0] = p_c
+            return
+
+        cdef double alpha_ba = self.get_probability(proc_b)
+
+        cdef double p_b = kernel.cross_rate(i, proc_b, alpha_ba)
+
         cdef int choice
+        cdef double choice_rate
         if self.base.rng.rand() < min(1, (p_c * alpha_ba) / (p_b * alpha_ca)):
             choice = candidate
+            choice_rate = p_c # / alpha_ca
         else:
             choice = proc_b
-        return choice
+            choice_rate = p_b # / alpha_ba
+        result_sample[0] = choice
+        prob_sample[0] = choice_rate
 
-    cdef uint64_t is_background(self, AbstractKernel kernel, double dt) nogil:
-        return self.base.is_background(kernel, dt)
+    cdef uint64_t is_background(self, double mu_rate, double dt_mu,
+                                double cross_rate, double dt_cross) nogil:
+        return self.base.is_background(mu_rate, dt_mu, cross_rate, dt_cross)
 
 cdef class CollapsedGibbsSampler(AbstractSampler):
 
@@ -177,7 +192,8 @@ cdef class CollapsedGibbsSampler(AbstractSampler):
     def _dec_one(self, size_t b):
         return self.dec_one(b)
 
-    cdef size_t sample_for_idx(self, size_t i, AbstractKernel kernel) nogil:
+    cdef void sample_for_idx(self, size_t i, AbstractKernel kernel,
+                             size_t *result_sample, double *prob_sample) nogil:
         cdef size_t n_proc = self.buffer.shape[0]
         cdef size_t b
         cdef double alpha_ba
@@ -186,8 +202,12 @@ cdef class CollapsedGibbsSampler(AbstractSampler):
             self.buffer[b] = kernel.cross_rate(i, b, alpha_ba)
             if b > 0:
                 self.buffer[b] += self.buffer[b-1]
-        return searchsorted(&self.buffer[0], self.buffer.shape[0],
-                            self.base.rng.rand() * self.buffer[n_proc-1], 0)
+        cdef size_t choice
+        choice = searchsorted(&self.buffer[0], self.buffer.shape[0],
+                              self.base.rng.rand() * self.buffer[n_proc-1], 0)
+        result_sample[0] = choice
+        prob_sample[0] = self.buffer[choice]
 
-    cdef uint64_t is_background(self, AbstractKernel kernel, double dt) nogil:
-        return self.base.is_background(kernel, dt)
+    cdef uint64_t is_background(self, double mu_rate, double dt_mu,
+                                double cross_rate, double dt_cross) nogil:
+        return self.base.is_background(mu_rate, dt_mu, cross_rate, dt_cross)

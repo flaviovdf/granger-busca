@@ -1,5 +1,7 @@
 # -*- coding: utf8
 
+from gb.randomkit.random import RNG
+
 from gb.samplers import BaseSampler
 from gb.samplers import CollapsedGibbsSampler
 from gb.stamps import Timestamps
@@ -33,7 +35,8 @@ def test_get_probability():
     init_state = np.array([[5, 5]], dtype='uint64')
     id_ = 0
     sloppy = SloppyCounter(1, 9999, nb, init_state)
-    sampler = CollapsedGibbsSampler(BaseSampler(stamps, sloppy, id_, 0.1), 2)
+    sampler = CollapsedGibbsSampler(BaseSampler(stamps, sloppy, id_, 0.1,
+                                                RNG()), 2)
     sampler._set_current_process(0)
     assert_equal(0.5961538461538461, sampler._get_probability(0))
     assert_equal(0.7884615384615383, sampler._get_probability(1))
@@ -66,7 +69,8 @@ def test_inc_dec():
     init_state = np.array([[5, 5]], dtype='uint64')
     id_ = 0
     sloppy = SloppyCounter(1, 9999, nb, init_state)
-    sampler = CollapsedGibbsSampler(BaseSampler(stamps, sloppy, id_, 0.1), 2)
+    sampler = CollapsedGibbsSampler(BaseSampler(stamps, sloppy, id_, 0.1,
+                                                RNG()), 2)
     sampler._set_current_process(0)
     assert_equal(0.5961538461538461, sampler._get_probability(0))
     assert_equal(0.7884615384615383, sampler._get_probability(1))

@@ -45,6 +45,10 @@ cdef void sample_alpha(size_t proc_a, Timestamps all_stamps,
 
     cdef double prev_back_t = 0      # stores last known background time stamp
     cdef double prev_back_t_aux = 0  # every it: prev_back_t = prev_back_t_aux
+    cdef double dt_poisson
+    cdef double dt_wold
+    cdef size_t candidate
+    cdef double candidate_prob
     for i in range(n):
         influencer = causes[i]
         if influencer == n_proc:
@@ -52,10 +56,18 @@ cdef void sample_alpha(size_t proc_a, Timestamps all_stamps,
         else:
             sampler.dec_one(influencer)
 
-        if sampler.is_background(kernel, stamps[i] - prev_back_t):
+        dt_poisson = stamps[i] - prev_back_t
+        if i > 0:
+            dt_wold = stamps[i] - stamps[i-1]
+        else:
+            dt_wold = stamps[i]
+
+        sampler.sample_for_idx(i, kernel, &candidate, &candidate_prob)
+        if sampler.is_background(kernel.mu_rate(proc_a), dt_poisson,
+                                 candidate_prob, dt_wold):
             new_influencer = n_proc
         else:
-            new_influencer = sampler.sample_for_idx(i, kernel)
+            new_influencer = candidate
             sampler.inc_one(new_influencer)
 
         causes[i] = new_influencer

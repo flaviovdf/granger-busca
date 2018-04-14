@@ -80,8 +80,4 @@ class GrangeBuscaSimulator(object):
                 self.integrals[i].append(lambdas_t[i] * (t - self.past[i][-1]))
             self.past[i].append(t)
         self.t = t
-        print(len(self.past[0]))
-        print(len(self.past[1]))
-        print(len(self.past[2]))
-        print(len(self.past[3]))
         return self.past
