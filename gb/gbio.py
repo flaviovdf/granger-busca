@@ -18,6 +18,7 @@ def save_model(filename, granger_model):
                         Alpha_indptr=granger_model.Alpha_.indptr,
                         Alpha_shape=granger_model.Alpha_.shape,
                         alpha_prior=granger_model.alpha_prior,
+                        beta=granger_model.beta_,
                         mu_=granger_model.mu_,
                         num_iter=granger_model.num_iter,
                         metropolis=granger_model.metropolis,
@@ -39,6 +40,7 @@ def load_model(filename):
     model.metropolis = loader['metropolis']
     model.num_jobs = loader['num_jobs']
     model.sloppy = loader['sloppy']
+    model.beta_ = loader['beta']
     state = {}
     for id_ in range(model.mu_.shape[0]):
         state[id_] = loader['id_{}'.format(id_)]

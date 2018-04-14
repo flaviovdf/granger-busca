@@ -103,7 +103,6 @@ def fit(Timestamps all_stamps, SloppyCounter sloppy, double alpha_prior,
     else:
         sampler = CollapsedGibbsSampler(base_sampler, n_proc)
 
-    print(np.array(beta))
     cdef PoissonKernel poisson = PoissonKernel(all_stamps, n_proc, rng)
     cdef AbstractKernel kernel = WoldKernel(poisson, beta)
 
