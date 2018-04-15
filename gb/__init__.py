@@ -72,7 +72,7 @@ class GrangerBusca(object):
             if len(timestamps[i]) > 1:
                 medians.append(np.median(np.ediff1d(timestamps[i])))
             else:
-                medians.append(timestamps[i])
+                medians.append(timestamps[i][0])
 
         self.n_proc = n_proc
         self.timestamps = timestamps
