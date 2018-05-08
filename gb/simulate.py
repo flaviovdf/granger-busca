@@ -2,10 +2,9 @@
 
 import numpy as np
 
-
 class GrangeBuscaSimulator(object):
 
-    def __init__(self, mu_rates, Alpha_ba, Beta_ba=None, thinning=False):
+    def __init__(self, mu_rates, Alpha_ba, Beta_ba=None, thinning=False, npsearch=False):
         self.mu_rates = np.asanyarray(mu_rates)
         self.Alpha_ba = np.asanyarray(Alpha_ba)
         if Beta_ba is not None:
@@ -23,6 +22,23 @@ class GrangeBuscaSimulator(object):
         self.thinning = thinning
         self.t = 0
 
+        self.npsearch=npsearch
+
+    def binary_search(self,l,x,low,high):
+        mid=(low+high)//2
+        if ((mid+1)>=len(l)):
+            return mid
+        elif (mid<0):
+            return -1
+        elif  (l[mid]<=x and l[mid+1]>x):
+            return mid    
+        else:
+            if l[mid]>x:
+                return self.binary_search(l,x,low,mid-1)
+            
+            else:
+                return self.binary_search(l,x,mid+1,high)
+
     def total_intensity(self, t):
         lambdas_t = np.zeros(self.mu_rates.shape[0], dtype='d')
         for proc_a in range(self.Alpha_ba.shape[0]):
@@ -35,15 +51,25 @@ class GrangeBuscaSimulator(object):
             for proc_b in range(self.Alpha_ba.shape[0]):
                 if len(self.past[proc_b]) == 0:
                     continue
-                tpp_idx = np.searchsorted(self.past[proc_b], tp)
-                if tpp_idx >= len(self.past[proc_b]):
-                    tpp_idx = -1
-                tpp = self.past[proc_b][tpp_idx]
-                while tpp >= tp and tpp_idx > 0:
-                    tpp_idx = tpp_idx - 1
+
+                if not(self.npsearch):
+                    tpp_idx=self.binary_search(self.past[proc_b],tp,0,len(self.past[proc_b])-1)
+                    if tpp_idx==-1:
+                        continue
                     tpp = self.past[proc_b][tpp_idx]
-                if tpp >= tp:
-                    continue
+                    if tpp >= tp:
+                        continue
+                else:
+                    tpp_idx = np.searchsorted(self.past[proc_b], tp)
+                    if tpp_idx >= len(self.past[proc_b]):
+                        tpp_idx = -1
+                    tpp = self.past[proc_b][tpp_idx]
+                    while tpp >= tp and tpp_idx > 0:
+                        tpp_idx = tpp_idx - 1
+                        tpp = self.past[proc_b][tpp_idx]
+                    if tpp >= tp:
+                        continue
+                
                 busca_rate = self.Alpha_ba[proc_b, proc_a]
                 busca_rate /= (self.Beta_ba[proc_b, proc_a] + tp - tpp)
                 lambdas_t[proc_a] += busca_rate
