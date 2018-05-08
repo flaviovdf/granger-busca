@@ -39,9 +39,7 @@ class GrangeBuscaSimulator(object):
                 if tpp_idx >= len(self.past[proc_b]):
                     tpp_idx = -1
                 tpp = self.past[proc_b][tpp_idx]
-                if tpp > tp:
-                    continue
-                while tpp == tp and tpp_idx > 0:
+                while tpp >= tp and tpp_idx > 0:
                     tpp_idx = tpp_idx - 1
                     tpp = self.past[proc_b][tpp_idx]
                 if tpp >= tp:
