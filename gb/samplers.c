@@ -1389,7 +1389,7 @@ static struct __pyx_vtabstruct_2gb_8samplers_BaseSampler *__pyx_vtabptr_2gb_8sam
 
 
 /* "gb/samplers.pyx":93
- *         return self.rng.rand() < (mu_rate / (cross_rate))
+ *         return self.rng.rand() < 1 - exp(-dt_mu * mu_rate)
  * 
  * cdef class FenwickSampler(AbstractSampler):             # <<<<<<<<<<<<<<
  * 
@@ -2034,7 +2034,7 @@ static void __pyx_f_2gb_8samplers_11BaseSampler_set_current_process(struct __pyx
 static double __pyx_f_2gb_8samplers_11BaseSampler_get_probability(struct __pyx_obj_2gb_8samplers_BaseSampler *__pyx_v_self, size_t __pyx_v_b); /* proto*/
 static void __pyx_f_2gb_8samplers_11BaseSampler_inc_one(struct __pyx_obj_2gb_8samplers_BaseSampler *__pyx_v_self, size_t __pyx_v_b); /* proto*/
 static void __pyx_f_2gb_8samplers_11BaseSampler_dec_one(struct __pyx_obj_2gb_8samplers_BaseSampler *__pyx_v_self, size_t __pyx_v_b); /* proto*/
-static uint64_t __pyx_f_2gb_8samplers_11BaseSampler_is_background(struct __pyx_obj_2gb_8samplers_BaseSampler *__pyx_v_self, double __pyx_v_mu_rate, CYTHON_UNUSED double __pyx_v_dt_mu, double __pyx_v_cross_rate, CYTHON_UNUSED double __pyx_v_dt_cross); /* proto*/
+static uint64_t __pyx_f_2gb_8samplers_11BaseSampler_is_background(struct __pyx_obj_2gb_8samplers_BaseSampler *__pyx_v_self, double __pyx_v_mu_rate, double __pyx_v_dt_mu, CYTHON_UNUSED double __pyx_v_cross_rate, CYTHON_UNUSED double __pyx_v_dt_cross); /* proto*/
 static void __pyx_f_2gb_8samplers_14FenwickSampler_set_current_process(struct __pyx_obj_2gb_8samplers_FenwickSampler *__pyx_v_self, size_t __pyx_v_a); /* proto*/
 static double __pyx_f_2gb_8samplers_14FenwickSampler_get_probability(struct __pyx_obj_2gb_8samplers_FenwickSampler *__pyx_v_self, size_t __pyx_v_b); /* proto*/
 static void __pyx_f_2gb_8samplers_14FenwickSampler_inc_one(struct __pyx_obj_2gb_8samplers_FenwickSampler *__pyx_v_self, size_t __pyx_v_b); /* proto*/
@@ -3577,20 +3577,20 @@ static void __pyx_f_2gb_8samplers_11BaseSampler_dec_one(struct __pyx_obj_2gb_8sa
  * 
  *     cdef uint64_t is_background(self, double mu_rate, double dt_mu,             # <<<<<<<<<<<<<<
  *                                 double cross_rate, double dt_cross) nogil:
- *         return self.rng.rand() < (mu_rate / (cross_rate))
+ *         return self.rng.rand() < 1 - exp(-dt_mu * mu_rate)
  */
 
-static uint64_t __pyx_f_2gb_8samplers_11BaseSampler_is_background(struct __pyx_obj_2gb_8samplers_BaseSampler *__pyx_v_self, double __pyx_v_mu_rate, CYTHON_UNUSED double __pyx_v_dt_mu, double __pyx_v_cross_rate, CYTHON_UNUSED double __pyx_v_dt_cross) {
+static uint64_t __pyx_f_2gb_8samplers_11BaseSampler_is_background(struct __pyx_obj_2gb_8samplers_BaseSampler *__pyx_v_self, double __pyx_v_mu_rate, double __pyx_v_dt_mu, CYTHON_UNUSED double __pyx_v_cross_rate, CYTHON_UNUSED double __pyx_v_dt_cross) {
   uint64_t __pyx_r;
 
   /* "gb/samplers.pyx":91
  *     cdef uint64_t is_background(self, double mu_rate, double dt_mu,
  *                                 double cross_rate, double dt_cross) nogil:
- *         return self.rng.rand() < (mu_rate / (cross_rate))             # <<<<<<<<<<<<<<
+ *         return self.rng.rand() < 1 - exp(-dt_mu * mu_rate)             # <<<<<<<<<<<<<<
  * 
  * cdef class FenwickSampler(AbstractSampler):
  */
-  __pyx_r = (((struct __pyx_vtabstruct_2gb_9randomkit_6random_RNG *)__pyx_v_self->rng->__pyx_vtab)->rand(__pyx_v_self->rng) < (__pyx_v_mu_rate / __pyx_v_cross_rate));
+  __pyx_r = (((struct __pyx_vtabstruct_2gb_9randomkit_6random_RNG *)__pyx_v_self->rng->__pyx_vtab)->rand(__pyx_v_self->rng) < (1.0 - exp(((-__pyx_v_dt_mu) * __pyx_v_mu_rate))));
   goto __pyx_L0;
 
   /* "gb/samplers.pyx":89
@@ -3598,7 +3598,7 @@ static uint64_t __pyx_f_2gb_8samplers_11BaseSampler_is_background(struct __pyx_o
  * 
  *     cdef uint64_t is_background(self, double mu_rate, double dt_mu,             # <<<<<<<<<<<<<<
  *                                 double cross_rate, double dt_cross) nogil:
- *         return self.rng.rand() < (mu_rate / (cross_rate))
+ *         return self.rng.rand() < 1 - exp(-dt_mu * mu_rate)
  */
 
   /* function exit code */

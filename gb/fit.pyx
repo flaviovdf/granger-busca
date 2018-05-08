@@ -62,11 +62,11 @@ cdef void sample_alpha(size_t proc_a, Timestamps all_stamps,
         else:
             dt_wold = stamps[i]
 
-        sampler.sample_for_idx(i, kernel, &candidate, &candidate_prob)
         if sampler.is_background(kernel.mu_rate(proc_a), dt_poisson,
                                  candidate_prob, dt_wold):
             new_influencer = n_proc
         else:
+            sampler.sample_for_idx(i, kernel, &candidate, &candidate_prob)
             new_influencer = candidate
             sampler.inc_one(new_influencer)
 

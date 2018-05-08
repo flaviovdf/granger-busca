@@ -2673,7 +2673,7 @@ static void __pyx_f_2gb_3fit_sample_alpha(size_t __pyx_v_proc_a, struct __pyx_ob
  *         else:
  *             dt_wold = stamps[i]             # <<<<<<<<<<<<<<
  * 
- *         sampler.sample_for_idx(i, kernel, &candidate, &candidate_prob)
+ *         if sampler.is_background(kernel.mu_rate(proc_a), dt_poisson,
  */
     /*else*/ {
       __pyx_v_dt_wold = (__pyx_v_stamps[__pyx_v_i]);
@@ -2683,15 +2683,6 @@ static void __pyx_f_2gb_3fit_sample_alpha(size_t __pyx_v_proc_a, struct __pyx_ob
     /* "gb/fit.pyx":65
  *             dt_wold = stamps[i]
  * 
- *         sampler.sample_for_idx(i, kernel, &candidate, &candidate_prob)             # <<<<<<<<<<<<<<
- *         if sampler.is_background(kernel.mu_rate(proc_a), dt_poisson,
- *                                  candidate_prob, dt_wold):
- */
-    ((struct __pyx_vtabstruct_2gb_8samplers_AbstractSampler *)__pyx_v_sampler->__pyx_vtab)->sample_for_idx(__pyx_v_sampler, __pyx_v_i, __pyx_v_kernel, (&__pyx_v_candidate), (&__pyx_v_candidate_prob));
-
-    /* "gb/fit.pyx":66
- * 
- *         sampler.sample_for_idx(i, kernel, &candidate, &candidate_prob)
  *         if sampler.is_background(kernel.mu_rate(proc_a), dt_poisson,             # <<<<<<<<<<<<<<
  *                                  candidate_prob, dt_wold):
  *             new_influencer = n_proc
@@ -2699,18 +2690,18 @@ static void __pyx_f_2gb_3fit_sample_alpha(size_t __pyx_v_proc_a, struct __pyx_ob
     __pyx_t_3 = (((struct __pyx_vtabstruct_2gb_8samplers_AbstractSampler *)__pyx_v_sampler->__pyx_vtab)->is_background(__pyx_v_sampler, ((struct __pyx_vtabstruct_2gb_7kernels_AbstractKernel *)__pyx_v_kernel->__pyx_vtab)->mu_rate(__pyx_v_kernel, __pyx_v_proc_a), __pyx_v_dt_poisson, __pyx_v_candidate_prob, __pyx_v_dt_wold) != 0);
     if (__pyx_t_3) {
 
-      /* "gb/fit.pyx":68
+      /* "gb/fit.pyx":67
  *         if sampler.is_background(kernel.mu_rate(proc_a), dt_poisson,
  *                                  candidate_prob, dt_wold):
  *             new_influencer = n_proc             # <<<<<<<<<<<<<<
  *         else:
- *             new_influencer = candidate
+ *             sampler.sample_for_idx(i, kernel, &candidate, &candidate_prob)
  */
       __pyx_v_new_influencer = __pyx_v_n_proc;
 
-      /* "gb/fit.pyx":66
+      /* "gb/fit.pyx":65
+ *             dt_wold = stamps[i]
  * 
- *         sampler.sample_for_idx(i, kernel, &candidate, &candidate_prob)
  *         if sampler.is_background(kernel.mu_rate(proc_a), dt_poisson,             # <<<<<<<<<<<<<<
  *                                  candidate_prob, dt_wold):
  *             new_influencer = n_proc
@@ -2718,18 +2709,27 @@ static void __pyx_f_2gb_3fit_sample_alpha(size_t __pyx_v_proc_a, struct __pyx_ob
       goto __pyx_L7;
     }
 
-    /* "gb/fit.pyx":70
+    /* "gb/fit.pyx":69
  *             new_influencer = n_proc
  *         else:
+ *             sampler.sample_for_idx(i, kernel, &candidate, &candidate_prob)             # <<<<<<<<<<<<<<
+ *             new_influencer = candidate
+ *             sampler.inc_one(new_influencer)
+ */
+    /*else*/ {
+      ((struct __pyx_vtabstruct_2gb_8samplers_AbstractSampler *)__pyx_v_sampler->__pyx_vtab)->sample_for_idx(__pyx_v_sampler, __pyx_v_i, __pyx_v_kernel, (&__pyx_v_candidate), (&__pyx_v_candidate_prob));
+
+      /* "gb/fit.pyx":70
+ *         else:
+ *             sampler.sample_for_idx(i, kernel, &candidate, &candidate_prob)
  *             new_influencer = candidate             # <<<<<<<<<<<<<<
  *             sampler.inc_one(new_influencer)
  * 
  */
-    /*else*/ {
       __pyx_v_new_influencer = __pyx_v_candidate;
 
       /* "gb/fit.pyx":71
- *         else:
+ *             sampler.sample_for_idx(i, kernel, &candidate, &candidate_prob)
  *             new_influencer = candidate
  *             sampler.inc_one(new_influencer)             # <<<<<<<<<<<<<<
  * 

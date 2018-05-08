@@ -88,7 +88,7 @@ cdef class BaseSampler(AbstractSampler):
 
     cdef uint64_t is_background(self, double mu_rate, double dt_mu,
                                 double cross_rate, double dt_cross) nogil:
-        return self.rng.rand() < (mu_rate / (cross_rate))
+        return self.rng.rand() < 1 - exp(-dt_mu * mu_rate)
 
 cdef class FenwickSampler(AbstractSampler):
 
