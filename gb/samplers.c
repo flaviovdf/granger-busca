@@ -1065,8 +1065,8 @@ struct __pyx_obj_2gb_8samplers_AbstractSampler {
 };
 
 
-/* "gb/samplers.pxd":29
- *                                 double cross_rate, double dt_cross) nogil
+/* "gb/samplers.pxd":27
+ *     cdef uint64_t is_background(self, double mu_rate, double dt_mu) nogil
  * 
  * cdef class BaseSampler(AbstractSampler):             # <<<<<<<<<<<<<<
  *     cdef size_t n_proc
@@ -1081,13 +1081,12 @@ struct __pyx_obj_2gb_8samplers_BaseSampler {
   __Pyx_memviewslice nab;
   size_t current_process;
   size_t worker_id;
-  struct __pyx_obj_2gb_11collections_6fptree_FPTree *tree;
   struct __pyx_obj_2gb_6stamps_Timestamps *timestamps;
   struct __pyx_obj_2gb_9randomkit_6random_RNG *rng;
 };
 
 
-/* "gb/samplers.pxd":42
+/* "gb/samplers.pxd":38
  *     cdef RNG rng
  * 
  * cdef class FenwickSampler(AbstractSampler):             # <<<<<<<<<<<<<<
@@ -1098,12 +1097,11 @@ struct __pyx_obj_2gb_8samplers_FenwickSampler {
   struct __pyx_obj_2gb_8samplers_AbstractSampler __pyx_base;
   struct __pyx_obj_2gb_8samplers_BaseSampler *base;
   struct __pyx_obj_2gb_11collections_6fptree_FPTree *tree;
-  size_t n_proc;
 };
 
 
-/* "gb/samplers.pxd":47
- *     cdef size_t n_proc
+/* "gb/samplers.pxd":42
+ *     cdef FPTree tree
  * 
  * cdef class CollapsedGibbsSampler(AbstractSampler):             # <<<<<<<<<<<<<<
  *     cdef BaseSampler base
@@ -1368,13 +1366,13 @@ struct __pyx_vtabstruct_2gb_8samplers_AbstractSampler {
   double (*get_probability)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, size_t);
   void (*inc_one)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, size_t);
   void (*dec_one)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, size_t);
-  void (*sample_for_idx)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, size_t, struct __pyx_obj_2gb_7kernels_AbstractKernel *, size_t *, double *);
-  uint64_t (*is_background)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, double, double, double, double);
+  size_t (*sample_for_idx)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, size_t, struct __pyx_obj_2gb_7kernels_AbstractKernel *);
+  uint64_t (*is_background)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, double, double);
 };
 static struct __pyx_vtabstruct_2gb_8samplers_AbstractSampler *__pyx_vtabptr_2gb_8samplers_AbstractSampler;
 
 
-/* "gb/samplers.pyx":46
+/* "gb/samplers.pyx":44
  * 
  * 
  * cdef class BaseSampler(AbstractSampler):             # <<<<<<<<<<<<<<
@@ -1388,7 +1386,7 @@ struct __pyx_vtabstruct_2gb_8samplers_BaseSampler {
 static struct __pyx_vtabstruct_2gb_8samplers_BaseSampler *__pyx_vtabptr_2gb_8samplers_BaseSampler;
 
 
-/* "gb/samplers.pyx":93
+/* "gb/samplers.pyx":90
  *         return self.rng.rand() < 1 - exp(-dt_mu * mu_rate)
  * 
  * cdef class FenwickSampler(AbstractSampler):             # <<<<<<<<<<<<<<
@@ -1402,8 +1400,8 @@ struct __pyx_vtabstruct_2gb_8samplers_FenwickSampler {
 static struct __pyx_vtabstruct_2gb_8samplers_FenwickSampler *__pyx_vtabptr_2gb_8samplers_FenwickSampler;
 
 
-/* "gb/samplers.pyx":165
- *         return self.base.is_background(mu_rate, dt_mu, cross_rate, dt_cross)
+/* "gb/samplers.pyx":154
+ *         return self.base.is_background(mu_rate, dt_mu)
  * 
  * cdef class CollapsedGibbsSampler(AbstractSampler):             # <<<<<<<<<<<<<<
  * 
@@ -1652,6 +1650,24 @@ static CYTHON_INLINE void __Pyx_XDEC_MEMVIEW(__Pyx_memviewslice *, int, int);
 
 /* RaiseException.proto */
 static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb, PyObject *cause);
+
+/* PyObjectSetAttrStr.proto */
+#if CYTHON_USE_TYPE_SLOTS
+#define __Pyx_PyObject_DelAttrStr(o,n) __Pyx_PyObject_SetAttrStr(o,n,NULL)
+static CYTHON_INLINE int __Pyx_PyObject_SetAttrStr(PyObject* obj, PyObject* attr_name, PyObject* value) {
+    PyTypeObject* tp = Py_TYPE(obj);
+    if (likely(tp->tp_setattro))
+        return tp->tp_setattro(obj, attr_name, value);
+#if PY_MAJOR_VERSION < 3
+    if (likely(tp->tp_setattr))
+        return tp->tp_setattr(obj, PyString_AS_STRING(attr_name), value);
+#endif
+    return PyObject_SetAttr(obj, attr_name, value);
+}
+#else
+#define __Pyx_PyObject_DelAttrStr(o,n)   PyObject_DelAttr(o,n)
+#define __Pyx_PyObject_SetAttrStr(o,n,v) PyObject_SetAttr(o,n,v)
+#endif
 
 /* Import.proto */
 static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level);
@@ -2028,25 +2044,25 @@ static void __pyx_f_2gb_8samplers_15AbstractSampler_set_current_process(CYTHON_U
 static double __pyx_f_2gb_8samplers_15AbstractSampler_get_probability(CYTHON_UNUSED struct __pyx_obj_2gb_8samplers_AbstractSampler *__pyx_v_self, CYTHON_UNUSED size_t __pyx_v_b); /* proto*/
 static void __pyx_f_2gb_8samplers_15AbstractSampler_inc_one(CYTHON_UNUSED struct __pyx_obj_2gb_8samplers_AbstractSampler *__pyx_v_self, CYTHON_UNUSED size_t __pyx_v_b); /* proto*/
 static void __pyx_f_2gb_8samplers_15AbstractSampler_dec_one(CYTHON_UNUSED struct __pyx_obj_2gb_8samplers_AbstractSampler *__pyx_v_self, CYTHON_UNUSED size_t __pyx_v_b); /* proto*/
-static void __pyx_f_2gb_8samplers_15AbstractSampler_sample_for_idx(CYTHON_UNUSED struct __pyx_obj_2gb_8samplers_AbstractSampler *__pyx_v_self, CYTHON_UNUSED size_t __pyx_v_i, CYTHON_UNUSED struct __pyx_obj_2gb_7kernels_AbstractKernel *__pyx_v_kernel, CYTHON_UNUSED size_t *__pyx_v_result_sample, CYTHON_UNUSED double *__pyx_v_prob_sample); /* proto*/
-static uint64_t __pyx_f_2gb_8samplers_15AbstractSampler_is_background(CYTHON_UNUSED struct __pyx_obj_2gb_8samplers_AbstractSampler *__pyx_v_self, CYTHON_UNUSED double __pyx_v_mu_rate, CYTHON_UNUSED double __pyx_v_dt_mu, CYTHON_UNUSED double __pyx_v_cross_rate, CYTHON_UNUSED double __pyx_v_dt_cross); /* proto*/
+static size_t __pyx_f_2gb_8samplers_15AbstractSampler_sample_for_idx(CYTHON_UNUSED struct __pyx_obj_2gb_8samplers_AbstractSampler *__pyx_v_self, CYTHON_UNUSED size_t __pyx_v_i, CYTHON_UNUSED struct __pyx_obj_2gb_7kernels_AbstractKernel *__pyx_v_kernel); /* proto*/
+static uint64_t __pyx_f_2gb_8samplers_15AbstractSampler_is_background(CYTHON_UNUSED struct __pyx_obj_2gb_8samplers_AbstractSampler *__pyx_v_self, CYTHON_UNUSED double __pyx_v_mu_rate, CYTHON_UNUSED double __pyx_v_dt_mu); /* proto*/
 static void __pyx_f_2gb_8samplers_11BaseSampler_set_current_process(struct __pyx_obj_2gb_8samplers_BaseSampler *__pyx_v_self, size_t __pyx_v_a); /* proto*/
 static double __pyx_f_2gb_8samplers_11BaseSampler_get_probability(struct __pyx_obj_2gb_8samplers_BaseSampler *__pyx_v_self, size_t __pyx_v_b); /* proto*/
 static void __pyx_f_2gb_8samplers_11BaseSampler_inc_one(struct __pyx_obj_2gb_8samplers_BaseSampler *__pyx_v_self, size_t __pyx_v_b); /* proto*/
 static void __pyx_f_2gb_8samplers_11BaseSampler_dec_one(struct __pyx_obj_2gb_8samplers_BaseSampler *__pyx_v_self, size_t __pyx_v_b); /* proto*/
-static uint64_t __pyx_f_2gb_8samplers_11BaseSampler_is_background(struct __pyx_obj_2gb_8samplers_BaseSampler *__pyx_v_self, double __pyx_v_mu_rate, double __pyx_v_dt_mu, CYTHON_UNUSED double __pyx_v_cross_rate, CYTHON_UNUSED double __pyx_v_dt_cross); /* proto*/
+static uint64_t __pyx_f_2gb_8samplers_11BaseSampler_is_background(struct __pyx_obj_2gb_8samplers_BaseSampler *__pyx_v_self, double __pyx_v_mu_rate, double __pyx_v_dt_mu); /* proto*/
 static void __pyx_f_2gb_8samplers_14FenwickSampler_set_current_process(struct __pyx_obj_2gb_8samplers_FenwickSampler *__pyx_v_self, size_t __pyx_v_a); /* proto*/
 static double __pyx_f_2gb_8samplers_14FenwickSampler_get_probability(struct __pyx_obj_2gb_8samplers_FenwickSampler *__pyx_v_self, size_t __pyx_v_b); /* proto*/
 static void __pyx_f_2gb_8samplers_14FenwickSampler_inc_one(struct __pyx_obj_2gb_8samplers_FenwickSampler *__pyx_v_self, size_t __pyx_v_b); /* proto*/
 static void __pyx_f_2gb_8samplers_14FenwickSampler_dec_one(struct __pyx_obj_2gb_8samplers_FenwickSampler *__pyx_v_self, size_t __pyx_v_b); /* proto*/
-static void __pyx_f_2gb_8samplers_14FenwickSampler_sample_for_idx(struct __pyx_obj_2gb_8samplers_FenwickSampler *__pyx_v_self, size_t __pyx_v_i, struct __pyx_obj_2gb_7kernels_AbstractKernel *__pyx_v_kernel, size_t *__pyx_v_result_sample, double *__pyx_v_prob_sample); /* proto*/
-static uint64_t __pyx_f_2gb_8samplers_14FenwickSampler_is_background(struct __pyx_obj_2gb_8samplers_FenwickSampler *__pyx_v_self, double __pyx_v_mu_rate, double __pyx_v_dt_mu, double __pyx_v_cross_rate, double __pyx_v_dt_cross); /* proto*/
+static size_t __pyx_f_2gb_8samplers_14FenwickSampler_sample_for_idx(struct __pyx_obj_2gb_8samplers_FenwickSampler *__pyx_v_self, size_t __pyx_v_i, struct __pyx_obj_2gb_7kernels_AbstractKernel *__pyx_v_kernel); /* proto*/
+static uint64_t __pyx_f_2gb_8samplers_14FenwickSampler_is_background(struct __pyx_obj_2gb_8samplers_FenwickSampler *__pyx_v_self, double __pyx_v_mu_rate, double __pyx_v_dt_mu); /* proto*/
 static void __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_set_current_process(struct __pyx_obj_2gb_8samplers_CollapsedGibbsSampler *__pyx_v_self, size_t __pyx_v_a); /* proto*/
 static double __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_get_probability(struct __pyx_obj_2gb_8samplers_CollapsedGibbsSampler *__pyx_v_self, size_t __pyx_v_b); /* proto*/
 static void __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_inc_one(struct __pyx_obj_2gb_8samplers_CollapsedGibbsSampler *__pyx_v_self, size_t __pyx_v_b); /* proto*/
 static void __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_dec_one(struct __pyx_obj_2gb_8samplers_CollapsedGibbsSampler *__pyx_v_self, size_t __pyx_v_b); /* proto*/
-static void __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_sample_for_idx(struct __pyx_obj_2gb_8samplers_CollapsedGibbsSampler *__pyx_v_self, size_t __pyx_v_i, struct __pyx_obj_2gb_7kernels_AbstractKernel *__pyx_v_kernel, size_t *__pyx_v_result_sample, double *__pyx_v_prob_sample); /* proto*/
-static uint64_t __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_is_background(struct __pyx_obj_2gb_8samplers_CollapsedGibbsSampler *__pyx_v_self, double __pyx_v_mu_rate, double __pyx_v_dt_mu, double __pyx_v_cross_rate, double __pyx_v_dt_cross); /* proto*/
+static size_t __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_sample_for_idx(struct __pyx_obj_2gb_8samplers_CollapsedGibbsSampler *__pyx_v_self, size_t __pyx_v_i, struct __pyx_obj_2gb_7kernels_AbstractKernel *__pyx_v_kernel); /* proto*/
+static uint64_t __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_is_background(struct __pyx_obj_2gb_8samplers_CollapsedGibbsSampler *__pyx_v_self, double __pyx_v_mu_rate, double __pyx_v_dt_mu); /* proto*/
 static PyObject *__pyx_array_get_memview(struct __pyx_array_obj *__pyx_v_self); /* proto*/
 static char *__pyx_memoryview_get_item_pointer(struct __pyx_memoryview_obj *__pyx_v_self, PyObject *__pyx_v_index); /* proto*/
 static PyObject *__pyx_memoryview_is_slice(struct __pyx_memoryview_obj *__pyx_v_self, PyObject *__pyx_v_obj); /* proto*/
@@ -2251,10 +2267,10 @@ static const char __pyx_k_strided_and_direct_or_indirect[] = "<strided and direc
 static const char __pyx_k_Buffer_view_does_not_expose_stri[] = "Buffer view does not expose strides";
 static const char __pyx_k_Can_only_create_a_buffer_that_is[] = "Can only create a buffer that is contiguous in memory.";
 static const char __pyx_k_Empty_shape_tuple_for_cython_arr[] = "Empty shape tuple for cython.array";
-static const char __pyx_k_Incompatible_checksums_s_vs_0x75[] = "Incompatible checksums (%s vs 0x75496a8 = (base, n_proc, tree))";
 static const char __pyx_k_Incompatible_checksums_s_vs_0xb0[] = "Incompatible checksums (%s vs 0xb068931 = (name))";
 static const char __pyx_k_Incompatible_checksums_s_vs_0xc1[] = "Incompatible checksums (%s vs 0xc10c28a = (base, buffer))";
 static const char __pyx_k_Incompatible_checksums_s_vs_0xd4[] = "Incompatible checksums (%s vs 0xd41d8cd = ())";
+static const char __pyx_k_Incompatible_checksums_s_vs_0xd7[] = "Incompatible checksums (%s vs 0xd7d8bc9 = (base, tree))";
 static const char __pyx_k_Indirect_dimensions_not_supporte[] = "Indirect dimensions not supported";
 static const char __pyx_k_Invalid_mode_expected_c_or_fortr[] = "Invalid mode, expected 'c' or 'fortran', got %s";
 static const char __pyx_k_Out_of_bounds_on_buffer_access_a[] = "Out of bounds on buffer access (axis %d)";
@@ -2269,10 +2285,10 @@ static PyObject *__pyx_kp_s_Can_only_create_a_buffer_that_is;
 static PyObject *__pyx_kp_s_Cannot_index_with_type_s;
 static PyObject *__pyx_n_s_Ellipsis;
 static PyObject *__pyx_kp_s_Empty_shape_tuple_for_cython_arr;
-static PyObject *__pyx_kp_s_Incompatible_checksums_s_vs_0x75;
 static PyObject *__pyx_kp_s_Incompatible_checksums_s_vs_0xb0;
 static PyObject *__pyx_kp_s_Incompatible_checksums_s_vs_0xc1;
 static PyObject *__pyx_kp_s_Incompatible_checksums_s_vs_0xd4;
+static PyObject *__pyx_kp_s_Incompatible_checksums_s_vs_0xd7;
 static PyObject *__pyx_n_s_IndexError;
 static PyObject *__pyx_kp_s_Indirect_dimensions_not_supporte;
 static PyObject *__pyx_kp_s_Invalid_mode_expected_c_or_fortr;
@@ -2441,10 +2457,10 @@ static PyObject *__pyx_tp_new_memoryview(PyTypeObject *t, PyObject *a, PyObject 
 static PyObject *__pyx_tp_new__memoryviewslice(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_int_0;
 static PyObject *__pyx_int_1;
-static PyObject *__pyx_int_122984104;
 static PyObject *__pyx_int_184977713;
 static PyObject *__pyx_int_202424970;
 static PyObject *__pyx_int_222419149;
+static PyObject *__pyx_int_226331593;
 static PyObject *__pyx_int_neg_1;
 static PyObject *__pyx_tuple_;
 static PyObject *__pyx_tuple__2;
@@ -2648,7 +2664,7 @@ static void __pyx_f_2gb_8samplers_15AbstractSampler_dec_one(CYTHON_UNUSED struct
  *     cdef void dec_one(self, size_t b) nogil:
  *         printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')             # <<<<<<<<<<<<<<
  *         abort()
- *     cdef void sample_for_idx(self, size_t i, AbstractKernel kernel,
+ *     cdef size_t sample_for_idx(self, size_t i, AbstractKernel kernel) nogil:
  */
   printf(((char const *)"[gb.samplers] Do not use the BaseSampler or AbstractSampler\n"));
 
@@ -2656,8 +2672,8 @@ static void __pyx_f_2gb_8samplers_15AbstractSampler_dec_one(CYTHON_UNUSED struct
  *     cdef void dec_one(self, size_t b) nogil:
  *         printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')
  *         abort()             # <<<<<<<<<<<<<<
- *     cdef void sample_for_idx(self, size_t i, AbstractKernel kernel,
- *                              size_t *result_sample, double *prob_sample) nogil:
+ *     cdef size_t sample_for_idx(self, size_t i, AbstractKernel kernel) nogil:
+ *         printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')
  */
   abort();
 
@@ -2675,64 +2691,67 @@ static void __pyx_f_2gb_8samplers_15AbstractSampler_dec_one(CYTHON_UNUSED struct
 /* "gb/samplers.pyx":36
  *         printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')
  *         abort()
- *     cdef void sample_for_idx(self, size_t i, AbstractKernel kernel,             # <<<<<<<<<<<<<<
- *                              size_t *result_sample, double *prob_sample) nogil:
+ *     cdef size_t sample_for_idx(self, size_t i, AbstractKernel kernel) nogil:             # <<<<<<<<<<<<<<
  *         printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')
+ *         abort()
  */
 
-static void __pyx_f_2gb_8samplers_15AbstractSampler_sample_for_idx(CYTHON_UNUSED struct __pyx_obj_2gb_8samplers_AbstractSampler *__pyx_v_self, CYTHON_UNUSED size_t __pyx_v_i, CYTHON_UNUSED struct __pyx_obj_2gb_7kernels_AbstractKernel *__pyx_v_kernel, CYTHON_UNUSED size_t *__pyx_v_result_sample, CYTHON_UNUSED double *__pyx_v_prob_sample) {
+static size_t __pyx_f_2gb_8samplers_15AbstractSampler_sample_for_idx(CYTHON_UNUSED struct __pyx_obj_2gb_8samplers_AbstractSampler *__pyx_v_self, CYTHON_UNUSED size_t __pyx_v_i, CYTHON_UNUSED struct __pyx_obj_2gb_7kernels_AbstractKernel *__pyx_v_kernel) {
+  size_t __pyx_r;
 
-  /* "gb/samplers.pyx":38
- *     cdef void sample_for_idx(self, size_t i, AbstractKernel kernel,
- *                              size_t *result_sample, double *prob_sample) nogil:
+  /* "gb/samplers.pyx":37
+ *         abort()
+ *     cdef size_t sample_for_idx(self, size_t i, AbstractKernel kernel) nogil:
  *         printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')             # <<<<<<<<<<<<<<
  *         abort()
- *     cdef uint64_t is_background(self, double mu_rate, double dt_mu,
+ *     cdef uint64_t is_background(self, double mu_rate, double dt_mu) nogil:
  */
   printf(((char const *)"[gb.samplers] Do not use the BaseSampler or AbstractSampler\n"));
 
-  /* "gb/samplers.pyx":39
- *                              size_t *result_sample, double *prob_sample) nogil:
+  /* "gb/samplers.pyx":38
+ *     cdef size_t sample_for_idx(self, size_t i, AbstractKernel kernel) nogil:
  *         printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')
  *         abort()             # <<<<<<<<<<<<<<
- *     cdef uint64_t is_background(self, double mu_rate, double dt_mu,
- *                                 double cross_rate, double dt_cross) nogil:
+ *     cdef uint64_t is_background(self, double mu_rate, double dt_mu) nogil:
+ *         printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')
  */
   abort();
 
   /* "gb/samplers.pyx":36
  *         printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')
  *         abort()
- *     cdef void sample_for_idx(self, size_t i, AbstractKernel kernel,             # <<<<<<<<<<<<<<
- *                              size_t *result_sample, double *prob_sample) nogil:
+ *     cdef size_t sample_for_idx(self, size_t i, AbstractKernel kernel) nogil:             # <<<<<<<<<<<<<<
  *         printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')
+ *         abort()
  */
 
   /* function exit code */
+  __pyx_r = 0;
+  return __pyx_r;
 }
 
-/* "gb/samplers.pyx":40
+/* "gb/samplers.pyx":39
  *         printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')
  *         abort()
- *     cdef uint64_t is_background(self, double mu_rate, double dt_mu,             # <<<<<<<<<<<<<<
- *                                 double cross_rate, double dt_cross) nogil:
+ *     cdef uint64_t is_background(self, double mu_rate, double dt_mu) nogil:             # <<<<<<<<<<<<<<
  *         printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')
+ *         abort()
  */
 
-static uint64_t __pyx_f_2gb_8samplers_15AbstractSampler_is_background(CYTHON_UNUSED struct __pyx_obj_2gb_8samplers_AbstractSampler *__pyx_v_self, CYTHON_UNUSED double __pyx_v_mu_rate, CYTHON_UNUSED double __pyx_v_dt_mu, CYTHON_UNUSED double __pyx_v_cross_rate, CYTHON_UNUSED double __pyx_v_dt_cross) {
+static uint64_t __pyx_f_2gb_8samplers_15AbstractSampler_is_background(CYTHON_UNUSED struct __pyx_obj_2gb_8samplers_AbstractSampler *__pyx_v_self, CYTHON_UNUSED double __pyx_v_mu_rate, CYTHON_UNUSED double __pyx_v_dt_mu) {
   uint64_t __pyx_r;
 
-  /* "gb/samplers.pyx":42
- *     cdef uint64_t is_background(self, double mu_rate, double dt_mu,
- *                                 double cross_rate, double dt_cross) nogil:
+  /* "gb/samplers.pyx":40
+ *         abort()
+ *     cdef uint64_t is_background(self, double mu_rate, double dt_mu) nogil:
  *         printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')             # <<<<<<<<<<<<<<
  *         abort()
  * 
  */
   printf(((char const *)"[gb.samplers] Do not use the BaseSampler or AbstractSampler\n"));
 
-  /* "gb/samplers.pyx":43
- *                                 double cross_rate, double dt_cross) nogil:
+  /* "gb/samplers.pyx":41
+ *     cdef uint64_t is_background(self, double mu_rate, double dt_mu) nogil:
  *         printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')
  *         abort()             # <<<<<<<<<<<<<<
  * 
@@ -2740,12 +2759,12 @@ static uint64_t __pyx_f_2gb_8samplers_15AbstractSampler_is_background(CYTHON_UNU
  */
   abort();
 
-  /* "gb/samplers.pyx":40
+  /* "gb/samplers.pyx":39
  *         printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')
  *         abort()
- *     cdef uint64_t is_background(self, double mu_rate, double dt_mu,             # <<<<<<<<<<<<<<
- *                                 double cross_rate, double dt_cross) nogil:
+ *     cdef uint64_t is_background(self, double mu_rate, double dt_mu) nogil:             # <<<<<<<<<<<<<<
  *         printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')
+ *         abort()
  */
 
   /* function exit code */
@@ -3034,7 +3053,7 @@ static PyObject *__pyx_pf_2gb_8samplers_15AbstractSampler_2__setstate_cython__(s
   return __pyx_r;
 }
 
-/* "gb/samplers.pyx":48
+/* "gb/samplers.pyx":46
  * cdef class BaseSampler(AbstractSampler):
  * 
  *     def __init__(self, Timestamps timestamps, SloppyCounter sloppy,             # <<<<<<<<<<<<<<
@@ -3082,29 +3101,29 @@ static int __pyx_pw_2gb_8samplers_11BaseSampler_1__init__(PyObject *__pyx_v_self
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_sloppy)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, 1); __PYX_ERR(0, 48, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, 1); __PYX_ERR(0, 46, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_worker_id)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, 2); __PYX_ERR(0, 48, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, 2); __PYX_ERR(0, 46, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_alpha_prior)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, 3); __PYX_ERR(0, 48, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, 3); __PYX_ERR(0, 46, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_rng)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, 4); __PYX_ERR(0, 48, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, 4); __PYX_ERR(0, 46, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 48, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 46, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 5) {
       goto __pyx_L5_argtuple_error;
@@ -3117,21 +3136,21 @@ static int __pyx_pw_2gb_8samplers_11BaseSampler_1__init__(PyObject *__pyx_v_self
     }
     __pyx_v_timestamps = ((struct __pyx_obj_2gb_6stamps_Timestamps *)values[0]);
     __pyx_v_sloppy = ((struct __pyx_obj_2gb_6sloppy_SloppyCounter *)values[1]);
-    __pyx_v_worker_id = __Pyx_PyInt_As_size_t(values[2]); if (unlikely((__pyx_v_worker_id == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 49, __pyx_L3_error)
-    __pyx_v_alpha_prior = __pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_alpha_prior == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 49, __pyx_L3_error)
+    __pyx_v_worker_id = __Pyx_PyInt_As_size_t(values[2]); if (unlikely((__pyx_v_worker_id == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 47, __pyx_L3_error)
+    __pyx_v_alpha_prior = __pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_alpha_prior == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 47, __pyx_L3_error)
     __pyx_v_rng = ((struct __pyx_obj_2gb_9randomkit_6random_RNG *)values[4]);
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 48, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 46, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gb.samplers.BaseSampler.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_timestamps), __pyx_ptype_2gb_6stamps_Timestamps, 1, "timestamps", 0))) __PYX_ERR(0, 48, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_sloppy), __pyx_ptype_2gb_6sloppy_SloppyCounter, 1, "sloppy", 0))) __PYX_ERR(0, 48, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_rng), __pyx_ptype_2gb_9randomkit_6random_RNG, 1, "rng", 0))) __PYX_ERR(0, 49, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_timestamps), __pyx_ptype_2gb_6stamps_Timestamps, 1, "timestamps", 0))) __PYX_ERR(0, 46, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_sloppy), __pyx_ptype_2gb_6sloppy_SloppyCounter, 1, "sloppy", 0))) __PYX_ERR(0, 46, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_rng), __pyx_ptype_2gb_9randomkit_6random_RNG, 1, "rng", 0))) __PYX_ERR(0, 47, __pyx_L1_error)
   __pyx_r = __pyx_pf_2gb_8samplers_11BaseSampler___init__(((struct __pyx_obj_2gb_8samplers_BaseSampler *)__pyx_v_self), __pyx_v_timestamps, __pyx_v_sloppy, __pyx_v_worker_id, __pyx_v_alpha_prior, __pyx_v_rng);
 
   /* function exit code */
@@ -3153,7 +3172,7 @@ static int __pyx_pf_2gb_8samplers_11BaseSampler___init__(struct __pyx_obj_2gb_8s
   __Pyx_memviewslice __pyx_t_5 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_RefNannySetupContext("__init__", 0);
 
-  /* "gb/samplers.pyx":50
+  /* "gb/samplers.pyx":48
  *     def __init__(self, Timestamps timestamps, SloppyCounter sloppy,
  *                  size_t worker_id, double alpha_prior, RNG rng):
  *         self.n_proc = timestamps.num_proc()             # <<<<<<<<<<<<<<
@@ -3162,7 +3181,7 @@ static int __pyx_pf_2gb_8samplers_11BaseSampler___init__(struct __pyx_obj_2gb_8s
  */
   __pyx_v_self->n_proc = ((struct __pyx_vtabstruct_2gb_6stamps_Timestamps *)__pyx_v_timestamps->__pyx_vtab)->num_proc(__pyx_v_timestamps);
 
-  /* "gb/samplers.pyx":51
+  /* "gb/samplers.pyx":49
  *                  size_t worker_id, double alpha_prior, RNG rng):
  *         self.n_proc = timestamps.num_proc()
  *         self.alpha_prior = alpha_prior             # <<<<<<<<<<<<<<
@@ -3171,7 +3190,7 @@ static int __pyx_pf_2gb_8samplers_11BaseSampler___init__(struct __pyx_obj_2gb_8s
  */
   __pyx_v_self->alpha_prior = __pyx_v_alpha_prior;
 
-  /* "gb/samplers.pyx":52
+  /* "gb/samplers.pyx":50
  *         self.n_proc = timestamps.num_proc()
  *         self.alpha_prior = alpha_prior
  *         self.sloppy = sloppy             # <<<<<<<<<<<<<<
@@ -3184,7 +3203,7 @@ static int __pyx_pf_2gb_8samplers_11BaseSampler___init__(struct __pyx_obj_2gb_8s
   __Pyx_DECREF(((PyObject *)__pyx_v_self->sloppy));
   __pyx_v_self->sloppy = __pyx_v_sloppy;
 
-  /* "gb/samplers.pyx":53
+  /* "gb/samplers.pyx":51
  *         self.alpha_prior = alpha_prior
  *         self.sloppy = sloppy
  *         self.worker_id = worker_id             # <<<<<<<<<<<<<<
@@ -3193,7 +3212,7 @@ static int __pyx_pf_2gb_8samplers_11BaseSampler___init__(struct __pyx_obj_2gb_8s
  */
   __pyx_v_self->worker_id = __pyx_v_worker_id;
 
-  /* "gb/samplers.pyx":54
+  /* "gb/samplers.pyx":52
  *         self.sloppy = sloppy
  *         self.worker_id = worker_id
  *         self.timestamps = timestamps             # <<<<<<<<<<<<<<
@@ -3206,42 +3225,42 @@ static int __pyx_pf_2gb_8samplers_11BaseSampler___init__(struct __pyx_obj_2gb_8s
   __Pyx_DECREF(((PyObject *)__pyx_v_self->timestamps));
   __pyx_v_self->timestamps = __pyx_v_timestamps;
 
-  /* "gb/samplers.pyx":55
+  /* "gb/samplers.pyx":53
  *         self.worker_id = worker_id
  *         self.timestamps = timestamps
  *         self.nab = np.zeros(self.n_proc, dtype='uint64')             # <<<<<<<<<<<<<<
  *         self.sloppy.get_local_counts(self.worker_id, &self.denominators)
  *         self.rng = rng
  */
-  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 55, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 53, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 55, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 53, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyInt_FromSize_t(__pyx_v_self->n_proc); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 55, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_FromSize_t(__pyx_v_self->n_proc); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 53, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 55, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 53, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 55, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 53, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_n_s_uint64) < 0) __PYX_ERR(0, 55, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 55, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_n_s_uint64) < 0) __PYX_ERR(0, 53, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 53, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_dc_nn_uint64_t(__pyx_t_4);
-  if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 55, __pyx_L1_error)
+  if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 53, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __PYX_XDEC_MEMVIEW(&__pyx_v_self->nab, 0);
   __pyx_v_self->nab = __pyx_t_5;
   __pyx_t_5.memview = NULL;
   __pyx_t_5.data = NULL;
 
-  /* "gb/samplers.pyx":56
+  /* "gb/samplers.pyx":54
  *         self.timestamps = timestamps
  *         self.nab = np.zeros(self.n_proc, dtype='uint64')
  *         self.sloppy.get_local_counts(self.worker_id, &self.denominators)             # <<<<<<<<<<<<<<
@@ -3250,7 +3269,7 @@ static int __pyx_pf_2gb_8samplers_11BaseSampler___init__(struct __pyx_obj_2gb_8s
  */
   ((struct __pyx_vtabstruct_2gb_6sloppy_SloppyCounter *)__pyx_v_self->sloppy->__pyx_vtab)->get_local_counts(__pyx_v_self->sloppy, __pyx_v_self->worker_id, (&__pyx_v_self->denominators));
 
-  /* "gb/samplers.pyx":57
+  /* "gb/samplers.pyx":55
  *         self.nab = np.zeros(self.n_proc, dtype='uint64')
  *         self.sloppy.get_local_counts(self.worker_id, &self.denominators)
  *         self.rng = rng             # <<<<<<<<<<<<<<
@@ -3263,7 +3282,7 @@ static int __pyx_pf_2gb_8samplers_11BaseSampler___init__(struct __pyx_obj_2gb_8s
   __Pyx_DECREF(((PyObject *)__pyx_v_self->rng));
   __pyx_v_self->rng = __pyx_v_rng;
 
-  /* "gb/samplers.pyx":48
+  /* "gb/samplers.pyx":46
  * cdef class BaseSampler(AbstractSampler):
  * 
  *     def __init__(self, Timestamps timestamps, SloppyCounter sloppy,             # <<<<<<<<<<<<<<
@@ -3287,7 +3306,7 @@ static int __pyx_pf_2gb_8samplers_11BaseSampler___init__(struct __pyx_obj_2gb_8s
   return __pyx_r;
 }
 
-/* "gb/samplers.pyx":59
+/* "gb/samplers.pyx":57
  *         self.rng = rng
  * 
  *     cdef void set_current_process(self, size_t a) nogil:             # <<<<<<<<<<<<<<
@@ -3307,7 +3326,7 @@ static void __pyx_f_2gb_8samplers_11BaseSampler_set_current_process(struct __pyx
   int __pyx_t_4;
   size_t __pyx_t_5;
 
-  /* "gb/samplers.pyx":60
+  /* "gb/samplers.pyx":58
  * 
  *     cdef void set_current_process(self, size_t a) nogil:
  *         self.current_process = a             # <<<<<<<<<<<<<<
@@ -3316,7 +3335,7 @@ static void __pyx_f_2gb_8samplers_11BaseSampler_set_current_process(struct __pyx
  */
   __pyx_v_self->current_process = __pyx_v_a;
 
-  /* "gb/samplers.pyx":62
+  /* "gb/samplers.pyx":60
  *         self.current_process = a
  * 
  *         cdef size_t n = self.timestamps.get_size(a)             # <<<<<<<<<<<<<<
@@ -3325,7 +3344,7 @@ static void __pyx_f_2gb_8samplers_11BaseSampler_set_current_process(struct __pyx
  */
   __pyx_v_n = ((struct __pyx_vtabstruct_2gb_6stamps_Timestamps *)__pyx_v_self->timestamps->__pyx_vtab)->get_size(__pyx_v_self->timestamps, __pyx_v_a);
 
-  /* "gb/samplers.pyx":64
+  /* "gb/samplers.pyx":62
  *         cdef size_t n = self.timestamps.get_size(a)
  *         cdef size_t *causes
  *         self.timestamps.get_causes(a, &causes)             # <<<<<<<<<<<<<<
@@ -3334,7 +3353,7 @@ static void __pyx_f_2gb_8samplers_11BaseSampler_set_current_process(struct __pyx
  */
   ((struct __pyx_vtabstruct_2gb_6stamps_Timestamps *)__pyx_v_self->timestamps->__pyx_vtab)->get_causes(__pyx_v_self->timestamps, __pyx_v_a, (&__pyx_v_causes));
 
-  /* "gb/samplers.pyx":67
+  /* "gb/samplers.pyx":65
  * 
  *         cdef size_t b, i
  *         cdef size_t n_proc = self.nab.shape[0]             # <<<<<<<<<<<<<<
@@ -3343,7 +3362,7 @@ static void __pyx_f_2gb_8samplers_11BaseSampler_set_current_process(struct __pyx
  */
   __pyx_v_n_proc = (__pyx_v_self->nab.shape[0]);
 
-  /* "gb/samplers.pyx":68
+  /* "gb/samplers.pyx":66
  *         cdef size_t b, i
  *         cdef size_t n_proc = self.nab.shape[0]
  *         for b in range(n_proc):             # <<<<<<<<<<<<<<
@@ -3354,7 +3373,7 @@ static void __pyx_f_2gb_8samplers_11BaseSampler_set_current_process(struct __pyx
   for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
     __pyx_v_b = __pyx_t_2;
 
-    /* "gb/samplers.pyx":69
+    /* "gb/samplers.pyx":67
  *         cdef size_t n_proc = self.nab.shape[0]
  *         for b in range(n_proc):
  *             self.nab[b] = 0             # <<<<<<<<<<<<<<
@@ -3365,7 +3384,7 @@ static void __pyx_f_2gb_8samplers_11BaseSampler_set_current_process(struct __pyx
     *((uint64_t *) ( /* dim=0 */ ((char *) (((uint64_t *) __pyx_v_self->nab.data) + __pyx_t_3)) )) = 0;
   }
 
-  /* "gb/samplers.pyx":70
+  /* "gb/samplers.pyx":68
  *         for b in range(n_proc):
  *             self.nab[b] = 0
  *         for i in range(n):             # <<<<<<<<<<<<<<
@@ -3376,7 +3395,7 @@ static void __pyx_f_2gb_8samplers_11BaseSampler_set_current_process(struct __pyx
   for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
     __pyx_v_i = __pyx_t_2;
 
-    /* "gb/samplers.pyx":71
+    /* "gb/samplers.pyx":69
  *             self.nab[b] = 0
  *         for i in range(n):
  *             b = causes[i]             # <<<<<<<<<<<<<<
@@ -3385,7 +3404,7 @@ static void __pyx_f_2gb_8samplers_11BaseSampler_set_current_process(struct __pyx
  */
     __pyx_v_b = (__pyx_v_causes[__pyx_v_i]);
 
-    /* "gb/samplers.pyx":72
+    /* "gb/samplers.pyx":70
  *         for i in range(n):
  *             b = causes[i]
  *             if b != n_proc:             # <<<<<<<<<<<<<<
@@ -3395,7 +3414,7 @@ static void __pyx_f_2gb_8samplers_11BaseSampler_set_current_process(struct __pyx
     __pyx_t_4 = ((__pyx_v_b != __pyx_v_n_proc) != 0);
     if (__pyx_t_4) {
 
-      /* "gb/samplers.pyx":73
+      /* "gb/samplers.pyx":71
  *             b = causes[i]
  *             if b != n_proc:
  *                 self.nab[b] += 1             # <<<<<<<<<<<<<<
@@ -3405,7 +3424,7 @@ static void __pyx_f_2gb_8samplers_11BaseSampler_set_current_process(struct __pyx
       __pyx_t_5 = __pyx_v_b;
       *((uint64_t *) ( /* dim=0 */ ((char *) (((uint64_t *) __pyx_v_self->nab.data) + __pyx_t_5)) )) += 1;
 
-      /* "gb/samplers.pyx":72
+      /* "gb/samplers.pyx":70
  *         for i in range(n):
  *             b = causes[i]
  *             if b != n_proc:             # <<<<<<<<<<<<<<
@@ -3415,7 +3434,7 @@ static void __pyx_f_2gb_8samplers_11BaseSampler_set_current_process(struct __pyx
     }
   }
 
-  /* "gb/samplers.pyx":59
+  /* "gb/samplers.pyx":57
  *         self.rng = rng
  * 
  *     cdef void set_current_process(self, size_t a) nogil:             # <<<<<<<<<<<<<<
@@ -3426,7 +3445,7 @@ static void __pyx_f_2gb_8samplers_11BaseSampler_set_current_process(struct __pyx
   /* function exit code */
 }
 
-/* "gb/samplers.pyx":75
+/* "gb/samplers.pyx":73
  *                 self.nab[b] += 1
  * 
  *     cdef double get_probability(self, size_t b) nogil:             # <<<<<<<<<<<<<<
@@ -3438,7 +3457,7 @@ static double __pyx_f_2gb_8samplers_11BaseSampler_get_probability(struct __pyx_o
   double __pyx_r;
   size_t __pyx_t_1;
 
-  /* "gb/samplers.pyx":76
+  /* "gb/samplers.pyx":74
  * 
  *     cdef double get_probability(self, size_t b) nogil:
  *         return dirmulti_posterior(self.nab[b], self.denominators[b],             # <<<<<<<<<<<<<<
@@ -3447,7 +3466,7 @@ static double __pyx_f_2gb_8samplers_11BaseSampler_get_probability(struct __pyx_o
  */
   __pyx_t_1 = __pyx_v_b;
 
-  /* "gb/samplers.pyx":77
+  /* "gb/samplers.pyx":75
  *     cdef double get_probability(self, size_t b) nogil:
  *         return dirmulti_posterior(self.nab[b], self.denominators[b],
  *                                   self.nab.shape[0], self.alpha_prior)             # <<<<<<<<<<<<<<
@@ -3457,7 +3476,7 @@ static double __pyx_f_2gb_8samplers_11BaseSampler_get_probability(struct __pyx_o
   __pyx_r = __pyx_f_2gb_8samplers_dirmulti_posterior((*((uint64_t *) ( /* dim=0 */ ((char *) (((uint64_t *) __pyx_v_self->nab.data) + __pyx_t_1)) ))), (__pyx_v_self->denominators[__pyx_v_b]), (__pyx_v_self->nab.shape[0]), __pyx_v_self->alpha_prior);
   goto __pyx_L0;
 
-  /* "gb/samplers.pyx":75
+  /* "gb/samplers.pyx":73
  *                 self.nab[b] += 1
  * 
  *     cdef double get_probability(self, size_t b) nogil:             # <<<<<<<<<<<<<<
@@ -3470,7 +3489,7 @@ static double __pyx_f_2gb_8samplers_11BaseSampler_get_probability(struct __pyx_o
   return __pyx_r;
 }
 
-/* "gb/samplers.pyx":79
+/* "gb/samplers.pyx":77
  *                                   self.nab.shape[0], self.alpha_prior)
  * 
  *     cdef void inc_one(self, size_t b) nogil:             # <<<<<<<<<<<<<<
@@ -3481,7 +3500,7 @@ static double __pyx_f_2gb_8samplers_11BaseSampler_get_probability(struct __pyx_o
 static void __pyx_f_2gb_8samplers_11BaseSampler_inc_one(struct __pyx_obj_2gb_8samplers_BaseSampler *__pyx_v_self, size_t __pyx_v_b) {
   size_t __pyx_t_1;
 
-  /* "gb/samplers.pyx":80
+  /* "gb/samplers.pyx":78
  * 
  *     cdef void inc_one(self, size_t b) nogil:
  *         self.denominators[b] += 1             # <<<<<<<<<<<<<<
@@ -3491,7 +3510,7 @@ static void __pyx_f_2gb_8samplers_11BaseSampler_inc_one(struct __pyx_obj_2gb_8sa
   __pyx_t_1 = __pyx_v_b;
   (__pyx_v_self->denominators[__pyx_t_1]) = ((__pyx_v_self->denominators[__pyx_t_1]) + 1);
 
-  /* "gb/samplers.pyx":81
+  /* "gb/samplers.pyx":79
  *     cdef void inc_one(self, size_t b) nogil:
  *         self.denominators[b] += 1
  *         self.nab[b] += 1             # <<<<<<<<<<<<<<
@@ -3501,7 +3520,7 @@ static void __pyx_f_2gb_8samplers_11BaseSampler_inc_one(struct __pyx_obj_2gb_8sa
   __pyx_t_1 = __pyx_v_b;
   *((uint64_t *) ( /* dim=0 */ ((char *) (((uint64_t *) __pyx_v_self->nab.data) + __pyx_t_1)) )) += 1;
 
-  /* "gb/samplers.pyx":82
+  /* "gb/samplers.pyx":80
  *         self.denominators[b] += 1
  *         self.nab[b] += 1
  *         self.sloppy.inc_one(self.worker_id, b)             # <<<<<<<<<<<<<<
@@ -3510,7 +3529,7 @@ static void __pyx_f_2gb_8samplers_11BaseSampler_inc_one(struct __pyx_obj_2gb_8sa
  */
   ((struct __pyx_vtabstruct_2gb_6sloppy_SloppyCounter *)__pyx_v_self->sloppy->__pyx_vtab)->inc_one(__pyx_v_self->sloppy, __pyx_v_self->worker_id, __pyx_v_b);
 
-  /* "gb/samplers.pyx":79
+  /* "gb/samplers.pyx":77
  *                                   self.nab.shape[0], self.alpha_prior)
  * 
  *     cdef void inc_one(self, size_t b) nogil:             # <<<<<<<<<<<<<<
@@ -3521,7 +3540,7 @@ static void __pyx_f_2gb_8samplers_11BaseSampler_inc_one(struct __pyx_obj_2gb_8sa
   /* function exit code */
 }
 
-/* "gb/samplers.pyx":84
+/* "gb/samplers.pyx":82
  *         self.sloppy.inc_one(self.worker_id, b)
  * 
  *     cdef void dec_one(self, size_t b) nogil:             # <<<<<<<<<<<<<<
@@ -3532,7 +3551,7 @@ static void __pyx_f_2gb_8samplers_11BaseSampler_inc_one(struct __pyx_obj_2gb_8sa
 static void __pyx_f_2gb_8samplers_11BaseSampler_dec_one(struct __pyx_obj_2gb_8samplers_BaseSampler *__pyx_v_self, size_t __pyx_v_b) {
   size_t __pyx_t_1;
 
-  /* "gb/samplers.pyx":85
+  /* "gb/samplers.pyx":83
  * 
  *     cdef void dec_one(self, size_t b) nogil:
  *         self.denominators[b] -= 1             # <<<<<<<<<<<<<<
@@ -3542,7 +3561,7 @@ static void __pyx_f_2gb_8samplers_11BaseSampler_dec_one(struct __pyx_obj_2gb_8sa
   __pyx_t_1 = __pyx_v_b;
   (__pyx_v_self->denominators[__pyx_t_1]) = ((__pyx_v_self->denominators[__pyx_t_1]) - 1);
 
-  /* "gb/samplers.pyx":86
+  /* "gb/samplers.pyx":84
  *     cdef void dec_one(self, size_t b) nogil:
  *         self.denominators[b] -= 1
  *         self.nab[b] -= 1             # <<<<<<<<<<<<<<
@@ -3552,16 +3571,16 @@ static void __pyx_f_2gb_8samplers_11BaseSampler_dec_one(struct __pyx_obj_2gb_8sa
   __pyx_t_1 = __pyx_v_b;
   *((uint64_t *) ( /* dim=0 */ ((char *) (((uint64_t *) __pyx_v_self->nab.data) + __pyx_t_1)) )) -= 1;
 
-  /* "gb/samplers.pyx":87
+  /* "gb/samplers.pyx":85
  *         self.denominators[b] -= 1
  *         self.nab[b] -= 1
  *         self.sloppy.dec_one(self.worker_id, b)             # <<<<<<<<<<<<<<
  * 
- *     cdef uint64_t is_background(self, double mu_rate, double dt_mu,
+ *     cdef uint64_t is_background(self, double mu_rate, double dt_mu) nogil:
  */
   ((struct __pyx_vtabstruct_2gb_6sloppy_SloppyCounter *)__pyx_v_self->sloppy->__pyx_vtab)->dec_one(__pyx_v_self->sloppy, __pyx_v_self->worker_id, __pyx_v_b);
 
-  /* "gb/samplers.pyx":84
+  /* "gb/samplers.pyx":82
  *         self.sloppy.inc_one(self.worker_id, b)
  * 
  *     cdef void dec_one(self, size_t b) nogil:             # <<<<<<<<<<<<<<
@@ -3572,20 +3591,20 @@ static void __pyx_f_2gb_8samplers_11BaseSampler_dec_one(struct __pyx_obj_2gb_8sa
   /* function exit code */
 }
 
-/* "gb/samplers.pyx":89
+/* "gb/samplers.pyx":87
  *         self.sloppy.dec_one(self.worker_id, b)
  * 
- *     cdef uint64_t is_background(self, double mu_rate, double dt_mu,             # <<<<<<<<<<<<<<
- *                                 double cross_rate, double dt_cross) nogil:
+ *     cdef uint64_t is_background(self, double mu_rate, double dt_mu) nogil:             # <<<<<<<<<<<<<<
  *         return self.rng.rand() < 1 - exp(-dt_mu * mu_rate)
+ * 
  */
 
-static uint64_t __pyx_f_2gb_8samplers_11BaseSampler_is_background(struct __pyx_obj_2gb_8samplers_BaseSampler *__pyx_v_self, double __pyx_v_mu_rate, double __pyx_v_dt_mu, CYTHON_UNUSED double __pyx_v_cross_rate, CYTHON_UNUSED double __pyx_v_dt_cross) {
+static uint64_t __pyx_f_2gb_8samplers_11BaseSampler_is_background(struct __pyx_obj_2gb_8samplers_BaseSampler *__pyx_v_self, double __pyx_v_mu_rate, double __pyx_v_dt_mu) {
   uint64_t __pyx_r;
 
-  /* "gb/samplers.pyx":91
- *     cdef uint64_t is_background(self, double mu_rate, double dt_mu,
- *                                 double cross_rate, double dt_cross) nogil:
+  /* "gb/samplers.pyx":88
+ * 
+ *     cdef uint64_t is_background(self, double mu_rate, double dt_mu) nogil:
  *         return self.rng.rand() < 1 - exp(-dt_mu * mu_rate)             # <<<<<<<<<<<<<<
  * 
  * cdef class FenwickSampler(AbstractSampler):
@@ -3593,12 +3612,12 @@ static uint64_t __pyx_f_2gb_8samplers_11BaseSampler_is_background(struct __pyx_o
   __pyx_r = (((struct __pyx_vtabstruct_2gb_9randomkit_6random_RNG *)__pyx_v_self->rng->__pyx_vtab)->rand(__pyx_v_self->rng) < (1.0 - exp(((-__pyx_v_dt_mu) * __pyx_v_mu_rate))));
   goto __pyx_L0;
 
-  /* "gb/samplers.pyx":89
+  /* "gb/samplers.pyx":87
  *         self.sloppy.dec_one(self.worker_id, b)
  * 
- *     cdef uint64_t is_background(self, double mu_rate, double dt_mu,             # <<<<<<<<<<<<<<
- *                                 double cross_rate, double dt_cross) nogil:
+ *     cdef uint64_t is_background(self, double mu_rate, double dt_mu) nogil:             # <<<<<<<<<<<<<<
  *         return self.rng.rand() < 1 - exp(-dt_mu * mu_rate)
+ * 
  */
 
   /* function exit code */
@@ -3713,7 +3732,7 @@ static PyObject *__pyx_pf_2gb_8samplers_11BaseSampler_4__setstate_cython__(CYTHO
   return __pyx_r;
 }
 
-/* "gb/samplers.pyx":95
+/* "gb/samplers.pyx":92
  * cdef class FenwickSampler(AbstractSampler):
  * 
  *     def __init__(self, BaseSampler base, size_t n_proc):             # <<<<<<<<<<<<<<
@@ -3752,11 +3771,11 @@ static int __pyx_pw_2gb_8samplers_14FenwickSampler_1__init__(PyObject *__pyx_v_s
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_n_proc)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__init__", 1, 2, 2, 1); __PYX_ERR(0, 95, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__init__", 1, 2, 2, 1); __PYX_ERR(0, 92, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 95, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 92, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -3765,17 +3784,17 @@ static int __pyx_pw_2gb_8samplers_14FenwickSampler_1__init__(PyObject *__pyx_v_s
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
     __pyx_v_base = ((struct __pyx_obj_2gb_8samplers_BaseSampler *)values[0]);
-    __pyx_v_n_proc = __Pyx_PyInt_As_size_t(values[1]); if (unlikely((__pyx_v_n_proc == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 95, __pyx_L3_error)
+    __pyx_v_n_proc = __Pyx_PyInt_As_size_t(values[1]); if (unlikely((__pyx_v_n_proc == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 92, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__init__", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 95, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__init__", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 92, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gb.samplers.FenwickSampler.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_base), __pyx_ptype_2gb_8samplers_BaseSampler, 1, "base", 0))) __PYX_ERR(0, 95, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_base), __pyx_ptype_2gb_8samplers_BaseSampler, 1, "base", 0))) __PYX_ERR(0, 92, __pyx_L1_error)
   __pyx_r = __pyx_pf_2gb_8samplers_14FenwickSampler___init__(((struct __pyx_obj_2gb_8samplers_FenwickSampler *)__pyx_v_self), __pyx_v_base, __pyx_v_n_proc);
 
   /* function exit code */
@@ -3794,7 +3813,7 @@ static int __pyx_pf_2gb_8samplers_14FenwickSampler___init__(struct __pyx_obj_2gb
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("__init__", 0);
 
-  /* "gb/samplers.pyx":96
+  /* "gb/samplers.pyx":93
  * 
  *     def __init__(self, BaseSampler base, size_t n_proc):
  *         self.base = base             # <<<<<<<<<<<<<<
@@ -3807,21 +3826,21 @@ static int __pyx_pf_2gb_8samplers_14FenwickSampler___init__(struct __pyx_obj_2gb
   __Pyx_DECREF(((PyObject *)__pyx_v_self->base));
   __pyx_v_self->base = __pyx_v_base;
 
-  /* "gb/samplers.pyx":97
+  /* "gb/samplers.pyx":94
  *     def __init__(self, BaseSampler base, size_t n_proc):
  *         self.base = base
  *         self.tree = FPTree(n_proc)             # <<<<<<<<<<<<<<
  *         self.n_proc = n_proc
  * 
  */
-  __pyx_t_1 = __Pyx_PyInt_FromSize_t(__pyx_v_n_proc); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 97, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_FromSize_t(__pyx_v_n_proc); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 94, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 97, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 94, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_2gb_11collections_6fptree_FPTree), __pyx_t_2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 97, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_2gb_11collections_6fptree_FPTree), __pyx_t_2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 94, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_GIVEREF(__pyx_t_1);
@@ -3830,16 +3849,19 @@ static int __pyx_pf_2gb_8samplers_14FenwickSampler___init__(struct __pyx_obj_2gb
   __pyx_v_self->tree = ((struct __pyx_obj_2gb_11collections_6fptree_FPTree *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "gb/samplers.pyx":98
+  /* "gb/samplers.pyx":95
  *         self.base = base
  *         self.tree = FPTree(n_proc)
  *         self.n_proc = n_proc             # <<<<<<<<<<<<<<
  * 
  *     cdef void set_current_process(self, size_t a) nogil:
  */
-  __pyx_v_self->n_proc = __pyx_v_n_proc;
+  __pyx_t_1 = __Pyx_PyInt_FromSize_t(__pyx_v_n_proc); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 95, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_n_proc, __pyx_t_1) < 0) __PYX_ERR(0, 95, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "gb/samplers.pyx":95
+  /* "gb/samplers.pyx":92
  * cdef class FenwickSampler(AbstractSampler):
  * 
  *     def __init__(self, BaseSampler base, size_t n_proc):             # <<<<<<<<<<<<<<
@@ -3860,7 +3882,7 @@ static int __pyx_pf_2gb_8samplers_14FenwickSampler___init__(struct __pyx_obj_2gb
   return __pyx_r;
 }
 
-/* "gb/samplers.pyx":100
+/* "gb/samplers.pyx":97
  *         self.n_proc = n_proc
  * 
  *     cdef void set_current_process(self, size_t a) nogil:             # <<<<<<<<<<<<<<
@@ -3873,7 +3895,7 @@ static void __pyx_f_2gb_8samplers_14FenwickSampler_set_current_process(struct __
   size_t __pyx_t_1;
   size_t __pyx_t_2;
 
-  /* "gb/samplers.pyx":101
+  /* "gb/samplers.pyx":98
  * 
  *     cdef void set_current_process(self, size_t a) nogil:
  *         self.base.set_current_process(a)             # <<<<<<<<<<<<<<
@@ -3882,7 +3904,7 @@ static void __pyx_f_2gb_8samplers_14FenwickSampler_set_current_process(struct __
  */
   ((struct __pyx_vtabstruct_2gb_8samplers_BaseSampler *)__pyx_v_self->base->__pyx_base.__pyx_vtab)->__pyx_base.set_current_process(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self->base), __pyx_v_a);
 
-  /* "gb/samplers.pyx":103
+  /* "gb/samplers.pyx":100
  *         self.base.set_current_process(a)
  * 
  *         self.tree.reset()             # <<<<<<<<<<<<<<
@@ -3891,7 +3913,7 @@ static void __pyx_f_2gb_8samplers_14FenwickSampler_set_current_process(struct __
  */
   ((struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *)__pyx_v_self->tree->__pyx_vtab)->reset(__pyx_v_self->tree);
 
-  /* "gb/samplers.pyx":105
+  /* "gb/samplers.pyx":102
  *         self.tree.reset()
  *         cdef size_t b
  *         for b in range(self.base.n_proc):             # <<<<<<<<<<<<<<
@@ -3902,7 +3924,7 @@ static void __pyx_f_2gb_8samplers_14FenwickSampler_set_current_process(struct __
   for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
     __pyx_v_b = __pyx_t_2;
 
-    /* "gb/samplers.pyx":106
+    /* "gb/samplers.pyx":103
  *         cdef size_t b
  *         for b in range(self.base.n_proc):
  *             self.tree.set_value(b, self.get_probability(b))             # <<<<<<<<<<<<<<
@@ -3912,7 +3934,7 @@ static void __pyx_f_2gb_8samplers_14FenwickSampler_set_current_process(struct __
     ((struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *)__pyx_v_self->tree->__pyx_vtab)->set_value(__pyx_v_self->tree, __pyx_v_b, ((struct __pyx_vtabstruct_2gb_8samplers_FenwickSampler *)__pyx_v_self->__pyx_base.__pyx_vtab)->__pyx_base.get_probability(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self), __pyx_v_b));
   }
 
-  /* "gb/samplers.pyx":100
+  /* "gb/samplers.pyx":97
  *         self.n_proc = n_proc
  * 
  *     cdef void set_current_process(self, size_t a) nogil:             # <<<<<<<<<<<<<<
@@ -3923,7 +3945,7 @@ static void __pyx_f_2gb_8samplers_14FenwickSampler_set_current_process(struct __
   /* function exit code */
 }
 
-/* "gb/samplers.pyx":108
+/* "gb/samplers.pyx":105
  *             self.tree.set_value(b, self.get_probability(b))
  * 
  *     def _set_current_process(self, size_t a):             # <<<<<<<<<<<<<<
@@ -3939,7 +3961,7 @@ static PyObject *__pyx_pw_2gb_8samplers_14FenwickSampler_3_set_current_process(P
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("_set_current_process (wrapper)", 0);
   assert(__pyx_arg_a); {
-    __pyx_v_a = __Pyx_PyInt_As_size_t(__pyx_arg_a); if (unlikely((__pyx_v_a == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 108, __pyx_L3_error)
+    __pyx_v_a = __Pyx_PyInt_As_size_t(__pyx_arg_a); if (unlikely((__pyx_v_a == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 105, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -3960,7 +3982,7 @@ static PyObject *__pyx_pf_2gb_8samplers_14FenwickSampler_2_set_current_process(s
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("_set_current_process", 0);
 
-  /* "gb/samplers.pyx":109
+  /* "gb/samplers.pyx":106
  * 
  *     def _set_current_process(self, size_t a):
  *         return self.set_current_process(a)             # <<<<<<<<<<<<<<
@@ -3968,13 +3990,13 @@ static PyObject *__pyx_pf_2gb_8samplers_14FenwickSampler_2_set_current_process(s
  *     cdef double get_probability(self, size_t b) nogil:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_void_to_None(((struct __pyx_vtabstruct_2gb_8samplers_FenwickSampler *)__pyx_v_self->__pyx_base.__pyx_vtab)->__pyx_base.set_current_process(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self), __pyx_v_a)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 109, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_void_to_None(((struct __pyx_vtabstruct_2gb_8samplers_FenwickSampler *)__pyx_v_self->__pyx_base.__pyx_vtab)->__pyx_base.set_current_process(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self), __pyx_v_a)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 106, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "gb/samplers.pyx":108
+  /* "gb/samplers.pyx":105
  *             self.tree.set_value(b, self.get_probability(b))
  * 
  *     def _set_current_process(self, size_t a):             # <<<<<<<<<<<<<<
@@ -3993,7 +4015,7 @@ static PyObject *__pyx_pf_2gb_8samplers_14FenwickSampler_2_set_current_process(s
   return __pyx_r;
 }
 
-/* "gb/samplers.pyx":111
+/* "gb/samplers.pyx":108
  *         return self.set_current_process(a)
  * 
  *     cdef double get_probability(self, size_t b) nogil:             # <<<<<<<<<<<<<<
@@ -4004,7 +4026,7 @@ static PyObject *__pyx_pf_2gb_8samplers_14FenwickSampler_2_set_current_process(s
 static double __pyx_f_2gb_8samplers_14FenwickSampler_get_probability(struct __pyx_obj_2gb_8samplers_FenwickSampler *__pyx_v_self, size_t __pyx_v_b) {
   double __pyx_r;
 
-  /* "gb/samplers.pyx":112
+  /* "gb/samplers.pyx":109
  * 
  *     cdef double get_probability(self, size_t b) nogil:
  *         return self.base.get_probability(b)             # <<<<<<<<<<<<<<
@@ -4014,7 +4036,7 @@ static double __pyx_f_2gb_8samplers_14FenwickSampler_get_probability(struct __py
   __pyx_r = ((struct __pyx_vtabstruct_2gb_8samplers_BaseSampler *)__pyx_v_self->base->__pyx_base.__pyx_vtab)->__pyx_base.get_probability(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self->base), __pyx_v_b);
   goto __pyx_L0;
 
-  /* "gb/samplers.pyx":111
+  /* "gb/samplers.pyx":108
  *         return self.set_current_process(a)
  * 
  *     cdef double get_probability(self, size_t b) nogil:             # <<<<<<<<<<<<<<
@@ -4027,7 +4049,7 @@ static double __pyx_f_2gb_8samplers_14FenwickSampler_get_probability(struct __py
   return __pyx_r;
 }
 
-/* "gb/samplers.pyx":114
+/* "gb/samplers.pyx":111
  *         return self.base.get_probability(b)
  * 
  *     def _get_probability(self, size_t b):             # <<<<<<<<<<<<<<
@@ -4043,7 +4065,7 @@ static PyObject *__pyx_pw_2gb_8samplers_14FenwickSampler_5_get_probability(PyObj
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("_get_probability (wrapper)", 0);
   assert(__pyx_arg_b); {
-    __pyx_v_b = __Pyx_PyInt_As_size_t(__pyx_arg_b); if (unlikely((__pyx_v_b == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 114, __pyx_L3_error)
+    __pyx_v_b = __Pyx_PyInt_As_size_t(__pyx_arg_b); if (unlikely((__pyx_v_b == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 111, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -4064,7 +4086,7 @@ static PyObject *__pyx_pf_2gb_8samplers_14FenwickSampler_4_get_probability(struc
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("_get_probability", 0);
 
-  /* "gb/samplers.pyx":115
+  /* "gb/samplers.pyx":112
  * 
  *     def _get_probability(self, size_t b):
  *         return self.get_probability(b)             # <<<<<<<<<<<<<<
@@ -4072,13 +4094,13 @@ static PyObject *__pyx_pf_2gb_8samplers_14FenwickSampler_4_get_probability(struc
  *     cdef void inc_one(self, size_t b) nogil:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(((struct __pyx_vtabstruct_2gb_8samplers_FenwickSampler *)__pyx_v_self->__pyx_base.__pyx_vtab)->__pyx_base.get_probability(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self), __pyx_v_b)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 115, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(((struct __pyx_vtabstruct_2gb_8samplers_FenwickSampler *)__pyx_v_self->__pyx_base.__pyx_vtab)->__pyx_base.get_probability(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self), __pyx_v_b)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 112, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "gb/samplers.pyx":114
+  /* "gb/samplers.pyx":111
  *         return self.base.get_probability(b)
  * 
  *     def _get_probability(self, size_t b):             # <<<<<<<<<<<<<<
@@ -4097,7 +4119,7 @@ static PyObject *__pyx_pf_2gb_8samplers_14FenwickSampler_4_get_probability(struc
   return __pyx_r;
 }
 
-/* "gb/samplers.pyx":117
+/* "gb/samplers.pyx":114
  *         return self.get_probability(b)
  * 
  *     cdef void inc_one(self, size_t b) nogil:             # <<<<<<<<<<<<<<
@@ -4107,7 +4129,7 @@ static PyObject *__pyx_pf_2gb_8samplers_14FenwickSampler_4_get_probability(struc
 
 static void __pyx_f_2gb_8samplers_14FenwickSampler_inc_one(struct __pyx_obj_2gb_8samplers_FenwickSampler *__pyx_v_self, size_t __pyx_v_b) {
 
-  /* "gb/samplers.pyx":118
+  /* "gb/samplers.pyx":115
  * 
  *     cdef void inc_one(self, size_t b) nogil:
  *         self.base.inc_one(b)             # <<<<<<<<<<<<<<
@@ -4116,7 +4138,7 @@ static void __pyx_f_2gb_8samplers_14FenwickSampler_inc_one(struct __pyx_obj_2gb_
  */
   ((struct __pyx_vtabstruct_2gb_8samplers_BaseSampler *)__pyx_v_self->base->__pyx_base.__pyx_vtab)->__pyx_base.inc_one(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self->base), __pyx_v_b);
 
-  /* "gb/samplers.pyx":119
+  /* "gb/samplers.pyx":116
  *     cdef void inc_one(self, size_t b) nogil:
  *         self.base.inc_one(b)
  *         self.tree.set_value(b, self.get_probability(b))             # <<<<<<<<<<<<<<
@@ -4125,7 +4147,7 @@ static void __pyx_f_2gb_8samplers_14FenwickSampler_inc_one(struct __pyx_obj_2gb_
  */
   ((struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *)__pyx_v_self->tree->__pyx_vtab)->set_value(__pyx_v_self->tree, __pyx_v_b, ((struct __pyx_vtabstruct_2gb_8samplers_FenwickSampler *)__pyx_v_self->__pyx_base.__pyx_vtab)->__pyx_base.get_probability(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self), __pyx_v_b));
 
-  /* "gb/samplers.pyx":117
+  /* "gb/samplers.pyx":114
  *         return self.get_probability(b)
  * 
  *     cdef void inc_one(self, size_t b) nogil:             # <<<<<<<<<<<<<<
@@ -4136,7 +4158,7 @@ static void __pyx_f_2gb_8samplers_14FenwickSampler_inc_one(struct __pyx_obj_2gb_
   /* function exit code */
 }
 
-/* "gb/samplers.pyx":121
+/* "gb/samplers.pyx":118
  *         self.tree.set_value(b, self.get_probability(b))
  * 
  *     def _inc_one(self, size_t b):             # <<<<<<<<<<<<<<
@@ -4152,7 +4174,7 @@ static PyObject *__pyx_pw_2gb_8samplers_14FenwickSampler_7_inc_one(PyObject *__p
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("_inc_one (wrapper)", 0);
   assert(__pyx_arg_b); {
-    __pyx_v_b = __Pyx_PyInt_As_size_t(__pyx_arg_b); if (unlikely((__pyx_v_b == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 121, __pyx_L3_error)
+    __pyx_v_b = __Pyx_PyInt_As_size_t(__pyx_arg_b); if (unlikely((__pyx_v_b == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 118, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -4173,7 +4195,7 @@ static PyObject *__pyx_pf_2gb_8samplers_14FenwickSampler_6_inc_one(struct __pyx_
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("_inc_one", 0);
 
-  /* "gb/samplers.pyx":122
+  /* "gb/samplers.pyx":119
  * 
  *     def _inc_one(self, size_t b):
  *         return self.inc_one(b)             # <<<<<<<<<<<<<<
@@ -4181,13 +4203,13 @@ static PyObject *__pyx_pf_2gb_8samplers_14FenwickSampler_6_inc_one(struct __pyx_
  *     cdef void dec_one(self, size_t b) nogil:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_void_to_None(((struct __pyx_vtabstruct_2gb_8samplers_FenwickSampler *)__pyx_v_self->__pyx_base.__pyx_vtab)->__pyx_base.inc_one(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self), __pyx_v_b)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 122, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_void_to_None(((struct __pyx_vtabstruct_2gb_8samplers_FenwickSampler *)__pyx_v_self->__pyx_base.__pyx_vtab)->__pyx_base.inc_one(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self), __pyx_v_b)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 119, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "gb/samplers.pyx":121
+  /* "gb/samplers.pyx":118
  *         self.tree.set_value(b, self.get_probability(b))
  * 
  *     def _inc_one(self, size_t b):             # <<<<<<<<<<<<<<
@@ -4206,7 +4228,7 @@ static PyObject *__pyx_pf_2gb_8samplers_14FenwickSampler_6_inc_one(struct __pyx_
   return __pyx_r;
 }
 
-/* "gb/samplers.pyx":124
+/* "gb/samplers.pyx":121
  *         return self.inc_one(b)
  * 
  *     cdef void dec_one(self, size_t b) nogil:             # <<<<<<<<<<<<<<
@@ -4216,7 +4238,7 @@ static PyObject *__pyx_pf_2gb_8samplers_14FenwickSampler_6_inc_one(struct __pyx_
 
 static void __pyx_f_2gb_8samplers_14FenwickSampler_dec_one(struct __pyx_obj_2gb_8samplers_FenwickSampler *__pyx_v_self, size_t __pyx_v_b) {
 
-  /* "gb/samplers.pyx":125
+  /* "gb/samplers.pyx":122
  * 
  *     cdef void dec_one(self, size_t b) nogil:
  *         self.base.dec_one(b)             # <<<<<<<<<<<<<<
@@ -4225,7 +4247,7 @@ static void __pyx_f_2gb_8samplers_14FenwickSampler_dec_one(struct __pyx_obj_2gb_
  */
   ((struct __pyx_vtabstruct_2gb_8samplers_BaseSampler *)__pyx_v_self->base->__pyx_base.__pyx_vtab)->__pyx_base.dec_one(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self->base), __pyx_v_b);
 
-  /* "gb/samplers.pyx":126
+  /* "gb/samplers.pyx":123
  *     cdef void dec_one(self, size_t b) nogil:
  *         self.base.dec_one(b)
  *         self.tree.set_value(b, self.get_probability(b))             # <<<<<<<<<<<<<<
@@ -4234,7 +4256,7 @@ static void __pyx_f_2gb_8samplers_14FenwickSampler_dec_one(struct __pyx_obj_2gb_
  */
   ((struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *)__pyx_v_self->tree->__pyx_vtab)->set_value(__pyx_v_self->tree, __pyx_v_b, ((struct __pyx_vtabstruct_2gb_8samplers_FenwickSampler *)__pyx_v_self->__pyx_base.__pyx_vtab)->__pyx_base.get_probability(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self), __pyx_v_b));
 
-  /* "gb/samplers.pyx":124
+  /* "gb/samplers.pyx":121
  *         return self.inc_one(b)
  * 
  *     cdef void dec_one(self, size_t b) nogil:             # <<<<<<<<<<<<<<
@@ -4245,7 +4267,7 @@ static void __pyx_f_2gb_8samplers_14FenwickSampler_dec_one(struct __pyx_obj_2gb_
   /* function exit code */
 }
 
-/* "gb/samplers.pyx":128
+/* "gb/samplers.pyx":125
  *         self.tree.set_value(b, self.get_probability(b))
  * 
  *     def _dec_one(self, size_t b):             # <<<<<<<<<<<<<<
@@ -4261,7 +4283,7 @@ static PyObject *__pyx_pw_2gb_8samplers_14FenwickSampler_9_dec_one(PyObject *__p
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("_dec_one (wrapper)", 0);
   assert(__pyx_arg_b); {
-    __pyx_v_b = __Pyx_PyInt_As_size_t(__pyx_arg_b); if (unlikely((__pyx_v_b == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 128, __pyx_L3_error)
+    __pyx_v_b = __Pyx_PyInt_As_size_t(__pyx_arg_b); if (unlikely((__pyx_v_b == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 125, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -4282,21 +4304,21 @@ static PyObject *__pyx_pf_2gb_8samplers_14FenwickSampler_8_dec_one(struct __pyx_
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("_dec_one", 0);
 
-  /* "gb/samplers.pyx":129
+  /* "gb/samplers.pyx":126
  * 
  *     def _dec_one(self, size_t b):
  *         return self.dec_one(b)             # <<<<<<<<<<<<<<
  * 
- *     cdef void sample_for_idx(self, size_t i, AbstractKernel kernel,
+ *     cdef size_t sample_for_idx(self, size_t i, AbstractKernel kernel) nogil:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_void_to_None(((struct __pyx_vtabstruct_2gb_8samplers_FenwickSampler *)__pyx_v_self->__pyx_base.__pyx_vtab)->__pyx_base.dec_one(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self), __pyx_v_b)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 129, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_void_to_None(((struct __pyx_vtabstruct_2gb_8samplers_FenwickSampler *)__pyx_v_self->__pyx_base.__pyx_vtab)->__pyx_base.dec_one(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self), __pyx_v_b)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 126, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "gb/samplers.pyx":128
+  /* "gb/samplers.pyx":125
  *         self.tree.set_value(b, self.get_probability(b))
  * 
  *     def _dec_one(self, size_t b):             # <<<<<<<<<<<<<<
@@ -4315,15 +4337,15 @@ static PyObject *__pyx_pf_2gb_8samplers_14FenwickSampler_8_dec_one(struct __pyx_
   return __pyx_r;
 }
 
-/* "gb/samplers.pyx":131
+/* "gb/samplers.pyx":128
  *         return self.dec_one(b)
  * 
- *     cdef void sample_for_idx(self, size_t i, AbstractKernel kernel,             # <<<<<<<<<<<<<<
- *                              size_t *result_sample, double *prob_sample) nogil:
+ *     cdef size_t sample_for_idx(self, size_t i, AbstractKernel kernel) nogil:             # <<<<<<<<<<<<<<
  *         cdef size_t proc_a = self.base.current_process
+ *         cdef size_t candidate = self.tree.sample(self.base.rng.rand() * \
  */
 
-static void __pyx_f_2gb_8samplers_14FenwickSampler_sample_for_idx(struct __pyx_obj_2gb_8samplers_FenwickSampler *__pyx_v_self, size_t __pyx_v_i, struct __pyx_obj_2gb_7kernels_AbstractKernel *__pyx_v_kernel, size_t *__pyx_v_result_sample, double *__pyx_v_prob_sample) {
+static size_t __pyx_f_2gb_8samplers_14FenwickSampler_sample_for_idx(struct __pyx_obj_2gb_8samplers_FenwickSampler *__pyx_v_self, size_t __pyx_v_i, struct __pyx_obj_2gb_7kernels_AbstractKernel *__pyx_v_kernel) {
   size_t __pyx_v_proc_a;
   size_t __pyx_v_candidate;
   double __pyx_v_alpha_ca;
@@ -4332,16 +4354,16 @@ static void __pyx_f_2gb_8samplers_14FenwickSampler_sample_for_idx(struct __pyx_o
   double __pyx_v_alpha_ba;
   double __pyx_v_p_b;
   int __pyx_v_choice;
-  double __pyx_v_choice_rate;
+  size_t __pyx_r;
   size_t __pyx_t_1;
   int __pyx_t_2;
   double __pyx_t_3;
   long __pyx_t_4;
   double __pyx_t_5;
 
-  /* "gb/samplers.pyx":133
- *     cdef void sample_for_idx(self, size_t i, AbstractKernel kernel,
- *                              size_t *result_sample, double *prob_sample) nogil:
+  /* "gb/samplers.pyx":129
+ * 
+ *     cdef size_t sample_for_idx(self, size_t i, AbstractKernel kernel) nogil:
  *         cdef size_t proc_a = self.base.current_process             # <<<<<<<<<<<<<<
  *         cdef size_t candidate = self.tree.sample(self.base.rng.rand() * \
  *                                                  self.tree.get_total())
@@ -4349,8 +4371,8 @@ static void __pyx_f_2gb_8samplers_14FenwickSampler_sample_for_idx(struct __pyx_o
   __pyx_t_1 = __pyx_v_self->base->current_process;
   __pyx_v_proc_a = __pyx_t_1;
 
-  /* "gb/samplers.pyx":134
- *                              size_t *result_sample, double *prob_sample) nogil:
+  /* "gb/samplers.pyx":130
+ *     cdef size_t sample_for_idx(self, size_t i, AbstractKernel kernel) nogil:
  *         cdef size_t proc_a = self.base.current_process
  *         cdef size_t candidate = self.tree.sample(self.base.rng.rand() * \             # <<<<<<<<<<<<<<
  *                                                  self.tree.get_total())
@@ -4358,7 +4380,7 @@ static void __pyx_f_2gb_8samplers_14FenwickSampler_sample_for_idx(struct __pyx_o
  */
   __pyx_v_candidate = ((struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *)__pyx_v_self->tree->__pyx_vtab)->sample(__pyx_v_self->tree, (((struct __pyx_vtabstruct_2gb_9randomkit_6random_RNG *)__pyx_v_self->base->rng->__pyx_vtab)->rand(__pyx_v_self->base->rng) * ((struct __pyx_vtabstruct_2gb_11collections_6fptree_FPTree *)__pyx_v_self->tree->__pyx_vtab)->get_total(__pyx_v_self->tree)));
 
-  /* "gb/samplers.pyx":137
+  /* "gb/samplers.pyx":133
  *                                                  self.tree.get_total())
  * 
  *         cdef double alpha_ca = self.get_probability(candidate)             # <<<<<<<<<<<<<<
@@ -4367,7 +4389,7 @@ static void __pyx_f_2gb_8samplers_14FenwickSampler_sample_for_idx(struct __pyx_o
  */
   __pyx_v_alpha_ca = ((struct __pyx_vtabstruct_2gb_8samplers_FenwickSampler *)__pyx_v_self->__pyx_base.__pyx_vtab)->__pyx_base.get_probability(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self), __pyx_v_candidate);
 
-  /* "gb/samplers.pyx":138
+  /* "gb/samplers.pyx":134
  * 
  *         cdef double alpha_ca = self.get_probability(candidate)
  *         cdef double p_c = kernel.cross_rate(i, candidate, alpha_ca)             # <<<<<<<<<<<<<<
@@ -4376,63 +4398,46 @@ static void __pyx_f_2gb_8samplers_14FenwickSampler_sample_for_idx(struct __pyx_o
  */
   __pyx_v_p_c = ((struct __pyx_vtabstruct_2gb_7kernels_AbstractKernel *)__pyx_v_kernel->__pyx_vtab)->cross_rate(__pyx_v_kernel, __pyx_v_i, __pyx_v_candidate, __pyx_v_alpha_ca);
 
-  /* "gb/samplers.pyx":140
+  /* "gb/samplers.pyx":136
  *         cdef double p_c = kernel.cross_rate(i, candidate, alpha_ca)
  * 
  *         cdef size_t proc_b = self.base.timestamps.get_cause(proc_a, i)             # <<<<<<<<<<<<<<
- *         if proc_b == self.n_proc:
- *             result_sample[0] = candidate
+ *         if proc_b == self.base.n_proc:
+ *             return candidate
  */
   __pyx_v_proc_b = ((struct __pyx_vtabstruct_2gb_6stamps_Timestamps *)__pyx_v_self->base->timestamps->__pyx_vtab)->get_cause(__pyx_v_self->base->timestamps, __pyx_v_proc_a, __pyx_v_i);
 
-  /* "gb/samplers.pyx":141
+  /* "gb/samplers.pyx":137
  * 
  *         cdef size_t proc_b = self.base.timestamps.get_cause(proc_a, i)
- *         if proc_b == self.n_proc:             # <<<<<<<<<<<<<<
- *             result_sample[0] = candidate
- *             prob_sample[0] = p_c
+ *         if proc_b == self.base.n_proc:             # <<<<<<<<<<<<<<
+ *             return candidate
+ * 
  */
-  __pyx_t_2 = ((__pyx_v_proc_b == __pyx_v_self->n_proc) != 0);
+  __pyx_t_2 = ((__pyx_v_proc_b == __pyx_v_self->base->n_proc) != 0);
   if (__pyx_t_2) {
 
-    /* "gb/samplers.pyx":142
+    /* "gb/samplers.pyx":138
  *         cdef size_t proc_b = self.base.timestamps.get_cause(proc_a, i)
- *         if proc_b == self.n_proc:
- *             result_sample[0] = candidate             # <<<<<<<<<<<<<<
- *             prob_sample[0] = p_c
- *             return
- */
-    (__pyx_v_result_sample[0]) = __pyx_v_candidate;
-
-    /* "gb/samplers.pyx":143
- *         if proc_b == self.n_proc:
- *             result_sample[0] = candidate
- *             prob_sample[0] = p_c             # <<<<<<<<<<<<<<
- *             return
- * 
- */
-    (__pyx_v_prob_sample[0]) = __pyx_v_p_c;
-
-    /* "gb/samplers.pyx":144
- *             result_sample[0] = candidate
- *             prob_sample[0] = p_c
- *             return             # <<<<<<<<<<<<<<
+ *         if proc_b == self.base.n_proc:
+ *             return candidate             # <<<<<<<<<<<<<<
  * 
  *         cdef double alpha_ba = self.get_probability(proc_b)
  */
+    __pyx_r = __pyx_v_candidate;
     goto __pyx_L0;
 
-    /* "gb/samplers.pyx":141
+    /* "gb/samplers.pyx":137
  * 
  *         cdef size_t proc_b = self.base.timestamps.get_cause(proc_a, i)
- *         if proc_b == self.n_proc:             # <<<<<<<<<<<<<<
- *             result_sample[0] = candidate
- *             prob_sample[0] = p_c
+ *         if proc_b == self.base.n_proc:             # <<<<<<<<<<<<<<
+ *             return candidate
+ * 
  */
   }
 
-  /* "gb/samplers.pyx":146
- *             return
+  /* "gb/samplers.pyx":140
+ *             return candidate
  * 
  *         cdef double alpha_ba = self.get_probability(proc_b)             # <<<<<<<<<<<<<<
  * 
@@ -4440,7 +4445,7 @@ static void __pyx_f_2gb_8samplers_14FenwickSampler_sample_for_idx(struct __pyx_o
  */
   __pyx_v_alpha_ba = ((struct __pyx_vtabstruct_2gb_8samplers_FenwickSampler *)__pyx_v_self->__pyx_base.__pyx_vtab)->__pyx_base.get_probability(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self), __pyx_v_proc_b);
 
-  /* "gb/samplers.pyx":148
+  /* "gb/samplers.pyx":142
  *         cdef double alpha_ba = self.get_probability(proc_b)
  * 
  *         cdef double p_b = kernel.cross_rate(i, proc_b, alpha_ba)             # <<<<<<<<<<<<<<
@@ -4449,12 +4454,12 @@ static void __pyx_f_2gb_8samplers_14FenwickSampler_sample_for_idx(struct __pyx_o
  */
   __pyx_v_p_b = ((struct __pyx_vtabstruct_2gb_7kernels_AbstractKernel *)__pyx_v_kernel->__pyx_vtab)->cross_rate(__pyx_v_kernel, __pyx_v_i, __pyx_v_proc_b, __pyx_v_alpha_ba);
 
-  /* "gb/samplers.pyx":152
+  /* "gb/samplers.pyx":145
+ * 
  *         cdef int choice
- *         cdef double choice_rate
  *         if self.base.rng.rand() < min(1, (p_c * alpha_ba) / (p_b * alpha_ca)):             # <<<<<<<<<<<<<<
  *             choice = candidate
- *             choice_rate = p_c # / alpha_ca
+ *         else:
  */
   __pyx_t_3 = ((__pyx_v_p_c * __pyx_v_alpha_ba) / (__pyx_v_p_b * __pyx_v_alpha_ca));
   __pyx_t_4 = 1;
@@ -4466,112 +4471,87 @@ static void __pyx_f_2gb_8samplers_14FenwickSampler_sample_for_idx(struct __pyx_o
   __pyx_t_2 = ((((struct __pyx_vtabstruct_2gb_9randomkit_6random_RNG *)__pyx_v_self->base->rng->__pyx_vtab)->rand(__pyx_v_self->base->rng) < __pyx_t_5) != 0);
   if (__pyx_t_2) {
 
-    /* "gb/samplers.pyx":153
- *         cdef double choice_rate
+    /* "gb/samplers.pyx":146
+ *         cdef int choice
  *         if self.base.rng.rand() < min(1, (p_c * alpha_ba) / (p_b * alpha_ca)):
  *             choice = candidate             # <<<<<<<<<<<<<<
- *             choice_rate = p_c # / alpha_ca
- *         else:
- */
-    __pyx_v_choice = __pyx_v_candidate;
-
-    /* "gb/samplers.pyx":154
- *         if self.base.rng.rand() < min(1, (p_c * alpha_ba) / (p_b * alpha_ca)):
- *             choice = candidate
- *             choice_rate = p_c # / alpha_ca             # <<<<<<<<<<<<<<
  *         else:
  *             choice = proc_b
  */
-    __pyx_v_choice_rate = __pyx_v_p_c;
+    __pyx_v_choice = __pyx_v_candidate;
 
-    /* "gb/samplers.pyx":152
+    /* "gb/samplers.pyx":145
+ * 
  *         cdef int choice
- *         cdef double choice_rate
  *         if self.base.rng.rand() < min(1, (p_c * alpha_ba) / (p_b * alpha_ca)):             # <<<<<<<<<<<<<<
  *             choice = candidate
- *             choice_rate = p_c # / alpha_ca
+ *         else:
  */
     goto __pyx_L4;
   }
 
-  /* "gb/samplers.pyx":156
- *             choice_rate = p_c # / alpha_ca
+  /* "gb/samplers.pyx":148
+ *             choice = candidate
  *         else:
  *             choice = proc_b             # <<<<<<<<<<<<<<
- *             choice_rate = p_b # / alpha_ba
- *         result_sample[0] = choice
+ *         return choice
+ * 
  */
   /*else*/ {
     __pyx_v_choice = __pyx_v_proc_b;
-
-    /* "gb/samplers.pyx":157
- *         else:
- *             choice = proc_b
- *             choice_rate = p_b # / alpha_ba             # <<<<<<<<<<<<<<
- *         result_sample[0] = choice
- *         prob_sample[0] = choice_rate
- */
-    __pyx_v_choice_rate = __pyx_v_p_b;
   }
   __pyx_L4:;
 
-  /* "gb/samplers.pyx":158
+  /* "gb/samplers.pyx":149
+ *         else:
  *             choice = proc_b
- *             choice_rate = p_b # / alpha_ba
- *         result_sample[0] = choice             # <<<<<<<<<<<<<<
- *         prob_sample[0] = choice_rate
+ *         return choice             # <<<<<<<<<<<<<<
  * 
+ *     cdef uint64_t is_background(self, double mu_rate, double dt_mu) nogil:
  */
-  (__pyx_v_result_sample[0]) = __pyx_v_choice;
+  __pyx_r = __pyx_v_choice;
+  goto __pyx_L0;
 
-  /* "gb/samplers.pyx":159
- *             choice_rate = p_b # / alpha_ba
- *         result_sample[0] = choice
- *         prob_sample[0] = choice_rate             # <<<<<<<<<<<<<<
- * 
- *     cdef uint64_t is_background(self, double mu_rate, double dt_mu,
- */
-  (__pyx_v_prob_sample[0]) = __pyx_v_choice_rate;
-
-  /* "gb/samplers.pyx":131
+  /* "gb/samplers.pyx":128
  *         return self.dec_one(b)
  * 
- *     cdef void sample_for_idx(self, size_t i, AbstractKernel kernel,             # <<<<<<<<<<<<<<
- *                              size_t *result_sample, double *prob_sample) nogil:
+ *     cdef size_t sample_for_idx(self, size_t i, AbstractKernel kernel) nogil:             # <<<<<<<<<<<<<<
  *         cdef size_t proc_a = self.base.current_process
+ *         cdef size_t candidate = self.tree.sample(self.base.rng.rand() * \
  */
 
   /* function exit code */
   __pyx_L0:;
+  return __pyx_r;
 }
 
-/* "gb/samplers.pyx":161
- *         prob_sample[0] = choice_rate
+/* "gb/samplers.pyx":151
+ *         return choice
  * 
- *     cdef uint64_t is_background(self, double mu_rate, double dt_mu,             # <<<<<<<<<<<<<<
- *                                 double cross_rate, double dt_cross) nogil:
- *         return self.base.is_background(mu_rate, dt_mu, cross_rate, dt_cross)
+ *     cdef uint64_t is_background(self, double mu_rate, double dt_mu) nogil:             # <<<<<<<<<<<<<<
+ *         return self.base.is_background(mu_rate, dt_mu)
+ * 
  */
 
-static uint64_t __pyx_f_2gb_8samplers_14FenwickSampler_is_background(struct __pyx_obj_2gb_8samplers_FenwickSampler *__pyx_v_self, double __pyx_v_mu_rate, double __pyx_v_dt_mu, double __pyx_v_cross_rate, double __pyx_v_dt_cross) {
+static uint64_t __pyx_f_2gb_8samplers_14FenwickSampler_is_background(struct __pyx_obj_2gb_8samplers_FenwickSampler *__pyx_v_self, double __pyx_v_mu_rate, double __pyx_v_dt_mu) {
   uint64_t __pyx_r;
 
-  /* "gb/samplers.pyx":163
- *     cdef uint64_t is_background(self, double mu_rate, double dt_mu,
- *                                 double cross_rate, double dt_cross) nogil:
- *         return self.base.is_background(mu_rate, dt_mu, cross_rate, dt_cross)             # <<<<<<<<<<<<<<
+  /* "gb/samplers.pyx":152
+ * 
+ *     cdef uint64_t is_background(self, double mu_rate, double dt_mu) nogil:
+ *         return self.base.is_background(mu_rate, dt_mu)             # <<<<<<<<<<<<<<
  * 
  * cdef class CollapsedGibbsSampler(AbstractSampler):
  */
-  __pyx_r = ((struct __pyx_vtabstruct_2gb_8samplers_BaseSampler *)__pyx_v_self->base->__pyx_base.__pyx_vtab)->__pyx_base.is_background(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self->base), __pyx_v_mu_rate, __pyx_v_dt_mu, __pyx_v_cross_rate, __pyx_v_dt_cross);
+  __pyx_r = ((struct __pyx_vtabstruct_2gb_8samplers_BaseSampler *)__pyx_v_self->base->__pyx_base.__pyx_vtab)->__pyx_base.is_background(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self->base), __pyx_v_mu_rate, __pyx_v_dt_mu);
   goto __pyx_L0;
 
-  /* "gb/samplers.pyx":161
- *         prob_sample[0] = choice_rate
+  /* "gb/samplers.pyx":151
+ *         return choice
  * 
- *     cdef uint64_t is_background(self, double mu_rate, double dt_mu,             # <<<<<<<<<<<<<<
- *                                 double cross_rate, double dt_cross) nogil:
- *         return self.base.is_background(mu_rate, dt_mu, cross_rate, dt_cross)
+ *     cdef uint64_t is_background(self, double mu_rate, double dt_mu) nogil:             # <<<<<<<<<<<<<<
+ *         return self.base.is_background(mu_rate, dt_mu)
+ * 
  */
 
   /* function exit code */
@@ -4582,7 +4562,7 @@ static uint64_t __pyx_f_2gb_8samplers_14FenwickSampler_is_background(struct __py
 /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
  *     cdef bint use_setstate
- *     state = (self.base, self.n_proc, self.tree)
+ *     state = (self.base, self.tree)
  */
 
 /* Python wrapper */
@@ -4605,9 +4585,9 @@ static PyObject *__pyx_pf_2gb_8samplers_14FenwickSampler_10__reduce_cython__(str
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
+  int __pyx_t_2;
   int __pyx_t_3;
-  int __pyx_t_4;
+  PyObject *__pyx_t_4 = NULL;
   int __pyx_t_5;
   PyObject *__pyx_t_6 = NULL;
   __Pyx_RefNannySetupContext("__reduce_cython__", 0);
@@ -4615,48 +4595,43 @@ static PyObject *__pyx_pf_2gb_8samplers_14FenwickSampler_10__reduce_cython__(str
   /* "(tree fragment)":3
  * def __reduce_cython__(self):
  *     cdef bint use_setstate
- *     state = (self.base, self.n_proc, self.tree)             # <<<<<<<<<<<<<<
+ *     state = (self.base, self.tree)             # <<<<<<<<<<<<<<
  *     _dict = getattr(self, '__dict__', None)
  *     if _dict is not None:
  */
-  __pyx_t_1 = __Pyx_PyInt_FromSize_t(__pyx_v_self->n_proc); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 3, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 3, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyTuple_New(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 3, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(((PyObject *)__pyx_v_self->base));
   __Pyx_GIVEREF(((PyObject *)__pyx_v_self->base));
-  PyTuple_SET_ITEM(__pyx_t_2, 0, ((PyObject *)__pyx_v_self->base));
-  __Pyx_GIVEREF(__pyx_t_1);
-  PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_t_1);
+  PyTuple_SET_ITEM(__pyx_t_1, 0, ((PyObject *)__pyx_v_self->base));
   __Pyx_INCREF(((PyObject *)__pyx_v_self->tree));
   __Pyx_GIVEREF(((PyObject *)__pyx_v_self->tree));
-  PyTuple_SET_ITEM(__pyx_t_2, 2, ((PyObject *)__pyx_v_self->tree));
+  PyTuple_SET_ITEM(__pyx_t_1, 1, ((PyObject *)__pyx_v_self->tree));
+  __pyx_v_state = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_v_state = ((PyObject*)__pyx_t_2);
-  __pyx_t_2 = 0;
 
   /* "(tree fragment)":4
  *     cdef bint use_setstate
- *     state = (self.base, self.n_proc, self.tree)
+ *     state = (self.base, self.tree)
  *     _dict = getattr(self, '__dict__', None)             # <<<<<<<<<<<<<<
  *     if _dict is not None:
  *         state += (_dict,)
  */
-  __pyx_t_2 = __Pyx_GetAttr3(((PyObject *)__pyx_v_self), __pyx_n_s_dict, Py_None); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 4, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_v__dict = __pyx_t_2;
-  __pyx_t_2 = 0;
+  __pyx_t_1 = __Pyx_GetAttr3(((PyObject *)__pyx_v_self), __pyx_n_s_dict, Py_None); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 4, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_v__dict = __pyx_t_1;
+  __pyx_t_1 = 0;
 
   /* "(tree fragment)":5
- *     state = (self.base, self.n_proc, self.tree)
+ *     state = (self.base, self.tree)
  *     _dict = getattr(self, '__dict__', None)
  *     if _dict is not None:             # <<<<<<<<<<<<<<
  *         state += (_dict,)
  *         use_setstate = True
  */
-  __pyx_t_3 = (__pyx_v__dict != Py_None);
-  __pyx_t_4 = (__pyx_t_3 != 0);
-  if (__pyx_t_4) {
+  __pyx_t_2 = (__pyx_v__dict != Py_None);
+  __pyx_t_3 = (__pyx_t_2 != 0);
+  if (__pyx_t_3) {
 
     /* "(tree fragment)":6
  *     _dict = getattr(self, '__dict__', None)
@@ -4665,16 +4640,16 @@ static PyObject *__pyx_pf_2gb_8samplers_14FenwickSampler_10__reduce_cython__(str
  *         use_setstate = True
  *     else:
  */
-    __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 6, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 6, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
     __Pyx_INCREF(__pyx_v__dict);
     __Pyx_GIVEREF(__pyx_v__dict);
-    PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v__dict);
-    __pyx_t_1 = PyNumber_InPlaceAdd(__pyx_v_state, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 6, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_DECREF_SET(__pyx_v_state, ((PyObject*)__pyx_t_1));
-    __pyx_t_1 = 0;
+    PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_v__dict);
+    __pyx_t_4 = PyNumber_InPlaceAdd(__pyx_v_state, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 6, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __Pyx_DECREF_SET(__pyx_v_state, ((PyObject*)__pyx_t_4));
+    __pyx_t_4 = 0;
 
     /* "(tree fragment)":7
  *     if _dict is not None:
@@ -4686,7 +4661,7 @@ static PyObject *__pyx_pf_2gb_8samplers_14FenwickSampler_10__reduce_cython__(str
     __pyx_v_use_setstate = 1;
 
     /* "(tree fragment)":5
- *     state = (self.base, self.n_proc, self.tree)
+ *     state = (self.base, self.tree)
  *     _dict = getattr(self, '__dict__', None)
  *     if _dict is not None:             # <<<<<<<<<<<<<<
  *         state += (_dict,)
@@ -4700,21 +4675,21 @@ static PyObject *__pyx_pf_2gb_8samplers_14FenwickSampler_10__reduce_cython__(str
  *     else:
  *         use_setstate = self.base is not None or self.tree is not None             # <<<<<<<<<<<<<<
  *     if use_setstate:
- *         return __pyx_unpickle_FenwickSampler, (type(self), 0x75496a8, None), state
+ *         return __pyx_unpickle_FenwickSampler, (type(self), 0xd7d8bc9, None), state
  */
   /*else*/ {
-    __pyx_t_3 = (((PyObject *)__pyx_v_self->base) != Py_None);
-    __pyx_t_5 = (__pyx_t_3 != 0);
+    __pyx_t_2 = (((PyObject *)__pyx_v_self->base) != Py_None);
+    __pyx_t_5 = (__pyx_t_2 != 0);
     if (!__pyx_t_5) {
     } else {
-      __pyx_t_4 = __pyx_t_5;
+      __pyx_t_3 = __pyx_t_5;
       goto __pyx_L4_bool_binop_done;
     }
     __pyx_t_5 = (((PyObject *)__pyx_v_self->tree) != Py_None);
-    __pyx_t_3 = (__pyx_t_5 != 0);
-    __pyx_t_4 = __pyx_t_3;
+    __pyx_t_2 = (__pyx_t_5 != 0);
+    __pyx_t_3 = __pyx_t_2;
     __pyx_L4_bool_binop_done:;
-    __pyx_v_use_setstate = __pyx_t_4;
+    __pyx_v_use_setstate = __pyx_t_3;
   }
   __pyx_L3:;
 
@@ -4722,44 +4697,44 @@ static PyObject *__pyx_pf_2gb_8samplers_14FenwickSampler_10__reduce_cython__(str
  *     else:
  *         use_setstate = self.base is not None or self.tree is not None
  *     if use_setstate:             # <<<<<<<<<<<<<<
- *         return __pyx_unpickle_FenwickSampler, (type(self), 0x75496a8, None), state
+ *         return __pyx_unpickle_FenwickSampler, (type(self), 0xd7d8bc9, None), state
  *     else:
  */
-  __pyx_t_4 = (__pyx_v_use_setstate != 0);
-  if (__pyx_t_4) {
+  __pyx_t_3 = (__pyx_v_use_setstate != 0);
+  if (__pyx_t_3) {
 
     /* "(tree fragment)":11
  *         use_setstate = self.base is not None or self.tree is not None
  *     if use_setstate:
- *         return __pyx_unpickle_FenwickSampler, (type(self), 0x75496a8, None), state             # <<<<<<<<<<<<<<
+ *         return __pyx_unpickle_FenwickSampler, (type(self), 0xd7d8bc9, None), state             # <<<<<<<<<<<<<<
  *     else:
- *         return __pyx_unpickle_FenwickSampler, (type(self), 0x75496a8, state)
+ *         return __pyx_unpickle_FenwickSampler, (type(self), 0xd7d8bc9, state)
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_pyx_unpickle_FenwickSampler); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 11, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_pyx_unpickle_FenwickSampler); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 11, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __pyx_t_1 = PyTuple_New(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 11, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = PyTuple_New(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 11, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
     __Pyx_INCREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
     __Pyx_GIVEREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    PyTuple_SET_ITEM(__pyx_t_2, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    __Pyx_INCREF(__pyx_int_122984104);
-    __Pyx_GIVEREF(__pyx_int_122984104);
-    PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_int_122984104);
+    PyTuple_SET_ITEM(__pyx_t_1, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
+    __Pyx_INCREF(__pyx_int_226331593);
+    __Pyx_GIVEREF(__pyx_int_226331593);
+    PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_int_226331593);
     __Pyx_INCREF(Py_None);
     __Pyx_GIVEREF(Py_None);
-    PyTuple_SET_ITEM(__pyx_t_2, 2, Py_None);
+    PyTuple_SET_ITEM(__pyx_t_1, 2, Py_None);
     __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 11, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
+    __Pyx_GIVEREF(__pyx_t_4);
+    PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_4);
     __Pyx_GIVEREF(__pyx_t_1);
-    PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_1);
-    __Pyx_GIVEREF(__pyx_t_2);
-    PyTuple_SET_ITEM(__pyx_t_6, 1, __pyx_t_2);
+    PyTuple_SET_ITEM(__pyx_t_6, 1, __pyx_t_1);
     __Pyx_INCREF(__pyx_v_state);
     __Pyx_GIVEREF(__pyx_v_state);
     PyTuple_SET_ITEM(__pyx_t_6, 2, __pyx_v_state);
+    __pyx_t_4 = 0;
     __pyx_t_1 = 0;
-    __pyx_t_2 = 0;
     __pyx_r = __pyx_t_6;
     __pyx_t_6 = 0;
     goto __pyx_L0;
@@ -4768,15 +4743,15 @@ static PyObject *__pyx_pf_2gb_8samplers_14FenwickSampler_10__reduce_cython__(str
  *     else:
  *         use_setstate = self.base is not None or self.tree is not None
  *     if use_setstate:             # <<<<<<<<<<<<<<
- *         return __pyx_unpickle_FenwickSampler, (type(self), 0x75496a8, None), state
+ *         return __pyx_unpickle_FenwickSampler, (type(self), 0xd7d8bc9, None), state
  *     else:
  */
   }
 
   /* "(tree fragment)":13
- *         return __pyx_unpickle_FenwickSampler, (type(self), 0x75496a8, None), state
+ *         return __pyx_unpickle_FenwickSampler, (type(self), 0xd7d8bc9, None), state
  *     else:
- *         return __pyx_unpickle_FenwickSampler, (type(self), 0x75496a8, state)             # <<<<<<<<<<<<<<
+ *         return __pyx_unpickle_FenwickSampler, (type(self), 0xd7d8bc9, state)             # <<<<<<<<<<<<<<
  * def __setstate_cython__(self, __pyx_state):
  *     __pyx_unpickle_FenwickSampler__set_state(self, __pyx_state)
  */
@@ -4784,40 +4759,40 @@ static PyObject *__pyx_pf_2gb_8samplers_14FenwickSampler_10__reduce_cython__(str
     __Pyx_XDECREF(__pyx_r);
     __pyx_t_6 = __Pyx_GetModuleGlobalName(__pyx_n_s_pyx_unpickle_FenwickSampler); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 13, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_2 = PyTuple_New(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 13, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_1 = PyTuple_New(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 13, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
     __Pyx_INCREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
     __Pyx_GIVEREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    PyTuple_SET_ITEM(__pyx_t_2, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    __Pyx_INCREF(__pyx_int_122984104);
-    __Pyx_GIVEREF(__pyx_int_122984104);
-    PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_int_122984104);
+    PyTuple_SET_ITEM(__pyx_t_1, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
+    __Pyx_INCREF(__pyx_int_226331593);
+    __Pyx_GIVEREF(__pyx_int_226331593);
+    PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_int_226331593);
     __Pyx_INCREF(__pyx_v_state);
     __Pyx_GIVEREF(__pyx_v_state);
-    PyTuple_SET_ITEM(__pyx_t_2, 2, __pyx_v_state);
-    __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 13, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
+    PyTuple_SET_ITEM(__pyx_t_1, 2, __pyx_v_state);
+    __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 13, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
     __Pyx_GIVEREF(__pyx_t_6);
-    PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_6);
-    __Pyx_GIVEREF(__pyx_t_2);
-    PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_t_2);
+    PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_6);
+    __Pyx_GIVEREF(__pyx_t_1);
+    PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_1);
     __pyx_t_6 = 0;
-    __pyx_t_2 = 0;
-    __pyx_r = __pyx_t_1;
     __pyx_t_1 = 0;
+    __pyx_r = __pyx_t_4;
+    __pyx_t_4 = 0;
     goto __pyx_L0;
   }
 
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
  *     cdef bint use_setstate
- *     state = (self.base, self.n_proc, self.tree)
+ *     state = (self.base, self.tree)
  */
 
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_6);
   __Pyx_AddTraceback("gb.samplers.FenwickSampler.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
@@ -4831,7 +4806,7 @@ static PyObject *__pyx_pf_2gb_8samplers_14FenwickSampler_10__reduce_cython__(str
 
 /* "(tree fragment)":14
  *     else:
- *         return __pyx_unpickle_FenwickSampler, (type(self), 0x75496a8, state)
+ *         return __pyx_unpickle_FenwickSampler, (type(self), 0xd7d8bc9, state)
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
  *     __pyx_unpickle_FenwickSampler__set_state(self, __pyx_state)
  */
@@ -4856,7 +4831,7 @@ static PyObject *__pyx_pf_2gb_8samplers_14FenwickSampler_12__setstate_cython__(s
   __Pyx_RefNannySetupContext("__setstate_cython__", 0);
 
   /* "(tree fragment)":15
- *         return __pyx_unpickle_FenwickSampler, (type(self), 0x75496a8, state)
+ *         return __pyx_unpickle_FenwickSampler, (type(self), 0xd7d8bc9, state)
  * def __setstate_cython__(self, __pyx_state):
  *     __pyx_unpickle_FenwickSampler__set_state(self, __pyx_state)             # <<<<<<<<<<<<<<
  */
@@ -4867,7 +4842,7 @@ static PyObject *__pyx_pf_2gb_8samplers_14FenwickSampler_12__setstate_cython__(s
 
   /* "(tree fragment)":14
  *     else:
- *         return __pyx_unpickle_FenwickSampler, (type(self), 0x75496a8, state)
+ *         return __pyx_unpickle_FenwickSampler, (type(self), 0xd7d8bc9, state)
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
  *     __pyx_unpickle_FenwickSampler__set_state(self, __pyx_state)
  */
@@ -4885,7 +4860,7 @@ static PyObject *__pyx_pf_2gb_8samplers_14FenwickSampler_12__setstate_cython__(s
   return __pyx_r;
 }
 
-/* "gb/samplers.pyx":167
+/* "gb/samplers.pyx":156
  * cdef class CollapsedGibbsSampler(AbstractSampler):
  * 
  *     def __init__(self, BaseSampler base, size_t n_proc):             # <<<<<<<<<<<<<<
@@ -4924,11 +4899,11 @@ static int __pyx_pw_2gb_8samplers_21CollapsedGibbsSampler_1__init__(PyObject *__
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_n_proc)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__init__", 1, 2, 2, 1); __PYX_ERR(0, 167, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__init__", 1, 2, 2, 1); __PYX_ERR(0, 156, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 167, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 156, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -4937,17 +4912,17 @@ static int __pyx_pw_2gb_8samplers_21CollapsedGibbsSampler_1__init__(PyObject *__
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
     __pyx_v_base = ((struct __pyx_obj_2gb_8samplers_BaseSampler *)values[0]);
-    __pyx_v_n_proc = __Pyx_PyInt_As_size_t(values[1]); if (unlikely((__pyx_v_n_proc == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 167, __pyx_L3_error)
+    __pyx_v_n_proc = __Pyx_PyInt_As_size_t(values[1]); if (unlikely((__pyx_v_n_proc == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 156, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__init__", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 167, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__init__", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 156, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gb.samplers.CollapsedGibbsSampler.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_base), __pyx_ptype_2gb_8samplers_BaseSampler, 1, "base", 0))) __PYX_ERR(0, 167, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_base), __pyx_ptype_2gb_8samplers_BaseSampler, 1, "base", 0))) __PYX_ERR(0, 156, __pyx_L1_error)
   __pyx_r = __pyx_pf_2gb_8samplers_21CollapsedGibbsSampler___init__(((struct __pyx_obj_2gb_8samplers_CollapsedGibbsSampler *)__pyx_v_self), __pyx_v_base, __pyx_v_n_proc);
 
   /* function exit code */
@@ -4969,7 +4944,7 @@ static int __pyx_pf_2gb_8samplers_21CollapsedGibbsSampler___init__(struct __pyx_
   __Pyx_memviewslice __pyx_t_5 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_RefNannySetupContext("__init__", 0);
 
-  /* "gb/samplers.pyx":168
+  /* "gb/samplers.pyx":157
  * 
  *     def __init__(self, BaseSampler base, size_t n_proc):
  *         self.base = base             # <<<<<<<<<<<<<<
@@ -4982,42 +4957,42 @@ static int __pyx_pf_2gb_8samplers_21CollapsedGibbsSampler___init__(struct __pyx_
   __Pyx_DECREF(((PyObject *)__pyx_v_self->base));
   __pyx_v_self->base = __pyx_v_base;
 
-  /* "gb/samplers.pyx":169
+  /* "gb/samplers.pyx":158
  *     def __init__(self, BaseSampler base, size_t n_proc):
  *         self.base = base
  *         self.buffer = np.zeros(n_proc, dtype='d')             # <<<<<<<<<<<<<<
  * 
  *     cdef void set_current_process(self, size_t a) nogil:
  */
-  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 169, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 158, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 169, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 158, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyInt_FromSize_t(__pyx_v_n_proc); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 169, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_FromSize_t(__pyx_v_n_proc); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 158, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 169, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 158, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 169, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 158, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_n_s_d) < 0) __PYX_ERR(0, 169, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 169, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_n_s_d) < 0) __PYX_ERR(0, 158, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 158, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_4);
-  if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 169, __pyx_L1_error)
+  if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 158, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __PYX_XDEC_MEMVIEW(&__pyx_v_self->buffer, 0);
   __pyx_v_self->buffer = __pyx_t_5;
   __pyx_t_5.memview = NULL;
   __pyx_t_5.data = NULL;
 
-  /* "gb/samplers.pyx":167
+  /* "gb/samplers.pyx":156
  * cdef class CollapsedGibbsSampler(AbstractSampler):
  * 
  *     def __init__(self, BaseSampler base, size_t n_proc):             # <<<<<<<<<<<<<<
@@ -5041,7 +5016,7 @@ static int __pyx_pf_2gb_8samplers_21CollapsedGibbsSampler___init__(struct __pyx_
   return __pyx_r;
 }
 
-/* "gb/samplers.pyx":171
+/* "gb/samplers.pyx":160
  *         self.buffer = np.zeros(n_proc, dtype='d')
  * 
  *     cdef void set_current_process(self, size_t a) nogil:             # <<<<<<<<<<<<<<
@@ -5051,7 +5026,7 @@ static int __pyx_pf_2gb_8samplers_21CollapsedGibbsSampler___init__(struct __pyx_
 
 static void __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_set_current_process(struct __pyx_obj_2gb_8samplers_CollapsedGibbsSampler *__pyx_v_self, size_t __pyx_v_a) {
 
-  /* "gb/samplers.pyx":172
+  /* "gb/samplers.pyx":161
  * 
  *     cdef void set_current_process(self, size_t a) nogil:
  *         self.base.set_current_process(a)             # <<<<<<<<<<<<<<
@@ -5060,7 +5035,7 @@ static void __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_set_current_process(st
  */
   ((struct __pyx_vtabstruct_2gb_8samplers_BaseSampler *)__pyx_v_self->base->__pyx_base.__pyx_vtab)->__pyx_base.set_current_process(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self->base), __pyx_v_a);
 
-  /* "gb/samplers.pyx":171
+  /* "gb/samplers.pyx":160
  *         self.buffer = np.zeros(n_proc, dtype='d')
  * 
  *     cdef void set_current_process(self, size_t a) nogil:             # <<<<<<<<<<<<<<
@@ -5071,7 +5046,7 @@ static void __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_set_current_process(st
   /* function exit code */
 }
 
-/* "gb/samplers.pyx":174
+/* "gb/samplers.pyx":163
  *         self.base.set_current_process(a)
  * 
  *     def _set_current_process(self, size_t a):             # <<<<<<<<<<<<<<
@@ -5087,7 +5062,7 @@ static PyObject *__pyx_pw_2gb_8samplers_21CollapsedGibbsSampler_3_set_current_pr
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("_set_current_process (wrapper)", 0);
   assert(__pyx_arg_a); {
-    __pyx_v_a = __Pyx_PyInt_As_size_t(__pyx_arg_a); if (unlikely((__pyx_v_a == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 174, __pyx_L3_error)
+    __pyx_v_a = __Pyx_PyInt_As_size_t(__pyx_arg_a); if (unlikely((__pyx_v_a == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 163, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -5107,7 +5082,7 @@ static PyObject *__pyx_pf_2gb_8samplers_21CollapsedGibbsSampler_2_set_current_pr
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("_set_current_process", 0);
 
-  /* "gb/samplers.pyx":175
+  /* "gb/samplers.pyx":164
  * 
  *     def _set_current_process(self, size_t a):
  *         self.set_current_process(a)             # <<<<<<<<<<<<<<
@@ -5116,7 +5091,7 @@ static PyObject *__pyx_pf_2gb_8samplers_21CollapsedGibbsSampler_2_set_current_pr
  */
   ((struct __pyx_vtabstruct_2gb_8samplers_CollapsedGibbsSampler *)__pyx_v_self->__pyx_base.__pyx_vtab)->__pyx_base.set_current_process(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self), __pyx_v_a);
 
-  /* "gb/samplers.pyx":174
+  /* "gb/samplers.pyx":163
  *         self.base.set_current_process(a)
  * 
  *     def _set_current_process(self, size_t a):             # <<<<<<<<<<<<<<
@@ -5131,7 +5106,7 @@ static PyObject *__pyx_pf_2gb_8samplers_21CollapsedGibbsSampler_2_set_current_pr
   return __pyx_r;
 }
 
-/* "gb/samplers.pyx":177
+/* "gb/samplers.pyx":166
  *         self.set_current_process(a)
  * 
  *     cdef double get_probability(self, size_t b) nogil:             # <<<<<<<<<<<<<<
@@ -5142,7 +5117,7 @@ static PyObject *__pyx_pf_2gb_8samplers_21CollapsedGibbsSampler_2_set_current_pr
 static double __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_get_probability(struct __pyx_obj_2gb_8samplers_CollapsedGibbsSampler *__pyx_v_self, size_t __pyx_v_b) {
   double __pyx_r;
 
-  /* "gb/samplers.pyx":178
+  /* "gb/samplers.pyx":167
  * 
  *     cdef double get_probability(self, size_t b) nogil:
  *         return self.base.get_probability(b)             # <<<<<<<<<<<<<<
@@ -5152,7 +5127,7 @@ static double __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_get_probability(stru
   __pyx_r = ((struct __pyx_vtabstruct_2gb_8samplers_BaseSampler *)__pyx_v_self->base->__pyx_base.__pyx_vtab)->__pyx_base.get_probability(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self->base), __pyx_v_b);
   goto __pyx_L0;
 
-  /* "gb/samplers.pyx":177
+  /* "gb/samplers.pyx":166
  *         self.set_current_process(a)
  * 
  *     cdef double get_probability(self, size_t b) nogil:             # <<<<<<<<<<<<<<
@@ -5165,7 +5140,7 @@ static double __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_get_probability(stru
   return __pyx_r;
 }
 
-/* "gb/samplers.pyx":180
+/* "gb/samplers.pyx":169
  *         return self.base.get_probability(b)
  * 
  *     def _get_probability(self, size_t b):             # <<<<<<<<<<<<<<
@@ -5181,7 +5156,7 @@ static PyObject *__pyx_pw_2gb_8samplers_21CollapsedGibbsSampler_5_get_probabilit
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("_get_probability (wrapper)", 0);
   assert(__pyx_arg_b); {
-    __pyx_v_b = __Pyx_PyInt_As_size_t(__pyx_arg_b); if (unlikely((__pyx_v_b == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 180, __pyx_L3_error)
+    __pyx_v_b = __Pyx_PyInt_As_size_t(__pyx_arg_b); if (unlikely((__pyx_v_b == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 169, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -5202,7 +5177,7 @@ static PyObject *__pyx_pf_2gb_8samplers_21CollapsedGibbsSampler_4_get_probabilit
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("_get_probability", 0);
 
-  /* "gb/samplers.pyx":181
+  /* "gb/samplers.pyx":170
  * 
  *     def _get_probability(self, size_t b):
  *         return self.get_probability(b)             # <<<<<<<<<<<<<<
@@ -5210,13 +5185,13 @@ static PyObject *__pyx_pf_2gb_8samplers_21CollapsedGibbsSampler_4_get_probabilit
  *     cdef void inc_one(self, size_t b) nogil:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(((struct __pyx_vtabstruct_2gb_8samplers_CollapsedGibbsSampler *)__pyx_v_self->__pyx_base.__pyx_vtab)->__pyx_base.get_probability(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self), __pyx_v_b)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 181, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(((struct __pyx_vtabstruct_2gb_8samplers_CollapsedGibbsSampler *)__pyx_v_self->__pyx_base.__pyx_vtab)->__pyx_base.get_probability(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self), __pyx_v_b)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 170, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "gb/samplers.pyx":180
+  /* "gb/samplers.pyx":169
  *         return self.base.get_probability(b)
  * 
  *     def _get_probability(self, size_t b):             # <<<<<<<<<<<<<<
@@ -5235,7 +5210,7 @@ static PyObject *__pyx_pf_2gb_8samplers_21CollapsedGibbsSampler_4_get_probabilit
   return __pyx_r;
 }
 
-/* "gb/samplers.pyx":183
+/* "gb/samplers.pyx":172
  *         return self.get_probability(b)
  * 
  *     cdef void inc_one(self, size_t b) nogil:             # <<<<<<<<<<<<<<
@@ -5245,7 +5220,7 @@ static PyObject *__pyx_pf_2gb_8samplers_21CollapsedGibbsSampler_4_get_probabilit
 
 static void __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_inc_one(struct __pyx_obj_2gb_8samplers_CollapsedGibbsSampler *__pyx_v_self, size_t __pyx_v_b) {
 
-  /* "gb/samplers.pyx":184
+  /* "gb/samplers.pyx":173
  * 
  *     cdef void inc_one(self, size_t b) nogil:
  *         self.base.inc_one(b)             # <<<<<<<<<<<<<<
@@ -5254,7 +5229,7 @@ static void __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_inc_one(struct __pyx_o
  */
   ((struct __pyx_vtabstruct_2gb_8samplers_BaseSampler *)__pyx_v_self->base->__pyx_base.__pyx_vtab)->__pyx_base.inc_one(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self->base), __pyx_v_b);
 
-  /* "gb/samplers.pyx":183
+  /* "gb/samplers.pyx":172
  *         return self.get_probability(b)
  * 
  *     cdef void inc_one(self, size_t b) nogil:             # <<<<<<<<<<<<<<
@@ -5265,7 +5240,7 @@ static void __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_inc_one(struct __pyx_o
   /* function exit code */
 }
 
-/* "gb/samplers.pyx":186
+/* "gb/samplers.pyx":175
  *         self.base.inc_one(b)
  * 
  *     def _inc_one(self, size_t b):             # <<<<<<<<<<<<<<
@@ -5281,7 +5256,7 @@ static PyObject *__pyx_pw_2gb_8samplers_21CollapsedGibbsSampler_7_inc_one(PyObje
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("_inc_one (wrapper)", 0);
   assert(__pyx_arg_b); {
-    __pyx_v_b = __Pyx_PyInt_As_size_t(__pyx_arg_b); if (unlikely((__pyx_v_b == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 186, __pyx_L3_error)
+    __pyx_v_b = __Pyx_PyInt_As_size_t(__pyx_arg_b); if (unlikely((__pyx_v_b == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 175, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -5302,7 +5277,7 @@ static PyObject *__pyx_pf_2gb_8samplers_21CollapsedGibbsSampler_6_inc_one(struct
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("_inc_one", 0);
 
-  /* "gb/samplers.pyx":187
+  /* "gb/samplers.pyx":176
  * 
  *     def _inc_one(self, size_t b):
  *         return self.inc_one(b)             # <<<<<<<<<<<<<<
@@ -5310,13 +5285,13 @@ static PyObject *__pyx_pf_2gb_8samplers_21CollapsedGibbsSampler_6_inc_one(struct
  *     cdef void dec_one(self, size_t b) nogil:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_void_to_None(((struct __pyx_vtabstruct_2gb_8samplers_CollapsedGibbsSampler *)__pyx_v_self->__pyx_base.__pyx_vtab)->__pyx_base.inc_one(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self), __pyx_v_b)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 187, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_void_to_None(((struct __pyx_vtabstruct_2gb_8samplers_CollapsedGibbsSampler *)__pyx_v_self->__pyx_base.__pyx_vtab)->__pyx_base.inc_one(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self), __pyx_v_b)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 176, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "gb/samplers.pyx":186
+  /* "gb/samplers.pyx":175
  *         self.base.inc_one(b)
  * 
  *     def _inc_one(self, size_t b):             # <<<<<<<<<<<<<<
@@ -5335,7 +5310,7 @@ static PyObject *__pyx_pf_2gb_8samplers_21CollapsedGibbsSampler_6_inc_one(struct
   return __pyx_r;
 }
 
-/* "gb/samplers.pyx":189
+/* "gb/samplers.pyx":178
  *         return self.inc_one(b)
  * 
  *     cdef void dec_one(self, size_t b) nogil:             # <<<<<<<<<<<<<<
@@ -5345,7 +5320,7 @@ static PyObject *__pyx_pf_2gb_8samplers_21CollapsedGibbsSampler_6_inc_one(struct
 
 static void __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_dec_one(struct __pyx_obj_2gb_8samplers_CollapsedGibbsSampler *__pyx_v_self, size_t __pyx_v_b) {
 
-  /* "gb/samplers.pyx":190
+  /* "gb/samplers.pyx":179
  * 
  *     cdef void dec_one(self, size_t b) nogil:
  *         self.base.dec_one(b)             # <<<<<<<<<<<<<<
@@ -5354,7 +5329,7 @@ static void __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_dec_one(struct __pyx_o
  */
   ((struct __pyx_vtabstruct_2gb_8samplers_BaseSampler *)__pyx_v_self->base->__pyx_base.__pyx_vtab)->__pyx_base.dec_one(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self->base), __pyx_v_b);
 
-  /* "gb/samplers.pyx":189
+  /* "gb/samplers.pyx":178
  *         return self.inc_one(b)
  * 
  *     cdef void dec_one(self, size_t b) nogil:             # <<<<<<<<<<<<<<
@@ -5365,7 +5340,7 @@ static void __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_dec_one(struct __pyx_o
   /* function exit code */
 }
 
-/* "gb/samplers.pyx":192
+/* "gb/samplers.pyx":181
  *         self.base.dec_one(b)
  * 
  *     def _dec_one(self, size_t b):             # <<<<<<<<<<<<<<
@@ -5381,7 +5356,7 @@ static PyObject *__pyx_pw_2gb_8samplers_21CollapsedGibbsSampler_9_dec_one(PyObje
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("_dec_one (wrapper)", 0);
   assert(__pyx_arg_b); {
-    __pyx_v_b = __Pyx_PyInt_As_size_t(__pyx_arg_b); if (unlikely((__pyx_v_b == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 192, __pyx_L3_error)
+    __pyx_v_b = __Pyx_PyInt_As_size_t(__pyx_arg_b); if (unlikely((__pyx_v_b == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 181, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -5402,21 +5377,21 @@ static PyObject *__pyx_pf_2gb_8samplers_21CollapsedGibbsSampler_8_dec_one(struct
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("_dec_one", 0);
 
-  /* "gb/samplers.pyx":193
+  /* "gb/samplers.pyx":182
  * 
  *     def _dec_one(self, size_t b):
  *         return self.dec_one(b)             # <<<<<<<<<<<<<<
  * 
- *     cdef void sample_for_idx(self, size_t i, AbstractKernel kernel,
+ *     cdef size_t sample_for_idx(self, size_t i, AbstractKernel kernel) nogil:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_void_to_None(((struct __pyx_vtabstruct_2gb_8samplers_CollapsedGibbsSampler *)__pyx_v_self->__pyx_base.__pyx_vtab)->__pyx_base.dec_one(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self), __pyx_v_b)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 193, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_void_to_None(((struct __pyx_vtabstruct_2gb_8samplers_CollapsedGibbsSampler *)__pyx_v_self->__pyx_base.__pyx_vtab)->__pyx_base.dec_one(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self), __pyx_v_b)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 182, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "gb/samplers.pyx":192
+  /* "gb/samplers.pyx":181
  *         self.base.dec_one(b)
  * 
  *     def _dec_one(self, size_t b):             # <<<<<<<<<<<<<<
@@ -5435,19 +5410,19 @@ static PyObject *__pyx_pf_2gb_8samplers_21CollapsedGibbsSampler_8_dec_one(struct
   return __pyx_r;
 }
 
-/* "gb/samplers.pyx":195
+/* "gb/samplers.pyx":184
  *         return self.dec_one(b)
  * 
- *     cdef void sample_for_idx(self, size_t i, AbstractKernel kernel,             # <<<<<<<<<<<<<<
- *                              size_t *result_sample, double *prob_sample) nogil:
+ *     cdef size_t sample_for_idx(self, size_t i, AbstractKernel kernel) nogil:             # <<<<<<<<<<<<<<
  *         cdef size_t n_proc = self.buffer.shape[0]
+ *         cdef size_t b
  */
 
-static void __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_sample_for_idx(struct __pyx_obj_2gb_8samplers_CollapsedGibbsSampler *__pyx_v_self, size_t __pyx_v_i, struct __pyx_obj_2gb_7kernels_AbstractKernel *__pyx_v_kernel, size_t *__pyx_v_result_sample, double *__pyx_v_prob_sample) {
+static size_t __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_sample_for_idx(struct __pyx_obj_2gb_8samplers_CollapsedGibbsSampler *__pyx_v_self, size_t __pyx_v_i, struct __pyx_obj_2gb_7kernels_AbstractKernel *__pyx_v_kernel) {
   size_t __pyx_v_n_proc;
   size_t __pyx_v_b;
   double __pyx_v_alpha_ba;
-  size_t __pyx_v_choice;
+  size_t __pyx_r;
   size_t __pyx_t_1;
   size_t __pyx_t_2;
   size_t __pyx_t_3;
@@ -5456,16 +5431,16 @@ static void __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_sample_for_idx(struct 
   size_t __pyx_t_6;
   Py_ssize_t __pyx_t_7;
 
-  /* "gb/samplers.pyx":197
- *     cdef void sample_for_idx(self, size_t i, AbstractKernel kernel,
- *                              size_t *result_sample, double *prob_sample) nogil:
+  /* "gb/samplers.pyx":185
+ * 
+ *     cdef size_t sample_for_idx(self, size_t i, AbstractKernel kernel) nogil:
  *         cdef size_t n_proc = self.buffer.shape[0]             # <<<<<<<<<<<<<<
  *         cdef size_t b
  *         cdef double alpha_ba
  */
   __pyx_v_n_proc = (__pyx_v_self->buffer.shape[0]);
 
-  /* "gb/samplers.pyx":200
+  /* "gb/samplers.pyx":188
  *         cdef size_t b
  *         cdef double alpha_ba
  *         for b in range(n_proc):             # <<<<<<<<<<<<<<
@@ -5476,7 +5451,7 @@ static void __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_sample_for_idx(struct 
   for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
     __pyx_v_b = __pyx_t_2;
 
-    /* "gb/samplers.pyx":201
+    /* "gb/samplers.pyx":189
  *         cdef double alpha_ba
  *         for b in range(n_proc):
  *             alpha_ba = self.get_probability(b)             # <<<<<<<<<<<<<<
@@ -5485,7 +5460,7 @@ static void __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_sample_for_idx(struct 
  */
     __pyx_v_alpha_ba = ((struct __pyx_vtabstruct_2gb_8samplers_CollapsedGibbsSampler *)__pyx_v_self->__pyx_base.__pyx_vtab)->__pyx_base.get_probability(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self), __pyx_v_b);
 
-    /* "gb/samplers.pyx":202
+    /* "gb/samplers.pyx":190
  *         for b in range(n_proc):
  *             alpha_ba = self.get_probability(b)
  *             self.buffer[b] = kernel.cross_rate(i, b, alpha_ba)             # <<<<<<<<<<<<<<
@@ -5495,119 +5470,101 @@ static void __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_sample_for_idx(struct 
     __pyx_t_3 = __pyx_v_b;
     *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_self->buffer.data) + __pyx_t_3)) )) = ((struct __pyx_vtabstruct_2gb_7kernels_AbstractKernel *)__pyx_v_kernel->__pyx_vtab)->cross_rate(__pyx_v_kernel, __pyx_v_i, __pyx_v_b, __pyx_v_alpha_ba);
 
-    /* "gb/samplers.pyx":203
+    /* "gb/samplers.pyx":191
  *             alpha_ba = self.get_probability(b)
  *             self.buffer[b] = kernel.cross_rate(i, b, alpha_ba)
  *             if b > 0:             # <<<<<<<<<<<<<<
  *                 self.buffer[b] += self.buffer[b-1]
- *         cdef size_t choice
+ *         return searchsorted(&self.buffer[0], self.buffer.shape[0],
  */
     __pyx_t_4 = ((__pyx_v_b > 0) != 0);
     if (__pyx_t_4) {
 
-      /* "gb/samplers.pyx":204
+      /* "gb/samplers.pyx":192
  *             self.buffer[b] = kernel.cross_rate(i, b, alpha_ba)
  *             if b > 0:
  *                 self.buffer[b] += self.buffer[b-1]             # <<<<<<<<<<<<<<
- *         cdef size_t choice
- *         choice = searchsorted(&self.buffer[0], self.buffer.shape[0],
+ *         return searchsorted(&self.buffer[0], self.buffer.shape[0],
+ *                             self.base.rng.rand() * self.buffer[n_proc-1], 0)
  */
       __pyx_t_5 = (__pyx_v_b - 1);
       __pyx_t_6 = __pyx_v_b;
       *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_self->buffer.data) + __pyx_t_6)) )) += (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_self->buffer.data) + __pyx_t_5)) )));
 
-      /* "gb/samplers.pyx":203
+      /* "gb/samplers.pyx":191
  *             alpha_ba = self.get_probability(b)
  *             self.buffer[b] = kernel.cross_rate(i, b, alpha_ba)
  *             if b > 0:             # <<<<<<<<<<<<<<
  *                 self.buffer[b] += self.buffer[b-1]
- *         cdef size_t choice
+ *         return searchsorted(&self.buffer[0], self.buffer.shape[0],
  */
     }
   }
 
-  /* "gb/samplers.pyx":206
+  /* "gb/samplers.pyx":193
+ *             if b > 0:
  *                 self.buffer[b] += self.buffer[b-1]
- *         cdef size_t choice
- *         choice = searchsorted(&self.buffer[0], self.buffer.shape[0],             # <<<<<<<<<<<<<<
- *                               self.base.rng.rand() * self.buffer[n_proc-1], 0)
- *         result_sample[0] = choice
+ *         return searchsorted(&self.buffer[0], self.buffer.shape[0],             # <<<<<<<<<<<<<<
+ *                             self.base.rng.rand() * self.buffer[n_proc-1], 0)
+ * 
  */
   __pyx_t_7 = 0;
 
-  /* "gb/samplers.pyx":207
- *         cdef size_t choice
- *         choice = searchsorted(&self.buffer[0], self.buffer.shape[0],
- *                               self.base.rng.rand() * self.buffer[n_proc-1], 0)             # <<<<<<<<<<<<<<
- *         result_sample[0] = choice
- *         prob_sample[0] = self.buffer[choice]
+  /* "gb/samplers.pyx":194
+ *                 self.buffer[b] += self.buffer[b-1]
+ *         return searchsorted(&self.buffer[0], self.buffer.shape[0],
+ *                             self.base.rng.rand() * self.buffer[n_proc-1], 0)             # <<<<<<<<<<<<<<
+ * 
+ *     cdef uint64_t is_background(self, double mu_rate, double dt_mu) nogil:
  */
   __pyx_t_1 = (__pyx_v_n_proc - 1);
 
-  /* "gb/samplers.pyx":206
+  /* "gb/samplers.pyx":193
+ *             if b > 0:
  *                 self.buffer[b] += self.buffer[b-1]
- *         cdef size_t choice
- *         choice = searchsorted(&self.buffer[0], self.buffer.shape[0],             # <<<<<<<<<<<<<<
- *                               self.base.rng.rand() * self.buffer[n_proc-1], 0)
- *         result_sample[0] = choice
- */
-  __pyx_v_choice = __pyx_f_2gb_7sorting_9binsearch_searchsorted((&(*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_self->buffer.data) + __pyx_t_7)) )))), (__pyx_v_self->buffer.shape[0]), (((struct __pyx_vtabstruct_2gb_9randomkit_6random_RNG *)__pyx_v_self->base->rng->__pyx_vtab)->rand(__pyx_v_self->base->rng) * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_self->buffer.data) + __pyx_t_1)) )))), 0);
-
-  /* "gb/samplers.pyx":208
- *         choice = searchsorted(&self.buffer[0], self.buffer.shape[0],
- *                               self.base.rng.rand() * self.buffer[n_proc-1], 0)
- *         result_sample[0] = choice             # <<<<<<<<<<<<<<
- *         prob_sample[0] = self.buffer[choice]
+ *         return searchsorted(&self.buffer[0], self.buffer.shape[0],             # <<<<<<<<<<<<<<
+ *                             self.base.rng.rand() * self.buffer[n_proc-1], 0)
  * 
  */
-  (__pyx_v_result_sample[0]) = __pyx_v_choice;
+  __pyx_r = __pyx_f_2gb_7sorting_9binsearch_searchsorted((&(*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_self->buffer.data) + __pyx_t_7)) )))), (__pyx_v_self->buffer.shape[0]), (((struct __pyx_vtabstruct_2gb_9randomkit_6random_RNG *)__pyx_v_self->base->rng->__pyx_vtab)->rand(__pyx_v_self->base->rng) * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_self->buffer.data) + __pyx_t_1)) )))), 0);
+  goto __pyx_L0;
 
-  /* "gb/samplers.pyx":209
- *                               self.base.rng.rand() * self.buffer[n_proc-1], 0)
- *         result_sample[0] = choice
- *         prob_sample[0] = self.buffer[choice]             # <<<<<<<<<<<<<<
- * 
- *     cdef uint64_t is_background(self, double mu_rate, double dt_mu,
- */
-  __pyx_t_2 = __pyx_v_choice;
-  (__pyx_v_prob_sample[0]) = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_self->buffer.data) + __pyx_t_2)) )));
-
-  /* "gb/samplers.pyx":195
+  /* "gb/samplers.pyx":184
  *         return self.dec_one(b)
  * 
- *     cdef void sample_for_idx(self, size_t i, AbstractKernel kernel,             # <<<<<<<<<<<<<<
- *                              size_t *result_sample, double *prob_sample) nogil:
+ *     cdef size_t sample_for_idx(self, size_t i, AbstractKernel kernel) nogil:             # <<<<<<<<<<<<<<
  *         cdef size_t n_proc = self.buffer.shape[0]
+ *         cdef size_t b
  */
 
   /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
 }
 
-/* "gb/samplers.pyx":211
- *         prob_sample[0] = self.buffer[choice]
+/* "gb/samplers.pyx":196
+ *                             self.base.rng.rand() * self.buffer[n_proc-1], 0)
  * 
- *     cdef uint64_t is_background(self, double mu_rate, double dt_mu,             # <<<<<<<<<<<<<<
- *                                 double cross_rate, double dt_cross) nogil:
- *         return self.base.is_background(mu_rate, dt_mu, cross_rate, dt_cross)
+ *     cdef uint64_t is_background(self, double mu_rate, double dt_mu) nogil:             # <<<<<<<<<<<<<<
+ *         return self.base.is_background(mu_rate, dt_mu)
  */
 
-static uint64_t __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_is_background(struct __pyx_obj_2gb_8samplers_CollapsedGibbsSampler *__pyx_v_self, double __pyx_v_mu_rate, double __pyx_v_dt_mu, double __pyx_v_cross_rate, double __pyx_v_dt_cross) {
+static uint64_t __pyx_f_2gb_8samplers_21CollapsedGibbsSampler_is_background(struct __pyx_obj_2gb_8samplers_CollapsedGibbsSampler *__pyx_v_self, double __pyx_v_mu_rate, double __pyx_v_dt_mu) {
   uint64_t __pyx_r;
 
-  /* "gb/samplers.pyx":213
- *     cdef uint64_t is_background(self, double mu_rate, double dt_mu,
- *                                 double cross_rate, double dt_cross) nogil:
- *         return self.base.is_background(mu_rate, dt_mu, cross_rate, dt_cross)             # <<<<<<<<<<<<<<
+  /* "gb/samplers.pyx":197
+ * 
+ *     cdef uint64_t is_background(self, double mu_rate, double dt_mu) nogil:
+ *         return self.base.is_background(mu_rate, dt_mu)             # <<<<<<<<<<<<<<
  */
-  __pyx_r = ((struct __pyx_vtabstruct_2gb_8samplers_BaseSampler *)__pyx_v_self->base->__pyx_base.__pyx_vtab)->__pyx_base.is_background(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self->base), __pyx_v_mu_rate, __pyx_v_dt_mu, __pyx_v_cross_rate, __pyx_v_dt_cross);
+  __pyx_r = ((struct __pyx_vtabstruct_2gb_8samplers_BaseSampler *)__pyx_v_self->base->__pyx_base.__pyx_vtab)->__pyx_base.is_background(((struct __pyx_obj_2gb_8samplers_AbstractSampler *)__pyx_v_self->base), __pyx_v_mu_rate, __pyx_v_dt_mu);
   goto __pyx_L0;
 
-  /* "gb/samplers.pyx":211
- *         prob_sample[0] = self.buffer[choice]
+  /* "gb/samplers.pyx":196
+ *                             self.base.rng.rand() * self.buffer[n_proc-1], 0)
  * 
- *     cdef uint64_t is_background(self, double mu_rate, double dt_mu,             # <<<<<<<<<<<<<<
- *                                 double cross_rate, double dt_cross) nogil:
- *         return self.base.is_background(mu_rate, dt_mu, cross_rate, dt_cross)
+ *     cdef uint64_t is_background(self, double mu_rate, double dt_mu) nogil:             # <<<<<<<<<<<<<<
+ *         return self.base.is_background(mu_rate, dt_mu)
  */
 
   /* function exit code */
@@ -6361,7 +6318,7 @@ static PyObject *__pyx_f_2gb_8samplers___pyx_unpickle_AbstractSampler__set_state
 
 /* "(tree fragment)":1
  * def __pyx_unpickle_FenwickSampler(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
- *     if __pyx_checksum != 0x75496a8:
+ *     if __pyx_checksum != 0xd7d8bc9:
  *         from pickle import PickleError as __pyx_PickleError
  */
 
@@ -6454,18 +6411,18 @@ static PyObject *__pyx_pf_2gb_8samplers_2__pyx_unpickle_FenwickSampler(CYTHON_UN
 
   /* "(tree fragment)":2
  * def __pyx_unpickle_FenwickSampler(__pyx_type, long __pyx_checksum, __pyx_state):
- *     if __pyx_checksum != 0x75496a8:             # <<<<<<<<<<<<<<
+ *     if __pyx_checksum != 0xd7d8bc9:             # <<<<<<<<<<<<<<
  *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x75496a8 = (base, n_proc, tree))" % __pyx_checksum)
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xd7d8bc9 = (base, tree))" % __pyx_checksum)
  */
-  __pyx_t_1 = ((__pyx_v___pyx_checksum != 0x75496a8) != 0);
+  __pyx_t_1 = ((__pyx_v___pyx_checksum != 0xd7d8bc9) != 0);
   if (__pyx_t_1) {
 
     /* "(tree fragment)":3
  * def __pyx_unpickle_FenwickSampler(__pyx_type, long __pyx_checksum, __pyx_state):
- *     if __pyx_checksum != 0x75496a8:
+ *     if __pyx_checksum != 0xd7d8bc9:
  *         from pickle import PickleError as __pyx_PickleError             # <<<<<<<<<<<<<<
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x75496a8 = (base, n_proc, tree))" % __pyx_checksum)
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xd7d8bc9 = (base, tree))" % __pyx_checksum)
  *     __pyx_result = FenwickSampler.__new__(__pyx_type)
  */
     __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 3, __pyx_L1_error)
@@ -6484,15 +6441,15 @@ static PyObject *__pyx_pf_2gb_8samplers_2__pyx_unpickle_FenwickSampler(CYTHON_UN
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
     /* "(tree fragment)":4
- *     if __pyx_checksum != 0x75496a8:
+ *     if __pyx_checksum != 0xd7d8bc9:
  *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x75496a8 = (base, n_proc, tree))" % __pyx_checksum)             # <<<<<<<<<<<<<<
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xd7d8bc9 = (base, tree))" % __pyx_checksum)             # <<<<<<<<<<<<<<
  *     __pyx_result = FenwickSampler.__new__(__pyx_type)
  *     if __pyx_state is not None:
  */
     __pyx_t_2 = __Pyx_PyInt_From_long(__pyx_v___pyx_checksum); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 4, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = __Pyx_PyString_Format(__pyx_kp_s_Incompatible_checksums_s_vs_0x75, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 4, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyString_Format(__pyx_kp_s_Incompatible_checksums_s_vs_0xd7, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 4, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_INCREF(__pyx_v___pyx_PickleError);
@@ -6548,15 +6505,15 @@ static PyObject *__pyx_pf_2gb_8samplers_2__pyx_unpickle_FenwickSampler(CYTHON_UN
 
     /* "(tree fragment)":2
  * def __pyx_unpickle_FenwickSampler(__pyx_type, long __pyx_checksum, __pyx_state):
- *     if __pyx_checksum != 0x75496a8:             # <<<<<<<<<<<<<<
+ *     if __pyx_checksum != 0xd7d8bc9:             # <<<<<<<<<<<<<<
  *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x75496a8 = (base, n_proc, tree))" % __pyx_checksum)
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xd7d8bc9 = (base, tree))" % __pyx_checksum)
  */
   }
 
   /* "(tree fragment)":5
  *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x75496a8 = (base, n_proc, tree))" % __pyx_checksum)
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xd7d8bc9 = (base, tree))" % __pyx_checksum)
  *     __pyx_result = FenwickSampler.__new__(__pyx_type)             # <<<<<<<<<<<<<<
  *     if __pyx_state is not None:
  *         __pyx_unpickle_FenwickSampler__set_state(<FenwickSampler> __pyx_result, __pyx_state)
@@ -6610,7 +6567,7 @@ static PyObject *__pyx_pf_2gb_8samplers_2__pyx_unpickle_FenwickSampler(CYTHON_UN
   __pyx_t_3 = 0;
 
   /* "(tree fragment)":6
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x75496a8 = (base, n_proc, tree))" % __pyx_checksum)
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xd7d8bc9 = (base, tree))" % __pyx_checksum)
  *     __pyx_result = FenwickSampler.__new__(__pyx_type)
  *     if __pyx_state is not None:             # <<<<<<<<<<<<<<
  *         __pyx_unpickle_FenwickSampler__set_state(<FenwickSampler> __pyx_result, __pyx_state)
@@ -6633,7 +6590,7 @@ static PyObject *__pyx_pf_2gb_8samplers_2__pyx_unpickle_FenwickSampler(CYTHON_UN
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
     /* "(tree fragment)":6
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x75496a8 = (base, n_proc, tree))" % __pyx_checksum)
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xd7d8bc9 = (base, tree))" % __pyx_checksum)
  *     __pyx_result = FenwickSampler.__new__(__pyx_type)
  *     if __pyx_state is not None:             # <<<<<<<<<<<<<<
  *         __pyx_unpickle_FenwickSampler__set_state(<FenwickSampler> __pyx_result, __pyx_state)
@@ -6646,7 +6603,7 @@ static PyObject *__pyx_pf_2gb_8samplers_2__pyx_unpickle_FenwickSampler(CYTHON_UN
  *         __pyx_unpickle_FenwickSampler__set_state(<FenwickSampler> __pyx_result, __pyx_state)
  *     return __pyx_result             # <<<<<<<<<<<<<<
  * cdef __pyx_unpickle_FenwickSampler__set_state(FenwickSampler __pyx_result, tuple __pyx_state):
- *     __pyx_result.base = __pyx_state[0]; __pyx_result.n_proc = __pyx_state[1]; __pyx_result.tree = __pyx_state[2]
+ *     __pyx_result.base = __pyx_state[0]; __pyx_result.tree = __pyx_state[1]
  */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(__pyx_v___pyx_result);
@@ -6655,7 +6612,7 @@ static PyObject *__pyx_pf_2gb_8samplers_2__pyx_unpickle_FenwickSampler(CYTHON_UN
 
   /* "(tree fragment)":1
  * def __pyx_unpickle_FenwickSampler(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
- *     if __pyx_checksum != 0x75496a8:
+ *     if __pyx_checksum != 0xd7d8bc9:
  *         from pickle import PickleError as __pyx_PickleError
  */
 
@@ -6680,30 +6637,29 @@ static PyObject *__pyx_pf_2gb_8samplers_2__pyx_unpickle_FenwickSampler(CYTHON_UN
  *         __pyx_unpickle_FenwickSampler__set_state(<FenwickSampler> __pyx_result, __pyx_state)
  *     return __pyx_result
  * cdef __pyx_unpickle_FenwickSampler__set_state(FenwickSampler __pyx_result, tuple __pyx_state):             # <<<<<<<<<<<<<<
- *     __pyx_result.base = __pyx_state[0]; __pyx_result.n_proc = __pyx_state[1]; __pyx_result.tree = __pyx_state[2]
- *     if len(__pyx_state) > 3 and hasattr(__pyx_result, '__dict__'):
+ *     __pyx_result.base = __pyx_state[0]; __pyx_result.tree = __pyx_state[1]
+ *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):
  */
 
 static PyObject *__pyx_f_2gb_8samplers___pyx_unpickle_FenwickSampler__set_state(struct __pyx_obj_2gb_8samplers_FenwickSampler *__pyx_v___pyx_result, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
-  size_t __pyx_t_2;
-  int __pyx_t_3;
-  Py_ssize_t __pyx_t_4;
+  int __pyx_t_2;
+  Py_ssize_t __pyx_t_3;
+  int __pyx_t_4;
   int __pyx_t_5;
-  int __pyx_t_6;
+  PyObject *__pyx_t_6 = NULL;
   PyObject *__pyx_t_7 = NULL;
   PyObject *__pyx_t_8 = NULL;
-  PyObject *__pyx_t_9 = NULL;
   __Pyx_RefNannySetupContext("__pyx_unpickle_FenwickSampler__set_state", 0);
 
   /* "(tree fragment)":10
  *     return __pyx_result
  * cdef __pyx_unpickle_FenwickSampler__set_state(FenwickSampler __pyx_result, tuple __pyx_state):
- *     __pyx_result.base = __pyx_state[0]; __pyx_result.n_proc = __pyx_state[1]; __pyx_result.tree = __pyx_state[2]             # <<<<<<<<<<<<<<
- *     if len(__pyx_state) > 3 and hasattr(__pyx_result, '__dict__'):
- *         __pyx_result.__dict__.update(__pyx_state[3])
+ *     __pyx_result.base = __pyx_state[0]; __pyx_result.tree = __pyx_state[1]             # <<<<<<<<<<<<<<
+ *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):
+ *         __pyx_result.__dict__.update(__pyx_state[2])
  */
   if (unlikely(__pyx_v___pyx_state == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
@@ -6721,14 +6677,8 @@ static PyObject *__pyx_f_2gb_8samplers___pyx_unpickle_FenwickSampler__set_state(
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(1, 10, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_PyInt_As_size_t(PyTuple_GET_ITEM(__pyx_v___pyx_state, 1)); if (unlikely((__pyx_t_2 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(1, 10, __pyx_L1_error)
-  __pyx_v___pyx_result->n_proc = __pyx_t_2;
-  if (unlikely(__pyx_v___pyx_state == Py_None)) {
-    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(1, 10, __pyx_L1_error)
-  }
-  if (!(likely(((PyTuple_GET_ITEM(__pyx_v___pyx_state, 2)) == Py_None) || likely(__Pyx_TypeTest(PyTuple_GET_ITEM(__pyx_v___pyx_state, 2), __pyx_ptype_2gb_11collections_6fptree_FPTree))))) __PYX_ERR(1, 10, __pyx_L1_error)
-  __pyx_t_1 = PyTuple_GET_ITEM(__pyx_v___pyx_state, 2);
+  if (!(likely(((PyTuple_GET_ITEM(__pyx_v___pyx_state, 1)) == Py_None) || likely(__Pyx_TypeTest(PyTuple_GET_ITEM(__pyx_v___pyx_state, 1), __pyx_ptype_2gb_11collections_6fptree_FPTree))))) __PYX_ERR(1, 10, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_GET_ITEM(__pyx_v___pyx_state, 1);
   __Pyx_INCREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
   __Pyx_GOTREF(__pyx_v___pyx_result->tree);
@@ -6738,91 +6688,91 @@ static PyObject *__pyx_f_2gb_8samplers___pyx_unpickle_FenwickSampler__set_state(
 
   /* "(tree fragment)":11
  * cdef __pyx_unpickle_FenwickSampler__set_state(FenwickSampler __pyx_result, tuple __pyx_state):
- *     __pyx_result.base = __pyx_state[0]; __pyx_result.n_proc = __pyx_state[1]; __pyx_result.tree = __pyx_state[2]
- *     if len(__pyx_state) > 3 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
- *         __pyx_result.__dict__.update(__pyx_state[3])
+ *     __pyx_result.base = __pyx_state[0]; __pyx_result.tree = __pyx_state[1]
+ *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
+ *         __pyx_result.__dict__.update(__pyx_state[2])
  */
   if (unlikely(__pyx_v___pyx_state == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
     __PYX_ERR(1, 11, __pyx_L1_error)
   }
-  __pyx_t_4 = PyTuple_GET_SIZE(__pyx_v___pyx_state); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(1, 11, __pyx_L1_error)
-  __pyx_t_5 = ((__pyx_t_4 > 3) != 0);
-  if (__pyx_t_5) {
+  __pyx_t_3 = PyTuple_GET_SIZE(__pyx_v___pyx_state); if (unlikely(__pyx_t_3 == ((Py_ssize_t)-1))) __PYX_ERR(1, 11, __pyx_L1_error)
+  __pyx_t_4 = ((__pyx_t_3 > 2) != 0);
+  if (__pyx_t_4) {
   } else {
-    __pyx_t_3 = __pyx_t_5;
+    __pyx_t_2 = __pyx_t_4;
     goto __pyx_L4_bool_binop_done;
   }
-  __pyx_t_5 = __Pyx_HasAttr(((PyObject *)__pyx_v___pyx_result), __pyx_n_s_dict); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(1, 11, __pyx_L1_error)
-  __pyx_t_6 = (__pyx_t_5 != 0);
-  __pyx_t_3 = __pyx_t_6;
+  __pyx_t_4 = __Pyx_HasAttr(((PyObject *)__pyx_v___pyx_result), __pyx_n_s_dict); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(1, 11, __pyx_L1_error)
+  __pyx_t_5 = (__pyx_t_4 != 0);
+  __pyx_t_2 = __pyx_t_5;
   __pyx_L4_bool_binop_done:;
-  if (__pyx_t_3) {
+  if (__pyx_t_2) {
 
     /* "(tree fragment)":12
- *     __pyx_result.base = __pyx_state[0]; __pyx_result.n_proc = __pyx_state[1]; __pyx_result.tree = __pyx_state[2]
- *     if len(__pyx_state) > 3 and hasattr(__pyx_result, '__dict__'):
- *         __pyx_result.__dict__.update(__pyx_state[3])             # <<<<<<<<<<<<<<
+ *     __pyx_result.base = __pyx_state[0]; __pyx_result.tree = __pyx_state[1]
+ *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):
+ *         __pyx_result.__dict__.update(__pyx_state[2])             # <<<<<<<<<<<<<<
  */
-    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v___pyx_result), __pyx_n_s_dict); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 12, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v___pyx_result), __pyx_n_s_dict); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 12, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
+    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_update); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 12, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_update); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 12, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_8);
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     if (unlikely(__pyx_v___pyx_state == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
       __PYX_ERR(1, 12, __pyx_L1_error)
     }
-    __pyx_t_7 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_8))) {
-      __pyx_t_7 = PyMethod_GET_SELF(__pyx_t_8);
-      if (likely(__pyx_t_7)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_8);
-        __Pyx_INCREF(__pyx_t_7);
+    __pyx_t_6 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_7))) {
+      __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_7);
+      if (likely(__pyx_t_6)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_7);
+        __Pyx_INCREF(__pyx_t_6);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_8, function);
+        __Pyx_DECREF_SET(__pyx_t_7, function);
       }
     }
-    if (!__pyx_t_7) {
-      __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_8, PyTuple_GET_ITEM(__pyx_v___pyx_state, 3)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+    if (!__pyx_t_6) {
+      __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_7, PyTuple_GET_ITEM(__pyx_v___pyx_state, 2)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
     } else {
       #if CYTHON_FAST_PYCALL
-      if (PyFunction_Check(__pyx_t_8)) {
-        PyObject *__pyx_temp[2] = {__pyx_t_7, PyTuple_GET_ITEM(__pyx_v___pyx_state, 3)};
-        __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_8, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
-        __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
+      if (PyFunction_Check(__pyx_t_7)) {
+        PyObject *__pyx_temp[2] = {__pyx_t_6, PyTuple_GET_ITEM(__pyx_v___pyx_state, 2)};
+        __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_7, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+        __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_GOTREF(__pyx_t_1);
       } else
       #endif
       #if CYTHON_FAST_PYCCALL
-      if (__Pyx_PyFastCFunction_Check(__pyx_t_8)) {
-        PyObject *__pyx_temp[2] = {__pyx_t_7, PyTuple_GET_ITEM(__pyx_v___pyx_state, 3)};
-        __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_8, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
-        __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
+      if (__Pyx_PyFastCFunction_Check(__pyx_t_7)) {
+        PyObject *__pyx_temp[2] = {__pyx_t_6, PyTuple_GET_ITEM(__pyx_v___pyx_state, 2)};
+        __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_7, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+        __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_GOTREF(__pyx_t_1);
       } else
       #endif
       {
-        __pyx_t_9 = PyTuple_New(1+1); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 12, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_9);
-        __Pyx_GIVEREF(__pyx_t_7); PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_7); __pyx_t_7 = NULL;
-        __Pyx_INCREF(PyTuple_GET_ITEM(__pyx_v___pyx_state, 3));
-        __Pyx_GIVEREF(PyTuple_GET_ITEM(__pyx_v___pyx_state, 3));
-        PyTuple_SET_ITEM(__pyx_t_9, 0+1, PyTuple_GET_ITEM(__pyx_v___pyx_state, 3));
-        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_8, __pyx_t_9, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+        __pyx_t_8 = PyTuple_New(1+1); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 12, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_8);
+        __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_6); __pyx_t_6 = NULL;
+        __Pyx_INCREF(PyTuple_GET_ITEM(__pyx_v___pyx_state, 2));
+        __Pyx_GIVEREF(PyTuple_GET_ITEM(__pyx_v___pyx_state, 2));
+        PyTuple_SET_ITEM(__pyx_t_8, 0+1, PyTuple_GET_ITEM(__pyx_v___pyx_state, 2));
+        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_t_8, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+        __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
       }
     }
-    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
     /* "(tree fragment)":11
  * cdef __pyx_unpickle_FenwickSampler__set_state(FenwickSampler __pyx_result, tuple __pyx_state):
- *     __pyx_result.base = __pyx_state[0]; __pyx_result.n_proc = __pyx_state[1]; __pyx_result.tree = __pyx_state[2]
- *     if len(__pyx_state) > 3 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
- *         __pyx_result.__dict__.update(__pyx_state[3])
+ *     __pyx_result.base = __pyx_state[0]; __pyx_result.tree = __pyx_state[1]
+ *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
+ *         __pyx_result.__dict__.update(__pyx_state[2])
  */
   }
 
@@ -6830,8 +6780,8 @@ static PyObject *__pyx_f_2gb_8samplers___pyx_unpickle_FenwickSampler__set_state(
  *         __pyx_unpickle_FenwickSampler__set_state(<FenwickSampler> __pyx_result, __pyx_state)
  *     return __pyx_result
  * cdef __pyx_unpickle_FenwickSampler__set_state(FenwickSampler __pyx_result, tuple __pyx_state):             # <<<<<<<<<<<<<<
- *     __pyx_result.base = __pyx_state[0]; __pyx_result.n_proc = __pyx_state[1]; __pyx_result.tree = __pyx_state[2]
- *     if len(__pyx_state) > 3 and hasattr(__pyx_result, '__dict__'):
+ *     __pyx_result.base = __pyx_state[0]; __pyx_result.tree = __pyx_state[1]
+ *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):
  */
 
   /* function exit code */
@@ -6839,9 +6789,9 @@ static PyObject *__pyx_f_2gb_8samplers___pyx_unpickle_FenwickSampler__set_state(
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_7);
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_XDECREF(__pyx_t_9);
   __Pyx_AddTraceback("gb.samplers.__pyx_unpickle_FenwickSampler__set_state", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
@@ -20237,7 +20187,6 @@ static PyObject *__pyx_tp_new_2gb_8samplers_BaseSampler(PyTypeObject *t, PyObjec
   p = ((struct __pyx_obj_2gb_8samplers_BaseSampler *)o);
   p->__pyx_base.__pyx_vtab = (struct __pyx_vtabstruct_2gb_8samplers_AbstractSampler*)__pyx_vtabptr_2gb_8samplers_BaseSampler;
   p->sloppy = ((struct __pyx_obj_2gb_6sloppy_SloppyCounter *)Py_None); Py_INCREF(Py_None);
-  p->tree = ((struct __pyx_obj_2gb_11collections_6fptree_FPTree *)Py_None); Py_INCREF(Py_None);
   p->timestamps = ((struct __pyx_obj_2gb_6stamps_Timestamps *)Py_None); Py_INCREF(Py_None);
   p->rng = ((struct __pyx_obj_2gb_9randomkit_6random_RNG *)Py_None); Py_INCREF(Py_None);
   p->nab.data = NULL;
@@ -20254,7 +20203,6 @@ static void __pyx_tp_dealloc_2gb_8samplers_BaseSampler(PyObject *o) {
   #endif
   PyObject_GC_UnTrack(o);
   Py_CLEAR(p->sloppy);
-  Py_CLEAR(p->tree);
   Py_CLEAR(p->timestamps);
   Py_CLEAR(p->rng);
   __PYX_XDEC_MEMVIEW(&p->nab, 1);
@@ -20272,9 +20220,6 @@ static int __pyx_tp_traverse_2gb_8samplers_BaseSampler(PyObject *o, visitproc v,
   if (p->sloppy) {
     e = (*v)(((PyObject *)p->sloppy), a); if (e) return e;
   }
-  if (p->tree) {
-    e = (*v)(((PyObject *)p->tree), a); if (e) return e;
-  }
   if (p->timestamps) {
     e = (*v)(((PyObject *)p->timestamps), a); if (e) return e;
   }
@@ -20290,9 +20235,6 @@ static int __pyx_tp_clear_2gb_8samplers_BaseSampler(PyObject *o) {
   if (likely(__pyx_ptype_2gb_8samplers_AbstractSampler)) { if (__pyx_ptype_2gb_8samplers_AbstractSampler->tp_clear) __pyx_ptype_2gb_8samplers_AbstractSampler->tp_clear(o); } else __Pyx_call_next_tp_clear(o, __pyx_tp_clear_2gb_8samplers_BaseSampler);
   tmp = ((PyObject*)p->sloppy);
   p->sloppy = ((struct __pyx_obj_2gb_6sloppy_SloppyCounter *)Py_None); Py_INCREF(Py_None);
-  Py_XDECREF(tmp);
-  tmp = ((PyObject*)p->tree);
-  p->tree = ((struct __pyx_obj_2gb_11collections_6fptree_FPTree *)Py_None); Py_INCREF(Py_None);
   Py_XDECREF(tmp);
   tmp = ((PyObject*)p->timestamps);
   p->timestamps = ((struct __pyx_obj_2gb_6stamps_Timestamps *)Py_None); Py_INCREF(Py_None);
@@ -21322,10 +21264,10 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_Cannot_index_with_type_s, __pyx_k_Cannot_index_with_type_s, sizeof(__pyx_k_Cannot_index_with_type_s), 0, 0, 1, 0},
   {&__pyx_n_s_Ellipsis, __pyx_k_Ellipsis, sizeof(__pyx_k_Ellipsis), 0, 0, 1, 1},
   {&__pyx_kp_s_Empty_shape_tuple_for_cython_arr, __pyx_k_Empty_shape_tuple_for_cython_arr, sizeof(__pyx_k_Empty_shape_tuple_for_cython_arr), 0, 0, 1, 0},
-  {&__pyx_kp_s_Incompatible_checksums_s_vs_0x75, __pyx_k_Incompatible_checksums_s_vs_0x75, sizeof(__pyx_k_Incompatible_checksums_s_vs_0x75), 0, 0, 1, 0},
   {&__pyx_kp_s_Incompatible_checksums_s_vs_0xb0, __pyx_k_Incompatible_checksums_s_vs_0xb0, sizeof(__pyx_k_Incompatible_checksums_s_vs_0xb0), 0, 0, 1, 0},
   {&__pyx_kp_s_Incompatible_checksums_s_vs_0xc1, __pyx_k_Incompatible_checksums_s_vs_0xc1, sizeof(__pyx_k_Incompatible_checksums_s_vs_0xc1), 0, 0, 1, 0},
   {&__pyx_kp_s_Incompatible_checksums_s_vs_0xd4, __pyx_k_Incompatible_checksums_s_vs_0xd4, sizeof(__pyx_k_Incompatible_checksums_s_vs_0xd4), 0, 0, 1, 0},
+  {&__pyx_kp_s_Incompatible_checksums_s_vs_0xd7, __pyx_k_Incompatible_checksums_s_vs_0xd7, sizeof(__pyx_k_Incompatible_checksums_s_vs_0xd7), 0, 0, 1, 0},
   {&__pyx_n_s_IndexError, __pyx_k_IndexError, sizeof(__pyx_k_IndexError), 0, 0, 1, 1},
   {&__pyx_kp_s_Indirect_dimensions_not_supporte, __pyx_k_Indirect_dimensions_not_supporte, sizeof(__pyx_k_Indirect_dimensions_not_supporte), 0, 0, 1, 0},
   {&__pyx_kp_s_Invalid_mode_expected_c_or_fortr, __pyx_k_Invalid_mode_expected_c_or_fortr, sizeof(__pyx_k_Invalid_mode_expected_c_or_fortr), 0, 0, 1, 0},
@@ -21423,7 +21365,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0, 0, 0, 0}
 };
 static int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 68, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 66, __pyx_L1_error)
   __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) __PYX_ERR(1, 2, __pyx_L1_error)
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(1, 131, __pyx_L1_error)
   __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(1, 146, __pyx_L1_error)
@@ -21755,10 +21697,10 @@ static int __Pyx_InitGlobals(void) {
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   __pyx_int_0 = PyInt_FromLong(0); if (unlikely(!__pyx_int_0)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_1 = PyInt_FromLong(1); if (unlikely(!__pyx_int_1)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_122984104 = PyInt_FromLong(122984104L); if (unlikely(!__pyx_int_122984104)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_184977713 = PyInt_FromLong(184977713L); if (unlikely(!__pyx_int_184977713)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_202424970 = PyInt_FromLong(202424970L); if (unlikely(!__pyx_int_202424970)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_222419149 = PyInt_FromLong(222419149L); if (unlikely(!__pyx_int_222419149)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_226331593 = PyInt_FromLong(226331593L); if (unlikely(!__pyx_int_226331593)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_neg_1 = PyInt_FromLong(-1); if (unlikely(!__pyx_int_neg_1)) __PYX_ERR(0, 1, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
@@ -21914,8 +21856,8 @@ static int __pyx_pymod_exec_samplers(PyObject *__pyx_pyinit_module)
   __pyx_vtable_2gb_8samplers_AbstractSampler.get_probability = (double (*)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, size_t))__pyx_f_2gb_8samplers_15AbstractSampler_get_probability;
   __pyx_vtable_2gb_8samplers_AbstractSampler.inc_one = (void (*)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, size_t))__pyx_f_2gb_8samplers_15AbstractSampler_inc_one;
   __pyx_vtable_2gb_8samplers_AbstractSampler.dec_one = (void (*)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, size_t))__pyx_f_2gb_8samplers_15AbstractSampler_dec_one;
-  __pyx_vtable_2gb_8samplers_AbstractSampler.sample_for_idx = (void (*)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, size_t, struct __pyx_obj_2gb_7kernels_AbstractKernel *, size_t *, double *))__pyx_f_2gb_8samplers_15AbstractSampler_sample_for_idx;
-  __pyx_vtable_2gb_8samplers_AbstractSampler.is_background = (uint64_t (*)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, double, double, double, double))__pyx_f_2gb_8samplers_15AbstractSampler_is_background;
+  __pyx_vtable_2gb_8samplers_AbstractSampler.sample_for_idx = (size_t (*)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, size_t, struct __pyx_obj_2gb_7kernels_AbstractKernel *))__pyx_f_2gb_8samplers_15AbstractSampler_sample_for_idx;
+  __pyx_vtable_2gb_8samplers_AbstractSampler.is_background = (uint64_t (*)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, double, double))__pyx_f_2gb_8samplers_15AbstractSampler_is_background;
   if (PyType_Ready(&__pyx_type_2gb_8samplers_AbstractSampler) < 0) __PYX_ERR(0, 23, __pyx_L1_error)
   __pyx_type_2gb_8samplers_AbstractSampler.tp_print = 0;
   if (__Pyx_SetVtable(__pyx_type_2gb_8samplers_AbstractSampler.tp_dict, __pyx_vtabptr_2gb_8samplers_AbstractSampler) < 0) __PYX_ERR(0, 23, __pyx_L1_error)
@@ -21928,13 +21870,13 @@ static int __pyx_pymod_exec_samplers(PyObject *__pyx_pyinit_module)
   __pyx_vtable_2gb_8samplers_BaseSampler.__pyx_base.get_probability = (double (*)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, size_t))__pyx_f_2gb_8samplers_11BaseSampler_get_probability;
   __pyx_vtable_2gb_8samplers_BaseSampler.__pyx_base.inc_one = (void (*)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, size_t))__pyx_f_2gb_8samplers_11BaseSampler_inc_one;
   __pyx_vtable_2gb_8samplers_BaseSampler.__pyx_base.dec_one = (void (*)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, size_t))__pyx_f_2gb_8samplers_11BaseSampler_dec_one;
-  __pyx_vtable_2gb_8samplers_BaseSampler.__pyx_base.is_background = (uint64_t (*)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, double, double, double, double))__pyx_f_2gb_8samplers_11BaseSampler_is_background;
+  __pyx_vtable_2gb_8samplers_BaseSampler.__pyx_base.is_background = (uint64_t (*)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, double, double))__pyx_f_2gb_8samplers_11BaseSampler_is_background;
   __pyx_type_2gb_8samplers_BaseSampler.tp_base = __pyx_ptype_2gb_8samplers_AbstractSampler;
-  if (PyType_Ready(&__pyx_type_2gb_8samplers_BaseSampler) < 0) __PYX_ERR(0, 46, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_2gb_8samplers_BaseSampler) < 0) __PYX_ERR(0, 44, __pyx_L1_error)
   __pyx_type_2gb_8samplers_BaseSampler.tp_print = 0;
-  if (__Pyx_SetVtable(__pyx_type_2gb_8samplers_BaseSampler.tp_dict, __pyx_vtabptr_2gb_8samplers_BaseSampler) < 0) __PYX_ERR(0, 46, __pyx_L1_error)
-  if (PyObject_SetAttrString(__pyx_m, "BaseSampler", (PyObject *)&__pyx_type_2gb_8samplers_BaseSampler) < 0) __PYX_ERR(0, 46, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_2gb_8samplers_BaseSampler) < 0) __PYX_ERR(0, 46, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_type_2gb_8samplers_BaseSampler.tp_dict, __pyx_vtabptr_2gb_8samplers_BaseSampler) < 0) __PYX_ERR(0, 44, __pyx_L1_error)
+  if (PyObject_SetAttrString(__pyx_m, "BaseSampler", (PyObject *)&__pyx_type_2gb_8samplers_BaseSampler) < 0) __PYX_ERR(0, 44, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_2gb_8samplers_BaseSampler) < 0) __PYX_ERR(0, 44, __pyx_L1_error)
   __pyx_ptype_2gb_8samplers_BaseSampler = &__pyx_type_2gb_8samplers_BaseSampler;
   __pyx_vtabptr_2gb_8samplers_FenwickSampler = &__pyx_vtable_2gb_8samplers_FenwickSampler;
   __pyx_vtable_2gb_8samplers_FenwickSampler.__pyx_base = *__pyx_vtabptr_2gb_8samplers_AbstractSampler;
@@ -21942,14 +21884,14 @@ static int __pyx_pymod_exec_samplers(PyObject *__pyx_pyinit_module)
   __pyx_vtable_2gb_8samplers_FenwickSampler.__pyx_base.get_probability = (double (*)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, size_t))__pyx_f_2gb_8samplers_14FenwickSampler_get_probability;
   __pyx_vtable_2gb_8samplers_FenwickSampler.__pyx_base.inc_one = (void (*)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, size_t))__pyx_f_2gb_8samplers_14FenwickSampler_inc_one;
   __pyx_vtable_2gb_8samplers_FenwickSampler.__pyx_base.dec_one = (void (*)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, size_t))__pyx_f_2gb_8samplers_14FenwickSampler_dec_one;
-  __pyx_vtable_2gb_8samplers_FenwickSampler.__pyx_base.sample_for_idx = (void (*)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, size_t, struct __pyx_obj_2gb_7kernels_AbstractKernel *, size_t *, double *))__pyx_f_2gb_8samplers_14FenwickSampler_sample_for_idx;
-  __pyx_vtable_2gb_8samplers_FenwickSampler.__pyx_base.is_background = (uint64_t (*)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, double, double, double, double))__pyx_f_2gb_8samplers_14FenwickSampler_is_background;
+  __pyx_vtable_2gb_8samplers_FenwickSampler.__pyx_base.sample_for_idx = (size_t (*)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, size_t, struct __pyx_obj_2gb_7kernels_AbstractKernel *))__pyx_f_2gb_8samplers_14FenwickSampler_sample_for_idx;
+  __pyx_vtable_2gb_8samplers_FenwickSampler.__pyx_base.is_background = (uint64_t (*)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, double, double))__pyx_f_2gb_8samplers_14FenwickSampler_is_background;
   __pyx_type_2gb_8samplers_FenwickSampler.tp_base = __pyx_ptype_2gb_8samplers_AbstractSampler;
-  if (PyType_Ready(&__pyx_type_2gb_8samplers_FenwickSampler) < 0) __PYX_ERR(0, 93, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_2gb_8samplers_FenwickSampler) < 0) __PYX_ERR(0, 90, __pyx_L1_error)
   __pyx_type_2gb_8samplers_FenwickSampler.tp_print = 0;
-  if (__Pyx_SetVtable(__pyx_type_2gb_8samplers_FenwickSampler.tp_dict, __pyx_vtabptr_2gb_8samplers_FenwickSampler) < 0) __PYX_ERR(0, 93, __pyx_L1_error)
-  if (PyObject_SetAttrString(__pyx_m, "FenwickSampler", (PyObject *)&__pyx_type_2gb_8samplers_FenwickSampler) < 0) __PYX_ERR(0, 93, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_2gb_8samplers_FenwickSampler) < 0) __PYX_ERR(0, 93, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_type_2gb_8samplers_FenwickSampler.tp_dict, __pyx_vtabptr_2gb_8samplers_FenwickSampler) < 0) __PYX_ERR(0, 90, __pyx_L1_error)
+  if (PyObject_SetAttrString(__pyx_m, "FenwickSampler", (PyObject *)&__pyx_type_2gb_8samplers_FenwickSampler) < 0) __PYX_ERR(0, 90, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_2gb_8samplers_FenwickSampler) < 0) __PYX_ERR(0, 90, __pyx_L1_error)
   __pyx_ptype_2gb_8samplers_FenwickSampler = &__pyx_type_2gb_8samplers_FenwickSampler;
   __pyx_vtabptr_2gb_8samplers_CollapsedGibbsSampler = &__pyx_vtable_2gb_8samplers_CollapsedGibbsSampler;
   __pyx_vtable_2gb_8samplers_CollapsedGibbsSampler.__pyx_base = *__pyx_vtabptr_2gb_8samplers_AbstractSampler;
@@ -21957,14 +21899,14 @@ static int __pyx_pymod_exec_samplers(PyObject *__pyx_pyinit_module)
   __pyx_vtable_2gb_8samplers_CollapsedGibbsSampler.__pyx_base.get_probability = (double (*)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, size_t))__pyx_f_2gb_8samplers_21CollapsedGibbsSampler_get_probability;
   __pyx_vtable_2gb_8samplers_CollapsedGibbsSampler.__pyx_base.inc_one = (void (*)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, size_t))__pyx_f_2gb_8samplers_21CollapsedGibbsSampler_inc_one;
   __pyx_vtable_2gb_8samplers_CollapsedGibbsSampler.__pyx_base.dec_one = (void (*)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, size_t))__pyx_f_2gb_8samplers_21CollapsedGibbsSampler_dec_one;
-  __pyx_vtable_2gb_8samplers_CollapsedGibbsSampler.__pyx_base.sample_for_idx = (void (*)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, size_t, struct __pyx_obj_2gb_7kernels_AbstractKernel *, size_t *, double *))__pyx_f_2gb_8samplers_21CollapsedGibbsSampler_sample_for_idx;
-  __pyx_vtable_2gb_8samplers_CollapsedGibbsSampler.__pyx_base.is_background = (uint64_t (*)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, double, double, double, double))__pyx_f_2gb_8samplers_21CollapsedGibbsSampler_is_background;
+  __pyx_vtable_2gb_8samplers_CollapsedGibbsSampler.__pyx_base.sample_for_idx = (size_t (*)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, size_t, struct __pyx_obj_2gb_7kernels_AbstractKernel *))__pyx_f_2gb_8samplers_21CollapsedGibbsSampler_sample_for_idx;
+  __pyx_vtable_2gb_8samplers_CollapsedGibbsSampler.__pyx_base.is_background = (uint64_t (*)(struct __pyx_obj_2gb_8samplers_AbstractSampler *, double, double))__pyx_f_2gb_8samplers_21CollapsedGibbsSampler_is_background;
   __pyx_type_2gb_8samplers_CollapsedGibbsSampler.tp_base = __pyx_ptype_2gb_8samplers_AbstractSampler;
-  if (PyType_Ready(&__pyx_type_2gb_8samplers_CollapsedGibbsSampler) < 0) __PYX_ERR(0, 165, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_2gb_8samplers_CollapsedGibbsSampler) < 0) __PYX_ERR(0, 154, __pyx_L1_error)
   __pyx_type_2gb_8samplers_CollapsedGibbsSampler.tp_print = 0;
-  if (__Pyx_SetVtable(__pyx_type_2gb_8samplers_CollapsedGibbsSampler.tp_dict, __pyx_vtabptr_2gb_8samplers_CollapsedGibbsSampler) < 0) __PYX_ERR(0, 165, __pyx_L1_error)
-  if (PyObject_SetAttrString(__pyx_m, "CollapsedGibbsSampler", (PyObject *)&__pyx_type_2gb_8samplers_CollapsedGibbsSampler) < 0) __PYX_ERR(0, 165, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_2gb_8samplers_CollapsedGibbsSampler) < 0) __PYX_ERR(0, 165, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_type_2gb_8samplers_CollapsedGibbsSampler.tp_dict, __pyx_vtabptr_2gb_8samplers_CollapsedGibbsSampler) < 0) __PYX_ERR(0, 154, __pyx_L1_error)
+  if (PyObject_SetAttrString(__pyx_m, "CollapsedGibbsSampler", (PyObject *)&__pyx_type_2gb_8samplers_CollapsedGibbsSampler) < 0) __PYX_ERR(0, 154, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_2gb_8samplers_CollapsedGibbsSampler) < 0) __PYX_ERR(0, 154, __pyx_L1_error)
   __pyx_ptype_2gb_8samplers_CollapsedGibbsSampler = &__pyx_type_2gb_8samplers_CollapsedGibbsSampler;
   __pyx_vtabptr_array = &__pyx_vtable_array;
   __pyx_vtable_array.get_memview = (PyObject *(*)(struct __pyx_array_obj *))__pyx_array_get_memview;
@@ -24205,28 +24147,6 @@ __pyx_capsule_create(void *p, CYTHON_UNUSED const char *sig)
     return cobj;
 }
 
-/* CIntFromPyVerify */
-    #define __PYX_VERIFY_RETURN_INT(target_type, func_type, func_value)\
-    __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 0)
-#define __PYX_VERIFY_RETURN_INT_EXC(target_type, func_type, func_value)\
-    __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 1)
-#define __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, exc)\
-    {\
-        func_type value = func_value;\
-        if (sizeof(target_type) < sizeof(func_type)) {\
-            if (unlikely(value != (func_type) (target_type) value)) {\
-                func_type zero = 0;\
-                if (exc && unlikely(value == (func_type)-1 && PyErr_Occurred()))\
-                    return (target_type) -1;\
-                if (is_unsigned && unlikely(value < zero))\
-                    goto raise_neg_overflow;\
-                else\
-                    goto raise_overflow;\
-            }\
-        }\
-        return (target_type) value;\
-    }
-
 /* MemviewDtypeToObject */
     static CYTHON_INLINE PyObject *__pyx_memview_get_double(const char *itemp) {
     return (PyObject *) PyFloat_FromDouble(*(double *) itemp);
@@ -24995,6 +24915,28 @@ __pyx_fail:
     result.data = NULL;
     return result;
 }
+
+/* CIntFromPyVerify */
+      #define __PYX_VERIFY_RETURN_INT(target_type, func_type, func_value)\
+    __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 0)
+#define __PYX_VERIFY_RETURN_INT_EXC(target_type, func_type, func_value)\
+    __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 1)
+#define __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, exc)\
+    {\
+        func_type value = func_value;\
+        if (sizeof(target_type) < sizeof(func_type)) {\
+            if (unlikely(value != (func_type) (target_type) value)) {\
+                func_type zero = 0;\
+                if (exc && unlikely(value == (func_type)-1 && PyErr_Occurred()))\
+                    return (target_type) -1;\
+                if (is_unsigned && unlikely(value < zero))\
+                    goto raise_neg_overflow;\
+                else\
+                    goto raise_overflow;\
+            }\
+        }\
+        return (target_type) value;\
+    }
 
 /* CIntToPy */
       static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value) {

@@ -21,10 +21,8 @@ cdef class AbstractSampler(object):
     cdef double get_probability(self, size_t b) nogil
     cdef void inc_one(self, size_t b) nogil
     cdef void dec_one(self, size_t b) nogil
-    cdef void sample_for_idx(self, size_t i, AbstractKernel kernel,
-                             size_t *result_sample, double *prob_sample) nogil
-    cdef uint64_t is_background(self, double mu_rate, double dt_mu,
-                                double cross_rate, double dt_cross) nogil
+    cdef size_t sample_for_idx(self, size_t i, AbstractKernel kernel) nogil
+    cdef uint64_t is_background(self, double mu_rate, double dt_mu) nogil
 
 cdef class BaseSampler(AbstractSampler):
     cdef size_t n_proc
@@ -34,15 +32,12 @@ cdef class BaseSampler(AbstractSampler):
     cdef uint64_t[::1] nab
     cdef size_t current_process
     cdef size_t worker_id
-
-    cdef FPTree tree
     cdef Timestamps timestamps
     cdef RNG rng
 
 cdef class FenwickSampler(AbstractSampler):
     cdef BaseSampler base
     cdef FPTree tree
-    cdef size_t n_proc
 
 cdef class CollapsedGibbsSampler(AbstractSampler):
     cdef BaseSampler base
