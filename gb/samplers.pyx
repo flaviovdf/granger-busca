@@ -92,7 +92,6 @@ cdef class FenwickSampler(AbstractSampler):
     def __init__(self, BaseSampler base, size_t n_proc):
         self.base = base
         self.tree = FPTree(n_proc)
-        self.n_proc = n_proc
 
     cdef void set_current_process(self, size_t a) nogil:
         self.base.set_current_process(a)
