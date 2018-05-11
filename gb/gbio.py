@@ -46,3 +46,11 @@ def load_model(filename):
         state[id_] = loader['id_{}'.format(id_)]
     model.curr_state_ = state
     return model
+
+def load_alpha(filename):
+    loader = np.load(filename)
+    Alpha_ = sp.csr_matrix((loader['Alpha_data'],
+                            loader['Alpha_indices'],
+                            loader['Alpha_indptr']),
+                            shape=loader['Alpha_shape'])
+    return Alpha_
