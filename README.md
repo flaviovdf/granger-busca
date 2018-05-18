@@ -31,3 +31,9 @@ Simple example on how to fit Granger-Busca on a dataset available in the file
 (requires jupyter notebook):
 
 * Example Granger-Busca.ipynb
+
+Other notebooks:
+
+* Testing with data.ipynb -- Shows the model executing on a small subsample
+  of memetracker data
+* View data.ipynb -- Explores the memetracker results
