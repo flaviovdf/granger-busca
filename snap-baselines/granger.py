@@ -20,7 +20,7 @@ if len(sys.argv) >= 4:
 start = time()
 timestamps, graph, ids = experiments.get_graph_stamps(path, top)
 granger_model = GrangerBusca(alpha_prior=1.0/len(timestamps), num_iter=300,
-                             beta_strategy='busca')
+                             beta_strategy=1)
 granger_model.fit(timestamps)
 print(path, granger_model.training_time)
 print(path, 'with pre processing', time() - start)
