@@ -18,7 +18,7 @@ def precision10(A_true, A_pred, k=10):
     for i in range(A_true.shape[0]):
         x = set(A_true[i].argsort()[::-1][:k])
         y = set(A_pred[i].argsort()[::-1][:k])
-        res += len(x.intersection(y)) / len(y)
+        res += len(x.intersection(y)) / 10
         tmp += 1
     return res / tmp
 
