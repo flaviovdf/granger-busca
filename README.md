@@ -38,7 +38,7 @@ Other notebooks:
   of memetracker data
 * View data.ipynb -- Explores the memetracker results
 
-## Snap Bases
+## Snap Baselines
 
 The scripts used to extract results from the snap datasets are available in
 the `snap-baselines/` folder.
