@@ -1,4 +1,3 @@
-
 # Instructions
 
 ## Dependencies
@@ -23,10 +22,12 @@ Python dependencies:
 To compile, run:
 
 ```bash
-make 
+make
 ```
 
 ## Examples
 
-Simple example on how to fit Granger-Busca on a dataset available in the file (requires jupyter notebook):
+Simple example on how to fit Granger-Busca on a dataset available in the file
+(requires jupyter notebook):
+
 * Example Granger-Busca.ipynb
