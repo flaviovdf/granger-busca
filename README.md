@@ -37,3 +37,8 @@ Other notebooks:
 * Testing with data.ipynb -- Shows the model executing on a small subsample
   of memetracker data
 * View data.ipynb -- Explores the memetracker results
+
+## Snap Bases
+
+The scripts used to extract results from the snap datasets are available in
+the `snap-baselines/` folder.
