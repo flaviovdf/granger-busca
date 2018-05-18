@@ -12,14 +12,24 @@ import numpy as np
 P = []
 
 
-def precision10(A_true, A_pred, k=10):
+def precision(A_true, A_pred, k=10):
     res = 0.0
     tmp = 0
     for i in range(A_true.shape[0]):
-        x = set(A_true[i].argsort()[::-1][:k])
-        y = set(A_pred[i].argsort()[::-1][:k])
-        res += len(x.intersection(y)) / 10
+        x = A_true[i].toarray()
+        x = x[x != 0]
+
+        y = A_pred[i].toarray()
+        y = y[y != 0]
+
+        kx = min(len(x), k)
+        ky = min(len(y), k)
+        if ky == 0 or kx == 0: continue
+        x = set(np.argpartition(x, -kx)[-kx:])
+        y = set(np.argpartition(y, -ky)[-ky:])
+        res += len(x.intersection(y)) / k
         tmp += 1
+    if tmp == 0: return 0
     return res / tmp
 
 
@@ -29,7 +39,7 @@ def rank_corr(A_true, A_pred):
     for (x, y) in zip(A_true, A_pred):
         corr = ss.kendalltau(x, y)[0]
         P.append(ss.kendalltau(x, y)[1])
-        if not np.isnan(corr):
+        if np.isnan(corr) == False:
             res += corr
             tmp += 1
     if tmp == 0:
@@ -99,7 +109,7 @@ for path in glob.glob('*.gz'):
             try:
                 avg_error[name][mname] = rel_err(G, GT)
                 kendall[name][mname] = rank_corr(GT, G)
-                precision[name][mname] = precision10(GT, G)
+                precision[name][mname] = precision(GT, G)
             except:
                 pass
 
