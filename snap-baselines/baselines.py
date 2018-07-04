@@ -1,5 +1,4 @@
 #-*- coding: utf8
-# TODO: salvar a matriz get_kerel_norms para cada método.
 
 from hyperopt import fmin
 from hyperopt import hp
