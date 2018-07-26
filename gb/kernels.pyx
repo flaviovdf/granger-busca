@@ -136,7 +136,7 @@ cdef class TruncatedHawkesKernel(WoldKernel):
         cdef double tp
         if a == b:
             if i > 1:
-                tp = stamps[i-2]
+                tp = stamps[i-1]
             else:
                 tp = 0
         else:
