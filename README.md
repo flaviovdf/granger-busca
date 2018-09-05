@@ -1,6 +1,8 @@
-# Instructions
+# Granger Busca
 
-## Dependencies
+## Installation Instructions
+
+### Dependencies
 
 * Python version 3.5 or later
 * C++
@@ -17,12 +19,20 @@ Python dependencies:
 
 (Also available in requirements.txt)
 
-## Compiling
+### Compiling
 
 To compile, run:
 
 ```bash
-make
+$ make
+```
+
+### As a python module
+
+To install as a module execute the following:
+
+```
+$ python setup.py install
 ```
 
 ## Examples
