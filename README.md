@@ -1,5 +1,8 @@
 # Granger Busca
 
+Code for our paper **Fast Estimation of Causal Interactions using Wold Processes**
+to appear at NIPS2018.
+
 ## Installation Instructions
 
 ### Dependencies
