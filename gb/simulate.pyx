@@ -88,9 +88,6 @@ class GrangeBuscaSimulator(object):
         cdef float t = self.t        
         cdef float max_time = t + forward
         cdef float dt
-
-        #self.t=simulate_inside(t, max_time, self.Alpha_ba, self.Beta_ba, self.mu_rates, self.past)
-        #return self.past
         
         while t < max_time:
             lambdas_t = total_intensity2(t, self.Alpha_ba, self.Beta_ba, self.mu_rates, self.past)
@@ -116,6 +113,6 @@ class GrangeBuscaSimulator(object):
                 i += 1
             if len(self.past[i]) > 1:
                 self.integrals[i].append(lambdas_t[i] * (t - self.past[i][-1]))
-            self.past[i].push_back(t)
+            self.past[i].append(t)
         self.t = t
         return self.past
