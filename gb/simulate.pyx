@@ -5,7 +5,7 @@ import numpy as np
 cimport numpy as np
 
 
-cdef total_intensity2(float t, np.ndarray Alpha_ba, np.ndarray Beta_ba, np.ndarray mu_rates, past):
+cdef np.ndarray total_intensity2(float t, np.ndarray Alpha_ba, np.ndarray Beta_ba, np.ndarray mu_rates, past):
     cdef np.ndarray lambdas_t = np.zeros(mu_rates.shape[0], dtype=np.float)
     cdef float tp, tpp, busca_rate
     cdef int tpp_idx
@@ -38,7 +38,7 @@ cdef total_intensity2(float t, np.ndarray Alpha_ba, np.ndarray Beta_ba, np.ndarr
 
 class GrangeBuscaSimulator(object):
 
-    def __init__(self, mu_rates, Alpha_ba, Beta_ba=None, thinning=False):
+    def __init__(self, mu_rates, Alpha_ba, Beta_ba=None):
         self.mu_rates = np.asanyarray(mu_rates, dtype=np.float)
         self.n_nodes = self.mu_rates.shape[0]
         self.Alpha_ba = np.asanyarray(Alpha_ba, dtype=np.float)
@@ -54,7 +54,6 @@ class GrangeBuscaSimulator(object):
             for proc_b in range(self.n_nodes):
                 self.upper_bound += self.Alpha_ba[proc_b, proc_a] / \
                     self.Beta_ba[proc_b, proc_a]
-        self.thinning = thinning
         self.t = 0
 
     def total_intensity(self, t):
@@ -92,18 +91,11 @@ class GrangeBuscaSimulator(object):
         while t < max_time:
             lambdas_t = total_intensity2(t, self.Alpha_ba, self.Beta_ba, self.mu_rates, self.past)
             sum_lambdas_t = lambdas_t.cumsum()
-            if self.thinning:
-                dt = np.random.exponential(1.0 / self.upper_bound)
-            else:
-                dt = np.random.exponential(1.0 / sum_lambdas_t[-1])
+            dt = np.random.exponential(1.0 / sum_lambdas_t[-1])
 
             t = t + dt
             if t > max_time:
                 break
-
-            if self.thinning:
-                if np.random.rand() < (sum_lambdas_t[-1] / self.upper_bound):
-                    continue
 
             i = 0
             u = np.random.rand() * sum_lambdas_t[-1]
