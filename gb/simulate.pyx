@@ -5,7 +5,7 @@ import numpy as np
 cimport numpy as np
 
 
-cdef total_intensity2(float t, np.ndarray Alpha_ba, np.ndarray Beta_ba, np.ndarray mu_rates, past):
+cdef np.ndarray total_intensity2(float t, np.ndarray Alpha_ba, np.ndarray Beta_ba, np.ndarray mu_rates, past):
     cdef np.ndarray lambdas_t = np.zeros(mu_rates.shape[0], dtype=np.float)
     cdef float tp, tpp, busca_rate
     cdef int tpp_idx
