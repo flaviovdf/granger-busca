@@ -30,6 +30,14 @@ cdef class PoissonKernel(AbstractKernel):
 cdef class WoldKernel(AbstractKernel):
     cdef PoissonKernel poisson
     cdef double[::1] beta
+    cdef double[::1] gamma
+    cdef double[::1] gamma_sup
+    cdef double[::1] gamma_inf
+    cdef double[::1] y_vect_regression
+    cdef double[::1] x_vect_regression
+    cdef size_t[::1] n_pts_regression
+    cdef double[::1] prev_delta_vect_regression
+    cdef size_t min_pts_regression
 
 cdef class TruncatedHawkesKernel(WoldKernel):
     pass

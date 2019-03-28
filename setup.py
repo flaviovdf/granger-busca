@@ -52,7 +52,7 @@ def get_extensions():
     for pkg in packages:
         pkg_folder = pkg.replace('.', '/')
         pyx_files = glob.glob(os.path.join(pkg_folder, '*.pyx'))
-        include_dirs = ['gb/randomkit/', numpy.get_include()]
+        include_dirs = ['gb/randomkit/', 'gb/bvls/', numpy.get_include()]
         for pyx in pyx_files:
             pxd = pyx.replace('pyx', 'pxd')
             module = pyx.replace('.pyx', '').replace('/', '.')
@@ -65,6 +65,8 @@ def get_extensions():
             if module == 'gb.randomkit.random':
                 ext_files.append(os.path.join(pkg_folder, 'randomkit.c'))
                 ext_files.append(os.path.join(pkg_folder, 'distributions.c'))
+            if module == 'gb.bvls.solve':
+                ext_files.append(os.path.join(pkg_folder, 'bvls.c'))
 
             extra_compile_args = ['-msse', '-msse2', '-mfpmath=sse']
             extension = Extension(module, ext_files,

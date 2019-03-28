@@ -91,7 +91,7 @@ def fit(Timestamps all_stamps, SloppyCounter sloppy, double alpha_prior,
         sampler = CollapsedGibbsSampler(base_sampler, n_proc)
 
     cdef PoissonKernel poisson = PoissonKernel(all_stamps, n_proc, rng)
-    cdef AbstractKernel kernel = WoldKernel(poisson, beta)
+    cdef AbstractKernel kernel = WoldKernel(poisson, 10)
 
     printf("Worker %lu starting\n", worker_id)
     with nogil:

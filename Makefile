@@ -14,7 +14,7 @@ clean:
 	find . -name "*.so" | xargs rm -f
 
 clean-cython:
-	find . -name "*.c" | egrep -v "randomkit.c|distributions.c" | xargs rm -f
+	find . -name "*.c" | egrep -v "randomkit.c|distributions.c|bvls.c" | xargs rm -f
 	find . -name "*.cpp" | xargs rm -f
 
 test:
