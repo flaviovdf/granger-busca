@@ -3,6 +3,7 @@
 # cython: cdivision=True
 # cython: initializedcheck=False
 # cython: nonecheck=False
+# cython: language_level=3
 # cython: wraparound=False
 
 

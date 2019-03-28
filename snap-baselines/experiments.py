@@ -4,6 +4,7 @@ from collections import defaultdict
 
 import gzip
 
+
 def get_graph_stamps(path, top=None):
     count = defaultdict(int)
     srcs = set()
