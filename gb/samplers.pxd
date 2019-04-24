@@ -24,6 +24,7 @@ cdef class AbstractSampler(object):
     cdef void dec_one(self, size_t b) nogil
     cdef size_t sample_for_idx(self, size_t i, AbstractKernel kernel) nogil
     cdef uint64_t is_background(self, double mu_rate, double dt_mu) nogil
+    cdef void get_alphas(self, size_t n, double[::1] alphas) nogil
 
 cdef class BaseSampler(AbstractSampler):
     cdef size_t n_proc

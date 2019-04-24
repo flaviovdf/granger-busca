@@ -6,7 +6,6 @@
 # cython: language_level=3
 # cython: wraparound=False
 
-from gb.bvls.solve cimport my_bvls
 
 from libc.stdio cimport printf
 from libc.stdint cimport uint64_t
@@ -22,7 +21,7 @@ cdef extern from 'math.h':
 
 
 cdef class AbstractKernel(object):
-    cdef void set_current_process(self, size_t process) nogil:
+    cdef void set_current_process(self, size_t proc, double[::1] alphas) nogil:
         printf('[gb.kernels] Do not use the AbstractKernel\n')
         abort()
     cdef double background_probability(self, double dt) nogil:
@@ -46,7 +45,7 @@ cdef class PoissonKernel(AbstractKernel):
         self.mu = np.zeros(n_proc, dtype='d')
         self.rng = rng
 
-    cdef void set_current_process(self, size_t proc) nogil:
+    cdef void set_current_process(self, size_t proc, double[::1] alphas) nogil:
         self.current_process = proc
 
         cdef size_t n_proc = self.timestamps.num_proc()
@@ -89,26 +88,53 @@ cdef class PoissonKernel(AbstractKernel):
 
 cdef class WoldKernel(AbstractKernel):
 
-    def __init__(self, PoissonKernel poisson,
-                 size_t min_pts_regression):
-
+    def __init__(self, PoissonKernel poisson):
         cdef size_t n_proc = poisson.mu.shape[0]
-
         self.poisson = poisson
-        self.beta = np.zeros(n_proc, dtype='d')
-        self.gamma = np.zeros(n_proc, dtype='d')
-        self.gamma_sup = np.zeros(n_proc, dtype='d')
-        self.gamma_inf = np.zeros(n_proc, dtype='d')
-        self.y_vect_regression = np.zeros(n_proc, dtype='d')
-        self.x_vect_regression = np.zeros(n_proc, dtype='d')
-        self.n_pts_regression = np.zeros(n_proc, dtype='uint64')
-        self.prev_delta_vect_regression = np.zeros(n_proc, dtype='d')
-        self.min_pts_regression = min_pts_regression
+        self.beta = np.ones(n_proc, dtype='d')*5
+        self.saved_betas = np.ones(n_proc*n_proc, dtype='d')*5
+        self.dbeta = np.zeros(n_proc, dtype='d')
+        self.past_delta = np.zeros(n_proc, dtype='d')
 
-    cdef void set_current_process(self, size_t proc) nogil:
-        self.poisson.set_current_process(proc)
+    cdef void gradient_step(self, double[::1] alphas, double *stamps, size_t proc, size_t proc_size) nogil:
+        
+        cdef double mu = self.mu_rate(proc)
+        cdef double tpp = 0
+        cdef double tp = 0
+        cdef double t = 0
+        cdef double delta = 0
+        cdef size_t t_idx
+        cdef size_t b
+        cdef double sum_exct =0
+        cdef double t_idxminus1 
+
+        for t_idx in range(proc_size):
+            sum_exct = 0
+            for b in range(self.beta.shape[0]):
+                if (t_idx == 0):
+                    self.dbeta[b] = 0
+                    self.past_delta[b] = 0
+                t = stamps[t_idx]
+                tp = self.poisson.timestamps.find_previous(b, t)
+                if tp != 0 or (tp == 0. and self.poisson.timestamps.get_stamp(b, 0) == 0 and t != 0):
+                    delta = t - tp
+                    sum_exct += alphas[b]/(self.beta[b]+delta)
+            
+            for b in range(self.beta.shape[0]):
+                t = stamps[t_idx]
+                tp = self.poisson.timestamps.find_previous(b, t)
+                if tp != 0 or (tp == 0. and self.poisson.timestamps.get_stamp(b, 0) == 0 and t != 0):
+                    delta = t - tp
+                    self.dbeta[b] -= alphas[b]/((mu+sum_exct)*(self.beta[b]+delta)**2)
+                    if (t_idx > 1 and self.past_delta[b] > 0):
+                        self.dbeta[b] += (alphas[b]*(stamps[t_idx]-stamps[t_idx-1]))/(self.beta[b]+self.past_delta[b])**2
+                    self.past_delta[b] = delta
+
+
+    cdef void set_current_process(self, size_t proc, double[::1] alphas) nogil:
+        self.poisson.set_current_process(proc, alphas)
         cdef size_t a = proc
-
+        cdef size_t n_proc = self.beta.shape[0]
         cdef size_t proc_size = self.poisson.timestamps.get_size(a)
         cdef double *stamps
         self.poisson.timestamps.get_stamps(a, &stamps)
@@ -116,87 +142,42 @@ cdef class WoldKernel(AbstractKernel):
         cdef size_t *causes
         self.poisson.timestamps.get_causes(a, &causes)
 
-        cdef double tpp = 0
-        cdef double tp = 0
-        cdef double t = 0
+        cdef size_t b 
+        for b in range(self.beta.shape[0]):#initialize beta
+            self.beta[b] = self.saved_betas[b+a*n_proc]
+            #self.beta[b] = 5
+        
+        cdef size_t it = 0
+        cdef size_t max_it = 4000
+        cdef double precision = 1e-3
+        cdef double past_beta
+        cdef double step_size
+        cdef double gammab = 0.01
+        cdef uint64_t prec_reached = 0
+        while not(prec_reached):
 
-        cdef size_t b
+            it += 1
+            if (it>max_it):
+                max_it *= 2
+                printf("max iter reached a: %ld\n",a)
+                gammab *= 0.5
 
-        for b in range(<size_t>self.beta.shape[0]):
-            self.y_vect_regression[b] = 0
-            self.x_vect_regression[b] = 0
-            self.prev_delta_vect_regression[b] = -1
-            self.n_pts_regression[b] = 0
+            prec_reached = 1
+            self.gradient_step(alphas, stamps, proc, proc_size)
+            for b in range(self.beta.shape[0]):
+                past_beta = self.beta[b]
+                self.beta[b] = self.beta[b] + gammab*self.dbeta[b]
+                if self.beta[b] < 0:
+                    self.beta[b] = 0
 
-        cdef size_t i
-        for i in range(proc_size):
-            b = causes[i]
-            if b == <size_t>self.beta.shape[0]:
-                continue
-            t = stamps[i]
-            tp = self.poisson.timestamps.find_previous(b, t)
-            if self.prev_delta_vect_regression[b] == -1:
-                self.prev_delta_vect_regression[b] = t - tp
-            else:
-                if tp != 0 or \
-                    tp == 0. and self.poisson.timestamps.get_stamp(b, 0) == 0:
-                    self.n_pts_regression[b] += 1
-                    self.y_vect_regression[b] += log(t - tp)
-                    self.x_vect_regression[b] += log(self.prev_delta_vect_regression[b])
-                    self.prev_delta_vect_regression[b] = t - tp
+                step_size = self.beta[b] - past_beta
+                step_size = step_size if step_size >= 0 else -step_size
+                if step_size > precision:
+                    prec_reached = 0
 
-        cdef size_t n
-        for b in range(<size_t>self.beta.shape[0]):
-            n = self.n_pts_regression[b]
-            self.y_vect_regression[b] = self.y_vect_regression[b] / n
-            self.x_vect_regression[b] = self.x_vect_regression[b] / n
-            self.prev_delta_vect_regression[b] = -1
-            self.gamma_sup[b] = 0
-            self.gamma_inf[b] = 0
-
-        cdef double xi
-        cdef double yi
-        cdef double x_mean
-        cdef double y_mean
-
-        for i in range(proc_size):
-            b = causes[i]
-            if b == <size_t>self.beta.shape[0]:
-                continue
-            t = stamps[i]
-            tp = self.poisson.timestamps.find_previous(b, t)
-            if self.prev_delta_vect_regression[b] == -1:
-                self.prev_delta_vect_regression[b] = t - tp
-            else:
-                if tp != 0 or \
-                    tp == 0. and self.poisson.timestamps.get_stamp(b, 0) == 0:
-                    yi = log(t - tp)
-                    xi = log(self.prev_delta_vect_regression[b])
-                    y_mean = self.y_vect_regression[b]
-                    x_mean = self.x_vect_regression[b]
-                    self.gamma_sup[b] += (xi - x_mean) * (yi - y_mean)
-                    self.gamma_inf[b] += (xi - x_mean) * (xi - x_mean)
-                    self.prev_delta_vect_regression[b] = t - tp
-
-        for b in range(<size_t>self.gamma.shape[0]):
-            if self.n_pts_regression[b] >= 2:
-                self.gamma[b] = self.gamma_sup[b] / self.gamma_inf[b]
-                self.beta[b] = self.y_vect_regression[b]
-                self.beta[b] -= (self.x_vect_regression[b] * self.gamma[b])
-            if self.gamma[b] < 0:
-                self.gamma[b] = 0
-            if self.beta[b] < 1:
-                self.beta[b] = 1
-                # self.gamma[b] = 1.0
-                # self.beta[b] = 1.0
-            # if self.gamma[b] >= 1:
-            #    self.gamma[b] = 1
-            # if self.gamma[b] < 0:
-            #     self.gamma[b] = 0.000000001
-            # if self.beta[b] < 1.0:
-            #     self.beta[b] = 1.0
-            printf("a=%ld, b=%ld, gamma=%lf, beta=%lf\n", a, b,
-                   self.gamma[b], self.beta[b])
+        for b in range(self.beta.shape[0]):
+            self.saved_betas[b+a*n_proc] = self.beta[b]
+            printf("%ld-b: %lf ",a,self.beta[b])
         printf("\n")
 
     cdef double background_probability(self, double dt) nogil:
@@ -229,7 +210,7 @@ cdef class WoldKernel(AbstractKernel):
         else:
             tpp = 0
 
-        cdef double rate = alpha_ab / (self.beta[b] + self.gamma[b]*(tp - tpp))
+        cdef double rate = alpha_ab / (self.beta[b] + (tp - tpp))
         return rate
 
 

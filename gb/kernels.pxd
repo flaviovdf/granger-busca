@@ -14,7 +14,7 @@ from libc.stdint cimport uint64_t
 
 
 cdef class AbstractKernel(object):
-    cdef void set_current_process(self, size_t process) nogil
+    cdef void set_current_process(self, size_t proc, double[::1] alphas) nogil
     cdef double background_probability(self, double dt) nogil
     cdef double cross_rate(self, size_t i, size_t b, double alpha_ab) nogil
     cdef double mu_rate(self, size_t process) nogil
@@ -30,14 +30,10 @@ cdef class PoissonKernel(AbstractKernel):
 cdef class WoldKernel(AbstractKernel):
     cdef PoissonKernel poisson
     cdef double[::1] beta
-    cdef double[::1] gamma
-    cdef double[::1] gamma_sup
-    cdef double[::1] gamma_inf
-    cdef double[::1] y_vect_regression
-    cdef double[::1] x_vect_regression
-    cdef size_t[::1] n_pts_regression
-    cdef double[::1] prev_delta_vect_regression
-    cdef size_t min_pts_regression
+    cdef void gradient_step(self, double[::1] alphas, double *stamps, size_t proc, size_t proc_size) nogil
+    cdef double[::1] dbeta
+    cdef double[::1] past_delta
+    cdef double[::1] saved_betas
 
 cdef class TruncatedHawkesKernel(WoldKernel):
     pass

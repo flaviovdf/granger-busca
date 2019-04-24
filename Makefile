@@ -2,7 +2,7 @@
 
 .PHONY = all clean clean-cython test trailing-spaces
 
-PYTHON ?= python
+PYTHON ?= python3
 NOSETESTS ?= nosetests
 
 all:

@@ -40,6 +40,9 @@ cdef class AbstractSampler(object):
     cdef uint64_t is_background(self, double mu_rate, double dt_mu) nogil:
         printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')
         abort()
+    cdef void get_alphas(self, size_t n, double[::1] alphas) nogil:
+        printf('[gb.samplers] Do not use the BaseSampler or AbstractSampler\n')
+        abort()
 
 
 cdef class BaseSampler(AbstractSampler):
@@ -74,6 +77,11 @@ cdef class BaseSampler(AbstractSampler):
     cdef double get_probability(self, size_t b) nogil:
         return dirmulti_posterior(self.nab[b], self.denominators[b],
                                   self.nab.shape[0], self.alpha_prior)
+
+    cdef void get_alphas(self, size_t n, double[::1] alphas) nogil:
+        for i in range(<size_t>n):
+            alphas[i] = dirmulti_posterior(self.nab[i], self.denominators[i],
+                            self.nab.shape[0], self.alpha_prior)
 
     cdef void inc_one(self, size_t b) nogil:
         self.denominators[b] += 1
@@ -110,6 +118,9 @@ cdef class FenwickSampler(AbstractSampler):
 
     def _get_probability(self, size_t b):
         return self.get_probability(b)
+
+    cdef void get_alphas(self, size_t n, double[::1] alphas) nogil:
+        self.base.get_alphas(n, alphas)
 
     cdef void inc_one(self, size_t b) nogil:
         self.base.inc_one(b)
@@ -168,6 +179,9 @@ cdef class CollapsedGibbsSampler(AbstractSampler):
 
     def _get_probability(self, size_t b):
         return self.get_probability(b)
+
+    cdef void get_alphas(self, size_t n, double[::1] alphas) nogil:
+        self.base.get_alphas(n, alphas)
 
     cdef void inc_one(self, size_t b) nogil:
         self.base.inc_one(b)

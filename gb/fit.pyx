@@ -63,15 +63,17 @@ cdef void sample_alpha(size_t proc_a, Timestamps all_stamps,
 
 cdef void do_work(Timestamps all_stamps, SloppyCounter sloppy,
                   AbstractSampler sampler, AbstractKernel kernel,
-                  size_t n_iter, size_t worker_id, size_t[::1] workload) nogil:
+                  size_t n_iter, size_t worker_id, size_t[::1] workload, double[::1] alphas) nogil:
 
     cdef size_t iteration
     cdef size_t proc_a, i
     for iteration in range(n_iter):
+        printf("iter:%ld\n",iteration)
         for i in range(<size_t>workload.shape[0]):
             proc_a = workload[i]
             sampler.set_current_process(proc_a)
-            kernel.set_current_process(proc_a)
+            sampler.get_alphas(<size_t>alphas.shape[0], alphas)
+            kernel.set_current_process(proc_a, alphas)
             sample_alpha(proc_a, all_stamps, sampler, kernel)
         sloppy.update_counts(worker_id)
 
@@ -91,12 +93,13 @@ def fit(Timestamps all_stamps, SloppyCounter sloppy, double alpha_prior,
         sampler = CollapsedGibbsSampler(base_sampler, n_proc)
 
     cdef PoissonKernel poisson = PoissonKernel(all_stamps, n_proc, rng)
-    cdef AbstractKernel kernel = WoldKernel(poisson, 10)
+    cdef AbstractKernel kernel = WoldKernel(poisson)
+    cdef double[::1] alphas = np.zeros(n_proc, dtype='d', order='C')
 
     printf("Worker %lu starting\n", worker_id)
     with nogil:
         do_work(all_stamps, sloppy, sampler, kernel, n_iter, worker_id,
-                workload)
+                workload, alphas)
     printf("Worker %lu done\n", worker_id)
 
     cdef dict Alpha = {}
