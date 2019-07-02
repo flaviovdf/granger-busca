@@ -47,6 +47,7 @@ def load_model(filename):
     model.curr_state_ = state
     return model
 
+
 def load_alpha(filename):
     loader = np.load(filename)
     Alpha_ = sp.csr_matrix((loader['Alpha_data'],
